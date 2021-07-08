@@ -1,13 +1,46 @@
 {
     "name": "nowyouwerkn/wecommerce",
     "description": "eCommerce ecosystem to build and scale our clients businesses.",
+    "keywords": [
+        "werkn",
+        "laravel",
+        "ecommerce",
+        "cart",
+        "checkout"
+    ],
     "type": "project",
     "authors": [
         {
-            "name": "Werkn",
-            "email": "hey@werkn.mx"
+            "name": "Jorge Peña Lama",
+            "email": "jorge.pena@werkn.mx",
+            "homepage" : "https://werkn.mx",
+            "role": "Developer"
         }
     ],
+    "homepage": "https://github.com/nowyouwerkn/wecommerce",
+    "license": "MIT",
     "minimum-stability": "dev",
-    "require": {}
+    "prefer-stable": true,
+    "require": {
+        "php": "^7.3|^8.0",
+        "conekta/conekta-php": "^4.3",
+        "facebook/php-business-sdk": "^10.0",
+        "gabrielbull/ups-api": "^2.0",
+        "intervention/image": "^2.5",
+        "laravel/fortify": "^1.7",
+        "mews/purifier": "^3.3",
+        "openpay/sdk": "^2.2",
+        "paypal/rest-api-sdk-php": "^1.14",
+        "rawilk/laravel-ups": "^1.0",
+        "spatie/laravel-permission": "^4.2",
+        "stevebauman/location": "^6.1",
+        "stripe/stripe-php": "^7.77"
+    },
+    "extra":{
+        "laravel":{
+            "providers": [
+                "Nowyouwerkn\\WeCommerce\\WeCommerceServiceProvider"
+            ]
+        }
+    }
 }

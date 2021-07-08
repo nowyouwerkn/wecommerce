@@ -1,10 +1,3 @@
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
 # WeCommerce 
 ##### Elaborado por Werkn 
 -----------------------
@@ -35,7 +28,6 @@
   </ol>
 </details>
 
-
 ### Tecnologías
 
 * [Bootstrap](https://getbootstrap.com)
@@ -46,7 +38,7 @@
 <!-- ROADMAP -->
 ## Roadmap
 
-Revisa los [tickets abiertos](https://github.com/nowyouwerkn/werkn-commerce/issues) para una lista estructurada de las funcionalidades propuestas y problemas conocidos en producción.
+Revisa los [tickets abiertos](https://github.com/nowyouwerkn/wecommerce/issues) para una lista estructurada de las funcionalidades propuestas y problemas conocidos en producción.
 
 <!-- LICENCE -->
 ## License
@@ -77,8 +69,7 @@ SOFTWARE.
 ## Contacto
 
 Werkn S.A de C.V - [@nowyouwerkn](https://instagram.com/nowyouwerkn) - hey@werkn.mx
-
-Link de Proyecto: [https://github.com/nowyouwerkn/werkn-commerce](https://github.com/nowyouwerkn/werkn-commerce)
+Link de Proyecto: [https://github.com/nowyouwerkn/wecommerce](https://github.com/nowyouwerkn/wecommerce)
 
 
 <!-- ACKNOWLEDGEMENTS -->
