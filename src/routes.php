@@ -49,19 +49,18 @@ Route::group(['prefix' => 'w-admin', 'middleware' => 'auth'], function(){
     Route::resource('products', Nowyouwerkn\WeCommerce\Controllers\ProductController::class); //
     Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
     Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
-    Route::resource('variants', Nowyouwerkn\WeCommerce\Controllers\VariantTypeController::class);
     /*
     Route::post('variants/storeStock', 'VariantTypeController@storeStock')->name('variants.storeStock');
     Route::post('variants/updateStock', 'VariantTypeController@updateStock')->name('variants.updateStock');
     */
 
     Route::post('/variants/stock/{id}', [
-        'uses' => 'StockController@store',
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@store',
         'as' => 'stock.store',
     ]);
     
     Route::put('/variants/update-stock/{id}', [
-        'uses' => 'StockController@update',
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@update',
         'as' => 'stock.update',
     ]);
 
@@ -69,7 +68,7 @@ Route::group(['prefix' => 'w-admin', 'middleware' => 'auth'], function(){
     Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
 
     Route::post('/orders/{id}/cambiar-estado', [
-        'uses' => 'OrderController@changeStatus',
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@changeStatus',
         'as' => 'order.status',
     ]);
 
@@ -84,13 +83,13 @@ Route::group(['prefix' => 'w-admin', 'middleware' => 'auth'], function(){
     Route::resource('taxes', Nowyouwerkn\WeCommerce\Controllers\StoreTaxController::class); //
 
     Route::get('/taxes/create/{country_id}',[
-        'uses' => 'StoreTaxController@create',
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StoreTaxController@create',
         'as' => 'taxes.create',
     ]);
 
     Route::resource('users', Nowyouwerkn\WeCommerce\Controllers\UserController::class); //
-    Route::get('user/config', 'UserController@config')->name('user.config');  //
-    Route::get('user/help', 'UserController@help')->name('user.help');  //
+    Route::get('user/config', 'Nowyouwerkn\WeCommerce\Controllers\UserController@config')->name('user.config');  //
+    Route::get('user/help', 'Nowyouwerkn\WeCommerce\Controllers\UserController@help')->name('user.help');  //
     Route::resource('notifications', Nowyouwerkn\WeCommerce\Controllers\NotificationController::class); //
     Route::resource('payments', Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController::class);  //
     Route::resource('shipments', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodController::class);
@@ -254,7 +253,7 @@ Route::prefix('/')->group(function () {
             Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
             Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
             Route::get('address', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@address')->name('address');
-            Route::get('address/create', 'ClientController@addAddress')->name('address.create');
+            Route::get('address/create', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@addAddress')->name('address.create');
             Route::get('account', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@account')->name('account');
             
         });
