@@ -31,6 +31,5 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../public' => public_path('vendor/nowyouwerkn/wecommerce/src/assets'),
         ], 'public');
-
     }
 }

@@ -1,38 +1,109 @@
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+
 # WeCommerce 
 ##### Elaborado por Werkn 
 -----------------------
 
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://github.com/nowyouwerkn/wecommerce">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
+
+  <h3 align="center">project_title</h3>
+
+  <p align="center">
+    project_description
+    <br />
+    <a href="https://github.com/nowyouwerkn/wecommerce"><strong>Lee la documentación »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/nowyouwerkn/wecommerce/issues">Reportar Problema</a>
+    ·
+    <a href="https://github.com/nowyouwerkn/wecommerce/issues">Solicitar Funcionalidad</a>
+  </p>
+</p>
+
+
 <!-- TABLE OF CONTENTS -->
 <details open="open">
-  <summary>Indice de Contenido</summary>
+<summary><h2 style="display: inline-block">Indice de Contenido</h2></summary>
   <ol>
     <li>
-      <a href="#about-the-project">Acerca del Proyecto</a>
+      <a href="#acerca-del-proyecto">Acerca del Proyecto</a>
       <ul>
-        <li><a href="#built-with">Tecnologías</a></li>
+        <li><a href="#tecnologias">Tecnologías</a></li>
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Comenzando</a>
+      <a href="#comenzado">Comenzando</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisitos</a></li>
-        <li><a href="#installation">Instalación</a></li>
+        <li><a href="#pre-requisitos">Pre-requisitos</a></li>
+        <li><a href="#instalacion">Instalación</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Uso</a></li>
+    <li><a href="#uso">Uso</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contirbuir</a></li>
-    <li><a href="#license">Licencia</a></li>
-    <li><a href="#contact">Contacto</a></li>
-    <li><a href="#acknowledgements">Agradecimientos</a></li>
+    <li><a href="#licencia">Licencia</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+    <li><a href="#agradecimientos">Agradecimientos</a></li>
   </ol>
 </details>
+
+<!-- ABOUT THE PROJECT -->
+## Acerca del Proyecto
+
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
+
+Here's a blank template to get started:
+**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
+`github_username`, `repo_name`, `twitter_handle`, `email`, `project_title`, `project_description`
+
+
 
 ### Tecnologías
 
 * [Bootstrap](https://getbootstrap.com)
 * [JQuery](https://jquery.com)
 * [Laravel](https://laravel.com)
+
+<!-- GETTING STARTED -->
+## Comenzando
+
+To get a local copy up and running follow these simple steps.
+
+### Pre-requisitos
+
+This is an example of how to list things you need to use the software and how to install them.
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+### Instalacion
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/github_username/repo_name.git
+   ```
+2. Install NPM packages
+   ```sh
+   npm install
+   ```
+
+
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+
+_For more examples, please refer to the [Documentation](https://example.com)_
+
 
 
 <!-- ROADMAP -->
@@ -41,7 +112,7 @@
 Revisa los [tickets abiertos](https://github.com/nowyouwerkn/wecommerce/issues) para una lista estructurada de las funcionalidades propuestas y problemas conocidos en producción.
 
 <!-- LICENCE -->
-## License
+## Licencia
 
 MIT License
 
@@ -81,17 +152,10 @@ Link de Proyecto: [https://github.com/nowyouwerkn/wecommerce](https://github.com
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
+[forks-shield]:   https://img.shields.io/github/forks/nowyouwerkn/wecommerce
 [forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/nowyouwerkn/wecommerce
 [stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
+[issues-shield]: hhttps://img.shields.io/github/issues/nowyouwerkn/wecommerce
 [issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
 [product-screenshot]: images/screenshot.png
