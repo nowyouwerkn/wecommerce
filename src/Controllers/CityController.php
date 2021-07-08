@@ -3,7 +3,7 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
-use App\Models\City;
+use Nowyouwerkn\WeCommerce\Models\City;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
@@ -11,12 +11,12 @@ class CityController extends Controller
 
     public function index()
     {
-        return view('back.cities.index');
+        return view('wecommerce::back.cities.index');
     }
 
     public function create()
     {
-        return view('back.cities.create');
+        return view('wecommerce::back.cities.create');
     }
 
     public function store(Request $request)
@@ -41,12 +41,12 @@ class CityController extends Controller
 
     public function show(City $city)
     {
-        return view('back.cities.show', compact('city'));
+        return view('wecommerce::back.cities.show', compact('city'));
     }
 
     public function edit(City $city)
     {
-        return view('back.cities.edit', compact('city'));
+        return view('wecommerce::back.cities.edit', compact('city'));
     }
 
     public function update(Request $request, City $city)

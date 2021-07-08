@@ -10,21 +10,21 @@ use Session;
 use Auth;
 use Carbon\Carbon;
 
-use App\Models\Product;
-use App\Models\Cart;
+use Nowyouwerkn\WeCommerce\Models\Product;
+use Nowyouwerkn\WeCommerce\Models\Cart;
 
 class CartController extends Controller
 {
     public function cart()
     {
         if (!Session::has('cart')) {
-            return view('front.cart');
+            return view('wecommerce::front.cart');
         }
 
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
 
-        return view('front.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice);
+        return view('wecommerce::front.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice);
     }
 
     public function addCart(Request $request, $id, $variant)

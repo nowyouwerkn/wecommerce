@@ -8,7 +8,7 @@ use Str;
 use Session;
 use Purifier;
 
-use App\Models\LegalText;
+use Nowyouwerkn\WeCommerce\Models\LegalText;
 
 use Illuminate\Http\Request;
 
@@ -19,7 +19,7 @@ class LegalTextController extends Controller
     {
         $legals = LegalText::all();
 
-        return view('back.legals.index')->with('legals', $legals);
+        return view('wecommerce::back.legals.index')->with('legals', $legals);
     }
 
     public function create()
@@ -58,7 +58,7 @@ class LegalTextController extends Controller
     {
         $legal = LegalText::find($id);
 
-        return view('back.legals.edit')->with('legal', $legal);
+        return view('wecommerce::back.legals.edit')->with('legal', $legal);
     }
 
 

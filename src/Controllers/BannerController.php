@@ -9,7 +9,7 @@ use Session;
 
 use Purifier;
 
-use App\Models\Banner;
+use Nowyouwerkn\WeCommerce\Models\Banner;
 use Illuminate\Http\Request;
 
 class BannerController extends Controller
@@ -18,12 +18,12 @@ class BannerController extends Controller
     {
         $banners = Banner::paginate(5);
 
-        return view('back.banners.index', compact('banners'));
+        return view('wecommerce::back.banners.index', compact('banners'));
     }
 
     public function create()
     {
-        return view('back.banners.create');
+        return view('wecommerce::back.banners.create');
     }
 
     public function store(Request $request)
@@ -75,14 +75,14 @@ class BannerController extends Controller
     {
         $banner = Banner::find($id);
 
-        return view('back.banners.show')->with('banner', $banner);
+        return view('wecommerce::back.banners.show')->with('banner', $banner);
     }
 
 
     public function edit($id)
     {
         $banner = Banner::find($id);
-        return view('back.banners.edit', compact('banner'));
+        return view('wecommerce::back.banners.edit', compact('banner'));
     }
 
     public function update(Request $request, $id)

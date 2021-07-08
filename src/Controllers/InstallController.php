@@ -7,11 +7,10 @@ use Config;
 use Artisan;
 use Exception;
 
-use App\Models\User;
-use App\Models\StoreConfig;
+use Nowyouwerkn\WeCommerce\Models\User;
+use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
 
 use Illuminate\Http\Request;
 
@@ -19,7 +18,7 @@ class InstallController extends Controller
 {
     public function index()
     {
-        return view('back.install.index');
+        return view('wecommerce::back.install.index');
     }
 
     /*
@@ -92,7 +91,7 @@ class InstallController extends Controller
 
     public function auth()
     {
-        return view('back.install.auth');
+        return view('wecommerce::back.install.auth');
     }
 
     public function authPost(Request $request)
@@ -111,6 +110,6 @@ class InstallController extends Controller
 
     public function config()
     {
-        return view('back.users.config');
+        return view('wecommerce::back.users.config');
     }
 }

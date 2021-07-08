@@ -36,6 +36,11 @@
         "stevebauman/location": "^6.1",
         "stripe/stripe-php": "^7.77"
     },
+    "autoload": {
+        "psr-4": {
+            "Nowyouwerkn\\WeCommerce\\": "src"
+        }
+    },
     "extra":{
         "laravel":{
             "providers": [

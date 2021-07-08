@@ -17,15 +17,6 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function add($a, $b){
-        $result = $a + $b;
-        return view('wecommerce::back.index', compact('result'));
-    }
-
-    public function subtract($a, $b){
-        echo $a - $b;
-    }
-
     public function index () 
     {  
         $config = StoreConfig::take(1)->first();
@@ -48,24 +39,24 @@ class DashboardController extends Controller
 
     public function configuration () 
     {
-        return view('back.configuration');
+        return view('wecommerce::back.configuration');
     }
 
     public function shipping () 
     {
-        return view('back.shipping.index');
+        return view('wecommerce::back.shipping.index');
     }
 
     // Configuration Steps
     public function configStep1 () 
     {
-        return view('back.config_steps.step1');
+        return view('wecommerce::back.config_steps.step1');
     }
 
     public function configStep2 ($id) 
     {
         $config = StoreConfig::find($id);
 
-        return view('back.config_steps.step2')->with('config', $config);
+        return view('wecommerce::back.config_steps.step2')->with('config', $config);
     }
 }

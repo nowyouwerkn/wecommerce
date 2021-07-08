@@ -1,12 +1,31 @@
 <?php
 
-Route::get('add/{a}/{b}', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@add');
-Route::get('subtract/{a}/{b}', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@subtract');
+// Authentication Views
+Route::get('/login', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\AuthController@login',
+    'as' => 'login',
+]);
+Route::post('/login', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\AuthController@postLogin',
+    'as' => 'login',
+]);
 
+Route::get('/register', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\AuthController@register',
+    'as' => 'register',
+]);
+
+Route::post('/register', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\AuthController@postRegister',
+    'as' => 'register',
+]);
+
+
+// Back-End Views
 Route::group(['prefix' => 'w-admin', 'middleware' => 'auth'], function(){
     //Dashboard
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@index')->name('dashboard'); //
-    Route::resource('banners', BannerController::class);
+    Route::resource('banners', 'Nowyouwerkn\WeCommerce\Controllers\BannerController');
 
     Route::post('/banners/status/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\BannerController@status',
@@ -27,10 +46,10 @@ Route::group(['prefix' => 'w-admin', 'middleware' => 'auth'], function(){
     ]);
 
     //Catalog
-    Route::resource('products', ProductController::class); //
-    Route::resource('stocks', StockController::class); //
-    Route::resource('categories', CategoryController::class); //
-    Route::resource('variants', VariantTypeController::class);
+    Route::resource('products', Nowyouwerkn\WeCommerce\Controllers\ProductController::class); //
+    Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
+    Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
+    Route::resource('variants', Nowyouwerkn\WeCommerce\Controllers\VariantTypeController::class);
     /*
     Route::post('variants/storeStock', 'VariantTypeController@storeStock')->name('variants.storeStock');
     Route::post('variants/updateStock', 'VariantTypeController@updateStock')->name('variants.updateStock');
@@ -46,56 +65,56 @@ Route::group(['prefix' => 'w-admin', 'middleware' => 'auth'], function(){
         'as' => 'stock.update',
     ]);
 
-    Route::resource('clients', ClientController::class); //
-    Route::resource('orders', OrderController::class); //
+    Route::resource('clients', Nowyouwerkn\WeCommerce\Controllers\ClientController::class); //
+    Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
 
     Route::post('/orders/{id}/cambiar-estado', [
         'uses' => 'OrderController@changeStatus',
         'as' => 'order.status',
     ]);
 
-    Route::resource('orders/notes', OrderNoteController::class); //
+    Route::resource('orders/notes', Nowyouwerkn\WeCommerce\Controllers\OrderNoteController::class); //
 
-    Route::resource('coupons', CouponController::class); //
-    Route::resource('reviews', ReviewController::class); //  
+    Route::resource('coupons', Nowyouwerkn\WeCommerce\Controllers\CouponController::class); //
+    Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class); //  
    
     //Administration
-    Route::resource('seo', SEOController::class); //
-    Route::resource('legals', LegalTextController::class);
-    Route::resource('taxes', StoreTaxController::class); //
+    Route::resource('seo', Nowyouwerkn\WeCommerce\Controllers\SEOController::class); //
+    Route::resource('legals', Nowyouwerkn\WeCommerce\Controllers\LegalTextController::class);
+    Route::resource('taxes', Nowyouwerkn\WeCommerce\Controllers\StoreTaxController::class); //
 
     Route::get('/taxes/create/{country_id}',[
         'uses' => 'StoreTaxController@create',
         'as' => 'taxes.create',
     ]);
 
-    Route::resource('users', UserController::class); //
+    Route::resource('users', Nowyouwerkn\WeCommerce\Controllers\UserController::class); //
     Route::get('user/config', 'UserController@config')->name('user.config');  //
     Route::get('user/help', 'UserController@help')->name('user.help');  //
-    Route::resource('notifications', NotificationController::class); //
-    Route::resource('payments', PaymentMethodController::class);  //
-    Route::resource('shipments', ShipmentMethodController::class);
-    Route::resource('log', LogController::class); 
+    Route::resource('notifications', Nowyouwerkn\WeCommerce\Controllers\NotificationController::class); //
+    Route::resource('payments', Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController::class);  //
+    Route::resource('shipments', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodController::class);
+    Route::resource('log', Nowyouwerkn\WeCommerce\Controllers\LogController::class); 
 
     //Country
-    Route::resource('countries', CountryController::class); 
-    Route::resource('states', StateController::class); 
-    Route::resource('cities', CityController::class); 
-    Route::resource('config', StoreConfigController::class); 
+    Route::resource('countries', Nowyouwerkn\WeCommerce\Controllers\CountryController::class); 
+    Route::resource('states', Nowyouwerkn\WeCommerce\Controllers\StateController::class); 
+    Route::resource('cities', Nowyouwerkn\WeCommerce\Controllers\CityController::class); 
+    Route::resource('config', Nowyouwerkn\WeCommerce\Controllers\StoreConfigController::class); 
 
     // Sección Soporte
     Route::get('support', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@shipping')->name('support.help');
 
     /* Rutas de Correo */
-    Route::get('send_order_email','MailController@order_email');
+    Route::get('send_order_email','Nowyouwerkn\WeCommerce\Controllers\MailController@order_email');
 
     Route::post('/resend-mail/{order_id}', [
-        'uses' => 'MailController@resendOrder',
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\MailController@resendOrder',
         'as' => 'resend.order.mail',
     ]);
 });
 
-/* Shopping Cart */
+// Shopping Cart
 Route::get('/cart/{id}/{variant}',[
 	'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@addCart',
 	'as' => 'add-cart',
@@ -121,7 +140,7 @@ Route::get('/delete/{id}/{variant}',[
 	'as' => 'cart.delete',
 ]);
 
-/* Wishlist */
+// Wishlist
 Route::get('/wishlist/add/{id}', [
 	'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WishlistController@add',
 	'as' => 'wishlist.add',
@@ -139,8 +158,7 @@ Route::get('/xml-feed', [
 ]);
 
 
-/* ISNTALADOR */
-
+// INSTALADOR 
 Route::prefix('/instalador')->group(function () {
     Route::get('/', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@index',
@@ -180,12 +198,8 @@ Route::prefix('/instalador')->group(function () {
     ]);
 });
 
-/* --- 
 
-    Routes Front 
-
---- */
-
+// FRONT VIEWS
 Route::prefix('/')->group(function () {
     //Views
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@index')->name('index');
@@ -210,7 +224,7 @@ Route::prefix('/')->group(function () {
 
     /* Search Functions */
     Route::get('/busqueda-general', [
-        'uses' => 'SearchController@query',
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\SearchController@query',
         'as' => 'search.query',
     ]);
 
@@ -227,7 +241,6 @@ Route::prefix('/')->group(function () {
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@applyCuopon',
         'as' => 'apply.cuopon',
     ]);
-
 
     //Route::get('auth', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@auth')->name('auth');
 

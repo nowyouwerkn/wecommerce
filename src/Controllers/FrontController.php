@@ -81,12 +81,12 @@ class FrontController extends Controller
         $products = $query->paginate(30)->withQueryString();
 
         if($products->count() > 0){
-            return view('front.werkn-backbone.catalog_filter')
+            return view('wecommerce::front.werkn-backbone.catalog_filter')
             ->with('products', $products);
         }else{
             $products = collect([]);
 
-            return view('front.werkn-backbone.catalog_filter')
+            return view('wecommerce::front.werkn-backbone.catalog_filter')
             ->with('products', $products);
         }
     }
@@ -95,7 +95,7 @@ class FrontController extends Controller
     {
         $products = Product::orderBy('created_at', 'desc')->paginate(15);
 
-        return view('front.werkn-backbone.catalog')
+        return view('wecommerce::front.werkn-backbone.catalog')
         ->with('products', $products);
     }
 
@@ -105,7 +105,7 @@ class FrontController extends Controller
         $catalog = Category::where('slug', $category_slug)->first();
         $products = Product::where('category_id', $catalog->id)->paginate(15);
 
-        return view('front.werkn-backbone.catalog')
+        return view('wecommerce::front.werkn-backbone.catalog')
         ->with('catalog', $catalog)
         ->with('products', $products);
     }
@@ -120,7 +120,7 @@ class FrontController extends Controller
         if (empty($product)) {
             return redirect()->back();
         }else{
-            return view('front.werkn-backbone.detail')
+            return view('wecommerce::front.werkn-backbone.detail')
             ->with('product', $product)
             ->with('products_selected', $products_selected);
         }
@@ -131,10 +131,10 @@ class FrontController extends Controller
         $variants = collect();
 
         // Regresar a Vista
-        //return view('front.werkn-backbone.detail')->with('product', $product)->with('products_selected', $products_selected)->with('variants');
+        //return view('wecommerce::front.werkn-backbone.detail')->with('product', $product)->with('products_selected', $products_selected)->with('variants');
         */
 
-        //return view('front.werkn-backbone.detail', compact('product', 'products_selected', 'variants' ));
+        //return view('wecommerce::front.werkn-backbone.detail', compact('product', 'products_selected', 'variants' ));
     }
 
     public function cart ()
@@ -146,7 +146,7 @@ class FrontController extends Controller
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
 
-        return view('front.werkn-backbone.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice);
+        return view('wecommerce::front.werkn-backbone.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice);
     }
 
     public function checkout ()
@@ -173,7 +173,7 @@ class FrontController extends Controller
 
             $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-           return view('front.werkn-backbone.checkout')
+           return view('wecommerce::front.werkn-backbone.checkout')
            ->with('total', $total)
            ->with('user', $user)
            ->with('addresses', $addresses)
@@ -191,7 +191,7 @@ class FrontController extends Controller
 
             $addresses = UserAddress::where('user_id', '000998')->get();
 
-            return view('front.werkn-backbone.checkout')
+            return view('wecommerce::front.werkn-backbone.checkout')
             ->with('total', $total)
             ->with('addresses', $addresses)
             ->with('payment_method', $payment_method)
@@ -642,41 +642,41 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
-        return view('front.werkn-backbone.profile')->with('order', $order)->with('purchase_value', $purchase_value);
+        return view('wecommerce::front.werkn-backbone.profile')->with('order', $order)->with('purchase_value', $purchase_value);
     }
 
     public function auth ()
     {
-        return view('front.werkn-backbone.auth');
+        return view('wecommerce::front.werkn-backbone.auth');
     }
 
     //Profile
     public function profile ()
     {
-        return view('front.werkn-backbone.profile');
+        return view('wecommerce::front.werkn-backbone.profile');
     }
 
     public function wishlist ()
     {
         $wishlist = Wishlist::where('user_id', Auth::user()->id)->get();
 
-        return view('front.werkn-backbone.wishlist')->with('wishlist', $wishlist);
+        return view('wecommerce::front.werkn-backbone.wishlist')->with('wishlist', $wishlist);
     }
 
     public function shopping ()
     {
-        return view('front.werkn-backbone.shopping');
+        return view('wecommerce::front.werkn-backbone.shopping');
     }
 
     public function address ()
     {
         $addresses = UserAddress::paginate(10);
-        return view('front.werkn-backbone.address', compact('addresses'));
+        return view('wecommerce::front.werkn-backbone.address', compact('addresses'));
     }
 
     public function account ()
     {
-        return view('front.werkn-backbone.account');
+        return view('wecommerce::front.werkn-backbone.account');
     }
 
     public function applyCuopon(Request $request){

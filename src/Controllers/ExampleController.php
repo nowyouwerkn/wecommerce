@@ -8,7 +8,7 @@ use Session;
 use Auth;
 
 // Modelos
-use App\Models\Category;
+use Nowyouwerkn\WeCommerce\Models\Category;
 
 use Illuminate\Http\Request;
 

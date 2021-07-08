@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use DB;
 
-use App\Models\Product;
+use Nowyouwerkn\WeCommerce\Models\Product;
 
 use Illuminate\Http\Request;
 
@@ -23,6 +23,6 @@ class SearchController extends Controller
             $query->where(strtolower('name'), 'LIKE', '%' . strtolower($search_query) . '%');
         })->paginate(30);
 
-        return view('front.werkn-backbone.search.general_query')->with('products', $products);
+        return view('wecommerce::front.werkn-backbone.search.general_query')->with('products', $products);
     }
 }

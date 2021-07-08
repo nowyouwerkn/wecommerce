@@ -7,7 +7,7 @@ use Session;
 use Auth;
 use Carbon\Carbon;
 
-use App\Models\PaymentMethod;
+use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
 use Illuminate\Http\Request;
 
 class PaymentMethodController extends Controller
@@ -22,7 +22,7 @@ class PaymentMethodController extends Controller
         $openpay_method = PaymentMethod::where('type', 'card')->where('supplier', 'OpenPay')->first();
         $paypal_method = PaymentMethod::where('type', 'card')->where('supplier', 'Paypal')->first();
 
-        return view('back.payments.index')
+        return view('wecommerce::back.payments.index')
         ->with('payments', $payments)
         ->with('conekta_method', $conekta_method)
         ->with('oxxo_pay', $oxxo_pay)
@@ -33,7 +33,7 @@ class PaymentMethodController extends Controller
 
     public function create()
     {
-        return view('back.payments.create');
+        return view('wecommerce::back.payments.create');
     }
 
     public function store(Request $request)
@@ -87,12 +87,12 @@ class PaymentMethodController extends Controller
 
     public function show(PaymentMethod $paymentMethod)
     {
-        return view('back.payments.show', compact('paymentMethod'));
+        return view('wecommerce::back.payments.show', compact('paymentMethod'));
     }
 
     public function edit(PaymentMethod $paymentMethod)
     {
-        return view('back.payments.edit', compact('paymentMethod'));
+        return view('wecommerce::back.payments.edit', compact('paymentMethod'));
     }
 
     public function update(Request $request, PaymentMethod $paymentMethod)

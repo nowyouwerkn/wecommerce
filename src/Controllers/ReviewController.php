@@ -5,8 +5,8 @@ use App\Http\Controllers\Controller;
 
 use Session;
 
-use App\Models\Product;
-use App\Models\Review;
+use Nowyouwerkn\WeCommerce\Models\Product;
+use Nowyouwerkn\WeCommerce\Models\Review;
 
 use Illuminate\Http\Request;
 
@@ -18,7 +18,7 @@ class ReviewController extends Controller
 
         $reviews_pending = Review::where('is_approved', false)->get();
 
-        return view('back.reviews.index')->with('reviews', $reviews)->with('reviews_pending', $reviews_pending);
+        return view('wecommerce::back.reviews.index')->with('reviews', $reviews)->with('reviews_pending', $reviews_pending);
     }
 
     public function create()

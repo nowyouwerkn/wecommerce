@@ -8,8 +8,8 @@ use Auth;
 use Image;
 use Str;
 
-use App\Models\SEO;
-use App\Models\StoreConfig;
+use Nowyouwerkn\WeCommerce\Models\SEO;
+use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 use Illuminate\Http\Request;
 
 class StoreConfigController extends Controller

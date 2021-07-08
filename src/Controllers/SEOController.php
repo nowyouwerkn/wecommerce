@@ -8,7 +8,7 @@ use Auth;
 use Image;
 use Str;
 
-use App\Models\SEO;
+use Nowyouwerkn\WeCommerce\Models\SEO;
 use Illuminate\Http\Request;
 
 class SEOController extends Controller
@@ -18,12 +18,12 @@ class SEOController extends Controller
     {
         $seo = SEO::take(1)->first();
 
-        return view('back.seo.index')->with('seo', $seo);
+        return view('wecommerce::back.seo.index')->with('seo', $seo);
     }
 
     public function create()
     {
-        return view('back.seo.create');
+        return view('wecommerce::back.seo.create');
     }
 
     public function store(Request $request)
@@ -33,12 +33,12 @@ class SEOController extends Controller
 
     public function show(SEO $sEO)
     {
-        return view('back.seo.show', compact('seo'));
+        return view('wecommerce::back.seo.show', compact('seo'));
     }
 
     public function edit(SEO $sEO)
     {
-        return view('back.seo.edit', compact('seo'));
+        return view('wecommerce::back.seo.edit', compact('seo'));
     }
 
     public function update(Request $request, $id)

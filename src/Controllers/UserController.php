@@ -10,12 +10,12 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('back.users.index');
+        return view('wecommerce::back.users.index');
     }
 
     public function create()
     {
-        return view('back.users.create');
+        return view('wecommerce::back.users.create');
     }
 
     public function store(Request $request)
@@ -25,12 +25,12 @@ class UserController extends Controller
 
     public function show($id)
     {
-        return view('back.users.show', compact('id'));
+        return view('wecommerce::back.users.show', compact('id'));
     }
 
     public function edit($id)
     {
-        return view('back.users.edit', compact('id'));
+        return view('wecommerce::back.users.edit', compact('id'));
     }
 
     public function update(Request $request, $id)
@@ -45,6 +45,6 @@ class UserController extends Controller
 
     public function config()
     {
-        return view('back.users.config');
+        return view('wecommerce::back.users.config');
     }
 }

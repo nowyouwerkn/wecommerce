@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use Session;
 use Auth;
 
-use App\Models\StoreTax;
-use App\Models\Country;
+use Nowyouwerkn\WeCommerce\Models\StoreTax;
+use Nowyouwerkn\WeCommerce\Models\Country;
 
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class StoreTaxController extends Controller
     {   
         $countries = Country::all();
 
-        return view('back.taxes.index')
+        return view('wecommerce::back.taxes.index')
         ->with('countries', $countries);
     }
 
@@ -27,7 +27,7 @@ class StoreTaxController extends Controller
 
         $tax = StoreTax::where('country_id', $country->id)->where('parent_tax_id', NULL)->first();
 
-        return view('back.taxes.create')->with('country', $country)->with('tax', $tax);
+        return view('wecommerce::back.taxes.create')->with('country', $country)->with('tax', $tax);
     }
 
     public function store(Request $request)
@@ -65,12 +65,12 @@ class StoreTaxController extends Controller
 
     public function show($id)
     {
-        return view('back.taxes.show', compact('taxes'));
+        return view('wecommerce::back.taxes.show', compact('taxes'));
     }
 
     public function edit($id)
     {
-        return view('back.taxes.edit', compact('taxes'));
+        return view('wecommerce::back.taxes.edit', compact('taxes'));
     }
 
     public function update(Request $request, $id)

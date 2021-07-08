@@ -8,11 +8,11 @@ use Carbon\Carbon;
 use Auth;
 use Storage;
 
-use App\Models\User;
-use App\Models\Client;
-use App\Models\UserAddress;
+use Nowyouwerkn\WeCommerce\Models\User;
+use Nowyouwerkn\WeCommerce\Models\Client;
+use Nowyouwerkn\WeCommerce\Models\UserAddress;
 
-use App\Models\Wishlist;
+use Nowyouwerkn\WeCommerce\Models\Wishlist;
 
 use Illuminate\Http\Request;
 
@@ -34,7 +34,7 @@ class ClientController extends Controller
         $wishlists_today = Wishlist::where('created_at', '<=', $today)
         ->count();
 
-        return view('back.clients.index')
+        return view('wecommerce::back.clients.index')
         ->with('clients', $clients)
         ->with('new_clients', $new_clients)
         ->with('clients_today', $clients_today)
@@ -55,14 +55,14 @@ class ClientController extends Controller
             return $order;
         });
 
-        return view('back.clients.show')->with('client', $client)->with('wishlist', $wishlist)->with('addresses', $addresses)->with('orders', $orders);
+        return view('wecommerce::back.clients.show')->with('client', $client)->with('wishlist', $wishlist)->with('addresses', $addresses)->with('orders', $orders);
     }
 
     public function indexWishlist()
     {
         $wishlists = Wishlist::all();
 
-        return view('back.clients.filters.wishlist')
+        return view('wecommerce::back.clients.filters.wishlist')
         ->with('wishlists', $wishlists);
     }
 
@@ -70,7 +70,7 @@ class ClientController extends Controller
     {
         $clients = User::where('created_at', '>=', Carbon::now()->subWeek())->get();
 
-        return view('back.clients.filters.new')
+        return view('wecommerce::back.clients.filters.new')
         ->with('clients', $clients);
     }
 

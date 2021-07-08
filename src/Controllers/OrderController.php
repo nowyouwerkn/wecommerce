@@ -9,12 +9,12 @@ use Auth;
 use Storage;
 use Session;
 
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Size;
-use App\Models\ProductSize;
+use Nowyouwerkn\WeCommerce\Models\User;
+use Nowyouwerkn\WeCommerce\Models\Order;
+use Nowyouwerkn\WeCommerce\Models\Size;
+use Nowyouwerkn\WeCommerce\Models\ProductSize;
 
-use App\Models\PaymentMethod;
+use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
 
 
 use Illuminate\Http\Request;
@@ -38,7 +38,7 @@ class OrderController extends Controller
 
         $new_orders = Order::where('created_at', '>=', Carbon::now()->subWeek())->count();
 
-        return view('back.orders.index')
+        return view('wecommerce::back.orders.index')
         ->with('clients', $clients)
         ->with('orders', $orders)
         ->with('new_orders', $new_orders);
@@ -53,7 +53,7 @@ class OrderController extends Controller
         $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
         $shipping_method = '0';
 
-        return view('back.orders.show')
+        return view('wecommerce::back.orders.show')
         ->with('order', $order)
         ->with('payment_method', $payment_method)
         ->with('shipping_method', $shipping_method);

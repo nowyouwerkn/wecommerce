@@ -9,11 +9,11 @@ use Purifier;
 use Storage;
 use Image;
 
-use App\Models\Product;
-use App\Models\Category;
-use App\Models\ProductSize;
-use App\Models\ProductImage;
-use App\Models\ProductVariant;
+use Nowyouwerkn\WeCommerce\Models\Product;
+use Nowyouwerkn\WeCommerce\Models\Category;
+use Nowyouwerkn\WeCommerce\Models\ProductSize;
+use Nowyouwerkn\WeCommerce\Models\ProductImage;
+use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -24,14 +24,14 @@ class ProductController extends Controller
     {
         $products = Product::paginate(15);
 
-        return view('back.products.index')->with('products', $products);
+        return view('wecommerce::back.products.index')->with('products', $products);
     }
 
     public function create()
     {
         $categories = Category::all();
 
-        return view('back.products.create')
+        return view('wecommerce::back.products.create')
         ->with('categories', $categories);
     }
 
@@ -108,7 +108,7 @@ class ProductController extends Controller
         $product = Product::find($id);
         $variant_stock = ProductVariant::where('product_id', $product->id)->get();
 
-        return view('back.products.show')->with('product', $product)->with('variant_stock', $variant_stock);
+        return view('wecommerce::back.products.show')->with('product', $product)->with('variant_stock', $variant_stock);
     }
 
     public function storeImage(Request $request)
@@ -208,7 +208,7 @@ class ProductController extends Controller
         $product = Product::find($id);
         $categories = Category::all();
 
-        return view('back.products.edit')
+        return view('wecommerce::back.products.edit')
         ->with('product', $product)
         ->with('categories', $categories);
     }

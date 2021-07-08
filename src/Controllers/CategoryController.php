@@ -8,7 +8,7 @@ use Auth;
 use Image;
 use Str;
 
-use App\Models\Category;
+use Nowyouwerkn\WeCommerce\Models\Category;
 use Illuminate\Http\Request;
 
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -20,14 +20,14 @@ class CategoryController extends Controller
         $categories = Category::where('parent_id', 0)->orWhere('parent_id', NULL)->paginate(15);
         $categories_all = Category::all()->count();
 
-        return view('back.categories.index')->with('categories', $categories)->with('categories_all', $categories_all);
+        return view('wecommerce::back.categories.index')->with('categories', $categories)->with('categories_all', $categories_all);
     }
 
     public function create()
     {
         $categories = Category::where('parent_id', 0)->orWhere('parent_id', NULL)->paginate(10);
 
-        return view('back.categories.create')->with('categories', $categories);
+        return view('wecommerce::back.categories.create')->with('categories', $categories);
     }
 
     public function store(Request $request)
@@ -76,14 +76,14 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
 
-        return view('back.categories.show')->with('category', $category);
+        return view('wecommerce::back.categories.show')->with('category', $category);
     }
 
     public function edit($id)
     {
         $category = Category::find($id);
 
-        return view('back.categories.show')->with('category', $category);
+        return view('wecommerce::back.categories.show')->with('category', $category);
     }
 
     public function update(Request $request, $id)

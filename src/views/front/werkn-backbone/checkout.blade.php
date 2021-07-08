@@ -1,4 +1,4 @@
-@extends('front.werkn-backbone.layouts.main')
+@extends('wecommerce::front.werkn-backbone.layouts.main')
 
 @push('seo')
 
@@ -116,7 +116,7 @@
                                             <div class="form-group mb-3">
                                                 <label for="state">Estado <span class="text-danger">*</span></label>
                                                 @php
-                                                    $states = App\Models\State::all();
+                                                    $states = Nowyouwerkn\WeCommerce\Models\State::all();
                                                 @endphp
                                                 <select class="form-control" id="state" name="state" data-parsley-trigger="change" required="">
                                                     @foreach($states as $state)
@@ -370,7 +370,7 @@
                                     {{ csrf_field() }}
 
                                     @php
-                                        $legals = App\Models\LegalText::all();
+                                        $legals = Nowyouwerkn\WeCommerce\Models\LegalText::all();
                                     @endphp
                                     <p class="mb-2 terms-links text-center"><small>
                                         Al confirmar la orden, aceptas nuestros 

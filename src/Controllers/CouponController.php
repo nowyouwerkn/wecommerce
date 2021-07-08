@@ -7,7 +7,7 @@ use Session;
 use Auth;
 use Purifier;
 
-use App\Models\Coupon;
+use Nowyouwerkn\WeCommerce\Models\Coupon;
 use Illuminate\Http\Request;
 
 class CouponController extends Controller
@@ -17,12 +17,12 @@ class CouponController extends Controller
     {
         $coupons = Coupon::paginate(10);
 
-        return view('back.coupons.index')->with('coupons', $coupons);
+        return view('wecommerce::back.coupons.index')->with('coupons', $coupons);
     }
 
     public function create()
     {
-        return view('back.coupons.create');
+        return view('wecommerce::back.coupons.create');
     }
 
     public function store(Request $request)

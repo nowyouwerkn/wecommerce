@@ -3,7 +3,7 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
-use App\Models\ShipmentMethod;
+use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
 use Illuminate\Http\Request;
 
 class ShipmentMethodController extends Controller
@@ -14,14 +14,14 @@ class ShipmentMethodController extends Controller
 
         $ups_method = ShipmentMethod::where('supplier', 'UPS')->first();
 
-        return view('back.shipments.index')
+        return view('wecommerce::back.shipments.index')
         ->with('shipments', $shipments)
         ->with('ups_method', $ups_method);
     }
 
     public function create()
     {
-        return view('back.shipments.create');
+        return view('wecommerce::back.shipments.create');
     }
 
     public function store(Request $request)
@@ -75,12 +75,12 @@ class ShipmentMethodController extends Controller
 
     public function show(ShipmentMethod $shipmentMethod)
     {
-        return view('back.shipments.show', compact('shipmentMethod'));
+        return view('wecommerce::back.shipments.show', compact('shipmentMethod'));
     }
 
     public function edit(ShipmentMethod $shipmentMethod)
     {
-        return view('back.shipments.edit', compact('shipmentMethod'));
+        return view('wecommerce::back.shipments.edit', compact('shipmentMethod'));
     }
 
     public function update(Request $request, ShipmentMethod $shipmentMethod)

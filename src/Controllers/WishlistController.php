@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Session;
 use Auth;
 
-use App\Models\Cart;
-use App\Models\Wishlist;
-use App\Models\Product;
+use Nowyouwerkn\WeCommerce\Models\Cart;
+use Nowyouwerkn\WeCommerce\Models\Wishlist;
+use Nowyouwerkn\WeCommerce\Models\Product;
 
 use Illuminate\Http\Request;
 
@@ -19,7 +19,7 @@ class WishlistController extends Controller
         $product = Product::all();
         $wishlist = Wishlist::where('user_id', Auth::user()->id)->get();
 
-        return view ('user-profile.wishlist.index')->with('wishlist', $wishlist)->with('product', $product);
+        return view ('wecommerce::user-profile.wishlist.index')->with('wishlist', $wishlist)->with('product', $product);
     }
 
     public function add($id)

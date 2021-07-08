@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Auth;
 use Session;
 
-use App\Models\OrderNote;
+use Nowyouwerkn\WeCommerce\Models\OrderNote;
 use Illuminate\Http\Request;
 
 class OrderNoteController extends Controller

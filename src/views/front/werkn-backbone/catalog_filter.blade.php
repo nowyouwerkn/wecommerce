@@ -1,4 +1,4 @@
-@extends('front.werkn-backbone.layouts.main')
+@extends('wecommerce::front.werkn-backbone.layouts.main')
 
 @push('seo')
 
@@ -23,9 +23,9 @@
             <div class="col-xl-3 col-lg-4">
                 <form method="get" action="{{ route('dynamic.filter.front') }}" id="product_filter_form">
                     @php
-                        $popular_products = App\Models\Product::where('is_favorite', true)->get();
-                        $categories = \App\Models\Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
-                        $variants = \App\Models\Variant::get();
+                        $popular_products = Nowyouwerkn\WeCommerce\Models\Product::where('is_favorite', true)->get();
+                        $categories = \Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
+                        $variants = \Nowyouwerkn\WeCommerce\Models\Variant::get();
                     @endphp
 
                     <aside class="shop-sidebar pr-5">
@@ -139,7 +139,7 @@
                 <div class="row">
                     @foreach($products as $product_info)
                     <div class="col-xl-4 col-sm-6">
-                        @include('front.werkn-backbone.layouts._product_card')
+                        @include('wecommerce::front.werkn-backbone.layouts._product_card')
                     </div>
                     @endforeach
                 </div>

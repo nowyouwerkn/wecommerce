@@ -3,7 +3,7 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
-use App\Models\Notification;
+use Nowyouwerkn\WeCommerce\Models\Notification;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -11,12 +11,12 @@ class NotificationController extends Controller
 
     public function index()
     {
-        return view('back.notifications.index');
+        return view('wecommerce::back.notifications.index');
     }
 
     public function create()
     {
-        return view('back.notifications.create');
+        return view('wecommerce::back.notifications.create');
     }
 
     public function store(Request $request)
@@ -26,12 +26,12 @@ class NotificationController extends Controller
 
     public function show(Notification $notification)
     {
-        return view('back.notifications.show', compact('notification'));
+        return view('wecommerce::back.notifications.show', compact('notification'));
     }
 
     public function edit(Notification $notification)
     {
-        return view('back.notifications.show', compact('notification'));
+        return view('wecommerce::back.notifications.show', compact('notification'));
     }
 
     public function update(Request $request, Notification $notification)

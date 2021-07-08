@@ -1,4 +1,4 @@
-@extends('front.werkn-backbone.layouts.main')
+@extends('wecommerce::front.werkn-backbone.layouts.main')
 
 @push('seo')
 
@@ -25,7 +25,7 @@
             <!-- Content -->
             <div class="row mt-3">
                 <div class="col-md-3">
-                    @include('front.layouts.nav-user')
+                    @include('wecommerce::front.layouts.nav-user')
                 </div>
 
                 <div class="col-md-9">

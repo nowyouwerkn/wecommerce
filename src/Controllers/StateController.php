@@ -3,7 +3,7 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
-use App\Models\State;
+use Nowyouwerkn\WeCommerce\Models\State;
 use Illuminate\Http\Request;
 
 class StateController extends Controller
@@ -11,12 +11,12 @@ class StateController extends Controller
 
     public function index()
     {
-        return view('back.states.index');
+        return view('wecommerce::back.states.index');
     }
 
     public function create()
     {
-        return view('back.states.create');
+        return view('wecommerce::back.states.create');
     }
 
     public function store(Request $request)
@@ -26,12 +26,12 @@ class StateController extends Controller
 
     public function show(State $state)
     {
-        return view('back.states.show', compact('state'));
+        return view('wecommerce::back.states.show', compact('state'));
     }
 
     public function edit(State $state)
     {
-        return view('back.states.edit', compact('state'));
+        return view('wecommerce::back.states.edit', compact('state'));
     }
 
     public function update(Request $request, State $state)
