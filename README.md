@@ -13,10 +13,10 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">project_title</h3>
+  <h3 align="center">Werkn E-Commerce</h3>
 
   <p align="center">
-    project_description
+    La paltaforma autoadministrable de e-commerce de Werkn
     <br />
     <a href="https://github.com/nowyouwerkn/wecommerce"><strong>Lee la documentación »</strong></a>
     <br />
@@ -153,9 +153,9 @@ Link de Proyecto: [https://github.com/nowyouwerkn/wecommerce](https://github.com
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [forks-shield]:   https://img.shields.io/github/forks/nowyouwerkn/wecommerce
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
+[forks-url]: https://github.com/nowyouwerkn/wecommerce/network/members
 [stars-shield]: https://img.shields.io/github/stars/nowyouwerkn/wecommerce
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
+[stars-url]: https://github.com/nowyouwerkn/wecommerce/stargazers
 [issues-shield]: hhttps://img.shields.io/github/issues/nowyouwerkn/wecommerce
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
+[issues-url]: https://github.com/nowyouwerkn/wecommerce/issues
 [product-screenshot]: images/screenshot.png
