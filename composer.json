@@ -1,0 +1,13 @@
+{
+    "name": "nowyouwerkn/wecommerce",
+    "description": "eCommerce ecosystem to build and scale our clients businesses.",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Werkn",
+            "email": "hey@werkn.mx"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

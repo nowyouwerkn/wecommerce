@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateProductVariantsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('product_variants', function (Blueprint $table) {
+            $table->id();
+
+            $table->integer('product_id')->unsigned();
+            $table->integer('variant_id')->unsigned();
+
+            $table->string('stock')->nullable();
+            $table->string('new_price')->nullable();
+            $table->string('sku')->nullable();
+            $table->string('barcode')->nullable();
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('product_variants');
+    }
+}
