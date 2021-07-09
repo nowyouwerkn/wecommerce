@@ -30,11 +30,13 @@
     "prefer-stable": true,
     "require":{
         "php": "^7.3|^8.0",
+        "ext-fileinfo": "*",
         "laravel/framework": "^8.12",
         "conekta/conekta-php": "^4.3",
         "facebook/php-business-sdk": "^10.0",
         "gabrielbull/ups-api": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "guzzlehttp/psr7": "~1.1",
         "intervention/image": "^2.5",
         "laravel/fortify": "^1.7",
         "mews/purifier": "^3.3",
