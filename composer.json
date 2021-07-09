@@ -15,6 +15,12 @@
             "name": "Jorge Peña Lama",
             "email": "jorge.pena@werkn.mx",
             "homepage" : "https://werkn.mx",
+            "role": "Project Manager"
+        },
+        {
+            "name": "Moisés Arrona",
+            "email": "tech@werkn.mx",
+            "homepage" : "https://werkn.mx",
             "role": "Developer"
         }
     ],
@@ -25,8 +31,6 @@
     "require":{
         "php": "^7.3|^8.0",
         "laravel/framework": "^8.12",
-    },
-    "provide": {
         "conekta/conekta-php": "^4.3",
         "facebook/php-business-sdk": "^10.0",
         "gabrielbull/ups-api": "^2.0",
@@ -41,7 +45,6 @@
         "stripe/stripe-php": "^7.77"
     },
     "require-dev": {
-
     },
     "autoload": {
         "psr-4": {
