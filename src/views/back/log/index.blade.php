@@ -1,4 +1,4 @@
-@extends('back.layouts.main')
+@extends('wecommerce::back.layouts.main')
 
 @section('content')
     index log

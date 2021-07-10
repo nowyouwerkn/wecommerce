@@ -1,4 +1,4 @@
-@extends('back.layouts.config')
+@extends('wecommerce::back.layouts.config')
 
 @section('title')
     <div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">

@@ -77,7 +77,7 @@
                 @yield('title')
                 <div class="row row-xs">
                     <div class="col-md-6">
-                        @include('back.layouts.partials._messages')
+                        @include('wecommerce::back.layouts.partials._messages')
                     </div>
                 </div>
                 

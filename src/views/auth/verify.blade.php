@@ -1,4 +1,4 @@
-@extends('back.layouts.auth')
+@extends('wecommerce::back.layouts.auth')
 
 @section('content')
     <div class="container">

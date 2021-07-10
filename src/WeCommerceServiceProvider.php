@@ -28,13 +28,14 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
         $this->loadViewsFrom(__DIR__.'/views', 'wecommerce');
 
+        // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
         $this->publishes([
             __DIR__.'/views/front' => resource_path('views/front/theme/'),
         ]);
 
         // Publicar Assets
         $this->publishes([
-            __DIR__.'/assets' => public_path('/assets'),
+            __DIR__.'/assets' => public_path(''),
         ], 'public');
     }
 }

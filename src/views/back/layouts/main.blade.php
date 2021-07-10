@@ -62,13 +62,13 @@
 
     <div class="content ht-100v pd-0">
         <!-- Header -->
-        @include('back.layouts.header')
+        @include('wecommerce::back.layouts.header')
 
         <div class="content-body">
             <div class="container pd-x-0">
                 <!-- Title -->
                 @yield('title')
-                @include('back.layouts.partials._messages')
+                @include('wecommerce::back.layouts.partials._messages')
                 <!-- Content -->
                 @yield('content')
             </div>
