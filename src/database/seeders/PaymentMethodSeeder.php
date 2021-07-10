@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\PaymentMethod; 
+use Nowyouwerkn\WeCommerce\Models\PaymentMethod; 
 
 class PaymentMethodSeeder extends Seeder
 {

@@ -2,7 +2,7 @@
 
 namespace Nowyouwerkn\WeCommerce\Models;
 
-use App\Models\Product;
+use Nowyouwerkn\WeCommerce\Models\Product;
 
 class Cart
 {

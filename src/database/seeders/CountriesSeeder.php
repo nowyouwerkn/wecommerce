@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Country;
+use Nowyouwerkn\WeCommerce\Models\Country;
 
 class CountriesSeeder extends Seeder
 {

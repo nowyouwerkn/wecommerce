@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\LegalText;
+use Nowyouwerkn\WeCommerce\Models\LegalText;
 
 class LegalTextSeeder extends Seeder
 {
