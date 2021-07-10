@@ -29,12 +29,12 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/views', 'wecommerce');
 
         $this->publishes([
-            __DIR__.'/../resources/views' => resource_path('vendor/nowyouwerkn/wecommerce/src/views/front/werkn-backbone'),
+            __DIR__.'/../views/front' => resource_path('views/front/theme/'),
         ]);
 
         // Publicar Assets
         $this->publishes([
-            __DIR__.'/../public' => public_path('vendor/nowyouwerkn/wecommerce/src/assets'),
+            __DIR__.'/../assets' => public_path('/assets'),
         ], 'public');
     }
 }
