@@ -33,9 +33,14 @@ class WeCommerceServiceProvider extends ServiceProvider
             __DIR__.'/views/front' => resource_path('views/front/theme/'),
         ]);
 
-        // Publicar Assets
+        // Publicar Assets de Estilos
         $this->publishes([
             __DIR__.'/assets' => public_path(''),
         ], 'public');
+
+        // Publicar archivos de config
+        $this->publishes([
+            __DIR__.'/config' => config_path(''),
+        ]);
     }
 }

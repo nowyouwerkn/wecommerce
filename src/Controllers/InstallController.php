@@ -2,6 +2,7 @@
 
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
+
 use Str;
 use Config;
 use Artisan;
@@ -58,7 +59,7 @@ class InstallController extends Controller
             try {
                 Storage::disk('root')->put('.env', $envFileData);
             } catch (Exception $e) {
-                return response()->json(['mensaje' => 'Información mal formada. Recarga la página e intenta de nuevo.'], 500);
+                return response()->json(['mensaje' => 'Información mal formada. Recarga la página e intenta de nuevo. Posiblemente falta configurar las rutas de tu disco.'], 500);
             }    
         }
 
