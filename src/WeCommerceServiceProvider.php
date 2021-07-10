@@ -42,5 +42,13 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config' => config_path(''),
         ]);
+
+        // Publicar archivos de base de datos
+        $this->publishes([
+            __DIR__.'/database/migrations' => database_path('migrations/'),
+        ]);
+        $this->publishes([
+            __DIR__.'/database/seeders' => database_path('seeders/'),
+        ]);
     }
 }

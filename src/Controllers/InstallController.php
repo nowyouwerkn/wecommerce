@@ -37,6 +37,8 @@ class InstallController extends Controller
         if (empty($request)) {
             return response()->json(['mensaje' => 'No completaste la información de conexión a la DB'], 500);
         }else{
+            Artisan::call('cache:clear');
+            
             Config::set('database.connections.mysql.host', '127.0.0.1');
             Config::set('database.connections.mysql.port', $request->db_port);
             Config::set('database.connections.mysql.database', $request->db_database);
