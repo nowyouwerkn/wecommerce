@@ -68,36 +68,57 @@
 <!-- GETTING STARTED -->
 ## Comenzando
 
-To get a local copy up and running follow these simple steps.
+Para comenzar a usar este paquete debes usar el siguiente comando para agregarlo a tu instalación de Laravel.
+```
+composer require nowyouwerkn/wecommerce
+```
+
+Opcional: el proveedor de servicios se registrará automáticamente. O puede agregar manualmente el proveedor de servicios en su archivo config / app.php:
+
+```
+'providers' => [
+    // ...
+    Nowyouwerkn\WeCommerce\WeCommerceServiceProvider::class,
+];
+```
+
+Publica todos los assets usando
+```
+php artisan vendor:publish --provider="Nowyouwerkn\WeCommerce\WeCommerceServiceProvider" --force
+```
+
+Limpia el caché de tu configuración
+```
+php artisan optimize:clear
+#o
+php artisan config:clear
+```
+
+El sistema necesita utilizar la ruta "/" que está utilizada por Laravel como vista de ejemplo. Accede al documento routes.php de tu proyecto de Laravel y comenta o borra la ruta predeterminada que esté en el sistema.
+
+Al realizarlo puedes usar 
+```
+php artisan serve
+```
+para prender tu servidor y acceder a /instalador para comenzar la instalación.
+
+Si prefieres preparar manualmente el proyecto sigue los siguientes comandos.
+
+```
+php artisan migrate
+php artisan db:seed
+```
 
 ### Pre-requisitos
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+
 
 ### Instalacion
-
-1. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
 
 
 
 <!-- USAGE EXAMPLES -->
 ## Uso
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
 
 
 <!-- ROADMAP -->

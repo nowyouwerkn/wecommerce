@@ -13,13 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(Nowyouwerkn\WeCommerce\database\seeders\PermissionsSeeder::class);
-        $this->call(Nowyouwerkn\WeCommerce\database\seeders\RolesSeeder::class);
-        $this->call(Nowyouwerkn\WeCommerce\database\seeders\UserSeeder::class);
+        $this->call(PermissionsSeeder::class);
+        $this->call(RolesSeeder::class);
+        $this->call(UserSeeder::class);
 
-        $this->call(Nowyouwerkn\WeCommerce\database\seeders\CurrencySeeder::class);
-        $this->call(Nowyouwerkn\WeCommerce\database\seeders\CountriesSeeder::class);
-        $this->call(Nowyouwerkn\WeCommerce\database\seeders\PaymentMethodSeeder::class);
-        $this->call(Nowyouwerkn\WeCommerce\database\seeders\LegalTextSeeder::class);
+        $this->call(CurrencySeeder::class);
+        $this->call(CountriesSeeder::class);
+        $this->call(PaymentMethodSeeder::class);
+        $this->call(LegalTextSeeder::class);
     }
 }
