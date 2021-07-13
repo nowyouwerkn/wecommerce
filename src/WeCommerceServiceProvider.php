@@ -101,7 +101,7 @@ class WeCommerceServiceProvider extends ServiceProvider
         ]);
 
         $this->publishes([
-            __DIR__.'/database/seeders/DatabaseSeeder.php' => database_path('seeders/'),
+            __DIR__.'/database/seeders' => database_path('seeders/'),
         ]);
     }
 
