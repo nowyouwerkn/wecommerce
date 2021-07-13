@@ -5,7 +5,7 @@ namespace Nowyouwerkn\WeCommerce;
 use Illuminate\Support\ServiceProvider;
 
 /* Fortify Auth */
-//use Nowyouwerkn\WeCommerce\Responses\LoginResponse;
+use Nowyouwerkn\WeCommerce\Responses\LoginResponse;
 use Laravel\Fortify\Fortify;
 
 class WeCommerceServiceProvider extends ServiceProvider
@@ -18,6 +18,7 @@ class WeCommerceServiceProvider extends ServiceProvider
     public function register()
     {
         //$this->app->make('Nowyouwerkn\WeCommerce\Controllers\AuthController');
+        /*
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\BannerController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\CartController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\CategoryController');
@@ -50,6 +51,7 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\UserController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\VariantController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\WishlistController');
+        */
     }
 
     /**
@@ -68,7 +70,7 @@ class WeCommerceServiceProvider extends ServiceProvider
             return view('wecommerce::front.werkn-backbone.auth');
         });
 
-        //$this->app->singleton(LoginResponseContract::class, LoginResponse::class);
+        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
 
         /*
         if ($this->app->runningInConsole()) {

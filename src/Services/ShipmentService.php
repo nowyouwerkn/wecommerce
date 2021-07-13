@@ -1,7 +1,5 @@
 <?php
 
-namespace Nowyouwerkn\WeCommerce\Models;
-
 /* UPS Modules */
 use Rawilk\Ups\Entity\Address\Address;
 use Rawilk\Ups\Apis\AddressValidation\AddressValidation;

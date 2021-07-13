@@ -4,7 +4,7 @@
 
 
 // Back-End Views
-Route::group(['prefix' => 'w-admin'], function(){
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
     //Dashboard
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@index')->name('dashboard'); //
     Route::resource('banners', 'Nowyouwerkn\WeCommerce\Controllers\BannerController');
@@ -32,8 +32,8 @@ Route::group(['prefix' => 'w-admin'], function(){
     Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
     Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
     /*
-    Route::post('variants/storeStock', 'VariantTypeController@storeStock')->name('variants.storeStock');
-    Route::post('variants/updateStock', 'VariantTypeController@updateStock')->name('variants.updateStock');
+    Route::post('variants/storeStock', 'Nowyouwerkn\WeCommerce\Controllers\VariantTypeController@storeStock')->name('variants.storeStock');
+    Route::post('variants/updateStock', 'Nowyouwerkn\WeCommerce\Controllers\VariantTypeController@updateStock')->name('variants.updateStock');
     */
 
     Route::post('/variants/stock/{id}', [
@@ -139,6 +139,58 @@ Route::get('/xml-feed', [
 ]);
 
 
+// FRONT VIEWS
+Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@index')->name('index');
+Route::get('catalog', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalogAll')->name('catalog.all');
+
+Route::get('/catalog/{category_slug}', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalog',
+    'as' => 'catalog',
+]);
+
+Route::get('/catalog/{category_slug}/{slug}', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@detail',
+    'as' => 'detail',
+])->where('slug', '[\w\d\-\_]+');
+
+Route::get('/catalog-filters', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@dynamicFilter',
+    'as' => 'dynamic.filter.front',
+]);
+
+/* Search Functions */
+Route::get('/busqueda-general', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\SearchController@query',
+    'as' => 'search.query',
+]);
+
+Route::get('cart', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@cart')->name('cart');
+Route::get('/checkout', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkout')->name('checkout');
+
+Route::post('/checkout',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckout',
+    'as' => 'checkout',
+]);
+
+/* Cuopon Validation on Checkout */
+Route::post('/apply-cuopon', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@applyCuopon',
+    'as' => 'apply.cuopon',
+]);
+
+Route::get('blog', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@blog')->name('blog');
+Route::get('contact', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@contact')->name('contact');
+
+//Profile
+Route::group(['prefix' => 'profile', 'middleware' => 'auth'], function(){
+    Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
+    Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
+    Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
+    Route::get('address', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@address')->name('address');
+    Route::get('address/create', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@addAddress')->name('address.create');
+    Route::get('account', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@account')->name('account');
+});
+
 // INSTALADOR 
 Route::prefix('/instalador')->group(function () {
     Route::get('/', [
@@ -179,62 +231,3 @@ Route::prefix('/instalador')->group(function () {
     ]);
 });
 
-
-// FRONT VIEWS
-Route::prefix('/')->group(function () {
-    //Views
-    Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@index')->name('index');
-    Route::get('catalog', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalogAll')->name('catalog.all');
-
-    //Route::get('detail', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@detail')->name('detail');
-
-    Route::get('/catalog/{category_slug}', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalog',
-        'as' => 'catalog',
-    ]);
-
-    Route::get('/catalog/{category_slug}/{slug}', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@detail',
-        'as' => 'detail',
-    ])->where('slug', '[\w\d\-\_]+');
-
-    Route::get('/catalog-filters', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@dynamicFilter',
-        'as' => 'dynamic.filter.front',
-    ]);
-
-    /* Search Functions */
-    Route::get('/busqueda-general', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\SearchController@query',
-        'as' => 'search.query',
-    ]);
-
-    Route::get('cart', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@cart')->name('cart');
-    Route::get('/checkout', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkout')->name('checkout');
-
-    Route::post('/checkout',[
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckout',
-        'as' => 'checkout',
-    ]);
-
-    /* Cuopon Validation on Checkout */
-    Route::post('/apply-cuopon', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@applyCuopon',
-        'as' => 'apply.cuopon',
-    ]);
-
-    //Route::get('auth', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@auth')->name('auth');
-
-    Route::get('blog', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@blog')->name('blog');
-    Route::get('contact', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@contact')->name('contact');
-
-    //Profile
-    Route::group(['prefix' => 'profile'], function(){
-        Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
-        Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
-        Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
-        Route::get('address', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@address')->name('address');
-        Route::get('address/create', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@addAddress')->name('address.create');
-        Route::get('account', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@account')->name('account');
-    });
-});

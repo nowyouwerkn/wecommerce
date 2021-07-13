@@ -93,6 +93,9 @@
                     </li>
                 </ul>
             </div>
+            @else
+
+            <h1>NO HA INICIADO SESIÓN</h1>
         @endif
 
         <div id="preloader">

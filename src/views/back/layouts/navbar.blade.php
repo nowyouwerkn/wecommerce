@@ -14,7 +14,7 @@
         <div class="aside-loggedin">
             <div class="d-flex align-items-center justify-content-start">
                 <a href="" class="avatar">
-                    <img src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim( Auth::user()->email))) . '?d=retro&s=150' }}" alt="user" class="rounded-circle">     
+                    <img src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim( Auth::user()->email ?? 'N/A'))) . '?d=retro&s=150' }}" alt="user" class="rounded-circle">     
                     <!--<img src="https://via.placeholder.com/500" class="rounded-circle" alt="">-->
                 </a>
                 <div class="aside-alert-link">
@@ -34,7 +34,7 @@
             </div>
             <div class="aside-loggedin-user">
                 <a href="#loggedinMenu" class="d-flex align-items-center justify-content-between mg-b-2" data-toggle="collapse">
-                    <h6 class="tx-semibold mg-b-0">{{ Auth::user()->name }}</h6>
+                    <h6 class="tx-semibold mg-b-0">{{ Auth::user()->name ?? 'N/A' }}</h6>
                     <i data-feather="chevron-down"></i>
                 </a>
                 <p class="tx-color-03 tx-12 mg-b-0">Administrator</p>

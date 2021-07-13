@@ -1,7 +1,5 @@
 <?php
 
-namespace Nowyouwerkn\WeCommerce\Models;
-
 /* Facebook SDK */
 use FacebookAds\Api;
 use FacebookAds\Logger\CurlLogger;
