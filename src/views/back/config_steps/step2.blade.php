@@ -59,7 +59,7 @@
 
                 <div class="row">
                     @php
-                        $countries = App\Models\Country::all();
+                        $countries = \Nowyouwerkn\WeCommerce\Models\Country::all();
                     @endphp
 
                     <div class="col-md-6">

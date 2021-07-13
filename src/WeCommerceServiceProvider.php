@@ -4,6 +4,10 @@ namespace Nowyouwerkn\WeCommerce;
 
 use Illuminate\Support\ServiceProvider;
 
+/* Fortify Auth */
+//use Nowyouwerkn\WeCommerce\Responses\LoginResponse;
+use Laravel\Fortify\Fortify;
+
 class WeCommerceServiceProvider extends ServiceProvider
 {
     /**
@@ -13,7 +17,7 @@ class WeCommerceServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->make('Nowyouwerkn\WeCommerce\Controllers\AuthController');
+        //$this->app->make('Nowyouwerkn\WeCommerce\Controllers\AuthController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\BannerController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\CartController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\CategoryController');
@@ -54,16 +58,54 @@ class WeCommerceServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {
+    {   
+        // Vistas de autenticación usando Fortify
+        Fortify::loginView(function () {
+            return view('wecommerce::front.werkn-backbone.auth');
+        });
+
+        Fortify::registerView(function () {
+            return view('wecommerce::front.werkn-backbone.auth');
+        });
+
+        //$this->app->singleton(LoginResponseContract::class, LoginResponse::class);
+
+        /*
         if ($this->app->runningInConsole()) {
             $this->publishResources();
         }
+        */
 
         $this->loadRoutesFrom(__DIR__.'/routes.php');
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
         $this->loadViewsFrom(__DIR__.'/views', 'wecommerce');
+
+        // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
+        $this->publishes([
+            __DIR__.'/views/front' => resource_path('views/front/theme/'),
+        ]);
+
+        // Publicar Assets de Estilos
+        $this->publishes([
+            __DIR__.'/assets' => public_path(''),
+        ], 'public');
+
+        // Publicar archivos de config
+        $this->publishes([
+            __DIR__.'/config' => config_path(''),
+        ]);
+
+        // Publicar archivos de base de datos
+        $this->publishes([
+            __DIR__.'/database/migrations' => database_path('migrations/'),
+        ]);
+
+        $this->publishes([
+            __DIR__.'/database/seeders/DatabaseSeeder.php' => database_path('seeders/'),
+        ]);
     }
 
+    /*
     protected function publishResources()
     {
         // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
@@ -89,4 +131,5 @@ class WeCommerceServiceProvider extends ServiceProvider
             __DIR__.'/database/seeders' => database_path('seeders/'),
         ]);
     }
+    */
 }

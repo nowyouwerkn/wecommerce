@@ -13,6 +13,6 @@ class Variant extends Model
 
     public function products()
     {
-        return $this->belongsToMany(\App\Models\Product::class, 'product_variants', 'product_id', 'variant_id');
+        return $this->belongsToMany(Nowyouwerkn\WeCommerce\Models\Product::class, 'product_variants', 'product_id', 'variant_id');
     }
 }

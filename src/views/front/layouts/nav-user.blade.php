@@ -1,6 +1,6 @@
 <ul class="list-unstyled">
     <li>
-        <a href="{{ route('profile') }}">Vista Genral</a>
+        <a href="{{ route('profile') }}">Vista General</a>
     </li>
     <li>
         <a href="{{ route('wishlist') }}">Mi Wishlist</a>

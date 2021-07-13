@@ -1,28 +1,10 @@
 <?php
 
 // Authentication Views
-Route::get('/login', [
-    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\AuthController@login',
-    'as' => 'login',
-]);
-Route::post('/login', [
-    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\AuthController@postLogin',
-    'as' => 'login',
-]);
-
-Route::get('/register', [
-    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\AuthController@register',
-    'as' => 'register',
-]);
-
-Route::post('/register', [
-    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\AuthController@postRegister',
-    'as' => 'register',
-]);
 
 
 // Back-End Views
-Route::group(['prefix' => 'w-admin', 'middleware' => 'auth'], function(){
+Route::group(['prefix' => 'w-admin'], function(){
     //Dashboard
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@index')->name('dashboard'); //
     Route::resource('banners', 'Nowyouwerkn\WeCommerce\Controllers\BannerController');
@@ -247,15 +229,12 @@ Route::prefix('/')->group(function () {
     Route::get('contact', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@contact')->name('contact');
 
     //Profile
-    Route::middleware(['auth'])->group(function () {
-        Route::prefix('profile')->group(function () {
-            Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
-            Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
-            Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
-            Route::get('address', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@address')->name('address');
-            Route::get('address/create', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@addAddress')->name('address.create');
-            Route::get('account', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@account')->name('account');
-            
-        });
+    Route::group(['prefix' => 'profile'], function(){
+        Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
+        Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
+        Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
+        Route::get('address', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@address')->name('address');
+        Route::get('address/create', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@addAddress')->name('address.create');
+        Route::get('account', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@account')->name('account');
     });
 });

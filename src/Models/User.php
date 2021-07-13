@@ -45,22 +45,22 @@ class User extends Authenticatable
 
     public function orders()
     {
-        return $this->hasMany(\App\Models\Order::class);
+        return $this->hasMany(Nowyouwerkn\WeCommerce\Models\Order::class);
     }
 
     public function addresses()
     {
-        return $this->hasMany(\App\Models\Address::class);
+        return $this->hasMany(Nowyouwerkn\WeCommerce\Models\Address::class);
     }
 
     public function wishlists()
     {
-        return $this->hasMany(\App\Models\Wishlist::class, 'user_id', 'id');
+        return $this->hasMany(Nowyouwerkn\WeCommerce\Models\Wishlist::class, 'user_id', 'id');
     }
 
     public function coupons()
     {
-        return $this->belongsToMany(\App\Models\Coupon::class, 'user_coupons', 'user_id', 'coupon_id');
+        return $this->belongsToMany(Nowyouwerkn\WeCommerce\Models\Coupon::class, 'user_coupons', 'user_id', 'coupon_id');
     }
 
     public function isInWishlist($productId)

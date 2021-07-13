@@ -58,7 +58,7 @@
 </head>
 <body>
     <!-- Aside Navbar -->
-    @include('back.layouts.navbar')
+    @include('wecommerce::back.layouts.navbar')
 
     <div class="content ht-100v pd-0">
         <!-- Header -->

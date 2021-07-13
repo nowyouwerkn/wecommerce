@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <p>Bienvenido</p>
-                    <h1>Hola, {{ auth()->user()->name }}</h1>
+                    <h1>Hola, {{ Auth()->user()->name ?? 'N/A' }}</h1>
                 </div>
             </div>
             <!-- Content -->

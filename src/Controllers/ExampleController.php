@@ -12,7 +12,7 @@ use Nowyouwerkn\WeCommerce\Models\Category;
 
 use Illuminate\Http\Request;
 
-class ModeloController extends Controller
+class ExampleController extends Controller
 {
     public function index()
     {

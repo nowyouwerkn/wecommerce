@@ -73,7 +73,7 @@
                 <hr>
                 <h6 class="text-uppercase">Moneda de la Tienda</h6>
                 @php
-                    $currencies = App\Models\Currency::all();
+                    $currencies = \Nowyouwerkn\WeCommerce\Models\Currency::all();
                 @endphp
                 <div class="form-group">
                     <select class="form-control" name="currency_id" required="">

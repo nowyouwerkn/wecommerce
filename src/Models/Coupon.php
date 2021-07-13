@@ -13,6 +13,6 @@ class Coupon extends Model
 
     public function users()
     {
-        return $this->belongsToMany(\App\Models\Coupon::class, 'user_coupons', 'user_id', 'coupon_id');
+        return $this->belongsToMany(Nowyouwerkn\WeCommerce\Models\Coupon::class, 'user_coupons', 'user_id', 'coupon_id');
     }
 }

@@ -13,6 +13,6 @@ class Country extends Model
 
     public function taxes()
     {
-        return $this->belongsTo(\App\Models\StoreTax::class, 'store_taxes', 'country_id');
+        return $this->belongsTo(Nowyouwerkn\WeCommerce\Models\StoreTax::class, 'store_taxes', 'country_id');
     }
 }

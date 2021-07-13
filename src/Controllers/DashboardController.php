@@ -22,6 +22,7 @@ class DashboardController extends Controller
         $config = StoreConfig::take(1)->first();
         
         if(empty($config)){
+            
             return redirect()->route('config.step1');
         }
 
