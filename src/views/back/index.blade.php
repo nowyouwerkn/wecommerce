@@ -192,20 +192,4 @@
           </div><!-- card -->
     </div>
 </div>
-
-    <hr>
-    <hr>
-    <h1>Live Mode</h1>
-    <hr>
-    <p>Visitantes en vivo</p>
-    <p>Total de sesiones</p>
-    <p>Total de ventas</p>
-    <p>total de ordenes</p>
-    <p>Paginas visitadas</p>
-    <hr>
-    <hr>
-    <h3>Vista en vivo de clientes</h3>
-    <p>Carritos activos</p>
-    <p>Clientes en checkout</p>
-    <p>Compras</p>
 @endsection

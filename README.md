@@ -85,6 +85,7 @@ Opcional: el proveedor de servicios se registrará automáticamente. O puede agr
 Publica todos los assets usando
 ```
 php artisan vendor:publish --provider="Nowyouwerkn\WeCommerce\WeCommerceServiceProvider" --force
+php artisan vendor:publish --provider="Laravel\Fortify\FortifyServiceProvider" --force
 ```
 
 Limpia el caché de tu configuración
