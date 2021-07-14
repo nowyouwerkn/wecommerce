@@ -52,6 +52,29 @@ class StockController extends Controller
         return redirect()->back();
     }
 
+    public function storeDynamic(Request $request)
+    {
+        // Guardar datos en la base de datos
+        $stock = new ProductVariant;
+        
+        $stock->product_id = $request->product_id;
+        
+        $variant = Variant::where('value', $request->variant)->first();
+        
+        if(empty($variant)){
+            $variant = new Variant;
+            $variant->value = $request->variant;
+            $variant->save();
+        }
+
+        $stock->variant_id = $variant->id;
+        $stock->stock = $request->stock;
+
+        $stock->save();
+
+        return response()->json(['mensaje' => 'Mensaje de exito', 'variant' => $variant->value], 200);
+    }
+
     public function show(Stock $stock)
     {
         return view('wecommerce::back.stock.show', compact('stock'));

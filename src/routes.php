@@ -42,6 +42,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@store',
         'as' => 'stock.store',
     ]);
+
+    Route::post('/variants/stock-dynamic', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@storeDynamic',
+        'as' => 'stock.store.dynamic',
+    ]);
     
     Route::put('/variants/update-stock/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@update',

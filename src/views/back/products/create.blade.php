@@ -1,5 +1,32 @@
 @extends('wecommerce::back.layouts.main')
 
+@section('stylesheets')
+<style type="text/css">
+    .save-bar{
+        position: fixed;
+        width: calc(100% - 240px);
+        bottom: -55px;
+        left: 240px;
+        padding: 10px 40px;
+        z-index: 99;
+
+        transition: all .2s ease-in-out;
+    }
+
+    .show-bar{
+        bottom: 0px;
+    }
+
+    .custom-control{
+        display: inline-block;
+    }
+
+    .hidden{
+        display: none;
+    }
+</style>
+@endsection
+
 @section('title')
     <div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">
         <div>
@@ -21,9 +48,14 @@
 
 @section('content')
     <!-- Form -->
-    <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
+    <form method="POST" id="save-form" action="{{ route('products.store') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
 
+        <div class="save-bar bg-success text-white d-flex align-items-center justify-content-between">
+            <p class="mb-0">El sistema guarda como borrador ocasionalmente. Para hacerlo manual da click en el botón.</p>
+            <button id="save-form" class="btn-save-big btn btn-outline-light btn-sm text-white">Guardar cambios</button>
+        </div>
+        
         <div class="row">
             <!-- Firts Column -->
             <div class="col-md-8">
@@ -122,7 +154,7 @@
                                   <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">MX$</span>
                                   </div>
-                                    <input type="number" name="price" class="form-control">
+                                    <input type="number" id="price" name="price" class="form-control">
                                 </div>
                             </div>
         
@@ -132,7 +164,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">MX$</span>
                                     </div>
-                                    <input type="number" name="discount_price" class="form-control">
+                                    <input type="number" id="discount_price" name="discount_price" class="form-control">
                                 </div>
                             </div>
 
@@ -155,7 +187,7 @@
                                   <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">MX$</span>
                                   </div>
-                                    <input type="number" name="production_cost" class="form-control">
+                                    <input type="number" id="production_cost" name="production_cost" class="form-control value-checker">
                                 </div>
                                 <span class="tx-13 tx-color-03 d-block">Tus clientes no verán esto.</span>
                             </div>
@@ -164,11 +196,11 @@
                                 <div class="d-flex align-items-center justify-content-between pt-4">
                                     <div class="">
                                         <p class="mb-0">Margen</p>
-                                        <h2>-</h2>
+                                        <h2><span id="margin">-</span>%</h2>
                                     </div>
                                     <div class="">
                                         <p class="mb-0">Ganancia</p>
-                                        <h2>-</h2>
+                                        <h2>$<span id="profit">-</span></h2>
                                     </div>
                                 </div>
                             </div>
@@ -257,75 +289,8 @@
                     </div>
                 </div>
 
-
+                @include('wecommerce::back.products.partials._variant_card')
                         
-
-                <!-- Variants -->
-                <div class="card mg-t-10 mb-4">
-                    <!-- Header -->
-                    <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                        <h5 class="mg-b-5">Variantes</h5>
-                        <p class="tx-12 tx-color-03 mg-b-0">Variantes.</p>
-                    </div>
-
-                    <!-- Form -->
-                    <div class="card-body row">
-                        <div class="col-md-12 mb-3">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="variants">
-                                <label class="custom-control-label" for="variants">Este producto tiene variantes</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="variant">Variante</label>
-                                <input type="text" name="variant" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="options">Opciones</label>
-                                <input type="text" name="options" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Variant Heade -->
-                    <div class="table-responsive">
-                        <table class="table table-dashboard mg-b-0">
-                            <thead>
-                                <tr>
-                                    <th>Variante</th>
-                                    <th class="text-right">Precio</th>
-                                    <th class="text-right">Cantidad</th>
-                                    <th class="text-right">Codigo SKU</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="tx-color-03 tx-normal">1</td>
-                                    <td class="text-right">
-                                        <input type="number" name="price_variant" class="form-control">
-                                    </td>
-                                    <td class="text-right">
-                                        <input type="number" name="amount_variant" class="form-control">
-                                    </td>
-                                    <td class="text-right">
-                                        <input type="text" name="sku_variant" class="form-control">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <div class="col-md-12 my-3">
-                            <a href="#" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
-                                Agregar otra variante
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
     
             <!-- Second -->
@@ -417,3 +382,33 @@
         </div>
     </form>
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    // Value Checker
+    $('.value-checker').keyup(function(){
+        event.preventDefault();
+
+        var price = $('#price').val();
+        var discount_price = $('#discount_price').val();
+        var production_cost = $('#production_cost').val();
+
+        var margin = ((parseFloat(price) - parseFloat(production_cost)) / 100);
+        var profit = (parseFloat(price) - parseFloat(production_cost));
+
+        $('#margin').text(parseFloat(margin).toFixed(2));
+        $('#profit').text(parseFloat(profit).toFixed(2));
+    });
+
+    $('.form-control').keyup(function(){
+        event.preventDefault();
+
+        if ($(this).val().length === 0 ) {
+            $('.save-bar').removeClass('show-bar');
+        }else{
+            $('.save-bar').addClass('show-bar');
+        }
+    });
+
+</script>
+@endpush

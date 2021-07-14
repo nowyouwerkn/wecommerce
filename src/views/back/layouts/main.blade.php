@@ -126,6 +126,6 @@
     <script src="{{ asset('assets/js/dashforge.js') }}"></script>
     <script src="{{ asset('assets/js/dashforge.aside.js') }}"></script>
 
-    @yield('scripts')
+    @stack('scripts')
 </body>
 </html>

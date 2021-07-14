@@ -96,11 +96,16 @@ class ProductController extends Controller
 
         $product->subCategory()->sync($request->category_id);
 
-        // Mensaje de session
-        Session::flash('success', 'Your product was saved correctly in the database.');
+        if ($request->type_static == false) {
+            return response()->json(['mensaje' => 'Mensaje de exito', 'product_id' => $product->id], 200);
+        }else{
+            // Mensaje de session
+            Session::flash('success', 'Your product was saved correctly in the database.');
 
-        // Enviar a vista
-        return redirect()->route('products.show', $product->id);
+            // Enviar a vista
+            return redirect()->route('products.show', $product->id);
+        }
+        
     }
 
     public function show($id)
@@ -146,7 +151,6 @@ class ProductController extends Controller
 
     public function destroyImage($id)
     {
-
         $var_imagen = ProductImage::find($id);
 
         $var_imagen->delete();
