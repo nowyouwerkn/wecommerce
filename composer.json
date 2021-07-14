@@ -36,7 +36,7 @@
         "facebook/php-business-sdk": "^10.0",
         "gabrielbull/ups-api": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "laravel/fortify": "^1.7",
+        "laravel/ui": "^3.3",
         "mews/purifier": "^3.3",
         "openpay/sdk": "^2.2",
         "paypal/rest-api-sdk-php": "^1.14",

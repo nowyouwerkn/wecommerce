@@ -1,10 +1,12 @@
 <?php
 
-// Authentication Views
+use Illuminate\Support\Facades\Route;
 
+// Authentication Views
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Back-End Views
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
+Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     //Dashboard
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@index')->name('dashboard'); //
     Route::resource('banners', 'Nowyouwerkn\WeCommerce\Controllers\BannerController');
@@ -197,13 +199,6 @@ Route::prefix('/instalador')->group(function () {
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@index',
         'as' => 'install.index',
     ]);
-
-    /*
-    Route::post('/encriptacion', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@key',
-        'as' => 'install.key',
-    ]);
-    */
 
     Route::post('/vistas', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@views',

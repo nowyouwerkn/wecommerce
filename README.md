@@ -116,6 +116,19 @@ php artisan db:seed
 ### Instalacion
 
 
+### Modificaciones necesarias a Laravel
+
+1. Cambiar en el archivo RouteServiceProvider la ruta de redirección a:
+```
+public const HOME = '/profile';
+```
+
+2. Sobreescribir el archivo routes.php de tu proyecto de laravel con el archivo routes del repositorio.
+```
+Ruta:
+https://github.com/nowyouwerkn/wecommerce/blob/main/src/routes.php
+```
+
 
 <!-- USAGE EXAMPLES -->
 ## Uso
