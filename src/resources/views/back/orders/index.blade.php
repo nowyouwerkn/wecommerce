@@ -12,7 +12,7 @@
             <h4 class="mg-b-0 tx-spacing--1">Ordenes</h4>
         </div>
         <div class="d-none d-md-block">
-            <a href="#" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
+            <a href="{{ route('export.orders') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
                 Exportar
             </a>
         </div>

@@ -37,6 +37,7 @@
     </head>
     <body>
         @if(Auth::check())
+            @if(Auth::user()->hasRole(['webmaster', 'admin', 'analyst']))
             @php
                 $config = Nowyouwerkn\WeCommerce\Models\StoreConfig::first();
             @endphp
@@ -93,9 +94,7 @@
                     </li>
                 </ul>
             </div>
-            @else
-
-            <h1>NO HA INICIADO SESIÓN</h1>
+            @endif
         @endif
 
         <div id="preloader">

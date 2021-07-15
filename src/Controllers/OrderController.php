@@ -16,6 +16,10 @@ use Nowyouwerkn\WeCommerce\Models\ProductSize;
 use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
+/* Exportar Info */
+use Maatwebsite\Excel\Facades\Excel;
+use Nowyouwerkn\WeCommerce\Exports\OrderExport;
+
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -119,5 +123,10 @@ class OrderController extends Controller
         Session::flash('success', 'Estado Actualizado Exitosamente.');
 
         return redirect()->back();
+    }
+
+    public function export() 
+    {
+        return Excel::download(new OrderExport, 'ordenes.xlsx');
     }
 }

@@ -12,7 +12,7 @@
             <h4 class="mg-b-0 tx-spacing--1">Productos</h4>
         </div>
         <div class="d-none d-md-block">
-            <a href="#" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
+            <a href="{{ route('export.products') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
                 Exportar
             </a>
             <a href="#" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5">
@@ -64,19 +64,19 @@
                                     <strong><a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a></strong> <br><p style="width: 200px;">{{ substr($product->description, 0, 100)}} {{ strlen($product->description) > 100 ? "[...]" : "" }}</p>
                                 </td>
                                 <td style="width: 80px;">{{ $product->sku }}</td>
-                                <td>$ {{ number_format($product->price) }}</td>
+                                <td>$ {{ number_format($product->price,2) }}</td>
                                 <td>
-                                    $ {{ number_format($product->discount_price) }}
+                                    $ {{ number_format($product->discount_price,2) }}
                                 </td>
                                 <td class="sizes-td">
                                     
                                 </td>
                                 <td class="text-nowrap">
-                                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-link" data-toggle="tooltip" data-original-title="See Detail">
+                                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-link" data-toggle="tooltip" data-original-title="Ver Detalle">
                                         <i class="fas fa-eye"></i>
                                     </a>
 
-                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-link" data-toggle="tooltip" data-original-title="Edit">
+                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-link" data-toggle="tooltip" data-original-title="Editar">
                                         <i class="fas fa-edit" aria-hidden="true"></i>
                                     </a>
 

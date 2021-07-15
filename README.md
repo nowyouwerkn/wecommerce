@@ -66,6 +66,8 @@
 
 ### Pre-requisitos
 
+* PHP: `^7.2\|^8.0`
+* Laravel: `8.*`
 
 ### Instalación
 

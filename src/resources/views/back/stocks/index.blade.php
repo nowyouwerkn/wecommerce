@@ -41,19 +41,7 @@
                 <div class="card-body pd-y-30">
                     <!-- Filters -->
                     <div class="mb-4">
-                        <form action="" method="POST" class="d-flex">
-                            <div class="content-search col-6">
-                                <i data-feather="search"></i>
-                                <input type="search" class="form-control" placeholder="Buscar en Inventario...">
-                            </div>
 
-                            <select class="custom-select tx-13">
-                                <option value="1" selected>Ordenar</option>
-                                <option value="2">...</option>
-                                <option value="3">...</option>
-                                <option value="4">...</option>
-                            </select>
-                        </form>
                     </div>
                 </div>
 
@@ -62,17 +50,20 @@
                     <table class="table table-dashboard mg-b-0">
                         <thead>
                             <tr>
-                                <th>Imagenes</th>
+                                <th>Estado</th>
+                                <th>Imagen</th>
+                            
+                                <th>SKU</th>
                                 <th>Producto</th>
-                                <th class="text-right">SKU</th>
-                                <th class="text-right">Cantidad</th>
-                                <th class="text-right">Variante</th>
-                                <th class="text-right">Editar Variante</th>
+                                <th>Precio</th>
+                                <th>Disponible</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($products as $product)
                             <tr>
+                                <td>Variantes: {{ $product->variants->count() }}</td>
                                 <td class="tx-color-03 tx-normal image-table">
                                     <img style="width: 100%;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
                                     <div class="text-center margin-top-10">
@@ -80,14 +71,15 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <strong><a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a></strong> <br><p style="width: 200px;">{{ substr($product->description, 0, 100)}} {{ strlen($product->description) > 100 ? "[...]" : "" }}</p>
-                                </td>
-                                <td class="text-right">
                                     {{ $product->sku }}
                                 </td>
-                                <td class="text-right">{{ $product->stock }}</td>
-                                <td class="text-right">{{ $product->variants->count() }}</td>
-                                <td class="text-right">
+                                <td>
+                                    <strong><a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a></strong> <br><p style="width: 200px;">{{ substr($product->description, 0, 100)}} {{ strlen($product->description) > 100 ? "[...]" : "" }}</p>
+                                </td>
+                                
+                                <td>$ {{ number_format($product->price,2) }}</td>
+                                <td>
+                                    {{ $product->stock }}
                                     <!--<nav class="nav nav-icon-only justify-content-end">
                                         <a href="" class="nav-link d-none d-sm-block">
                                             <i class="far fa-edit"></i>
@@ -97,6 +89,7 @@
                                         </a>
                                     </nav>-->
                                 </td>
+                                <td></td>
                             </tr>
 
                                 @foreach($product->variants as $variant)
@@ -105,19 +98,31 @@
                                         
                                     </td>
                                     <td>
-                                        <strong>{{ $variant->value }}</strong> <br><p>{{ $variant->type }}</p>
-                                    </td>
-                                    <td class="text-right">{{ $variant->pivot->sku }}</td>
-                                    <td class="text-right">{{ $variant->pivot->stock }}</td>
-                                    <td class="text-right">
                                         
                                     </td>
-                                    <td class="text-right">
-                                        <nav class="nav nav-icon-only justify-content-end">
+                                    <td>{{ $variant->pivot->sku }}</td>
+                                    <td><strong>{{ $variant->value }}</strong> <br><p>{{ $variant->type }}</p></td>
+                                    <td>
+                                        <nav class="nav nav-icon-only">
+                                            <div class="form-group w-50">
+                                                @if($variant->pivot->new_price == NULL)
+                                                <input type="number" name="amount" class="form-control" value="{{ $product->price }}">
+                                                @else
+                                                <input type="number" name="amount" class="form-control" value="{{ $variant->pivot->new_price }}">
+                                                @endif
+                                            </div>
+                                        </nav>
+                                    </td>
+
+                                    <td>
+                                        <nav class="nav nav-icon-only">
                                             <div class="form-group w-50">
                                                 <input type="number" name="amount" class="form-control" value="{{ $variant->pivot->stock }}">
                                             </div>
                                         </nav>
+                                    </td>
+                                    <td>
+                                        <a href="" class="btn btn-sm btn-success">Actualizar</a>
                                     </td>
                                 </tr>
                                 @endforeach

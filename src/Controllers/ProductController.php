@@ -15,6 +15,11 @@ use Nowyouwerkn\WeCommerce\Models\ProductSize;
 use Nowyouwerkn\WeCommerce\Models\ProductImage;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 
+/* Exportar Info */
+use Maatwebsite\Excel\Facades\Excel;
+use Nowyouwerkn\WeCommerce\Exports\ProductExport;
+
+/* Notificaciones */
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
 use Illuminate\Http\Request;
@@ -400,5 +405,10 @@ class ProductController extends Controller
         $value = $request->get('value');
 
         return response()->json(Category::where('parent_id', $value)->get());
+    }
+
+    public function export() 
+    {
+        return Excel::download(new ProductExport, 'productos.xlsx');
     }
 }

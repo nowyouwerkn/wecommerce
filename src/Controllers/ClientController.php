@@ -7,11 +7,16 @@ use Carbon\Carbon;
 
 use Auth;
 use Storage;
+use Session;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\Client;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
 use Nowyouwerkn\WeCommerce\Models\Wishlist;
+
+/* Exportar Info */
+use Maatwebsite\Excel\Facades\Excel;
+use Nowyouwerkn\WeCommerce\Exports\ClientExport;
 
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
@@ -63,15 +68,16 @@ class ClientController extends Controller
         ));
 
         $client = User::create([
-            'name' => $request->name,
-            'code' => $request->code,
-            'slug' => Str::slug($request->name),
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
         ]);
+        $client->assignRole('customer');
 
         //Session message
         Session::flash('success', 'El cliente fue registrado exitosamente.');
 
-        return redirect()->route('cities.show', $city->id);
+        return redirect()->route('clients.show', $client->id);
     }
 
     public function show($id)
@@ -111,5 +117,10 @@ class ClientController extends Controller
     {
         UserAddress::create($request->all());
         return redirect()->route('address')->with('status', 'Se ha agregado la dirección');
+    }
+
+    public function export() 
+    {
+        return Excel::download(new ClientExport, 'clientes.xlsx');
     }
 }

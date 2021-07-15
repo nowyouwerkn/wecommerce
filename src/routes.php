@@ -31,6 +31,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
 
     //Catalog
     Route::resource('products', Nowyouwerkn\WeCommerce\Controllers\ProductController::class); //
+    Route::get('exportar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@export')->name('export.products');
 
     Route::post('/products/create-dynamic', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeDynamic',
@@ -60,7 +61,10 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     ]);
 
     Route::resource('clients', Nowyouwerkn\WeCommerce\Controllers\ClientController::class); //
+    Route::get('exportar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@export')->name('export.clients');
+
     Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
+    Route::get('exportar-ordenes', 'Nowyouwerkn\WeCommerce\Controllers\OrderController@export')->name('export.orders');
 
     Route::post('/orders/{id}/cambiar-estado', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@changeStatus',

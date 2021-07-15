@@ -12,15 +12,14 @@
             <h4 class="mg-b-0 tx-spacing--1">Clientes</h4>
         </div>
         <div class="d-none d-md-block">
-            <a href="#" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
+            <a href="{{ route('export.clients') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
                 Exportar
             </a>
             <a href="#" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5">
                 Importar
             </a>
-            <a href="{{ route('clients.create') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Agregar Cliente
-            </a>
+            
+            <a href="{{ route('clients.create') }}" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase">Agregar Cliente</a>
         </div>
     </div>
 @endsection
@@ -100,5 +99,65 @@
             </div>
         </div>
     </div>
-@endif  
+@endif 
+
+<div id="modalCreate" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear nuevo Elemento</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+             <form method="POST" action="{{ route('clients.store') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+                <div class="modal-body pd-25">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Nombre(s) <span class="tx-danger">*</span></label>
+                                <input type="text" name="name" class="form-control" required="">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="lastname">Apellido(s) <span class="tx-danger">*</span></label>
+                                <input type="text" name="lastname" class="form-control" required="">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="email">Correo <span class="tx-danger">*</span></label>
+                                <input type="text" name="email" class="form-control" required="">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="password">Contraseña <span class="tx-danger">*</span></label>
+                                <input type="text" name="password" class="form-control" required="">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phone">Telefono <span class="text-info">(Opcional)</span></label>
+                                <input type="text" name="phone" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
 @endsection
