@@ -11,13 +11,21 @@ use Storage;
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\Client;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
-
 use Nowyouwerkn\WeCommerce\Models\Wishlist;
+
+use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
+    private $notification;
+
+    public function __construct()
+    {
+        $this->notification = new NotificationController;
+    }
+    
     public function index()
     {
         $today = Carbon::now();

@@ -10,13 +10,13 @@
 <br />
 <p align="center">
   <a href="https://github.com/nowyouwerkn/wecommerce">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" width="260">
   </a>
 
-  <h3 align="center">Werkn E-Commerce</h3>
+  <h3 align="center">WeCommerce</h3>
 
   <p align="center">
-    La paltaforma autoadministrable de e-commerce de Werkn
+    La plataforma autoadministrable de E-commerce de Werkn
     <br />
     <a href="https://github.com/nowyouwerkn/wecommerce"><strong>Lee la documentación »</strong></a>
     <br />
@@ -68,6 +68,11 @@
 <!-- GETTING STARTED -->
 ## Comenzando
 
+### Pre-requisitos
+
+
+### Instalación
+
 Para comenzar a usar este paquete debes usar el siguiente comando para agregarlo a tu instalación de Laravel.
 ```
 composer require nowyouwerkn/wecommerce
@@ -116,11 +121,6 @@ php artisan migrate
 php artisan db:seed
 ```
 
-### Pre-requisitos
-
-
-
-### Instalacion
 
 
 ### Modificaciones necesarias a Laravel
@@ -136,7 +136,15 @@ Ruta:
 https://github.com/nowyouwerkn/wecommerce/blob/main/src/routes.php
 ```
 
+3. En tu archivo `app.php` dentro de la carpeta `config` sobreescribe la información de zona horaria con lo siguiente:
+```
+'timezone' => 'America/Mexico_City',
+```
 
+4. (OPCIONAL) Si quieres usar las traducciones en español debes sobreescribir tu objeto `locale` de tu archivo `app.php` dentro de la carpeta `config` con lo siguiente. Si publicaste los archivos del paquete correctamente el sistema automáticamente usará la traducción:
+```
+'locale' => 'es',
+```
 <!-- USAGE EXAMPLES -->
 ## Uso
 

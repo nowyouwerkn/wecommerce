@@ -44,11 +44,21 @@ use Nowyouwerkn\WeCommerce\Models\UserAddress;
 use Nowyouwerkn\WeCommerce\Models\Coupon;
 use Nowyouwerkn\WeCommerce\Models\UserCoupon;
 
+/* Notificaciones */
+use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class FrontController extends Controller
 {
+    private $notification;
+
+    public function __construct()
+    {
+        $this->notification = new NotificationController;
+    }
+
     public function index ()
     {
         $products = Product::where('in_index', true)->get()->take(6);
@@ -619,6 +629,13 @@ class FrontController extends Controller
         */
 
         $purchase_value = number_format($cart->totalPrice,2);
+
+        // Notificación
+        $type = 'Orden';
+        $by = $user;
+        $data = 'hizo una compra por $' . $purchase_value;
+
+        $this->notification->send($type, $by ,$data);
 
         //Facebook Event
         /*

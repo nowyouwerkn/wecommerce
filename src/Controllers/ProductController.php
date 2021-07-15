@@ -14,7 +14,8 @@ use Nowyouwerkn\WeCommerce\Models\Category;
 use Nowyouwerkn\WeCommerce\Models\ProductSize;
 use Nowyouwerkn\WeCommerce\Models\ProductImage;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
-use Nowyouwerkn\WeCommerce\Models\Notification;
+
+use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -25,7 +26,7 @@ class ProductController extends Controller
 
     public function __construct()
     {
-        $this->notification = new Notification;
+        $this->notification = new NotificationController;
     }
 
     public function index()

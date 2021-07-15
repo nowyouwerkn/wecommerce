@@ -9,12 +9,22 @@ use Image;
 use Str;
 
 use Nowyouwerkn\WeCommerce\Models\Category;
-use Illuminate\Http\Request;
 
+/* Notificaciones */
+use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
+
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class CategoryController extends Controller
 {
+    private $notification;
+
+    public function __construct()
+    {
+        $this->notification = new NotificationController;
+    }
+
     public function index()
     {
         $categories = Category::where('parent_id', 0)->orWhere('parent_id', NULL)->paginate(15);
@@ -65,6 +75,13 @@ class CategoryController extends Controller
         }
 
         $category->save();
+
+        // Notificación
+        $type = 'Colección';
+        $by = Auth::user();
+        $data = 'creó una nueva colección con el nombre:' . $category->name;
+
+        $this->notification->send($type, $by ,$data);
 
         // Mensaje de session
         Session::flash('exito', 'Elemento guardado correctamente en la base de datos.');
@@ -121,8 +138,15 @@ class CategoryController extends Controller
 
         $category->save();
 
+        // Notificación
+        $type = 'Colección';
+        $by = Auth::user();
+        $data = 'editó una colección con el nombre:' . $category->name;
+
+        $this->notification->send($type, $by ,$data);
+
         // Mensaje de session
-        Session::flash('success', 'Se guardí tu categoría exitosamente en la base de datos.');
+        Session::flash('success', 'Se guardó tu categoría exitosamente en la base de datos.');
 
         // Enviar a vista
         return redirect()->back();
@@ -131,7 +155,14 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::find($id);
-        
+            
+        // Notificación
+        $type = 'Colección';
+        $by = Auth::user();
+        $data = 'eliminó la colección:' . $category->name;
+
+        $this->notification->send($type, $by ,$data);
+
         $category->delete();
 
         Session::flash('info', 'Elemento eliminado correctamente de la base de datos.');

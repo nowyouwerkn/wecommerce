@@ -7,11 +7,13 @@
     <nav class="nav">
         <div class="dropdown dropdown-notification">
             @php
-                $notifications = Nowyouwerkn\WeCommerce\Models\Notification::where('read_at', NULL)->orderBy('created_at', 'desc')->take(10)->get();
+                $notifications = Nowyouwerkn\WeCommerce\Models\Notification::where('read_at', NULL)->orderBy('created_at', 'desc')->take(5)->get();
+
+                $notifications_all = Nowyouwerkn\WeCommerce\Models\Notification::where('read_at', NULL)->orderBy('created_at', 'desc')->count();
             @endphp
           <a href="" class="dropdown-link new-indicator" data-toggle="dropdown">
             <i data-feather="bell"></i>
-            <span>{{ $notifications->count() }}</span>
+            <span>{{ $notifications_all }}</span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
             <div class="dropdown-header">Notificaciones</div>

@@ -7,7 +7,7 @@ use Auth;
 use Session;
 
 use Nowyouwerkn\WeCommerce\Models\OrderNote;
-use Nowyouwerkn\WeCommerce\Models\Notification;
+use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class OrderNoteController extends Controller
 
     public function __construct()
     {
-        $this->notification = new Notification;
+        $this->notification = new NotificationController;
     }
 
     public function index()

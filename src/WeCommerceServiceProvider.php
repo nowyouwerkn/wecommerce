@@ -30,7 +30,6 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\FrontController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\InstallController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\LegalTextController');
-        $this->app->make('Nowyouwerkn\WeCommerce\Controllers\LogController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\MailController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\NotificationController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\OrderController');
@@ -77,11 +76,16 @@ class WeCommerceServiceProvider extends ServiceProvider
 
         $this->loadRoutesFrom(__DIR__.'/routes.php');
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
-        $this->loadViewsFrom(__DIR__.'/views', 'wecommerce');
+        $this->loadViewsFrom(__DIR__.'/resources/views', 'wecommerce');
 
         // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
         $this->publishes([
-            __DIR__.'/views/front' => resource_path('views/front/theme/'),
+            __DIR__.'/resources/views/front' => resource_path('views/front/theme/'),
+        ]);
+
+        // Publica los archivos de traducción del sistema
+        $this->publishes([
+            __DIR__.'/resources/lang/es' => resource_path('lang/'),
         ]);
 
         // Publicar Assets de Estilos
