@@ -138,9 +138,9 @@
         </div>
 
         <div class="card card-body">
-            <h4>Pagos en Efectivo</h4>
+            <h4>Pagos en Efectivo <span class="badge badge-primary">PROXIMAMENTE</span></h4>
             <p class="mb-4">Empieza a cargar uno en tu plataforma usando el botón superior.</p>
-            <a href="{{ route('payments.create') }}" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Agregar Nuevo Método</a>
+            <!--<a href="{{ route('payments.create') }}" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Agregar Nuevo Método</a>-->
         </div>
     </div>
 </div>

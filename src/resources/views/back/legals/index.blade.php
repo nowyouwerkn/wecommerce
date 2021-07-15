@@ -68,13 +68,11 @@
                                 @default
                                     Hubo un problema, intenta después.
                             @endswitch
-
-                            
                         </h4>
 
                         <div class="form-group">
                             <input type="hidden" name="type" value="{{ $legal->type }}">
-                            <textarea name="description" id="" class="form-control" cols="30" rows="10">{{ $legal->description ?? '' }}</textarea>
+                            <textarea name="description" id="" class="form-control" cols="30" rows="10">{!! $legal->description ?? '' !!}</textarea>
                         </div>
 
                         <button type="submit" class="btn btn-outline-success"><i class="far fa-save"></i> Guardar información</a>

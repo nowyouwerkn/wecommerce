@@ -34,26 +34,7 @@
             <div class="card-body pd-y-30">
                 <!-- Filters -->
                 <div class="mb-4">
-                    <form action="" method="POST" class="d-flex">
-                        <div class="content-search col-6">
-                            <i data-feather="search"></i>
-                            <input type="search" class="form-control" placeholder="Buscar cupones...">
-                        </div>
-
-                        <select class="custom-select tx-13">
-                            <option value="1" selected>Estatus</option>
-                            <option value="2">...</option>
-                            <option value="3">...</option>
-                            <option value="4">...</option>
-                        </select>
-
-                        <select class="custom-select tx-13">
-                            <option value="1" selected>Ordenar</option>
-                            <option value="2">...</option>
-                            <option value="3">...</option>
-                            <option value="4">...</option>
-                        </select>
-                    </form>
+                    
                 </div>
             </div>
 
@@ -67,6 +48,7 @@
                             <th>Tipo</th>
                             <th>Envio Gratis</th>
                             <th>Expira</th>
+                            <th>Creado el</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>

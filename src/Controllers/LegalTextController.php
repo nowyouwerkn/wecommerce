@@ -31,7 +31,7 @@ class LegalTextController extends Controller
     {
         //Validar
         $this -> validate($request, array(
-            'description' => 'required|max:255',
+            'description' => 'required',
         ));
 
         // Guardar datos en la base de datos
@@ -39,6 +39,7 @@ class LegalTextController extends Controller
 
         $legal->type = $request->type;
         $legal->description = Purifier::clean($request->description);
+
 
         $legal->save();
 
@@ -66,7 +67,7 @@ class LegalTextController extends Controller
     {
         //Validar
         $this -> validate($request, array(
-            'description' => 'required|max:255',
+            'description' => 'required',
         ));
 
         // Guardar datos en la base de datos

@@ -38,5 +38,10 @@ class PaymentMethodSeeder extends Seeder
             'type' => 'card',
             'supplier' => 'Paypal'
         ]);
+
+        PaymentMethod::create([
+            'type' => 'card',
+            'supplier' => 'OpenPay'
+        ]);
     }
 }

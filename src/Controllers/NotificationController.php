@@ -9,6 +9,8 @@ use Mail;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\Notification;
+use Nowyouwerkn\WeCommerce\Models\StoreConfig;
+
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -29,22 +31,22 @@ class NotificationController extends Controller
         //
     }
 
-    public function show(Notification $notification)
+    public function show($id)
     {
         return view('wecommerce::back.notifications.show', compact('notification'));
     }
 
-    public function edit(Notification $notification)
+    public function edit($id)
     {
         return view('wecommerce::back.notifications.show', compact('notification'));
     }
 
-    public function update(Request $request, Notification $notification)
+    public function update(Request $request, $id)
     {
         //
     }
 
-    public function destroy(Notification $notification)
+    public function destroy($id)
     {
         //
     }
@@ -63,12 +65,13 @@ class NotificationController extends Controller
 
     public function mailOrder($data, $name, $email)
     {
+        $config = StoreConfig::find($id);
+
         Mail::send('mail.order_completed', $data, function($message) use($name, $email) {
 
-            $message->to($email, $name)->subject
-            ('Gracias por comprar Manfort');
+            $message->to($email, $name)->subject('Gracias por comprar en '. $config->store_name);
             
-            $message->from('noreply@manfort.com.mx','Manfort México');
+            $message->from($config->sender_email, $config->store_name);
         });
     }
 }

@@ -30,6 +30,11 @@
                     <input type="text" class="form-control" id="code" name="code" />
                     <small>Los clientes introducirán este código de descuento en la pantalla de pago.</small>
                 </div>
+
+                <div class="form-group mt-2">
+                    <label>Descripción <span class="text-info">(Opcional)</span></label>
+                    <textarea name="description" class="form-control"></textarea>
+                </div>
             </div>
 
             <div class="card card-body mb-4">
@@ -67,23 +72,26 @@
 
             <div class="card card-body mb-4">
                 <h6 class="text-uppercase">Restricciones de Uso</h6>
-                <div class="form-group mt-2">
-                    <label>Uso Individual</label>
-                    <select class="form-control" name="individual_use">
-                        <option value="0">No</option>
-                        <option value="1">Si</option>
-                    </select>
-                    <small>Este cupón solo podrá ser usado una vez por usuario.</small>
-                </div>
 
-                <div class="form-group mt-2">
-                    <label>Excluir productos con descuento</label>
-                    <select class="form-control" name="exclude_discounted_items">
-                        <option value="1">Si</option>
-                        <option value="0">No</option>
-                    </select>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mt-2">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="individual_use" name="individual_use" value="1">
+                                <label class="custom-control-label" for="individual_use">Uso Individual</label>
+                            </div>
+                            <small>Este cupón solo podrá ser usado una vez por usuario.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mt-2">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="exclude_discounted_items" name="exclude_discounted_items" value="1">
+                                <label class="custom-control-label" for="exclude_discounted_items">Excluir productos con descuento</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
                 {{-- 
                 <div class="form-group mt-2">
                     <label>Excluir categorías</label>
