@@ -32,6 +32,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     //Catalog
     Route::resource('products', Nowyouwerkn\WeCommerce\Controllers\ProductController::class); //
     Route::get('exportar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@export')->name('export.products');
+    Route::post('importar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@import')->name('import.products');
 
     Route::post('/products/create-dynamic', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeDynamic',
@@ -62,6 +63,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
 
     Route::resource('clients', Nowyouwerkn\WeCommerce\Controllers\ClientController::class); //
     Route::get('exportar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@export')->name('export.clients');
+    Route::post('importar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@import')->name('import.clients');
 
     Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
     Route::get('exportar-ordenes', 'Nowyouwerkn\WeCommerce\Controllers\OrderController@export')->name('export.orders');

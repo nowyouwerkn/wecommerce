@@ -18,6 +18,7 @@ use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 /* Exportar Info */
 use Maatwebsite\Excel\Facades\Excel;
 use Nowyouwerkn\WeCommerce\Exports\ProductExport;
+use Nowyouwerkn\WeCommerce\Imports\ProductImport;
 
 /* Notificaciones */
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
@@ -410,5 +411,12 @@ class ProductController extends Controller
     public function export() 
     {
         return Excel::download(new ProductExport, 'productos.xlsx');
+    }
+
+    public function import(Request $request) 
+    {
+        Excel::import(new ProductImport, $request->import_file);
+        
+        return redirect()->back()->with('success', 'Documento importado correctamente.');
     }
 }

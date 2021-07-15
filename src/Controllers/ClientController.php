@@ -17,6 +17,7 @@ use Nowyouwerkn\WeCommerce\Models\Wishlist;
 /* Exportar Info */
 use Maatwebsite\Excel\Facades\Excel;
 use Nowyouwerkn\WeCommerce\Exports\ClientExport;
+use Nowyouwerkn\WeCommerce\Imports\ClientImport;
 
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
@@ -122,5 +123,12 @@ class ClientController extends Controller
     public function export() 
     {
         return Excel::download(new ClientExport, 'clientes.xlsx');
+    }
+
+    public function import(Request $request) 
+    {
+        Excel::import(new ClientImport, $request->import_file);
+        
+        return redirect()->back()->with('success', 'Información guardad exitosamente.');
     }
 }
