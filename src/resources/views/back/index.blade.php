@@ -16,11 +16,13 @@
 
 @section('content')
 
+@if(empty($product) || empty($payment) || empty($shipment) || empty($category))
 <div class="row">
     <div class="col-md-12">
         <h1 class="mb-3">Acciones Recomendadas</h1>
     </div>
 </div>
+@endif
 
 <div class="row row-xs">
     @if(empty($product))
@@ -40,8 +42,8 @@
     @endif
 
     @if(empty($payment))
-    <div class="col-md-6">
-        <div class="card card-body mb-2">
+    <div class="col-md-6 mb-2">
+        <div class="card card-body h-100">
           <div class="media align-items-center">
             <img src="{{ asset('assets/img/new_2.svg') }}" class="wd-30p mg-l-20">
 
@@ -56,8 +58,8 @@
     @endif
 
     @if(empty($shipment))
-    <div class="col-md-6">
-        <div class="card card-body mb-2">
+    <div class="col-md-6 mb-2">
+        <div class="card card-body h-100">
           <div class="media align-items-center">
             <img src="{{ asset('assets/img/new_3.svg') }}" class="wd-30p mg-l-20">
 
@@ -72,8 +74,8 @@
     @endif
 
     @if(empty($category))
-    <div class="col-md-6">
-        <div class="card card-body mb-2">
+    <div class="col-md-6 mb-2">
+        <div class="card card-body h-100">
           <div class="media align-items-center">
             <img src="{{ asset('assets/img/new_4.svg') }}" class="wd-30p mg-l-20">
 
@@ -88,49 +90,52 @@
     @endif
 </div>
 
+@if(empty($product) || empty($payment) || empty($shipment) || empty($category))
 <hr>
+@endif
 
 <div class="row row-xs">
-    <div class="col-md-6">
-        <div class="card card-body mb-2">
+    <div class="col-md-3 mb-2">
+        <div class="card card-body h-100">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ventas Totales</h6>
             <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">0</h3>
-                <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success">0 <i class="icon ion-md-arrow-up"></i></span></p>
+                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">${{ number_format($ven_total, 2) }} MXN</h3>
+                <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success"><i class="icon ion-md-arrow-up"></i></span></p>
             </div>
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-3">
         <div class="card card-body">
-            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Sesiones</h6>
+            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Clientes Nuevos</h6>
             <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">0</h3>
-                <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success">0 <i class="icon ion-md-arrow-up"></i></span></p>
+                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">{{ $new_clients }} </h3>
+                <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-info">esta semana.</span></span></p>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card card-body">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Orden Promedio</h6>
             <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">0,00 MXN</h3>
+                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">${{ number_format($avg_order, 2) }} MXN</h3>
                 <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success">0 <i class="icon ion-md-arrow-up"></i></span></p>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card card-body">
-            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ordenes Totales</h6>
+            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ordenes</h6>
             <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">0</h3>
-                <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success">0 <i class="icon ion-md-arrow-up"></i></span></p>
+                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">{{ $new_orders->count() }}</h3>
+                <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-info">esta semana.</span></p>
             </div>
         </div>
     </div>
 
+    <!--
     <div class="col-md-4">
         <div class="card card-body mb-2">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Top Producto</h6>
@@ -139,7 +144,8 @@
             </div>
         </div>
     </div>
-
+    -->
+    <!--
     <div class="col-md-4">
         <div class="card card-body">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ventas Atribuidas a Marketing</h6>
@@ -149,7 +155,8 @@
             </div>
         </div>
     </div>
-
+    -->
+    <!--
     <div class="col-md-8">
         <div class="card mg-b-10">
             <div class="card-header pd-t-20 d-sm-flex align-items-start justify-content-between bd-b-0 pd-b-0">
@@ -157,7 +164,7 @@
                 <h6 class="mg-b-5">Conversión</h6>
                 <p class="tx-13 tx-color-03 mg-b-0">Eventos registrados.</p>
               </div>
-            </div><!-- card-header -->
+            </div>
             <div class="card-body pd-y-30">
               <div class="d-sm-flex">
                 <div class="media">
@@ -188,8 +195,9 @@
                   </div>
                 </div>
               </div>
-            </div><!-- card-body -->
-          </div><!-- card -->
+            </div>
+          </div>
     </div>
+    -->
 </div>
 @endsection

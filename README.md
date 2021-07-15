@@ -2,10 +2,6 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-# WeCommerce 
-##### Elaborado por Werkn 
------------------------
-
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
@@ -30,19 +26,19 @@
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
-<summary><h2 style="display: inline-block">Indice de Contenido</h2></summary>
+  <summary><h5 style="display: inline-block">Indice de Contenido</h5></summary>
   <ol>
     <li>
       <a href="#acerca-del-proyecto">Acerca del Proyecto</a>
       <ul>
-        <li><a href="#tecnologias">Tecnologías</a></li>
+        <li><a href="#tecnologías">Tecnologías</a></li>
       </ul>
     </li>
     <li>
       <a href="#comenzado">Comenzando</a>
       <ul>
         <li><a href="#pre-requisitos">Pre-requisitos</a></li>
-        <li><a href="#instalacion">Instalación</a></li>
+        <li><a href="#instalación">Instalación</a></li>
       </ul>
     </li>
     <li><a href="#uso">Uso</a></li>
@@ -84,19 +80,20 @@ Es necesario agregar proveedores al proyecto para poder utilizar todas las funci
 'providers' => [
     // ...
     Nowyouwerkn\WeCommerce\WeCommerceServiceProvider::class,
-    Intervention\Image\ImageServiceProvider::class
+    Intervention\Image\ImageServiceProvider::class,
+    Maatwebsite\Excel\ExcelServiceProvider::class,
 ];
 
 'aliases' => [
     // ...
-    'Image' => Intervention\Image\Facades\Image::class
+    'Image' => Intervention\Image\Facades\Image::class,
+    'Excel' => Maatwebsite\Excel\Facades\Excel::class
 ];
 ```
 
-Publica todos los assets usando
+Publica todos los assets del paquete y sus dependencias usando
 ```
 php artisan vendor:publish --provider="Nowyouwerkn\WeCommerce\WeCommerceServiceProvider" --force
-php artisan vendor:publish --provider="Laravel\Fortify\FortifyServiceProvider" --force
 ```
 
 Limpia el caché de tu configuración

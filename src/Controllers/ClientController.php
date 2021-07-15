@@ -50,6 +50,30 @@ class ClientController extends Controller
         ->with('wishlists_today', $wishlists_today);
     }
 
+    public function create()
+    {
+        return view('wecommerce::back.clients.create');
+    }
+
+    public function store(Request $request)
+    {
+        //Validation
+        $this -> validate($request, array(
+            'name' => 'required|max:255',
+        ));
+
+        $client = User::create([
+            'name' => $request->name,
+            'code' => $request->code,
+            'slug' => Str::slug($request->name),
+        ]);
+
+        //Session message
+        Session::flash('success', 'El cliente fue registrado exitosamente.');
+
+        return redirect()->route('cities.show', $city->id);
+    }
+
     public function show($id)
     {
         $client = User::find($id);

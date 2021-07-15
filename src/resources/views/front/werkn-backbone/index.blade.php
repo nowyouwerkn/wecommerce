@@ -5,19 +5,46 @@
 @endpush
 
 @push('stylesheets')
+<style type="text/css">
 
+    .banner-five-wrap{
+        overflow: hidden;
+        position: relative;
+    }
+
+    .banner-five-img{
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        right: initial !important;
+        bottom: initial !important;
+        z-index: -1;
+        opacity: .5;
+    }
+
+    .banner-five-img .main-img{
+        width: 100% !important;
+        max-width: 100vw;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+    }
+</style>
 @endpush
 
 @section('content')
 <!-- slider-area -->
 <section class="home-five-banner">
     <div class="container-fluid p-0" style="background:#f9f8f5;">
+        @if(empty($banner))
+        <h2>No se ha configurado un banner</h2>
+        @else
         <div class="banner-five-wrap">
             <div class="row">
-                <div class="col-12">
-                    @if(empty($banner))
-                        <h2>No se ha configurado un banner</h2>
-                    @else
+                <div class="col-12"> 
                     <div class="slider-content">
                         <h3 class="sub-title wow fadeInUp" data-wow-delay=".2s">{{ $banner->subtitle }}</h3>
                         <h2 class="title wow fadeInUp" data-wow-delay=".4s">{{ $banner->title }}</h2>
@@ -27,18 +54,16 @@
                         <a href="{{ $banner->link }}" class="btn wow fadeInUp" data-wow-delay=".8s">{{ $banner->text_button }}</a>
                         @endif
                     </div>
-                    @endif
                 </div>
             </div>
             <div class="banner-five-img">
-                @if(empty($banner))
-                    <h2>No se ha configurado un banner</h2>
+                @if($banner->image == NULL)
                 @else
-                <img src="{{ asset('img/banners/' . $banner->image ) }}" alt="" class="main-img">
+                    <img src="{{ asset('img/banners/' . $banner->image ) }}" alt="" class="main-img">
                 @endif
-                <!--<img src="{{ asset('themes/werkn-backbone/img/slider/h5_banner_shape.png') }}" alt="" class="img-shape">-->
             </div>
         </div>
+        @endif
     </div>
 </section>
 <!-- slider-area-end -->

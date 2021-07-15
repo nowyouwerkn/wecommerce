@@ -44,7 +44,8 @@
         "spatie/laravel-permission": "^4.2",
         "stevebauman/location": "^6.1",
         "stripe/stripe-php": "^7.77",
-        "intervention/image": "^2.6"
+        "intervention/image": "^2.6",
+        "maatwebsite/excel": "^3.1"
     },
     "require-dev": {
     },

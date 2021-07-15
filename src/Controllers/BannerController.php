@@ -46,7 +46,7 @@ class BannerController extends Controller
         $banner->link = $request->link;
         //$banner->image = $request->image;
         $banner->has_button = true;
-        $banner->active = true;
+        $banner->is_active = true;
         $banner->hex = $request->hex;
 
         $img2 = 'banner';
