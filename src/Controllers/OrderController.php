@@ -13,14 +13,20 @@ use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\Order;
 use Nowyouwerkn\WeCommerce\Models\Size;
 use Nowyouwerkn\WeCommerce\Models\ProductSize;
-
 use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
-
+use Nowyouwerkn\WeCommerce\Models\Notification;
 
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    private $notification;
+
+    public function __construct()
+    {
+        $this->notification = new Notification;
+    }
+
     public function index()
     {
         $dt = Carbon::now()->isCurrentMonth();
@@ -63,21 +69,21 @@ class OrderController extends Controller
     {
         $order = Order::find($id);
 
-        if($request->status == 'Payed'){
+        if($request->status == 'Pagado'){
             $order->is_completed = true;
             $order->status = NULL;
 
             $order->save();
         }
 
-        if($request->status == 'Pending'){
+        if($request->status == 'Pendiente'){
             $order->is_completed = NULL;
             $order->status = NULL;
 
             $order->save();
         }
 
-        if($request->status == 'Cancel Order'){
+        if($request->status == 'Cancelar Orden'){
             $order->is_completed = NULL;
             $order->status = 1;
 
@@ -101,6 +107,13 @@ class OrderController extends Controller
 
             $order->save();
         }
+
+        // Notificación
+        $type = 'Orden';
+        $by = Auth::user();
+        $data = 'cambió el estado de la orden #' . $order->id . ' a ' . $request->status;
+
+        $this->notification->send($type, $by ,$data);
 
         // Mensaje de session
         Session::flash('success', 'Estado Actualizado Exitosamente.');

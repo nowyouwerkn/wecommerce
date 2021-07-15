@@ -14,32 +14,32 @@ class Product extends Model
     //relation
     public function category()
     {
-        return $this->belongsTo(\Nowyouwerkn\WeCommerce\Models\Category::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function images()
     {
-        return $this->hasMany(\Nowyouwerkn\WeCommerce\Models\ProductImage::class);
+        return $this->hasMany(ProductImage::class);
     }
 
     public function variants()
     {
-        return $this->belongsToMany(\Nowyouwerkn\WeCommerce\Models\Variant::class, 'product_variants', 'product_id', 'variant_id')->withPivot('stock');
+        return $this->belongsToMany(Variant::class, 'product_variants', 'product_id', 'variant_id')->withPivot('stock', 'sku');
     }
 
     public function variants_stock()
     {
-        return $this->belongsToMany(\Nowyouwerkn\WeCommerce\Models\Variant::class, 'product_variants', 'product_id', 'variant_id')->withPivot('stock', 'id');
+        return $this->belongsToMany(Variant::class, 'product_variants', 'product_id', 'variant_id')->withPivot('stock', 'id');
     }
 
     public function reviews()
     {
-        return $this->hasMany(\Nowyouwerkn\WeCommerce\Models\Review::class, 'product_id');
+        return $this->hasMany(Review::class, 'product_id');
     }
 
     public function subCategory()
     {
-        return $this->belongsToMany(\Nowyouwerkn\WeCommerce\Models\Category::class, 'product_category', 'product_id', 'category_id');
+        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'category_id');
     }
 
     //filter

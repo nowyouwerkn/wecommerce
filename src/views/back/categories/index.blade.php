@@ -60,7 +60,7 @@
         <div class="card">
             <div class="action-btns">
                 <ul class="list-inline">
-                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal_{{ $category->id }}" class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-wrench"></i></a></li>
+                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal_{{ $category->id }}" class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-edit"></i></a></li>
                     <li class="list-inline-item"><a  data-toggle="tooltip" title="" data-original-title="Detail" href="#" class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-eye"></i></a></li>
 
                     <li class="list-inline-item">
@@ -130,7 +130,7 @@
                         </a>
                     </div>
                     <div style="transform: scale(.8);">
-                        <a href="javascript:void(0)" data-toggle="modal" data-target="#editModalSub_{{ $sub->id }}" class="btn btn-rounded btn-icon btn-sm btn-dark"><i class="fas fa-wrench"></i></a>
+                        <a href="javascript:void(0)" data-toggle="modal" data-target="#editModalSub_{{ $sub->id }}" class="btn btn-rounded btn-icon btn-sm btn-dark"><i class="fas fa-edit"></i></a>
 
                         <form method="POST" action="{{ route('categories.destroy', $sub->id) }}" style="display: inline-block;">
                             <button type="submit" class="btn btn-rounded btn-icon btn-sm btn-danger" data-toggle="tooltip" data-original-title="Delete">

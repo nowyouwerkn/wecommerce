@@ -13,12 +13,12 @@ class Category extends Model
     
     public function products()
     {
-        return $this->hasMany('\Nowyouwerkn\WeCommerce\Models\Product');
+        return $this->hasMany(Product::class);
     }
 
     public function favoriteProduct()
     {
-        return $this->hasOne('\Nowyouwerkn\WeCommerce\Models\Product');
+        return $this->hasOne(Product::class);
     }
 
     public function getParentCategoryName()

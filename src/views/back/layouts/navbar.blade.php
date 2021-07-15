@@ -22,14 +22,18 @@
                         <i data-feather="message-square"></i>
                     </a>
                     -->
+                    <!--
                     <a href="{{ route('notifications.index') }}" class="new" data-toggle="tooltip" title="Tienes 4 notificaciones nuevas">
                         <i data-feather="bell"></i>
                     </a>
-                    <!--
-                    <a href="" data-toggle="tooltip" title="Sign out">
-                        <i data-feather="log-out"></i>
-                    </a>
                     -->
+                    
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" data-toggle="tooltip" title="Cerrar Sesión">
+                        <i data-feather="log-out"></i>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </a>
                 </div>
             </div>
             <div class="aside-loggedin-user">

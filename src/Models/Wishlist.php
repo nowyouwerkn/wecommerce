@@ -16,6 +16,6 @@ class Wishlist extends Model
 
     public function product()
     {
-        return $this->belongsTo(Nowyouwerkn\WeCommerce\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 }

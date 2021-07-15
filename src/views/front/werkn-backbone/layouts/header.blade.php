@@ -95,7 +95,7 @@
                                         @if(Session::has('cart'))
                                         @php
                                         $oldCart = Session::get('cart');
-                                        $cart = new App\Models\Cart($oldCart);
+                                        $cart = new Nowyouwerkn\WeCommerce\Models\Cart($oldCart);
 
                                         $products = $cart->items;
                                         $totalPrice = $cart->totalPrice

@@ -73,12 +73,18 @@ Para comenzar a usar este paquete debes usar el siguiente comando para agregarlo
 composer require nowyouwerkn/wecommerce
 ```
 
-Opcional: el proveedor de servicios se registrará automáticamente. O puede agregar manualmente el proveedor de servicios en su archivo config / app.php:
+Es necesario agregar proveedores al proyecto para poder utilizar todas las funciones de las librerias utilizadas por el paquete. Esto se agrega en el archivo `config/app.php` 
 
 ```
 'providers' => [
     // ...
     Nowyouwerkn\WeCommerce\WeCommerceServiceProvider::class,
+    Intervention\Image\ImageServiceProvider::class
+];
+
+'aliases' => [
+    // ...
+    'Image' => Intervention\Image\Facades\Image::class
 ];
 ```
 

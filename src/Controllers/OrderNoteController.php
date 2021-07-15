@@ -7,10 +7,19 @@ use Auth;
 use Session;
 
 use Nowyouwerkn\WeCommerce\Models\OrderNote;
+use Nowyouwerkn\WeCommerce\Models\Notification;
+
 use Illuminate\Http\Request;
 
 class OrderNoteController extends Controller
 {
+    private $notification;
+
+    public function __construct()
+    {
+        $this->notification = new Notification;
+    }
+
     public function index()
     {
         //
@@ -37,8 +46,15 @@ class OrderNoteController extends Controller
 
         $note->save();
 
+        // Notificación
+        $type = 'Orden';
+        $by = Auth::user();
+        $data = 'creó una nueva nota en la orden #' . $order->id;
+
+        $this->notification->send($type, $by ,$data);
+
         // Mensaje de session
-        Session::flash('success', 'Your note was saved correctly in the database.');
+        Session::flash('success', 'Tu nota se guardó exitosamente en la base de datos.');
 
         // Enviar a vista
         return redirect()->back();

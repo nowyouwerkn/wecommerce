@@ -116,6 +116,7 @@
                                 -->
                                 <li class="cart-total-amount"><span>Total</span> <span class="amount">${{ number_format($totalPrice) }}</span></li>
                             </ul>
+                            
                             <a href="{{ route('checkout') }}" class="btn">SEGUIR CON LA COMPRA</a>
                         </form>
                     </div>

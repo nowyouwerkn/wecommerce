@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Session;
 use Auth;
 
-use Nowyouwerkn\WeCommerce\Models\Stock;
+use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Variant;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 
@@ -17,7 +17,9 @@ class StockController extends Controller
 
     public function index()
     {
-        return view('wecommerce::back.stocks.index');
+        $products = Product::paginate(10);
+
+        return view('wecommerce::back.stocks.index')->with('products', $products);
     }
 
     public function create()
@@ -72,7 +74,10 @@ class StockController extends Controller
 
         $stock->save();
 
-        return response()->json(['mensaje' => 'Mensaje de exito', 'variant' => $variant->value], 200);
+        return response()->json([
+            'mensaje' => 'Mensaje de exito', 
+            'variant' => $variant->value
+        ], 200);
     }
 
     public function show(Stock $stock)

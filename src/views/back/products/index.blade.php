@@ -57,7 +57,7 @@
                                 <td style="width: 150px; position: relative;">
                                     <img style="width: 100%;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
                                     <div class="text-center margin-top-10">
-                                        <small><p>+ {{ $product->images->count() }} Image(s)</p></small>    
+                                        <small><p>+ {{ $product->images->count() }} Imágen(es)</p></small>    
                                     </div>
                                 </td>
                                 <td style="width: 250px;">

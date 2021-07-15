@@ -14,12 +14,20 @@ use Nowyouwerkn\WeCommerce\Models\Category;
 use Nowyouwerkn\WeCommerce\Models\ProductSize;
 use Nowyouwerkn\WeCommerce\Models\ProductImage;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
+use Nowyouwerkn\WeCommerce\Models\Notification;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+    private $notification;
+
+    public function __construct()
+    {
+        $this->notification = new Notification;
+    }
+
     public function index()
     {
         $products = Product::paginate(15);
@@ -96,16 +104,93 @@ class ProductController extends Controller
 
         $product->subCategory()->sync($request->category_id);
 
-        if ($request->type_static == false) {
-            return response()->json(['mensaje' => 'Mensaje de exito', 'product_id' => $product->id], 200);
-        }else{
-            // Mensaje de session
-            Session::flash('success', 'Your product was saved correctly in the database.');
+        // Notificación
+        $type = 'Producto';
+        $by = Auth::user();
+        $data = 'creó el nuevo producto con nombre: ' . $product->name;
 
-            // Enviar a vista
-            return redirect()->route('products.show', $product->id);
-        }
+        $this->notification->send($type, $by ,$data);
+
+        // Mensaje de session
+        Session::flash('success', 'Tu producto se guardó exitosamente en la base de datos.');
+
+        // Enviar a vista
+        return redirect()->route('products.show', $product->id);
+
+    }
+
+    public function storeDynamic(Request $request)
+    {
+        //Validar
+        $this -> validate($request, array(
+            'name' => 'unique:products|required|max:255',
+            'description' => 'required',
+            'price' => 'required',
+            'model_image' => 'sometimes|image',
+            'sku' => 'nullable',
+        ));
+
+        // Guardar datos en la base de datos
+        $product = new Product;
+
+        $product->name = $request->name;
+        $product->slug = Str::slug($request->name);
+        $product->description = $request->description;
+        $product->materials = Purifier::clean($request->materials);
+        $product->color = $request->color;
+        $product->pattern = $request->pattern;
+
+        $product->in_index = $request->in_index;
+        $product->is_favorite = $request->is_favorite;
         
+        $product->price = $request->price;
+        $product->discount_price = $request->discount_price;
+        $product->production_cost = $request->production_cost;
+
+        $product->has_discount = $request->has_discount;
+        $product->has_tax = $request->has_tax;
+
+        $product->sku = $request->sku;
+        $product->barcode = $request->barcode;
+        $product->stock = $request->stock;
+
+        $product->size_chart_file = $request->size_chart_file;
+        $product->height = $request->height;
+        $product->width = $request->width;
+        $product->lenght = $request->lenght;
+        $product->weight = $request->weight;
+
+        $product->category_id = $request->category_id;
+        
+        $product->status = $request->status;
+        $product->search_tags = $request->search_tags;
+        $product->available_date_start = $request->available_date_start;
+
+        if ($request->hasFile('model_image')) {
+            $model_image = $request->file('model_image');
+            $filename = 'model' . time() . '.' . $model_image->getClientOriginalExtension();
+            $location = public_path('img/products/' . $filename);
+
+            Image::make($model_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $product->image = $filename;
+        }
+
+        $product->save();
+
+        $product->subCategory()->sync($request->category_id);
+
+        // Notificación
+        $type = 'Producto';
+        $by = Auth::user();
+        $data = 'creó el nuevo producto con nombre: ' . $product->name;
+
+        $this->notification->send($type, $by ,$data);
+
+        return response()->json([
+            'mensaje' => 'Gran Mensaje', 
+            'product_id' => $product->id
+        ], 200);
     }
 
     public function show($id)
@@ -219,6 +304,14 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
+        //Validar
+        $this -> validate($request, array(
+            'description' => 'required',
+            'price' => 'required',
+            'model_image' => 'sometimes|image',
+            'sku' => 'nullable',
+        ));
+
         // Guardar datos en la base de datos
         $product = Product::find($id);
 
@@ -228,32 +321,36 @@ class ProductController extends Controller
         $product->materials = Purifier::clean($request->materials);
         $product->color = $request->color;
         $product->pattern = $request->pattern;
-        $product->search_tags = $request->search_tags;
-        $product->price = $request->price;
-
-        $product->has_discount = $request->has_discount;
-        $product->discount_start = $request->discount_start;
-        $product->discount_end = $request->discount_end;
-        
-        $product->discount_price = $request->discount_price;
-
-        $product->sku = $request->sku;
-        $product->brand_id = $request->brand_id;
-        $product->gender_id = $request->gender_id;
 
         $product->in_index = $request->in_index;
         $product->is_favorite = $request->is_favorite;
+        
+        $product->price = $request->price;
+        $product->discount_price = $request->discount_price;
+        $product->production_cost = $request->production_cost;
 
-        $product->category_id = $request->main_category;
+        $product->has_discount = $request->has_discount;
+        $product->has_tax = $request->has_tax;
+
+        $product->sku = $request->sku;
+        $product->barcode = $request->barcode;
+        $product->stock = $request->stock;
+
+        $product->size_chart_file = $request->size_chart_file;
         $product->height = $request->height;
-        $product->lenght = $request->lenght;
         $product->width = $request->width;
+        $product->lenght = $request->lenght;
+        $product->weight = $request->weight;
 
-        $img2 = 'model';
+        $product->category_id = $request->category_id;
+        
+        $product->status = $request->status;
+        $product->search_tags = $request->search_tags;
+        $product->available_date_start = $request->available_date_start;
 
         if ($request->hasFile('model_image')) {
             $model_image = $request->file('model_image');
-            $filename = $img2 . time() . '.' . $model_image->getClientOriginalExtension();
+            $filename = 'model' . time() . '.' . $model_image->getClientOriginalExtension();
             $location = public_path('img/products/' . $filename);
 
             Image::make($model_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
@@ -262,25 +359,39 @@ class ProductController extends Controller
         }
 
         $product->save();
+
         $product->subCategory()->sync($request->category_id);
-        $product->features()->sync($request->features);
+
+        // Notificación
+        $type = 'Producto';
+        $by = Auth::user();
+        $data = 'actualizó el producto ' . $product->name;
+
+        $this->notification->send($type, $by ,$data);
 
         // Mensaje de session
         Session::flash('success', 'Your product was saved correctly in the database.');
 
         // Enviar a vista
-        return redirect()->route('productos.show', $product->id);
+        return redirect()->route('products.show', $product->id);
 
     }
     public function destroy($id)
     {
         $product = Product::find($id);
 
+        // Notificación
+        $type = 'Producto';
+        $by = Auth::user();
+        $data = 'eliminó permanentemente el producto ' . $product->name;
+
+        $this->notification->send($type, $by ,$data);
+
+        //
         $product->delete();
 
-        Session::flash('success', 'The product was succesfully deleted.');
-
-        return redirect()->route('productos.index');
+        Session::flash('success', 'Este producto se eliminó exitosamente.');
+        return redirect()->route('products.index');
     }
 
     public function fetchSubcategory(Request $request)

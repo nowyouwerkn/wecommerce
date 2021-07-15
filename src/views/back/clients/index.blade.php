@@ -91,7 +91,7 @@
                                 <td>{{ $client->email }}</td>
                                 <td>
                                     @php
-                                        $wishlist = \App\Models\Wishlist::where('user_id', $client->id)->get();
+                                        $wishlist = Nowyouwerkn\WeCommerce\Models\Wishlist::where('user_id', $client->id)->get();
                                     @endphp
 
                                     @if($wishlist->count() == NULL)

@@ -8,10 +8,19 @@ use Auth;
 use Purifier;
 
 use Nowyouwerkn\WeCommerce\Models\Coupon;
+use Nowyouwerkn\WeCommerce\Models\Notification;
+
 use Illuminate\Http\Request;
+
 
 class CouponController extends Controller
 {
+    private $notification;
+
+    public function __construct()
+    {
+        $this->notification = new Notification;
+    }
 
     public function index()
     {
@@ -54,6 +63,13 @@ class CouponController extends Controller
 
         $coupon->save();
 
+        // Notificación
+        $type = 'Cupón';
+        $by = Auth::user();
+        $data = 'creó un nuevo cupón con el código: ' . $coupon->code;
+
+        $this->notification->send($type, $by ,$data);
+
         // Mensaje de session
         Session::flash('success', 'Se guardó correctamente la información en tu base de datos.');
 
@@ -87,6 +103,13 @@ class CouponController extends Controller
 
         $coupon->save();
 
+        // Notificación
+        $type = 'Cupón';
+        $by = Auth::user();
+        $data = 'editó las condiciones del cupón: ' . $coupon->code;
+
+        $this->notification->send($type, $by ,$data);
+
         // Mensaje de session
         Session::flash('success', 'Se guardó correctamente la información en tu base de datos.');
 
@@ -98,6 +121,14 @@ class CouponController extends Controller
     {
         $coupon = Coupon::find($id);
 
+        // Notificación
+        $type = 'Cupón';
+        $by = Auth::user();
+        $data = 'eliminó el cupón con código: ' . $coupon->code;
+
+        $this->notification->send($type, $by ,$data);
+
+        //
         $coupon->delete();
 
         Session::flash('success', 'Se eliminó el cupón correctamente.');

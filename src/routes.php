@@ -31,6 +31,12 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
 
     //Catalog
     Route::resource('products', Nowyouwerkn\WeCommerce\Controllers\ProductController::class); //
+
+    Route::post('/products/create-dynamic', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeDynamic',
+        'as' => 'products.store.dynamic',
+    ]);
+
     Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
     Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
     /*

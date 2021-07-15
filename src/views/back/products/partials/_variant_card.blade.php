@@ -3,16 +3,22 @@
     <!-- Header -->
     <div class="card-header pd-t-20 pd-b-0 bd-b-0">
         <h5 class="mg-b-5">Variantes</h5>
-        <p class="tx-12 tx-color-03 mg-b-0">Variantes.</p>
+        <p class="tx-12 tx-color-03 mg-b-0">Puedes crear variantes para tus productos.</p>
     </div>
 
     <!-- Form -->
     <div class="card-body row">
         <div class="col-md-12">
-            <div class="custom-control custom-checkbox" id="hasVariants">
+        	<a href="javascript:void(0)" id="hasVariants"class="btn btn-sm pd-x-15 btn-white btn-uppercase">
+                Agregar Variantes
+           	</a>
+
+           	<!--
+            <div class="custom-control custom-checkbox" >
                 <input type="checkbox" class="custom-control-input" id="variants">
                 <label class="custom-control-label" for="variants">Este producto tiene variantes</label>
             </div>
+        	-->
         </div>
     </div>
 
@@ -52,7 +58,8 @@
 			-->
 		</div>
 	</div>
-    <!-- Variant Heade -->
+
+    <!-- Variant Header -->
     <div id="collapsedVariants" class="table-responsive hidden">
         <table class="table table-dashboard mg-b-0">
             <thead>
@@ -93,13 +100,19 @@
 
         <div class="col-md-12 my-3">
             <a href="javascript:void(0)" id="saveVariant" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
-                Agregar Variante
+                Guardar Variante
            	</a>
         </div>
     </div>
 </div>
 
-<input type="hidden" id="product_id" name="product_id">
+@php
+	$product = \Nowyouwerkn\WeCommerce\Models\Product::orderBy('created_at', 'desc')->first();
+
+	$product_id = $product->id+1;
+@endphp
+
+<input type="hidden" id="product_id" name="product_id" value="{{ $product_id }}">
 
 @push('scripts')
 <script type="text/javascript">
@@ -107,14 +120,16 @@
 		event.preventDefault();
 		$('#collapsedVariants').removeClass('hidden');
 
+		$(this).toggle();
+
 		$.ajax({
 			method: 'POST',
-	        url: "{{ route('products.store') }}",
+	        url: "{{ route('products.store.dynamic') }}",
 	        data:{ 
-	        	type_static:false,
 	        	name:$('input[name=name]').val(),
 	        	description:$('textarea[name=description]').val(),
 	        	price:$('input[name=price]').val(),
+	        	status: 'Borrador',
 	        	_token: '{{ Session::token() }}'
 	        },
 	        success: function(response){

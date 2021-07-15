@@ -7,11 +7,19 @@ use Session;
 
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Review;
+use Nowyouwerkn\WeCommerce\Models\Notification;
 
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
+    private $notification;
+
+    public function __construct()
+    {
+        $this->notification = new Notification;
+    }
+
     public function index()
     {
         $reviews = Review::where('is_approved', true)->get();
@@ -46,7 +54,14 @@ class ReviewController extends Controller
 
         $review->save();
 
-        Session::flash('success', 'Thanks for your review. Pending moderation.');
+        // Notificación
+        $type = 'Reseña';
+        $by = Auth::user();
+        $data = 'dejó una reseña para: ' . $product->name;
+
+        $this->notification->send($type, $by ,$data);
+
+        Session::flash('success', 'Gracias por tu reseña. La estamos revisando para publicarla lo antes posible.');
 
         return redirect()->route('detalle', [$product->slug]);
     }
@@ -58,14 +73,21 @@ class ReviewController extends Controller
 
     public function approve($id)
     {
-         $review = Review::find($id);
+        $review = Review::find($id);
 
-         $review->is_approved = true;
-         $review->save();
+        $review->is_approved = true;
+        $review->save();
 
-         Session::flash('success', 'User Review is_approved!');
+        // Notificación
+        $type = 'Reseña';
+        $by = Auth::user();
+        $data = 'aprobó una reseña.';
 
-         return redirect()->back();
+        $this->notification->send($type, $by ,$data);
+
+        Session::flash('success', 'Reseña aprobada con éxito. Aparecerá en el detalle de producto en breve.');
+
+        return redirect()->back();
     }
 
     public function disapprove($id)
@@ -75,7 +97,7 @@ class ReviewController extends Controller
          $review->is_approved = false;
          $review->save();
 
-         Session::flash('success', 'User Review is_approved!');
+         Session::flash('success', 'Reseña bloqueada. No aparecerá en el producto.');
 
          return redirect()->back();
     }
@@ -90,6 +112,13 @@ class ReviewController extends Controller
         $review = Review::find($id);
 
         $review->delete();
+
+        // Notificación
+        $type = 'Reseña';
+        $by = Auth::user();
+        $data = 'eliminó una reseña.';
+
+        $this->notification->send($type, $by ,$data);
 
         return redirect()->back();
     }

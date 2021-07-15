@@ -53,7 +53,7 @@
 
         <div class="save-bar bg-success text-white d-flex align-items-center justify-content-between">
             <p class="mb-0">El sistema guarda como borrador ocasionalmente. Para hacerlo manual da click en el botón.</p>
-            <button id="save-form" class="btn-save-big btn btn-outline-light btn-sm text-white">Guardar cambios</button>
+            <button id="save-form" type="submit" class="btn-save-big btn btn-outline-light btn-sm text-white">Guardar cambios</button>
         </div>
         
         <div class="row">
@@ -104,14 +104,14 @@
     
                         <div class="col-md-6">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="in_index">
+                                <input type="checkbox" class="custom-control-input" id="in_index" name="in_index" value="1">
                                 <label class="custom-control-label" for="in_index">Mostrar en Inicio</label>
                             </div>
                         </div>
     
                         <div class="col-md-6">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="is_favorite">
+                                <input type="checkbox" class="custom-control-input" id="is_favorite" name="is_favorite" value="1">
                                 <label class="custom-control-label" for="is_favorite">Este producto es un favorito</label>
                             </div>
                         </div>
@@ -170,7 +170,7 @@
 
                             <div class="col-md-6 offset-md-6">
                                 <div class="custom-control custom-checkbox">
-                                  <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                  <input type="checkbox" class="custom-control-input" name="has_discount" id="customCheck1" value="1">
                                   <label class="custom-control-label" for="customCheck1">Activar descuento</label><br>
                                 </div>
                             </div> 
@@ -207,7 +207,7 @@
 
                             <div class="col-md-12 mt-3">
                                 <div class="custom-control custom-checkbox">
-                                  <input type="checkbox" class="custom-control-input" id="has_tax">
+                                  <input type="checkbox" class="custom-control-input" id="has_tax" name="has_tax" value="1">
                                   <label class="custom-control-label" for="has_tax">Este producto tiene impuestos (I.V.A 16%)</label>
                                   <span class="tx-13 tx-color-03 d-block wd-60p">Aparecerá un anuncio informativo en el detalle de producto indicando los impuestos de acuerdo a tu configuración de cuenta.</span>
                                 </div>

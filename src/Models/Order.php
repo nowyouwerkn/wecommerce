@@ -11,12 +11,12 @@ class Order extends Model
 
     public function user()
     {
-        return $this->belongsTo('Nowyouwerkn\WeCommerce\Models\User');
+        return $this->belongsTo(User::class);
     }
     
     public function notes()
     {
-    	return $this->hasMany('Nowyouwerkn\WeCommerce\Models\OrderNote', 'order_id');
+    	return $this->hasMany(OrderNote::class, 'order_id');
     }
 
 }
