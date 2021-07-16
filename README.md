@@ -105,13 +105,11 @@ php artisan optimize:clear
 php artisan config:clear
 ```
 
-El sistema necesita utilizar la ruta "/" que está utilizada por Laravel como vista de ejemplo. Accede al documento routes.php de tu proyecto de Laravel y comenta o borra la ruta predeterminada que esté en el sistema.
-
-Al realizarlo puedes usar 
+El sistema necesita utilizar la ruta "/" que está utilizada por Laravel como vista de ejemplo. Accede al documento `web.php` de tu proyecto de Laravel y sobreescribe la información con el archivo que se encuentra aqui: `https://github.com/nowyouwerkn/wecommerce/blob/main/src/routes.php`. Al realizarlo podrás usar.
 ```
 php artisan serve
 ```
-para prender tu servidor y acceder a /instalador para comenzar la instalación.
+para prender tu servidor y acceder a `/instalador` para comenzar la instalación.
 
 Si prefieres preparar manualmente el proyecto sigue los siguientes comandos.
 
@@ -119,7 +117,6 @@ Si prefieres preparar manualmente el proyecto sigue los siguientes comandos.
 php artisan migrate
 php artisan db:seed
 ```
-
 
 
 ### Modificaciones necesarias a Laravel
@@ -146,6 +143,39 @@ https://github.com/nowyouwerkn/wecommerce/blob/main/src/routes.php
 ```
 <!-- USAGE EXAMPLES -->
 ## Uso
+El paquete publica automáticamente las vistas de front que verán los compradores asi como todos los estilos relacionados a su funcionamiento. Puedes editar las vistas de front que se encuentran en `resources/views/front/theme/werkn-backbone`.
+
+Estructura:
+* :open_file_folder: theme
+  * :open_file_folder: werkn-backbone
+    * :open_file_folder: layouts
+      * :open_file_folder: partials
+        * _messages.blade.php
+        * _modal_messages.blade.php
+      * _filter_sidebar.blade.php
+      * _product_card.blade.php
+      * footer.blade.php
+      * header.blade.php
+      * main.blade.php
+      * nav-user.blade.php
+    * :open_file_folder: search
+      * general_query.blade.php
+    * :open_file_folder: user_profile
+      * account.blade.php
+      * address.blade.php
+      * profile.blade.php
+      * shopping.blade.php
+      * wishlist.blade.php
+    * auth.blade.php
+    * cart.blade.php
+    * catalog.blade.php
+    * catalog_filter.blade.php
+    * checkout.blade.php
+    * detail.blade.php
+    * index.blade.php :house:
+
+
+Para hacer cambios en los estilos puedes modificar libremente el archivo `main.blade.php` dentro de `layouts` para modificar o eliminar los archivos originales de la plantilla. Para sobreescribir los preexistentes recomendamos hacer todo dentro de la carpeta `css` en el archivo `w-custom.css`
 
 
 <!-- ROADMAP -->

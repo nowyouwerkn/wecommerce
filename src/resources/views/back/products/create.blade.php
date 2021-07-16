@@ -351,7 +351,7 @@
                                     @endforeach
                                 </select>
                                 -->
-                                @if(empty($categories))
+                                @if($categories->count() != 0)
                                     <label for="category_id">Colección <span class="text-danger">*</span></label>
                                     <select class="custom-select tx-13 old-cat" name="category_id" required="">
                                         @foreach ($categories as $category)
