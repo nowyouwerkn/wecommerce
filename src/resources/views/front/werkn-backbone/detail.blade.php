@@ -1,4 +1,4 @@
-@extends('front.werkn-backbone.layouts.main')
+@extends('front.theme.werkn-backbone.layouts.main')
 
 @push('seo')
 <meta property="og:title" content="{{ $product->name }}">
@@ -325,7 +325,7 @@
             <div class="row related-product-active">
                 @foreach($products_selected as $product_info)
                 <div class="col">
-                    @include('front.werkn-backbone.layouts._product_card')
+                    @include('front.theme.werkn-backbone.layouts._product_card')
                 </div>
                 @endforeach
             </div>

@@ -1,4 +1,4 @@
-@extends('front.werkn-backbone.layouts.main')
+@extends('front.theme.werkn-backbone.layouts.main')
 
 @push('seo')
 
@@ -139,7 +139,7 @@
                 <div class="row">
                     @foreach($products as $product_info)
                     <div class="col-xl-4 col-sm-6">
-                        @include('front.werkn-backbone.layouts._product_card')
+                        @include('front.theme.werkn-backbone.layouts._product_card')
                     </div>
                     @endforeach
                 </div>

@@ -1,4 +1,4 @@
-@extends('front.werkn-backbone.layouts.main')
+@extends('front.theme.werkn-backbone.layouts.main')
 
 @push('seo')
 
@@ -100,7 +100,7 @@
                 <div class="row new-arrival-active">
                     @foreach($products as $product_info)
                     <div class="col-xl-4 col-sm-6 grid-item grid-sizer cat-two">
-                        @include('front.werkn-backbone.layouts._product_card')
+                        @include('front.theme.werkn-backbone.layouts._product_card')
                     </div>
                     @endforeach
                 </div>
@@ -142,7 +142,7 @@
         <div class="row best-selling-active">
             @foreach($products as $product)
             <div class="col">
-                @include('front.werkn-backbone.layouts._product_card')
+                @include('front.theme.werkn-backbone.layouts._product_card')
             </div>
             @endforeach
         </div>

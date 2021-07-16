@@ -125,14 +125,14 @@
             <i class="fas fa-angle-up"></i>
         </button>
 
-    	@include('front.werkn-backbone.layouts.header')
+    	@include('front.theme.werkn-backbone.layouts.header')
 
     	<main>
-            @include('front.werkn-backbone.layouts.partials._messages')
+            @include('front.theme.werkn-backbone.layouts.partials._messages')
     		@yield('content')
     	</main>
 
-    	@include('front.werkn-backbone.layouts.footer')
+    	@include('front.theme.werkn-backbone.layouts.footer')
 
 		<!-- JS here -->
         <script src="{{ asset('themes/werkn-backbone/js/vendor/jquery-3.5.0.min.js') }}"></script>

@@ -1,4 +1,4 @@
-@extends('front.werkn-backbone.layouts.main')
+@extends('front.theme.werkn-backbone.layouts.main')
 
 @push('seo')
 
@@ -22,7 +22,7 @@
             <!-- Content -->
             <div class="row mt-3">
                 <div class="col-md-3">
-                    @include('front.werkn-backbone.layouts.nav-user')
+                    @include('front.theme.werkn-backbone.layouts.nav-user')
                 </div>
 
                 <div class="col-md-9">
