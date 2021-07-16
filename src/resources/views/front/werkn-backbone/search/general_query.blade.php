@@ -29,9 +29,9 @@
             <div class="col-xl-3 col-lg-4">
                 <form method="get" action="{{ route('dynamic.filter.front') }}" id="product_filter_form">
                     @php
-                        $popular_products = App\Models\Product::where('is_favorite', true)->get();
-                        $categories = \App\Models\Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
-                        $variants = \App\Models\Variant::get();
+                        $popular_products = Nowyouwerkn\WeCommerce\Models\Product::where('is_favorite', true)->get();
+                        $categories = Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
+                        $variants = Nowyouwerkn\WeCommerce\Models\Variant::get();
                     @endphp
 
                     <aside class="shop-sidebar pr-5">
@@ -122,7 +122,6 @@
                         <div class="col-md-6">
                             <div class="shop-top-left">
                                 <ul>
-                                    <!--<li><a href="#"><i class="flaticon-menu"></i> FILTER</a></li>-->
                                     <li>Mostrando 1–9 de 80 resultados</li>
                                 </ul>
                             </div>
@@ -151,18 +150,6 @@
                 </div>
                 <div class="pagination-wrap">
                     {{ $products->links() }}
-                    {{-- 
-                    <ul>
-                        <li class="prev"><a href="#">Prev</a></li>
-                        <li><a href="#">1</a></li>
-                        <li class="active"><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">...</a></li>
-                        <li><a href="#">10</a></li>
-                        <li class="next"><a href="#">Next</a></li>
-                    </ul>
-                    --}}
                 </div>
             </div>
             

@@ -23,6 +23,6 @@ class SearchController extends Controller
             $query->where(strtolower('name'), 'LIKE', '%' . strtolower($search_query) . '%');
         })->paginate(30);
 
-        return view('wecommerce::front.werkn-backbone.search.general_query')->with('products', $products);
+        return view('front.theme.werkn-backbone.search.general_query')->with('products', $products);
     }
 }

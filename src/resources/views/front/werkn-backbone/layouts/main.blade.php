@@ -33,6 +33,10 @@
         <link rel="stylesheet" href="{{ asset('themes/werkn-backbone/css/default.css') }}">
         <link rel="stylesheet" href="{{ asset('themes/werkn-backbone/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('themes/werkn-backbone/css/responsive.css') }}">
+
+        <!-- This is the file for your custom styles -->
+        <link rel="stylesheet" href="{{ asset('css/w-custom.css') }}">
+
         @stack('stylesheets')
     </head>
     <body>
