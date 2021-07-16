@@ -17,10 +17,10 @@ class CreateProductCategoryTable extends Migration
             $table->id();
 
             //$table->integer('product_id')->unsigned();
-            $table->foreignId('product_id')->constrained('products');
+            $table->foreignId('product_id')->constrained('products')->references('id')->on('products')->onDelete('cascade');
 
             //$table->integer('category_id')->unsigned();
-            $table->foreignId('category_id')->constrained('categories');
+            $table->foreignId('category_id')->constrained('categories')->references('id')->on('categories')->onDelete('cascade');
 
             $table->timestamps();
         });

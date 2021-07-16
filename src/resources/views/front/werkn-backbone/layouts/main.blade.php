@@ -79,7 +79,7 @@
 
             <div class="werkn-admin-bar">
                 <ul>
-                   <li>{{ $config->store_name }}</li>
+                   <li>{{ $config->store_name ?? 'Sin Configurar' }}</li>
                    <li><a href="{{ route('dashboard') }}">Ir a tu Panel</a></li>
                 </ul>
 
@@ -125,14 +125,14 @@
             <i class="fas fa-angle-up"></i>
         </button>
 
-    	@include('wecommerce::front.werkn-backbone.layouts.header')
+    	@include('front.werkn-backbone.layouts.header')
 
     	<main>
-            @include('wecommerce::front.layouts.partials._messages')
+            @include('front.werkn-backbone.layouts.partials._messages')
     		@yield('content')
     	</main>
 
-    	@include('wecommerce::front.werkn-backbone.layouts.footer')
+    	@include('front.werkn-backbone.layouts.footer')
 
 		<!-- JS here -->
         <script src="{{ asset('themes/werkn-backbone/js/vendor/jquery-3.5.0.min.js') }}"></script>

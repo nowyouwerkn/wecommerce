@@ -1,4 +1,4 @@
-@extends('wecommerce::front.werkn-backbone.layouts.main')
+@extends('front.werkn-backbone.layouts.main')
 
 @push('seo')
 

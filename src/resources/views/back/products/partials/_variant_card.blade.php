@@ -109,7 +109,11 @@
 @php
 	$product = \Nowyouwerkn\WeCommerce\Models\Product::orderBy('created_at', 'desc')->first();
 
-	$product_id = $product->id+1;
+	if(empty($product)){
+		$product_id = 1;
+	}else{
+		$product_id = $product->id+1;
+	}
 @endphp
 
 <input type="hidden" id="product_id" name="product_id" value="{{ $product_id }}">

@@ -59,11 +59,11 @@ class WeCommerceServiceProvider extends ServiceProvider
     {   
         // Vistas de autenticación usando Fortify
         Fortify::loginView(function () {
-            return view('wecommerce::front.werkn-backbone.auth');
+            return view('front.theme.werkn-backbone.auth');
         });
 
         Fortify::registerView(function () {
-            return view('wecommerce::front.werkn-backbone.auth');
+            return view('front.theme.werkn-backbone.auth');
         });
 
         $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
@@ -85,7 +85,7 @@ class WeCommerceServiceProvider extends ServiceProvider
 
         // Publica los archivos de traducción del sistema
         $this->publishes([
-            __DIR__.'/resources/lang/es' => resource_path('lang/'),
+            __DIR__.'/resources/lang' => resource_path('lang/'),
         ]);
 
         // Publicar Assets de Estilos

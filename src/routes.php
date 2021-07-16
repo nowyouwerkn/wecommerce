@@ -5,6 +5,39 @@ use Illuminate\Support\Facades\Route;
 // Authentication Views
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+// INSTALADOR 
+Route::prefix('/instalador')->group(function () {
+    Route::get('/', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@index',
+        'as' => 'install.index',
+    ]);
+
+    Route::post('/vistas', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@views',
+        'as' => 'install.views',
+    ]);
+
+    Route::post('/migraciones', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@migrations',
+        'as' => 'install.migrations',
+    ]);
+
+    Route::post('/seeders', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@seeders',
+        'as' => 'install.seeders',
+    ]);
+
+    Route::get('/registro', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@auth',
+        'as' => 'install.auth',
+    ]);
+
+    Route::post('/registro', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@authPost',
+        'as' => 'install.store',
+    ]);
+});
+
 // Back-End Views
 Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     //Dashboard
@@ -151,14 +184,32 @@ Route::get('/wishlist/remove/{id}', [
 	'as' => 'wishlist.remove',
 ]);
 
+/*
+*
+*
+*
+*
+*/
+
 // XML Feed para Catálogo Facebook
 Route::get('/xml-feed', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@xmlFeed',
     'as' => 'xml.feed',
 ]);
 
+/*
+*
+*
+*
+*
+*/
 
-// FRONT VIEWS
+/* 
+ * FRONT VIEWS
+ * 
+ *
+ *
+*/
 Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@index')->name('index');
 Route::get('catalog', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalogAll')->name('catalog.all');
 
@@ -210,36 +261,4 @@ Route::group(['prefix' => 'profile', 'middleware' => 'auth'], function(){
     Route::get('account', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@account')->name('account');
 });
 
-// INSTALADOR 
-Route::prefix('/instalador')->group(function () {
-    Route::get('/', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@index',
-        'as' => 'install.index',
-    ]);
-
-    Route::post('/vistas', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@views',
-        'as' => 'install.views',
-    ]);
-
-    Route::post('/migraciones', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@migrations',
-        'as' => 'install.migrations',
-    ]);
-
-    Route::post('/seeders', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@seeders',
-        'as' => 'install.seeders',
-    ]);
-
-    Route::get('/registro', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@auth',
-        'as' => 'install.auth',
-    ]);
-
-    Route::post('/registro', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@authPost',
-        'as' => 'install.store',
-    ]);
-});
 

@@ -66,13 +66,17 @@ class FrontController extends Controller
 
         $banner = Banner::where('is_active', true)->first();
 
-        return view('wecommerce::front.werkn-backbone.index')
+        return view('front.theme.werkn-backbone.index')
         ->with('products', $products)
         ->with('main_categories', $main_categories)
         ->with('banner', $banner);
     }
 
-    /* Catalog Filters */
+    /*
+    * Catálogo
+    * Controladores para vistas de catálogo y producto
+    */
+
     public function dynamicFilter(Request $request)
     {
         $total_products = Product::all()->count();
@@ -91,12 +95,12 @@ class FrontController extends Controller
         $products = $query->paginate(30)->withQueryString();
 
         if($products->count() > 0){
-            return view('wecommerce::front.werkn-backbone.catalog_filter')
+            return view('front.theme.werkn-backbone.catalog_filter')
             ->with('products', $products);
         }else{
             $products = collect([]);
 
-            return view('wecommerce::front.werkn-backbone.catalog_filter')
+            return view('front.theme.werkn-backbone.catalog_filter')
             ->with('products', $products);
         }
     }
@@ -105,17 +109,16 @@ class FrontController extends Controller
     {
         $products = Product::orderBy('created_at', 'desc')->paginate(15);
 
-        return view('wecommerce::front.werkn-backbone.catalog')
+        return view('front.theme.werkn-backbone.catalog')
         ->with('products', $products);
     }
 
-    /* Normal Category Filter */
     public function catalog($category_slug)
     {
         $catalog = Category::where('slug', $category_slug)->first();
         $products = Product::where('category_id', $catalog->id)->paginate(15);
 
-        return view('wecommerce::front.werkn-backbone.catalog')
+        return view('front.theme.werkn-backbone.catalog')
         ->with('catalog', $catalog)
         ->with('products', $products);
     }
@@ -130,7 +133,7 @@ class FrontController extends Controller
         if (empty($product)) {
             return redirect()->back();
         }else{
-            return view('wecommerce::front.werkn-backbone.detail')
+            return view('front.theme.werkn-backbone.detail')
             ->with('product', $product)
             ->with('products_selected', $products_selected);
         }
@@ -141,11 +144,16 @@ class FrontController extends Controller
         $variants = collect();
 
         // Regresar a Vista
-        //return view('wecommerce::front.werkn-backbone.detail')->with('product', $product)->with('products_selected', $products_selected)->with('variants');
+        //return view('front.theme.werkn-backbone.detail')->with('product', $product)->with('products_selected', $products_selected)->with('variants');
         */
 
-        //return view('wecommerce::front.werkn-backbone.detail', compact('product', 'products_selected', 'variants' ));
+        //return view('front.theme.werkn-backbone.detail', compact('product', 'products_selected', 'variants' ));
     }
+
+    /*
+    * Checkout
+    * Lógica de carrito, checkout y compra exitosa
+    */
 
     public function cart ()
     {
@@ -156,7 +164,7 @@ class FrontController extends Controller
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
 
-        return view('wecommerce::front.werkn-backbone.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice);
+        return view('front.theme.werkn-backbone.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice);
     }
 
     public function checkout ()
@@ -183,7 +191,7 @@ class FrontController extends Controller
 
             $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-           return view('wecommerce::front.werkn-backbone.checkout')
+           return view('front.theme.werkn-backbone.checkout')
            ->with('total', $total)
            ->with('user', $user)
            ->with('addresses', $addresses)
@@ -201,7 +209,7 @@ class FrontController extends Controller
 
             $addresses = UserAddress::where('user_id', '000998')->get();
 
-            return view('wecommerce::front.werkn-backbone.checkout')
+            return view('front.theme.werkn-backbone.checkout')
             ->with('total', $total)
             ->with('addresses', $addresses)
             ->with('payment_method', $payment_method)
@@ -659,42 +667,56 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
-        return view('wecommerce::front.werkn-backbone.profile')->with('order', $order)->with('purchase_value', $purchase_value);
+        return view('front.theme.werkn-backbone.profile')->with('order', $order)->with('purchase_value', $purchase_value);
     }
+
+    /*
+    * Autenticación
+    * Esta vista maneja el LOGIN/REGISTRO
+    */
 
     public function auth ()
     {
-        return view('wecommerce::front.werkn-backbone.auth');
+        return view('front.theme.werkn-backbone.auth');
     }
 
-    //Profile
+    /*
+    * Información de Usuario
+    * Estas son las vistas del perfil de cliente
+    */
+
     public function profile ()
     {
-        return view('wecommerce::front.werkn-backbone.profile');
+        return view('front.theme.werkn-backbone.user_profile.profile');
     }
 
     public function wishlist ()
     {
         $wishlist = Wishlist::where('user_id', Auth::user()->id)->get();
 
-        return view('wecommerce::front.werkn-backbone.wishlist')->with('wishlist', $wishlist);
+        return view('front.theme.werkn-backbone.user_profile.wishlist')->with('wishlist', $wishlist);
     }
 
     public function shopping ()
     {
-        return view('wecommerce::front.werkn-backbone.shopping');
+        return view('front.theme.werkn-backbone.user_profile.shopping');
     }
 
     public function address ()
     {
         $addresses = UserAddress::paginate(10);
-        return view('wecommerce::front.werkn-backbone.address', compact('addresses'));
+        return view('front.theme.werkn-backbone.user_profile.address', compact('addresses'));
     }
 
     public function account ()
     {
-        return view('wecommerce::front.werkn-backbone.account');
+        return view('front.theme.werkn-backbone.user_profile.account');
     }
+
+    /*
+    * Extras Front
+    * Lógica de cupones
+    */
 
     public function applyCuopon(Request $request){
         // Recuperar codigo del cupon enviado por AJAX
@@ -811,6 +833,6 @@ class FrontController extends Controller
     {   
         $items = Product::all();
         
-        return view('feeds.xml')->with('items', $items);
+        return view('weecommerce:feeds.xml')->with('items', $items);
     }
 }
