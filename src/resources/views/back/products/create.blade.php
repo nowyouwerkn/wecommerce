@@ -24,6 +24,18 @@
     .hidden{
         display: none;
     }
+
+    .btn-add{
+        text-transform: uppercase;
+        padding: 15px 0px;
+        display: inline-block;
+        font-size: .8em;
+    }
+
+    .new-aut,
+    .new-cat{
+        display: none;
+    }
 </style>
 @endsection
 
@@ -71,15 +83,15 @@
                     <div class="card-body row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="name">Nombre</label>
-                                <input type="text" name="name" class="form-control">
+                                <label for="name">Nombre <span class="text-danger">*</span></label>
+                                <input type="text" name="name" class="form-control" required="">
                             </div>
                         </div>
     
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="description">Descripcion</label>
-                                <textarea name="description" cols="10" rows="3" class="form-control"></textarea>
+                                <label for="description">Descripcion <span class="text-danger">*</span></label>
+                                <textarea name="description" cols="10" rows="3" class="form-control" required=""></textarea>
                             </div>
                         </div>
     
@@ -130,7 +142,7 @@
                     <div class="card-body row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="model_image">Imagen de Modelo</label>
+                                <label for="model_image">Imagen de Modelo <span class="text-success">Recomendado</span></label>
                                 <input type="file" name="model_image" class="form-control">
                             </div>
                         </div>
@@ -149,12 +161,12 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="discount_price">Precio</label>
+                                <label for="discount_price">Precio <span class="text-danger">*</span></label>
                                 <div class="input-group mg-b-10">
                                   <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">MX$</span>
                                   </div>
-                                    <input type="number" id="price" name="price" class="form-control">
+                                    <input type="number" id="price" name="price" class="form-control" required="">
                                 </div>
                             </div>
         
@@ -229,21 +241,21 @@
                     <div class="card-body row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="stock">Cantidad</label>
-                                <input type="number" name="stock" class="form-control">
+                                <label for="stock">Cantidad <span class="text-danger">*</span></label>
+                                <input type="number" name="stock" class="form-control" value="1">
                             </div>
                         </div>
     
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="sku">SKU (Stock Keeping Unit)</label>
+                                <label for="sku">SKU (Stock Keeping Unit) <span class="text-danger">*</span></label>
                                 <input type="text" name="sku" class="form-control">
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="barcode">Código de Barras (ISBN, UPC, GTIN, etc)</label>
+                                <label for="barcode">Código de Barras (ISBN, UPC, GTIN, etc) <span class="text-info">(Opcional)</span></label>
                                 <input type="text" name="barcode" class="form-control">
                             </div>
                         </div>
@@ -331,12 +343,29 @@
                     <div class="card-body row">
                         <div class="col-md-12">
                             <div class="form-group mb-1">
-                                <label for="category_id">Categoria Principal (Tipo)</label>
-                                <select class="custom-select tx-13" name="category_id">
+                                <!--
+                                <label for="category_id">Colección <span class="text-danger">*</span></label>
+                                <select class="custom-select tx-13" name="category_id" required="">
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
+                                -->
+                                @if(empty($categories))
+                                    <label for="category_id">Colección <span class="text-danger">*</span></label>
+                                    <select class="custom-select tx-13 old-cat" name="category_id" required="">
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    <input type="text" name="category_name" class="form-control new-cat">
+
+                                    <small><a href="javascript:void(0)" id="newCategory" class="btn-add original-state">Crear nueva categoría</a></small>
+                                @else
+                                    <label for="category_id">Colección <span class="text-danger">*</span></label>
+                                    <input type="text" name="category_name" required="" class="form-control">
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -345,7 +374,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group mb-1">
-                                    <label for="tsearch_tagsags">Etiquetas</label>
+                                    <label for="tsearch_tagsags">Etiquetas <span class="text-success">Recomendado</span></label>
                                     <input type="text" name="search_tags" class="form-control" placeholder="Algodón, Fresco, Verano">
                                 </div>
                             </div>
@@ -410,5 +439,19 @@
         }
     });
 
+    $("#newCategory").click(function() {
+        var $this = $(this);
+        $(".new-cat").toggle("slow");
+        $(".old-cat").toggle("slow");
+        $this.toggleClass("original-state");
+
+        if ($this.hasClass("original-state")) {
+            $("#newCategory").text("Crear Nueva Categoría");
+        }else{
+            $("#newCategory").text("Seleccionar Categoría");
+            
+        }
+        
+    });
 </script>
 @endpush

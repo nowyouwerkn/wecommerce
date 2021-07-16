@@ -61,6 +61,16 @@ class ProductController extends Controller
             'sku' => 'nullable',
         ));
 
+        /* Crear categoría si usuario activó opción */
+        if ($request->category_name != NULL) {
+            $category = new Category;
+
+            $category->name = $request->category_name;
+            $category->slug = Str::slug($request->category_name);
+
+            $category->save();
+        }
+
         // Guardar datos en la base de datos
         $product = new Product;
 
@@ -91,7 +101,12 @@ class ProductController extends Controller
         $product->lenght = $request->lenght;
         $product->weight = $request->weight;
 
-        $product->category_id = $request->category_id;
+        if ($request->category_name != NULL) {
+            $product->category_id= $category->id;
+        }else{
+            $product->category_id = $request->category_id;
+        }
+        
         
         $product->status = $request->status;
         $product->search_tags = $request->search_tags;

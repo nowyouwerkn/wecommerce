@@ -43,13 +43,13 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Image</th>
-                                <th>Name</th>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
                                 <th>SKU</th>
-                                <th>Price</th>
-                                <th>Discount</th>
-                                <th>Stock</th>
-                                <th>Action</th>
+                                <th>Precio</th>
+                                <th>Precio Descuento</th>
+                                <th>Existencias</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
