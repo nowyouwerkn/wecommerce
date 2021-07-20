@@ -39,6 +39,18 @@
         border-color: #ff6000;
         color: #fff;
     }
+
+    .price-discounted{
+        opacity: .7;
+        font-size: 15px !important;
+        position: relative;
+        margin-top: -10px;
+        left: 0px;
+        border-bottom: 2px solid red;
+        display: inline-block;
+        line-height: 0px;
+        padding: 0px 11px;
+    }
 </style>
 @endpush
 
@@ -49,7 +61,7 @@
         <div class="row">
             <div class="col-lg-3 d-none d-lg-block">
                 <div class="previous-product">
-                    <a href="shop-details.html"><i class="fas fa-angle-left"></i> Producto anterior</a>
+                    <a href="{{ route('detail', [$last_product->category->slug, $last_product->slug]) }}"><i class="fas fa-angle-left"></i> Producto anterior</a>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -66,7 +78,7 @@
             </div>
             <div class="col-lg-3 d-none d-lg-block">
                 <div class="next-product">
-                    <a href="shop-details.html">Siguiente producto <i class="fas fa-angle-right"></i></a>
+                    <a href="{{ route('detail', [$next_product->category->slug, $next_product->slug]) }}">Siguiente producto <i class="fas fa-angle-right"></i></a>
                 </div>
             </div>
         </div>
@@ -112,8 +124,10 @@
             </div>
             <div class="col-lg-5">
                 <div class="shop-details-content">
-                    <a href="#" class="product-cat">{{ $product->category->name ?? 'Sin Categoria' }}</a>
+                    <a href="{{ route('catalog', $product->category->slug) }}" class="product-cat">{{ $product->category->name ?? 'Sin Categoria' }}</a>
                     <h3 class="title">{{ $product->name }}</h3>
+
+                    <!--
                     <div class="rating">
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
@@ -121,8 +135,16 @@
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
                     </div>
-                    <p class="style-name">SKU : {{ $product->sku }} con ID {{ $product->id }}</p>
+                    -->
+                    <p class="style-name">SKU : {{ $product->sku }}</p>
+                    @if($product->has_discount == true)
+                    <div class="price">Precio : ${{ number_format($product->discount_price, 2) }}</div>
+                    <div class="price price-discounted">${{ number_format($product->price, 2) }}</div>
+                    @else
                     <div class="price">Precio : ${{ number_format($product->price, 2) }}</div>
+                    @endif
+
+                    
                     <div class="product-details-info">
                         <span><a href="javascript:void(0)" data-toggle="modal" data-target="#sizesModal"><i class="fas fa-shoe-prints"></i> Guía de tallas</a></span>
 
@@ -162,7 +184,6 @@
                             <a href="#" id="cartBtn" class="btn" role="button">
                                 <i class="fas fa-cart-plus"></i> Agregar al carrito
                             </a>
-                            <!--<a href="#" class="btn"> Agregar al Carrito</a>-->
                         @endif
 
                         <div class="wishlist-compare">
@@ -178,10 +199,10 @@
                                     @endif
                                 @endif
                                 </li>
-                                <!--<li><a href="#"><i class="fas fa-retweet"></i> Add to Compare List</a></li>-->
                             </ul>
                         </div>
                     </div>
+                    <!--
                     <div class="product-details-share">
                         <ul>
                             <li>Compartir :</li>
@@ -192,6 +213,7 @@
                             <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
                         </ul>
                     </div>
+                    -->
                 </div>
             </div>
         </div>
@@ -222,57 +244,6 @@
                                         <h4 class="title">Materiales :</h4>
                                     </div>
                                     <p>{{ $product->materials }}</p>
-                                </div>
-                            </div>
-                            
-                            <div class="color-size-info">
-                                <ul>
-                                    <li><span>Colores :</span> Black, Gray</li>
-                                    <li><span>Tallas Disponibles :</span> XS, S, M, L</li>
-                                </ul>
-                            </div>
-                            <div class="additional-table">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">Size Name</th>
-                                                <td>28</td>
-                                                <td>49</td>
-                                                <td>36</td>
-                                                <td>55</td>
-                                                <td>44</td>
-                                                <td>34</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Waist Stretch</th>
-                                                <td>19</td>
-                                                <td>38</td>
-                                                <td>31</td>
-                                                <td>55</td>
-                                                <td>44</td>
-                                                <td>34</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Hip (7½” below from waist)</th>
-                                                <td>11</td>
-                                                <td>18</td>
-                                                <td>21</td>
-                                                <td>55</td>
-                                                <td>44</td>
-                                                <td>34</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">length (Out seam)</th>
-                                                <td>28</td>
-                                                <td>31</td>
-                                                <td>19</td>
-                                                <td>55</td>
-                                                <td>44</td>
-                                                <td>34</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>

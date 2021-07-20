@@ -97,6 +97,17 @@ Publica todos los assets del paquete y sus dependencias usando
 ```
 php artisan vendor:publish --provider="Nowyouwerkn\WeCommerce\WeCommerceServiceProvider" --force
 ```
+Para que funcione correctamente el sistema es OBLIGATORIO publicar los archivos de `migrations`, `seeders`, `theme`, `public` y `config`. Puedes escoger que elemento quieres publicar con las siguientes etiquetas.
+
+Etiquetas de elementos publicables:
+
+* --tag=theme
+* --tag=error-views
+* --tag=translations
+* --tag=public
+* --tag=config
+* --tag=migrations
+* --tag=seeders
 
 Limpia el caché de tu configuración
 ```
@@ -105,11 +116,11 @@ php artisan optimize:clear
 php artisan config:clear
 ```
 
-El sistema necesita utilizar la ruta "/" que está utilizada por Laravel como vista de ejemplo. Accede al documento `web.php` de tu proyecto de Laravel y sobreescribe la información con el archivo que se encuentra aqui: `https://github.com/nowyouwerkn/wecommerce/blob/main/src/routes.php`. Al realizarlo podrás usar.
+El sistema necesita utilizar la ruta "/" que usa Laravel como vista de ejemplo en las rutas. Accede al documento `web.php` de tu proyecto de Laravel y sobreescribe la información con el archivo que se encuentra aqui: `https://github.com/nowyouwerkn/wecommerce/blob/main/src/routes.php`. Al realizarlo podrás usar.
 ```
 php artisan serve
 ```
-para prender tu servidor y acceder a `/instalador` para comenzar la instalación.
+para prender tu servidor y acceder a `/instalador` para comenzar la instalación. Si estás usando Homestead no es necesario usar `php artisan serve`.
 
 Si prefieres preparar manualmente el proyecto sigue los siguientes comandos.
 

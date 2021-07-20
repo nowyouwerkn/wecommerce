@@ -61,7 +61,7 @@ class FrontController extends Controller
 
     public function index ()
     {
-        $products = Product::where('in_index', true)->get()->take(6);
+        $products = Product::where('in_index', true)->where('status', 'Publicado')->get()->take(6);
         $main_categories = Category::where('parent_id', '0')->orWhere('parent_id', NULL)->get()->take(3);
 
         $banner = Banner::where('is_active', true)->first();
@@ -84,7 +84,7 @@ class FrontController extends Controller
         $selected_cat_type = $request->cat_type;
         //$selected_variant = $request->variant;
         
-        $query = Product::select('*')->where('in_index', true);
+        $query = Product::select('*')->where('in_index', true)->where('status', 'Publicado');
 
         if (isset($selected_cat_type)) {
             $category = Category::where('slug', $selected_cat_type)->first();
@@ -107,7 +107,7 @@ class FrontController extends Controller
 
     public function catalogAll()
     {
-        $products = Product::orderBy('created_at', 'desc')->paginate(15);
+        $products = Product::orderBy('created_at', 'desc')->where('status', 'Publicado')->paginate(15);
 
         return view('front.theme.werkn-backbone.catalog')
         ->with('products', $products);
@@ -116,7 +116,7 @@ class FrontController extends Controller
     public function catalog($category_slug)
     {
         $catalog = Category::where('slug', $category_slug)->first();
-        $products = Product::where('category_id', $catalog->id)->paginate(15);
+        $products = Product::where('category_id', $catalog->id)->where('status', 'Publicado')->paginate(15);
 
         return view('front.theme.werkn-backbone.catalog')
         ->with('catalog', $catalog)
@@ -126,16 +126,21 @@ class FrontController extends Controller
     public function detail ($category_slug, $slug)
     {
         $catalog = Category::where('slug', $category_slug)->first();
-        $product = Product::where('slug', '=', $slug)->first();
+        $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->first();
 
         $products_selected = Product::where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->take(4)->get();
+
+        $next_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->first();
+        $last_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->first();
 
         if (empty($product)) {
             return redirect()->back();
         }else{
             return view('front.theme.werkn-backbone.detail')
             ->with('product', $product)
-            ->with('products_selected', $products_selected);
+            ->with('products_selected', $products_selected)
+            ->with('next_product', $next_product)
+            ->with('last_product', $last_product);
         }
 
         /*
@@ -186,36 +191,43 @@ class FrontController extends Controller
         $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
         $store_tax = StoreTax::take(1)->first();
 
-        if(Auth::check()){
-            $user = Auth::user();
+        if (!empty($payment_method)) {
+            if(Auth::check()){
+                $user = Auth::user();
 
-            $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
+                $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-           return view('front.theme.werkn-backbone.checkout')
-           ->with('total', $total)
-           ->with('user', $user)
-           ->with('addresses', $addresses)
-           ->with('payment_method', $payment_method)
-           ->with('store_tax', $store_tax)
-           ->with('products', $cart->items);
+               return view('front.theme.werkn-backbone.checkout')
+               ->with('total', $total)
+               ->with('user', $user)
+               ->with('addresses', $addresses)
+               ->with('payment_method', $payment_method)
+               ->with('store_tax', $store_tax)
+               ->with('products', $cart->items);
+            }else{
+                // COMPRA DE INVITADO
+                $count = 0;
+                foreach ($cart->items as $product) {
+                    $qty = $product['qty'];
+                    $count += $qty;
+                };
+                $count;
+
+                $addresses = UserAddress::where('user_id', '000998')->get();
+
+                return view('front.theme.werkn-backbone.checkout')
+                ->with('total', $total)
+                ->with('addresses', $addresses)
+                ->with('payment_method', $payment_method)
+                ->with('store_tax', $store_tax)
+                ->with('products', $cart->items)
+                ->with('cart_count', $count);
+            }
         }else{
-            // COMPRA DE INVITADO
-            $count = 0;
-            foreach ($cart->items as $product) {
-                $qty = $product['qty'];
-                $count += $qty;
-            };
-            $count;
+            //Session message
+            Session::flash('info', 'No se han configurado metodos de pago en esta tienda. Contacta con un administrador de sistema.');
 
-            $addresses = UserAddress::where('user_id', '000998')->get();
-
-            return view('front.theme.werkn-backbone.checkout')
-            ->with('total', $total)
-            ->with('addresses', $addresses)
-            ->with('payment_method', $payment_method)
-            ->with('store_tax', $store_tax)
-            ->with('products', $cart->items)
-            ->with('cart_count', $count);
+            return redirect()->route('index');
         }
     }
 

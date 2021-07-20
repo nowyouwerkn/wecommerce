@@ -54,7 +54,7 @@
         }
     </style>
 
-    @yield('stylesheets')
+    @stack('stylesheets')
 </head>
 <body>
     <!-- Aside Navbar -->

@@ -13,13 +13,13 @@
         </div>
         <div class="d-none d-md-block">
             <a href="{{ route('export.clients') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
-                Exportar
+                <i class="fas fa-file-export"></i> Exportar
             </a>
-            <a href="javascript:void(0)"  data-toggle="modal" data-target="#modalImport" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5">
-                Importar
+            <a href="javascript:void(0)"  data-toggle="modal" data-target="#modalImport" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5 mr-1">
+                <i class="fas fa-file-import"></i> Importar
             </a>
             
-            <a href="{{ route('clients.create') }}" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase">Agregar Cliente</a>
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase"><i class="fas fa-plus"></i> Agregar Cliente</a>
         </div>
     </div>
 @endsection

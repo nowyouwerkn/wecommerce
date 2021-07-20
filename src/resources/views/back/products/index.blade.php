@@ -24,6 +24,16 @@
             </a>
         </div>
     </div>
+
+    <style type="text/css">
+        .status-circle{
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px;
+            border-radius: 100%;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -45,10 +55,12 @@
                             <tr>
                                 <th>Imagen</th>
                                 <th>Nombre</th>
-                                <th>SKU</th>
+                                <th>SKU / UPC</th>
                                 <th>Precio</th>
                                 <th>Precio Descuento</th>
-                                <th>Existencias</th>
+                                <!--<th>Existencias</th>-->
+                                <th>Caracteristicas</th>
+                                <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -62,34 +74,85 @@
                                     </div>
                                 </td>
                                 <td style="width: 250px;">
-                                    <strong><a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a></strong> <br><p style="width: 200px;">{{ substr($product->description, 0, 100)}} {{ strlen($product->description) > 100 ? "[...]" : "" }}</p>
+                                    <strong><a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a></strong> <br><p style="width: 200px;" class="mb-1">{{ substr($product->description, 0, 100)}} {{ strlen($product->description) > 100 ? "[...]" : "" }}</p>
+
+                                    <small class="badge badge-info mb-3" style="white-space: unset;">{{ $product->search_tags }}</small>
                                 </td>
-                                <td style="width: 80px;">{{ $product->sku }}</td>
+                                <td style="width: 100px;">
+                                    {{ $product->sku }}
+                                    <small><em>{{ $product->barcode }}</em></small>
+                                </td>
                                 <td>$ {{ number_format($product->price,2) }}</td>
                                 <td>
                                     $ {{ number_format($product->discount_price,2) }}
                                 </td>
+                                <!--
                                 <td class="sizes-td">
                                     
                                 </td>
+                                -->
+                                <td>
+                                    <ul class="list-unstyled mb-0">
+
+                                        <li>
+                                            @if($product->in_index == true)
+                                            <i class="fas fa-check text-info"></i>
+                                            @else
+                                            <i class="fas fa-times text-danger"></i>
+                                            @endif
+                                            Mostrar en Inicio
+                                        </li>
+                                        <li>
+                                            @if($product->is_favorite == true)
+                                            <i class="fas fa-check text-info"></i>
+                                            @else
+                                            <i class="fas fa-times text-danger"></i>
+                                            @endif
+                                            Favorito
+                                        </li>
+                                        <li>
+                                            @if($product->has_discount == true)
+                                            <i class="fas fa-check text-info"></i>
+                                            @else
+                                            <i class="fas fa-times text-danger"></i>
+                                            @endif
+                                            Descuento Activo
+                                        </li>
+                                        <li>
+                                            @if($product->has_tax == true)
+                                            <i class="fas fa-check text-info"></i>
+                                            @else
+                                            <i class="fas fa-times text-danger"></i>
+                                            @endif
+                                            Tiene impuestos
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    @if($product->status == 'Publicado')
+                                        <span class="status-circle bg-success"></span> Publicado
+                                    @else
+                                        <span class="status-circle bg-danger"></span> Borrador
+                                    @endif
+                                </td>
                                 <td class="text-nowrap">
-                                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-link" data-toggle="tooltip" data-original-title="Ver Detalle">
+                                    {{-- 
+                                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-primary btn-sm btn-icon" data-toggle="tooltip" data-original-title="Ver Detalle">
                                         <i class="fas fa-eye"></i>
                                     </a>
+                                    --}}
 
-                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-link" data-toggle="tooltip" data-original-title="Editar">
+                                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-primary btn-sm btn-icon" data-toggle="tooltip" data-original-title="Editar">
                                         <i class="fas fa-edit" aria-hidden="true"></i>
                                     </a>
 
-                                    <!--
                                     <form method="POST" action="{{ route('products.destroy', $product->id) }}" style="display: inline-block;">
-                                        <button type="submit" class="btn btn-sm btn-icon btn-flat btn-default delete" data-toggle="tooltip" data-original-title="Borrar">
-                                            <i class="simple-icon-trash" aria-hidden="true"></i>
+                                        <button type="submit" class="btn btn-outline-danger btn-sm btn-icon" data-toggle="tooltip" data-original-title="Borrar">
+                                            <i class="fas fa-trash" aria-hidden="true"></i>
                                         </button>
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
                                     </form>
-                                    -->
                                 </td>
                             </tr>
                             @endforeach

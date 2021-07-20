@@ -12,15 +12,11 @@
             <h4 class="mg-b-0 tx-spacing--1">Usuarios</h4>
         </div>
         <div class="d-none d-md-block">
-            <a href="#" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
-                Exportar
+            <a href="{{ route('export.clients') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase mr-1">
+                <i class="fas fa-file-export"></i> Exportar
             </a>
-            <a href="#" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5">
-                Importar
-            </a>
-            <a href="{{ route('users.create') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Agregar Usuario
-            </a>
+            
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase"><i class="fas fa-plus"></i> Agregar Usuario</a>
         </div>
     </div>
 @endsection
@@ -31,6 +27,7 @@
             <div class="card mg-b-10">
                 <div class="card-body pd-y-30">
                     <!-- Filters -->
+                    {{--
                     <div class="mb-4">
                         <form action="" method="POST" class="d-flex">
                             <div class="content-search col-6">
@@ -53,45 +50,128 @@
                             </select>
                         </form>
                     </div>
+                    --}}
                 </div>
 
-                <!-- Table -->
                 <div class="table-responsive">
-                    <table class="table table-dashboard mg-b-0">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Usuario</th>
-                                <th>Correo</th>
-                                <th class="text-right">Rol</th>
-                                <th class="text-right">Acciones</th>
+                                <th scope="col">(#) Id</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Rol</th>
+                                <th scope="col">Creado</th>
+                                <th scope="col">Actualizado</th>
+                                @if($users->count() > 1)
+                                    <th scope="col">Acciones</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($users as $user)
                             <tr>
+                                <th scope="row">#{{ $user->id }}</th>
                                 <td>
-                                    SEO
+                                    @if( $user->image == NULL)
+                                    <img class="thumb-md rounded-circle mr-2" width="40px" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($user->email))) . '?d=retro&s=200' }}" alt="{{ $user->name }}">
+                                    @else
+                                    <img  class="thumb-md rounded-circle mr-2" width="40px" src="{{ asset('img/users/' . $user->image ) }}" alt="{{ $user->name }}">
+                                    @endif
+                                    {{ $user->name }}
                                 </td>
+                                <td>{{ $user->email }}</td>
                                 <td>
-                                    email@email.com
+                                    {{ $user->getRoleNames() }}
                                 </td>
-                                <td class="text-right">
-                                    Administrador
-                                </td>
-                                <td class="text-right">
-                                    <nav class="nav nav-icon-only justify-content-end">
-                                        <a href="" class="nav-link d-none d-sm-block">
-                                            <i class="far fa-edit"></i>
-                                        </a>
-                                        <a href="" class="nav-link d-none d-sm-block">
-                                            <i class="far fa-trash-alt"></i>
-                                        </a>
-                                    </nav>
-                                </td>
+                                <td>{{ $user->created_at }}</td>
+                                <td>{{ $user->updated_at }}</td>
+
+                                @if($users->count() > 1)
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <form method="POST" action="{{ route('users.destroy', $user->id) }}" style="display: inline-block;">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="mdi mdi-delete"></i> Borrar
+                                                </button>
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
+                                            </form>
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+<div id="modalCreate" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear nuevo Elemento</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+             <form method="POST" action="{{ route('users.store') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+                <div class="modal-body pd-25">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Nombre:</label>
+                                <input type="text" class="form-control" name="name">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Correo <span class="tx-danger">*</span></label>
+                                <input type="text" name="email" class="form-control" required="">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="password">Contraseña <span class="tx-danger">*</span></label>
+                                <input type="text" name="password" class="form-control" required="">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="pwd">Confirmar Contraseña:</label>
+                                <input type="password" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Definir Rol</label>
+                                <select class="form-control" name="rol">
+                                    <option value="0">Selecciona un Rol de Usuario</option>
+                                    @foreach($roles as $rol)
+                                        <option value="{{ $rol->name }}">
+                                            {{ $rol->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
 @endsection

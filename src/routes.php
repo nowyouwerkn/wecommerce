@@ -67,6 +67,16 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     Route::get('exportar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@export')->name('export.products');
     Route::post('importar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@import')->name('import.products');
 
+    Route::post('products/new-image', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeImage',
+        'as' => 'image.store',
+    ]);
+
+    Route::delete('products/delete-image/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@destroyImage',
+        'as' => 'image.destroy',
+    ]);
+
     Route::post('/products/create-dynamic', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeDynamic',
         'as' => 'products.store.dynamic',
@@ -92,6 +102,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     Route::put('/variants/update-stock/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@update',
         'as' => 'stock.update',
+    ]);
+
+    Route::put('/variants/delete-stock/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@destroy',
+        'as' => 'stock.destroy',
     ]);
 
     Route::resource('clients', Nowyouwerkn\WeCommerce\Controllers\ClientController::class); //

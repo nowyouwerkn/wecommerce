@@ -22,6 +22,14 @@
         </div>
         -->
     </div>
+
+    <style type="text/css">
+        .price-discounted{
+            text-decoration: line-through;
+            color: rgba(0, 0, 0, 0.8);
+            font-size: .9em;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -74,10 +82,18 @@
                                     {{ $product->sku }}
                                 </td>
                                 <td>
-                                    <strong><a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a></strong> <br><p style="width: 200px;">{{ substr($product->description, 0, 100)}} {{ strlen($product->description) > 100 ? "[...]" : "" }}</p>
+                                    <strong><a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a></strong> <br><p style="width: 200px; white-space: initial;">{{ substr($product->description, 0, 100)}} {{ strlen($product->description) > 100 ? "[...]" : "" }}</p>
                                 </td>
                                 
-                                <td>$ {{ number_format($product->price,2) }}</td>
+                                <td>
+                                    @if($product->has_discount == true)
+                                    $ {{ number_format($product->discount_price,2) }} <br>
+                                    <span class="price-discounted">${{ number_format($product->price, 2) }}</span>
+                                    @else
+                                    $ {{ number_format($product->price,2) }}
+                                    @endif
+                                </td>
+
                                 <td>
                                     {{ $product->stock }}
                                     <!--<nav class="nav nav-icon-only justify-content-end">
@@ -91,40 +107,46 @@
                                 </td>
                                 <td></td>
                             </tr>
-
                                 @foreach($product->variants as $variant)
-                                <tr class="bg-light">
-                                    <td class="tx-color-03 tx-normal image-table">
-                                        
-                                    </td>
-                                    <td>
-                                        
-                                    </td>
-                                    <td>{{ $variant->pivot->sku }}</td>
-                                    <td><strong>{{ $variant->value }}</strong> <br><p>{{ $variant->type }}</p></td>
-                                    <td>
-                                        <nav class="nav nav-icon-only">
-                                            <div class="form-group w-50">
-                                                @if($variant->pivot->new_price == NULL)
-                                                <input type="number" name="amount" class="form-control" value="{{ $product->price }}">
-                                                @else
-                                                <input type="number" name="amount" class="form-control" value="{{ $variant->pivot->new_price }}">
-                                                @endif
-                                            </div>
-                                        </nav>
-                                    </td>
+                                <form method="POST" action="{{ route('stock.update', $variant->id) }}" style="display: inline-block;">
+                                {{ csrf_field() }}
+                                {{ method_field('PUT') }}
 
-                                    <td>
-                                        <nav class="nav nav-icon-only">
-                                            <div class="form-group w-50">
-                                                <input type="number" name="amount" class="form-control" value="{{ $variant->pivot->stock }}">
-                                            </div>
-                                        </nav>
-                                    </td>
-                                    <td>
-                                        <a href="" class="btn btn-sm btn-success">Actualizar</a>
-                                    </td>
-                                </tr>
+                                    <tr class="bg-light">
+                                        <td class="tx-color-03 tx-normal image-table">
+                                            
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                        <td>{{ $variant->pivot->sku }}</td>
+                                        <td><strong>{{ $variant->value }}</strong> <br><p>{{ $variant->type }}</p></td>
+                                        <td>
+                                            <nav class="nav nav-icon-only">
+                                                <div class="form-group w-50">
+                                                    @if($variant->pivot->new_price == NULL)
+                                                    <input type="number" name="price_variant" class="form-control" value="{{ $product->price }}">
+                                                    @else
+                                                    <input type="number" name="price_variant" class="form-control" value="{{ $variant->pivot->new_price }}">
+                                                    @endif
+                                                </div>
+                                            </nav>
+                                        </td>
+
+                                        <td>
+                                            <nav class="nav nav-icon-only">
+                                                <div class="form-group w-50">
+                                                    <input type="number" name="stock_variant" class="form-control" value="{{ $variant->pivot->stock }}">
+                                                </div>
+                                            </nav>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
+                                                <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </form>
                                 @endforeach
                             @endforeach
                         </tbody>

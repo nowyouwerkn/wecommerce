@@ -77,7 +77,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->slug = Str::slug($request->name);
         $product->description = $request->description;
-        $product->materials = Purifier::clean($request->materials);
+        $product->materials = $request->materials;
         $product->color = $request->color;
         $product->pattern = $request->pattern;
 
@@ -158,7 +158,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->slug = Str::slug($request->name);
         $product->description = $request->description;
-        $product->materials = Purifier::clean($request->materials);
+        $product->materials = $request->materials;
         $product->color = $request->color;
         $product->pattern = $request->pattern;
 
@@ -217,10 +217,12 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::find($id);
+        
+        $product = Product::findOrFail($id);
+        $categories = Category::all();
         $variant_stock = ProductVariant::where('product_id', $product->id)->get();
 
-        return view('wecommerce::back.products.show')->with('product', $product)->with('variant_stock', $variant_stock);
+        return view('wecommerce::back.products.show')->with('product', $product)->with('variant_stock', $variant_stock)->with('categories', $categories);
     }
 
     public function storeImage(Request $request)
@@ -230,14 +232,29 @@ class ProductController extends Controller
             'description' => 'nullable',
         ));
 
-        // Guardar datos en la base de datos
-        $var_imagen = new ProductImage;
+        if ($request->hasFile('model_image')) {
 
-        $var_imagen->description = $request->description;
-        $var_imagen->product_id = $request->product_id;
+            $product = Product::find($request->product_id);
 
-        // Esto se logra gracias a la libreria de imagen Intervention de Laravel
+            $model_image = $request->file('model_image');
+            $filename = 'model' . time() . '.' . $model_image->getClientOriginalExtension();
+            $location = public_path('img/products/' . $filename);
+
+            Image::make($model_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $product->image = $filename;
+
+            $product->save();
+        }
+
         if ($request->hasFile('image')) {
+            // Guardar datos en la base de datos
+            $var_imagen = new ProductImage;
+
+            $var_imagen->description = $request->description;
+            $var_imagen->product_id = $request->product_id;
+
+            // Esto se logra gracias a la libreria de imagen Intervention de Laravel
             $imagen = $request->file('image');
             $nombre_archivo = Str::random(8) . '_productitem' . '.' . $imagen->getClientOriginalExtension();
             $ubicacion = public_path('img/products/' . $nombre_archivo);
@@ -245,12 +262,12 @@ class ProductController extends Controller
             Image::make($imagen)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($ubicacion);
 
             $var_imagen->image = $nombre_archivo;
+
+            $var_imagen->save();
         }
 
-        $var_imagen->save();
-
         // Mensaje de session
-        Session::flash('success', 'Image saved correctly on the database.');
+        Session::flash('success', 'Imagen guardada exitosamente para el producto.');
 
         // Enviar a vista
         return redirect()->back();
@@ -259,10 +276,9 @@ class ProductController extends Controller
     public function destroyImage($id)
     {
         $var_imagen = ProductImage::find($id);
-
         $var_imagen->delete();
 
-        Session::flash('success', 'The Image was succesfully deleted.');
+        Session::flash('success', 'La imagen fue borrada exitosamente');
 
 
         return redirect()->back();
@@ -396,8 +412,8 @@ class ProductController extends Controller
 
         // Enviar a vista
         return redirect()->route('products.show', $product->id);
-
     }
+
     public function destroy($id)
     {
         $product = Product::find($id);
@@ -408,11 +424,11 @@ class ProductController extends Controller
         $data = 'eliminó permanentemente el producto ' . $product->name;
 
         $this->notification->send($type, $by ,$data);
-
         //
         $product->delete();
 
         Session::flash('success', 'Este producto se eliminó exitosamente.');
+        
         return redirect()->route('products.index');
     }
 

@@ -45,7 +45,7 @@
                                         @if(isset($selected_scale))  
                                             @if (in_array('{{ $category->slug }}', $selected_scale))  
                                                 checked="checked"   
-                                            @endif 
+                                            @endif
                                         @endif
                                         >
                                         <label for="{{ $category->slug }}" class="form-check-label ib-m">
@@ -88,18 +88,18 @@
                                     @foreach($popular_products as $product)
                                     <li>
                                         <div class="sidebar-product-thumb">
-                                        <a href="{{ route('detail', [$product->category->slug, $product->slug]) }}"><img src="{{ asset('img/products/' . $product->image) }}" alt=""></a>
+                                            <a href="{{ route('detail', [$product->category->slug, $product->slug]) }}">
+                                                <img src="{{ asset('img/products/' . $product->image) }}" width="100%">
+                                            </a>
                                         </div>
                                         <div class="sidebar-product-content">
-                                            <div class="rating">
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                            </div>
                                             <h5><a href="#">{{ $product->name }}</a></h5>
-                                            <span>$ {{ number_format($product->price, 2) }}</span>
+                                            @if($product->has_discount == true)
+                                            <span>${{ number_format($product->discount_price, 2) }}</span>
+                                            <span class="price-discounted">${{ number_format($product->price, 2) }}</span>
+                                            @else
+                                            <span>${{ number_format($product->price, 2) }}</span>
+                                            @endif
                                         </div>
                                     </li>
                                     @endforeach

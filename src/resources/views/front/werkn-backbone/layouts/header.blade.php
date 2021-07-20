@@ -116,7 +116,7 @@
                                                     <p class="mb-2">Talla: {{ $variant }}</p>
                                                     <div class="cart-price">
                                                         @if($product['item']['has_discount'] == true)
-                                                        <span class="new">$${{ number_format($product['item']['discount_price'],2) }}</span>
+                                                        <span class="new">${{ number_format($product['item']['discount_price'],2) }}</span>
                                                         <span><del>${{ number_format($product['item']['price'],2) }}</del></span>
                                                         @else 
                                                         <span class="new">${{ number_format($product['item']['price'],2) }}</span>

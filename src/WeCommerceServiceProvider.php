@@ -81,12 +81,17 @@ class WeCommerceServiceProvider extends ServiceProvider
         // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
         $this->publishes([
             __DIR__.'/resources/views/front' => resource_path('views/front/theme/'),
-        ]);
+        ], 'theme');
+
+        // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
+        $this->publishes([
+            __DIR__.'/resources/views/errors' => resource_path('views/errors'),
+        ], 'error-views');
 
         // Publica los archivos de traducción del sistema
         $this->publishes([
             __DIR__.'/resources/lang' => resource_path('lang/'),
-        ]);
+        ], 'translations');
 
         // Publicar Assets de Estilos
         $this->publishes([
@@ -96,16 +101,16 @@ class WeCommerceServiceProvider extends ServiceProvider
         // Publicar archivos de config
         $this->publishes([
             __DIR__.'/config' => config_path(''),
-        ]);
+        ], 'config');
 
         // Publicar archivos de base de datos
         $this->publishes([
             __DIR__.'/database/migrations' => database_path('migrations/'),
-        ]);
+        ], 'migrations');
 
         $this->publishes([
             __DIR__.'/database/seeders' => database_path('seeders/'),
-        ]);
+        ], 'seeders');
     }
 
     /*

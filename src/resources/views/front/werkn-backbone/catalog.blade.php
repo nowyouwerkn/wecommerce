@@ -110,18 +110,18 @@
                                     @foreach($popular_products as $product)
                                     <li>
                                         <div class="sidebar-product-thumb">
-                                        <a href="{{ route('detail', [$product->category->slug, $product->slug]) }}"><img src="{{ asset('img/products/' . $product->image) }}" alt=""></a>
+                                            <a href="{{ route('detail', [$product->category->slug, $product->slug]) }}">
+                                                <img src="{{ asset('img/products/' . $product->image) }}" width="100%">
+                                            </a>
                                         </div>
                                         <div class="sidebar-product-content">
-                                            <div class="rating">
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                            </div>
                                             <h5><a href="#">{{ $product->name }}</a></h5>
-                                            <span>$ {{ number_format($product->price, 2) }}</span>
+                                            @if($product->has_discount == true)
+                                            <span>${{ number_format($product->discount_price, 2) }}</span>
+                                            <span class="price-discounted">${{ number_format($product->price, 2) }}</span>
+                                            @else
+                                            <span>${{ number_format($product->price, 2) }}</span>
+                                            @endif
                                         </div>
                                     </li>
                                     @endforeach
@@ -139,7 +139,7 @@
                             <div class="shop-top-left">
                                 <ul>
                                     <!--<li><a href="#"><i class="flaticon-menu"></i> FILTER</a></li>-->
-                                    <li>Mostrando 1–9 de 80 resultados</li>
+                                    <!--<li>Mostrando 1–9 de 80 resultados</li>-->
                                 </ul>
                             </div>
                         </div>

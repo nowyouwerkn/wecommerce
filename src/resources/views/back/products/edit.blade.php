@@ -1,6 +1,6 @@
 @extends('wecommerce::back.layouts.main')
 
-@section('stylesheets')
+@push('stylesheets')
 <style type="text/css">
     .save-bar{
         position: fixed;
@@ -25,7 +25,7 @@
         display: none;
     }
 </style>
-@endsection
+@endpush
 
 @section('title')
     <div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">

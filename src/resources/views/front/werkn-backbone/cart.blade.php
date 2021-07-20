@@ -40,10 +40,10 @@
                             <thead>
                                 <tr>
                                     <th class="product-thumbnail"></th>
-                                    <th class="product-name">Product</th>
-                                    <th class="product-price">Price</th>
-                                    <th class="product-quantity">QUANTITY</th>
-                                    <th class="product-subtotal">SUBTOTAL</th>
+                                    <th class="product-name">Producto</th>
+                                    <th class="product-price">Precio</th>
+                                    <th class="product-quantity">Cantidad</th>
+                                    <th class="product-subtotal">Subtotal</th>
                                     <th class="product-delete"></th>
                                 </tr>
                             </thead>
@@ -71,7 +71,7 @@
                                             <a href="{{ route( 'cart.add-more', [ 'id' => $product['item']['id'], 'variant' => $product['variant'] ] ) }}" class="btn btn-qty btn-outline-secondary">+</a>
                                         </div>
                                     </td>
-                                    <td class="product-subtotal"><span>$ $ {{ number_format($product['price']) }} </span></td>
+                                    <td class="product-subtotal"><span>$ {{ number_format($product['price'], 2) }} </span></td>
                                     <td class="product-delete"><a href="#"><i class="flaticon-trash"></i></a></td>
                                 </tr>
                             @endforeach

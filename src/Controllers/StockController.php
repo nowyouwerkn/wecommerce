@@ -43,7 +43,10 @@ class StockController extends Controller
         }
 
         $stock->variant_id = $variant->id;
-        $stock->stock = $request->stock;
+        $stock->stock = $request->stock_variant;
+        $stock->new_price = $request->price_variant;
+        $stock->sku = $request->sku_variant;
+        $stock->barcode = $request->barcode_variant;
 
         $stock->save();
 
@@ -80,22 +83,34 @@ class StockController extends Controller
         ], 200);
     }
 
-    public function show(Stock $stock)
+    public function show($id)
     {
         return view('wecommerce::back.stock.show', compact('stock'));
     }
 
-    public function edit(Stock $stock)
+    public function edit($id)
     {
         return view('wecommerce::back.stocks.edit', compact('stock'));
     }
 
-    public function update(Request $request, Stock $stock)
+    public function update(Request $request, $id)
     {
-        //
+        // Guardar datos en la base de datos
+        $stock = ProductVariant::find($id);
+        
+        $stock->stock = $request->stock_variant;
+        $stock->new_price = $request->price_variant;
+
+        $stock->save();
+
+        // Mensaje de session
+        Session::flash('success', 'Se actualizó exitosamente tu stock.');
+
+        // Enviar a vista
+        return redirect()->back();
     }
 
-    public function destroy(Stock $stock)
+    public function destroy($id)
     {
         //
     }

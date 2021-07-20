@@ -1,6 +1,6 @@
 @extends('wecommerce::back.layouts.main')
 
-@section('stylesheets')
+@push('stylesheets')
 <style type="text/css">
     .save-bar{
         position: fixed;
@@ -37,7 +37,7 @@
         display: none;
     }
 </style>
-@endsection
+@endpush
 
 @section('title')
     <div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">
@@ -52,7 +52,7 @@
         </div>
         <div class="d-none d-md-block">
             <a href="{{ route('products.index') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Regresar
+                <i class="fas fa-undo mr-1"></i> Regresar al listado
             </a>
         </div>
     </div>
@@ -239,6 +239,13 @@
 
                     <!-- Form -->
                     <div class="card-body row">
+                        <div class="col-md-12 mb-4">
+                            <div class="custom-control custom-checkbox" >
+                                <input type="checkbox" class="custom-control-input" id="hasVariants">
+                                <label class="custom-control-label" for="hasVariants">Este producto tiene variantes</label>
+                            </div>
+                        </div>
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="stock">Cantidad <span class="text-danger">*</span></label>
@@ -301,7 +308,7 @@
                     </div>
                 </div>
 
-                @include('wecommerce::back.products.partials._variant_card')
+                {{-- @include('wecommerce::back.products.partials._variant_card') --}}
                         
             </div>
     
@@ -451,7 +458,10 @@
             $("#newCategory").text("Seleccionar Categoría");
             
         }
-        
+    });
+
+    $("#hasVariants").click(function() {
+        $('#save-form').submit();
     });
 </script>
 @endpush
