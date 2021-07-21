@@ -94,7 +94,26 @@
                                 </td>
 
                                 <td>
+                                    @if($product->has_variants == true)
+                                        @php
+                                        $variant_stock = Nowyouwerkn\WeCommerce\Models\ProductVariant::where('product_id', $product->id)->get();
+
+                                        $total_qty = 0;
+
+                                        foreach ($variant_stock as $v_stock) {
+                                            $total_qty += $v_stock->stock;
+                                        };
+
+                                        $total_qty;
+
+                                        @endphp
+                                        
+                                        {{ $total_qty }}
+                                    @else
                                     {{ $product->stock }}
+                                    @endif
+
+                                    
                                     <!--<nav class="nav nav-icon-only justify-content-end">
                                         <a href="" class="nav-link d-none d-sm-block">
                                             <i class="far fa-edit"></i>
