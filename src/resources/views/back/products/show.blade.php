@@ -86,7 +86,6 @@
             <h4 class="mg-b-0 tx-spacing--1">Editar Producto</h4>
         </div>
         <div class="d-none d-md-block">
-
             <form method="POST" action="{{ route('products.destroy', $product->id) }}" style="display: inline-block;">
                 <button type="submit" class="btn btn-sm pd-x-15 btn-outline-danger btn-uppercase mg-l-5" data-toggle="tooltip" data-original-title="Borrar">
                     <i class="fas fa-trash mr-1"></i> Borrar

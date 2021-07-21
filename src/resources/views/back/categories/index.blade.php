@@ -6,42 +6,42 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                 <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Colleciones</li>
+                <li class="breadcrumb-item active" aria-current="page">Colecciones</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Colleciones</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Colecciones</h4>
         </div>
         @if(auth()->user()->can('admin_access'))
         <div class="d-none d-md-block">
             <a href="{{ route('categories.create') }}" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Agregar Nueva Categoría
+                <i class="fas fa-plus"></i>  Agregar Nueva Categoría
             </a>
         </div>
         @endif
     </div>
 
-<style type="text/css">
-    .action-btns{
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        display: flex;
-    }
+    <style type="text/css">
+        .action-btns{
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+        }
 
-    .action-btns .btn-rounded{
-        padding: 0px;
-        height: 20px;
-        width: 20px;
-        text-align: center;
-        line-height: 18px;
-        font-size: .8em;
-        border-radius: 15px;
-    }
+        .action-btns .btn-rounded{
+            padding: 0px;
+            height: 20px;
+            width: 20px;
+            text-align: center;
+            line-height: 18px;
+            font-size: .8em;
+            border-radius: 15px;
+        }
 
-    .list-group-item{
-        padding: .75rem 1.5rem;
-    }
-</style>
+        .list-group-item{
+            padding: .75rem 1.5rem;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -54,24 +54,22 @@
     <a href="{{ route('categories.create') }}" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Agregar Nueva Categoría</a>
 </div>
 @else
-
 <div class="card-columns">
     @foreach($categories as $category)
         <div class="card">
             <div class="action-btns">
                 <ul class="list-inline">
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal_{{ $category->id }}" class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-edit"></i></a></li>
-                    <li class="list-inline-item"><a  data-toggle="tooltip" title="" data-original-title="Detail" href="#" class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-eye"></i></a></li>
+                    <li class="list-inline-item"><a href="{{ route('categories.show', $category->id) }}"  data-toggle="tooltip" data-original-title="Detalle"class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-eye"></i></a></li>
 
                     <li class="list-inline-item">
                         <form method="POST" action="{{ route('categories.destroy', $category->id) }}" style="display: inline-block;">
-                            <button type="submit" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Delete">
+                            <button type="submit" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Eliminar">
                                 <i class="fas fa-times" aria-hidden="true"></i>
                             </button>
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
                         </form>
-
                     </li>                    
                 </ul>
 
@@ -84,6 +82,7 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
+
                             <form method="POST" action="{{ route('categories.update', $category->id) }}" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             {{ method_field('PUT') }}
@@ -94,12 +93,17 @@
                                                 <label>Nombre del Elemento</label>
                                                 <input type="text" class="form-control" name="name" value="{{ $category->name }}">
                                             </div>
+
+                                            <div class="form-group mt-2">
+                                                <label>Imágen <span class="text-info">(Opcional)</span></label>
+                                                <input type="file" class="form-control" id="image" name="image" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -133,7 +137,7 @@
                         <a href="javascript:void(0)" data-toggle="modal" data-target="#editModalSub_{{ $sub->id }}" class="btn btn-rounded btn-icon btn-sm btn-dark"><i class="fas fa-edit"></i></a>
 
                         <form method="POST" action="{{ route('categories.destroy', $sub->id) }}" style="display: inline-block;">
-                            <button type="submit" class="btn btn-rounded btn-icon btn-sm btn-danger" data-toggle="tooltip" data-original-title="Delete">
+                            <button type="submit" class="btn btn-rounded btn-icon btn-sm btn-danger" data-toggle="tooltip" data-original-title="Eliminar">
                                 <i class="fas fa-times" aria-hidden="true"></i>
                             </button>
                             {{ csrf_field() }}
@@ -165,8 +169,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -175,7 +179,6 @@
                 @endforeach
             </ul>
 
-            
             <div class="card-body">
                 <p class="card-text mb-0">
                     <small class="text-muted">Creado: {{ $category->created_at }}</small>
@@ -220,7 +223,7 @@
                     <div class="form-group">
                         <label>Vincular con otra categoría</label>
                         <select class="form-control" id="parent_id" name="parent_id">
-                            <option value="0">selecciona una opción</option>
+                            <option value="0" selected="">Selecciona una opción..</option>
                             @foreach($categories as $cat)
                                 @if($cat->parent_id == NULL || 0)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>

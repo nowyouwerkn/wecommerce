@@ -58,7 +58,7 @@
                     <table class="table table-dashboard mg-b-0">
                         <thead>
                             <tr>
-                                <th>Estado</th>
+                                <th>Variantes</th>
                                 <th>Imagen</th>
                                 <th>SKU</th>
                                 <th>Producto</th>
@@ -70,7 +70,7 @@
                         <tbody>
                             @foreach($products as $product)
                             <tr class="parent" id="row{{ $product->id }}" title="Click to expand/collapse" style="cursor: pointer;">
-                                <td>Variantes: {{ $product->variants->count() }}</td>
+                                <td>{{ $product->variants->count() }}</td>
                                 <td class="tx-color-03 tx-normal image-table td-tight">
                                     <img style="width: 100%;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
                                     <div class="text-center margin-top-10">
@@ -107,7 +107,7 @@
                                         $total_qty;
 
                                         @endphp
-                                        
+
                                         {{ $total_qty }}
                                     @else
                                     {{ $product->stock }}

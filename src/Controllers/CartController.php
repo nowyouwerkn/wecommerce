@@ -18,13 +18,16 @@ class CartController extends Controller
     public function cart()
     {
         if (!Session::has('cart')) {
-            return view('wecommerce::front.cart');
+            return view('front.cart');
         }
 
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
 
-        return view('wecommerce::front.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice);
+        $subtotal = 10;
+        $tax = 5;
+
+        return view('front.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice)->with('tax', $tax)->with('subtotal', $subtotal);
     }
 
     public function addCart(Request $request, $id, $variant)
@@ -102,7 +105,8 @@ class CartController extends Controller
         $totalQty = number_format($cart->totalQty);
         $totalPrice = '$ ' . number_format($cart->totalPrice);
 
-        return response()->json(['mensaje' => 'Sumado 1 producto al carrito.', 'qty' => $qty, 'price' => $price , 'totalQty' => $totalQty, 'totalPrice' => $totalPrice], 200);
+        return redirect()->back();
+        //return response()->json(['mensaje' => 'Sumado 1 producto al carrito.', 'qty' => $qty, 'price' => $price , 'totalQty' => $totalQty, 'totalPrice' => $totalPrice], 200);
     }
 
     public function substractOne($id, $variant)
@@ -129,15 +133,14 @@ class CartController extends Controller
         if(count($cart->items) > 0){
             Session::put('cart', $cart);
 
-            return response()->json(['mensaje' => 'Eliminado 1 producto del carrito.', 'qty' => $qty, 'price' => $price , 'totalQty' => $totalQty, 'totalPrice' => $totalPrice], 200);
+            return redirect()->back();
+            //return response()->json(['mensaje' => 'Eliminado 1 producto del carrito.', 'qty' => $qty, 'price' => $price , 'totalQty' => $totalQty, 'totalPrice' => $totalPrice], 200);
         }else{
             return redirect()->back();
 
             Session::forget('cart');
         }
 
-        //alert()->warning('Se eliminó 1 a la cantidad.', '¡Listo!')->persistent('Ok, gracias');
-        
     }
 
     public function deleteItem($id, $variant)
@@ -152,7 +155,6 @@ class CartController extends Controller
         }else{
             Session::forget('cart');
         }
-        //alert()->warning('Producto borrado exitosamente', '¡Listo!')->persistent('Ok, gracias');
         //return response()->json(['mensaje' => 'Producto eliminado del carrito.'],200);
         return redirect()->back();
     }

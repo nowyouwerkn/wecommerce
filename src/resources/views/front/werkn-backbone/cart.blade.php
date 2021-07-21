@@ -5,12 +5,20 @@
 @endpush
 
 @push('stylesheets')
+<style type="text/css">
+    .cart-total .shop-cart-widget form ul li > span{
+        width: 50%;
+    }
 
+    .cart-total .shop-cart-widget{
+        width: 30%;
+    }
+</style>
 @endpush
 
 @section('content')
 <!-- breadcrumb-area -->
-<section class="breadcrumb-area breadcrumb-bg" data-background="img/bg/breadcrumb_bg03.jpg">
+<section class="breadcrumb-area breadcrumb-bg" data-background="{{ asset('themes/werkn-backbone/img/bg/s_breadcrumb_bg01.jpg') }}">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -92,12 +100,14 @@
                     </div>
                     -->
                 </div>
-                <div class="cart-total pt-95">
+                <div class="cart-total pt-95" style="display:flex; justify-content: space-between;">
                     <h3 class="title">Total del Carrito</h3>
-                    <div class="shop-cart-widget">
+
+                    <div class="shop-cart-widget" style="display:inline-block;">
                         <form action="#">
                             <ul>
-                                <li class="sub-total"><span>Subtotal</span> ${{ number_format($totalPrice) }}</li>
+                                <li class="sub-total"><span>Subtotal</span> ${{ number_format($subtotal) }}</li>
+                                <li class="sub-total"><span>Impuestos</span> ${{ number_format($tax) }}</li>
                                 <!--
                                 <li>
                                     <span>SHIPPING</span>
@@ -116,8 +126,8 @@
                                 -->
                                 <li class="cart-total-amount"><span>Total</span> <span class="amount">${{ number_format($totalPrice) }}</span></li>
                             </ul>
-                            
-                            <a href="{{ route('checkout') }}" class="btn">SEGUIR CON LA COMPRA</a>
+                        
+                            <a href="{{ route('checkout') }}" class="btn">PAGAR</a>
                         </form>
                     </div>
                 </div>

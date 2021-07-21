@@ -131,7 +131,7 @@
 
                                             <li>
                                                 <div class="total-price">
-                                                    <span class="f-left">Total:</span>
+                                                    <span class="f-left">Subtotal:</span>
                                                     <span class="f-right">${{ number_format($totalPrice, 2) }}</span>
                                                 </div>
                                             </li>

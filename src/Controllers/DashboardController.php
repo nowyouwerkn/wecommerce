@@ -131,6 +131,11 @@ class DashboardController extends Controller
         return view('wecommerce::back.configuration');
     }
 
+    public function generalPreferences () 
+    {
+        
+    }
+
     public function shipping () 
     {
         return view('wecommerce::back.shipping.index');

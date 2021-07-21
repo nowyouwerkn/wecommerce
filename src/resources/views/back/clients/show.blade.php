@@ -94,7 +94,6 @@
 				                                <th>Fecha</th>
 				                                <th>Cantidad</th>
 				                                <th>Cobro</th>
-				                                <th>Envío</th>
 				                                <th>País</th>
 				                            </tr>
 				                        </thead>
@@ -102,7 +101,7 @@
 				                            @foreach($orders as $order)
 				                            <tr>
 				                                <td>
-				                                	<a href="{{ route('ordenes.show', $order->id) }}">
+				                                	<a href="{{ route('orders.show', $order->id) }}">
 				                                		@if(strlen($order->id) == 1)
 				                                		Orden #00{{ $order->id }}
 				                                		@endif
@@ -130,25 +129,7 @@
 									            		@endif
 									            	@endif
 				                                </td>
-				                                <td>
-				                                	@php
-				                                		$tracking = \App\Tracking::where('order_id', $order->id)->first();
-			                                		@endphp
 
-			                                		@if(empty($tracking))
-			                                			<span class="badge badge-info">Sin Procesar</span>
-			                                		@else
-					                                	@if($tracking->status == 'En proceso')
-					                                	<span class="badge badge-warning">{{ $tracking->status }}</span>
-					                                	@endif
-					                                	@if($tracking->status == 'Completado')
-					                                	<span class="badge badge-success">{{ $tracking->status }}</span>
-					                                	@endif
-					                                	@if($tracking->status == 'Perdido')
-					                                	<span class="badge badge-warning">{{ $tracking->status }}</span>
-					                                	@endif
-				                                	@endif
-				                                </td>
 				                                <td>{{ $order->country }}</td>
 				                            </tr>
 				                            @endforeach

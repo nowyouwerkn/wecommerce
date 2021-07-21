@@ -57,9 +57,19 @@ class CategoryController extends Controller
         if (empty($check_if_exists)) {
             $category->slug = Str::slug($request->name, '-');
         }else{
-            $parent_name = Category::where('id', $request->parent_id)->first();
 
-            $category->slug = Str::slug(($parent_name->name . ' ' . $request->name), '-');
+            if ($request->parent_id == 0) {
+                // Mensaje de session
+                Session::flash('error', 'Esa categoría ya existe.');
+
+                // Enviar a vista
+                return redirect()->back();
+            }else{
+                $parent_name = Category::where('id', $request->parent_id)->first();
+
+                $category->slug = Str::slug(($parent_name->name . ' ' . $request->name), '-');
+            }
+            
         }
         
         $category->parent_id = $request->parent_id;
@@ -118,9 +128,19 @@ class CategoryController extends Controller
         if (empty($check_if_exists)) {
             $category->slug = Str::slug($request->name, '-');
         }else{
-            $parent_name = Category::where('id', $request->parent_id)->first();
 
-            $category->slug = Str::slug(($parent_name->name . ' ' . $request->name), '-');
+            if ($request->parent_id == 0) {
+                // Mensaje de session
+                Session::flash('error', 'Esta categoría ya existe.');
+
+                // Enviar a vista
+                return redirect()->back();
+            }else{
+                $parent_name = Category::where('id', $request->parent_id)->first();
+
+                $category->slug = Str::slug(($parent_name->name . ' ' . $request->name), '-');
+            }
+            
         }
         
         $category->parent_id = $request->parent_id;

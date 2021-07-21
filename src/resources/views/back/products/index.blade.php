@@ -13,14 +13,14 @@
         </div>
         <div class="d-none d-md-block">
             <a href="{{ route('export.products') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
-                Exportar
+                <i class="fas fa-file-export"></i> Exportar
             </a>
             <a href="javascript:void(0)"  data-toggle="modal" data-target="#modalImport" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5">
-                Importar
+                <i class="fas fa-file-import"></i> Importar
             </a>
 
             <a href="{{ route('products.create') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Nuevo producto
+                <i class="fas fa-plus"></i> Nuevo producto
             </a>
         </div>
     </div>

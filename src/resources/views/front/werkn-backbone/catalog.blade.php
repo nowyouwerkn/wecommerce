@@ -115,7 +115,7 @@
                                             </a>
                                         </div>
                                         <div class="sidebar-product-content">
-                                            <h5><a href="#">{{ $product->name }}</a></h5>
+                                            <h5><a href="{{ route('detail', [$product->category->slug, $product->slug]) }}">{{ $product->name }}</a></h5>
                                             @if($product->has_discount == true)
                                             <span>${{ number_format($product->discount_price, 2) }}</span>
                                             <span class="price-discounted">${{ number_format($product->price, 2) }}</span>

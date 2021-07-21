@@ -157,5 +157,14 @@
         <script src="{{ asset('themes/werkn-backbone/js/plugins.js') }}"></script>
         <script src="{{ asset('themes/werkn-backbone/js/main.js') }}"></script>
     	@stack('scripts')
+
+        @php
+            $integrations = Nowyouwerkn\WeCommerce\Models\Integration::all();
+        @endphp
+
+        @foreach($integrations as $integration)
+            <!-- {{ $integration->name }} -->
+            {{ $integration->code }}
+        @endforeach
 	</body>
 </html>

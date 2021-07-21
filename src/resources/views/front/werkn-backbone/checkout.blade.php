@@ -236,7 +236,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="card-ccv">CCV <span class="text-danger">*</span></label>
-                                                <input type="text" id="card-cvc" name="card-cvc" class="form-control form-control" data-parsley-trigger="change" required="">
+                                                <input type="text" id="card-cvc" name="card-cvc" class="form-control form-control" data-parsley-trigger="change" required="" maxlength="3">
                                             </div>
                                         </div>
                                     </div>
@@ -456,34 +456,7 @@
         /* Rate Quote */
         var products = parseFloat($('#cartTotal').text().replace(',', ''));
 
-        // HACER LA CIUDAD UN SLUG
-        var str = $('#city').val();
-
-        str = str.replace(/^\s+|\s+$/g, '');
-        str = str.toLowerCase();
-
-        var from = "ÁÄÂÀÃÅČÇĆĎÉĚËÈÊẼĔȆÍÌÎÏŇÑÓÖÒÔÕØŘŔŠŤÚŮÜÙÛÝŸŽáäâàãåčçćďéěëèêẽĕȇíìîïňñóöòôõøðřŕšťúůüùûýÿžþÞĐđßÆa·/_,:;";
-        var to   = "AAAAAACCCDEEEEEEEEIIIINNOOOOOORRSTUUUUUYYZaaaaaacccdeeeeeeeeiiiinnooooooorrstuuuuuyyzbBDdBAa------";
-        for (var i=0, l=from.length ; i<l ; i++) {
-            str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
-        }
-
-        str = str.replace(/[^a-z0-9 -]/g, '') .replace(/\s+/g, '-') .replace(/-+/g, '-'); 
-
-        //var city = str_slug($('#city').val());
-
-        /*
-        if(str == 'leon'){
-            var rate = parseFloat(0);
-            $('#shippingRate').text(0.00);
-            $('#shippingInput').val(0);
-        }else{
-            var rate = parseFloat($('#shippingRate').text().replace(',', ''));
-        }
-        */
-        // Envios gratis
-        var rate = parseFloat(0);
-        
+        var rate = parseFloat($('#shippingRate').text().replace(',', ''));
         var subtotal = products + rate;
 
         $('#cartTotal').text(parseFloat(subtotal/1.16).toFixed(2));

@@ -15,120 +15,136 @@
 
         </div>
     </div>
+
+    <style type="text/css">
+        .status-circle{
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px;
+            border-radius: 100%;
+        }
+    </style>
 @endsection
 
 @section('content')
-<form method="POST" action="{{ route('seo.update', $seo->id) }}" enctype="multipart/form-data">
-    {{ csrf_field() }}
-    {{ method_field('PUT') }}
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="pr-5 pt-1 pl-3">
-                <div class="d-flex align-items-center mb-4">
-                    <a href="{{ route('configuration') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i></a>
-                    <h4 class="mb-0 ml-2">Regresar</h4>
-                </div>
-
-                <h3>Search Engine Optimization (SEO)</h3>
-                <p>Esta información te permite aparece más efectivamente en los buscadores en Internet.</p>
-                <!--<p>Al usar estas plantillas, aceptas que has leído y aceptado el descargo de responsabilidad.</p>-->
-
-                <button type="submit" class="btn btn-primary btn-lg">Guardar Cambios <i class="far fa-save"></i></button>
+<div class="row">
+    <div class="col-md-4">
+        <div class="pr-5 pt-4 pl-3">
+            <div class="d-flex align-items-center mb-4">
+                <a href="{{ route('configuration') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i></a>
+                <h4 class="mb-0 ml-2">Regresar</h4>
             </div>
+
+            <h3>Preferencias Generales</h3>
+            <p>Conecta cualquier sistema de empresas de terceros para analítica, seguimiento de pedidos, reservaciones, chats en vivo y más. .</p>
+
+            <p>Tu tienda puede vincularse con: </p>
+
+            <ul>
+                <li>Google Analytics</li>
+                <li>Facebook Pixel</li>
+                <li>Jivo Chat</li>
+                <li>Sirvoy</li>
+                <li>Acuity Sscheduling</li>
+                <li>Calendly</li>
+                <li>y mas...</li>
+            </ul>
         </div>
-        <div class="col-md-8">
-            
-            <div class="card mb-4">
-                <div class="card-body">
-                
-                <h6 class="text-uppercase mb-3">Información General</h6>
+        
+    </div>
+    <div class="col-md-8">
+        <div class="card card-body mb-4">
+            <h4>Integraciones del Sitio</h4>
+            <p class="mb-4"><strong>Operativo</strong></p>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="page_title">Titulo general del Sitio</label>
-                                <input type="text" class="form-control" id="page_title" name="page_title" value="{{ $seo->page_title ?? '' }}"/>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="page_canonical_url">URL</label>
-                                <input type="text" class="form-control" id="page_canonical_url" name="page_canonical_url" value="{{ $seo->page_canonical_url ?? '' }}"/>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="page_description">Descripción</label>
-                                <textarea class="form-control" id="page_description" name="page_description" rows="5">{{ $seo->page_description }}</textarea>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <label for="page_keywords">Palabras Clave</label>
-                            <input type="text" class="form-control" id="page_keywords" name="page_keywords" value="{{ $seo->page_keywords ?? '' }}"/>
-                            <small class="form-text text-muted">Separa cada elemento con una coma o los robots de busqueda no podrán identificar las palabras.</small>
-                        </div>
-
-                        <div class="col-md-12">
-                            <label for="page_theme_color_hex">Color (Tema)</label>
-                            <input type="text" class="form-control" id="page_theme_color_hex" name="page_theme_color_hex" value="{{ $seo->page_theme_color_hex ?? '' }}"/>
-                            <small class="form-text text-muted">Usa un valor HEX para determinar el color de tema de tu página.</small>
-                        </div>
-                    </div>
-
-                    <hr>
-                    <h6 class="text-uppercase mb-3">Configuración de ROBOTS.TXT para Google SEO</h6>
-
-                    <div class="form-group">
-                        <label for="image">Archivo Robots.txt</label>
-                        <input type="file" id="image" name="image" id="image" />
-                        <small class="form-text text-muted">Upload your text file with the proper configurations for robots. We'll take care of the rest.</small>
-                    </div>
-
-                    <hr>
-                    <h6 class="text-uppercase mb-3">Opciones adicionales de SEO</h6>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="page_canonical_url">URL Canónica</label>
-                                <input type="text" class="form-control" id="page_canonical_url" name="page_canonical_url" value="{{ $seo->page_canonical_url ?? '' }}"/>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="page_alternate_url">URL Alternativa</label>
-                                <input type="text" class="form-control" id="page_alternate_url" name="page_alternate_url" value="{{ $seo->page_alternate_url ?? '' }}"/>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="image">Archivo Browser Config XML</label>
-                                <input type="file" id="image" name="image" id="image" />
-                                <small class="form-text text-muted">Imagen tiene que ser 180x180 (Cualquier tamaño diferente será modificado a 180x180).</small>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="image">Archivo MSTILE 150x150</label>
-                                <input type="file" id="image" name="image" id="image" />
-                                <small class="form-text text-muted">Imagen tiene que ser 150x150 (Cualquier tamaño diferente será modificado a 150x150).</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            @if($integrations->count() == 0)
+            <div class="text-center">
+                <img src="{{ asset('assets/img/group_9.svg') }}" class="wd-40p ml-auto mr-auto mb-5">
+                <h4>No hay integraciones activas en tu plataforma.</h4>
+                <p class="mb-4">Empieza dando click en el botón inferior.</p>
             </div>
-            
+            @else
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Código</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($integrations as $integration)
+                        <tr>
+                            <td>{{ $integration->name }}</td>
+                            <td>{{ $integration->code }}</td>
+                            <td>
+                                @if($integration->is_active == true)
+                                    <span class="status-circle bg-success"></span> Activo
+                                @else
+                                    <span class="status-circle bg-danger"></span> Desactivado
+                                @endif
+                            </td>
+                            <td>
+                                <a href="" class="btn btn-outline-primary btn-sm btn-icon" data-toggle="tooltip" data-original-title="Editar">
+                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                </a>
+
+                                <form method="POST" action="{{ route('integrations.destroy', $integration->id) }}" style="display: inline-block;">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm btn-icon" data-toggle="tooltip" data-original-title="Borrar">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @endif
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-outline-light btn-uppercase btn-block mt-3">Integrar un nuevo sistema</a>
         </div>
     </div>
+</div>
 
-</form>
+
+<div id="modalCreate" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear nuevo Elemento</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+             <form method="POST" action="{{ route('integrations.store') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+                <div class="modal-body pd-25">
+                    <div class="form-group mt-2">
+                        <label>Nombre <span class="text-danger">*</span></label>
+                        <select class="custom-select tx-13" id="main_category"  name="name" required="">
+                            <option value="Google Analytics">Google Analytics</option>
+                            <option value="Facebook Pixel">Facebook Pixel</option>
+                            <option value="Jivo Chat">Jivo Chat</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label>Código <span class="text-danger">*</span></label>
+                        <textarea class="form-control" name="code" rows="10"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Integrar Ahora</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
 @endsection

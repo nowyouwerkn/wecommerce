@@ -146,7 +146,7 @@
             </div>
         </div>
         <div class="row best-selling-active">
-            @foreach($products as $product)
+            @foreach($products as $product_info)
             <div class="col">
                 @include('front.theme.werkn-backbone.layouts._product_card')
             </div>

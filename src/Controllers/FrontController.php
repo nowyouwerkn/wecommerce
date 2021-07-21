@@ -169,7 +169,10 @@ class FrontController extends Controller
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
 
-        return view('front.theme.werkn-backbone.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice);
+        $subtotal = 10;
+        $tax = 5;
+
+        return view('front.theme.werkn-backbone.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice)->with('tax', $tax)->with('subtotal', $subtotal);
     }
 
     public function checkout ()
@@ -679,7 +682,7 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
-        return view('front.theme.werkn-backbone.profile')->with('order', $order)->with('purchase_value', $purchase_value);
+        return view('front.theme.werkn-backbone.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
     }
 
     /*

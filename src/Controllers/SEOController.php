@@ -55,7 +55,7 @@ class SEOController extends Controller
         $seo->page_description = $request->input('page_description');
         $seo->page_keywords = $request->input('page_keywords');
 
-        //$seo->page_theme_color_hex = $request->input('page_theme_color_hex');
+        $seo->page_theme_color_hex = $request->input('page_theme_color_hex');
         $seo->page_canonical_url = $request->input('page_canonical_url');
         $seo->page_alternate_url = $request->input('page_alternate_url');
 

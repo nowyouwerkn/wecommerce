@@ -92,14 +92,7 @@
                     <h6 class="text-uppercase mb-3">Opciones adicionales de SEO</h6>
 
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="page_canonical_url">URL Canónica</label>
-                                <input type="text" class="form-control" id="page_canonical_url" name="page_canonical_url" value="{{ $seo->page_canonical_url ?? '' }}"/>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="page_alternate_url">URL Alternativa</label>
                                 <input type="text" class="form-control" id="page_alternate_url" name="page_alternate_url" value="{{ $seo->page_alternate_url ?? '' }}"/>

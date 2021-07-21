@@ -24,7 +24,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-4 mb-4">
-            <a href="{{ route('seo.index') }}">
+            <a href="{{ route('general.config') }}">
                 <div class="card card-body">
                     <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">Preferencias Generales</h3>
                     <h6 class="tx-12 tx-color-03 mg-b-0 mt-2">Administra los datos generales de tu tienda.</h6>

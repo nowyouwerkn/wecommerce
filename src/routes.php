@@ -172,6 +172,12 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     Route::resource('cities', Nowyouwerkn\WeCommerce\Controllers\CityController::class); 
     Route::resource('config', Nowyouwerkn\WeCommerce\Controllers\StoreConfigController::class); 
 
+    Route::resource('integrations', Nowyouwerkn\WeCommerce\Controllers\IntegrationController::class); 
+    Route::get('general-preferences',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\IntegrationController@index',
+        'as' => 'general.config',
+    ]);
+
     // Sección Soporte
     Route::get('support', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@shipping')->name('support.help');
 

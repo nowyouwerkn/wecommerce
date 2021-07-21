@@ -49,7 +49,7 @@ class OrderNoteController extends Controller
         // Notificación
         $type = 'Orden';
         $by = Auth::user();
-        $data = 'creó una nueva nota en la orden #' . $order->id;
+        $data = 'creó una nueva nota en la orden #' . $request->order_id;
 
         $this->notification->send($type, $by ,$data);
 

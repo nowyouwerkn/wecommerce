@@ -24,6 +24,7 @@ class CreateSEOSTable extends Migration
             /* Page SEO Options */
             $table->string('page_canonical_url')->nullable();
             $table->string('page_alternate_url')->nullable();
+            $table->string('page_theme_color_hex')->nullable();
 
             /* Page OG SEO Options */
             $table->string('page_og_type')->nullable();
