@@ -69,9 +69,9 @@
                         </thead>
                         <tbody>
                             @foreach($products as $product)
-                            <tr class="parent" id="row{{ $product->id }}" title="Click to expand/collapse" style="cursor: pointer;">
+                            <tr>
                                 <td>Variantes: {{ $product->variants->count() }}</td>
-                                <td class="tx-color-03 tx-normal image-table td-tight">
+                                <td class="tx-color-03 tx-normal image-table">
                                     <img style="width: 100%;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
                                     <div class="text-center margin-top-10">
                                         <small><p>+ {{ $product->images->count() }} Imágen(es)</p></small>    
@@ -107,12 +107,10 @@
                                 <td></td>
                             </tr>
                                 @foreach($product->variants as $variant)
-                                
-                                <tr class="bg-light child-row{{ $product->id }}" style="display: none;">
-                                    <form method="POST" action="{{ route('stock.update', $variant->id) }}" style="display: inline-block;">
-                                        {{ csrf_field() }}
-                                        {{ method_field('PUT') }}
-
+                                <form method="POST" action="{{ route('stock.update', $variant->id) }}" style="display: inline-block;">
+                                    {{ csrf_field() }}
+                                    {{ method_field('PUT') }}
+                                    <tr class="bg-light">
                                         <td class="tx-color-03 tx-normal image-table">
                                             
                                         </td>
@@ -145,9 +143,8 @@
                                                 <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
                                             </button>
                                         </td>
-                                    </form>
-                                </tr>
-                            
+                                    </tr>
+                                </form>
                                 @endforeach
                             @endforeach
                         </tbody>
@@ -162,19 +159,5 @@
     </div>
 @endif
 
+
 @endsection
-
-@push('scripts')
-<script type="text/javascript">  
-    $(document).ready(function () {  
-        $('tr.parent')  
-            .css("cursor", "pointer")  
-            .attr("title", "Da click para expandir/cerrar las variantes")  
-            .click(function () {  
-                $(this).siblings('.child-' + this.id).toggle();  
-            });  
-
-        //$('tr[@class^=child-]').hide().children('td');  
-    });  
-</script>  
-@endpush

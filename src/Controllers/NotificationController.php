@@ -7,6 +7,12 @@ use App\Http\Controllers\Controller;
 use Config;
 use Mail;
 
+use Carbon\Carbon;
+
+use Auth;
+use Storage;
+use Session;
+
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\Notification;
 use Nowyouwerkn\WeCommerce\Models\StoreConfig;
@@ -21,9 +27,11 @@ class NotificationController extends Controller
         return view('wecommerce::back.notifications.index');
     }
 
-    public function create()
+    public function all()
     {
-        return view('wecommerce::back.notifications.create');
+        $notifications = Notification::paginate(50);
+
+        return view('wecommerce::back.notifications.all', compact('notifications'));
     }
 
     public function store(Request $request)
@@ -43,7 +51,17 @@ class NotificationController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        $notifications = Notification::findOrFail($id);
+
+        $notification->read_at = Carbon::now();
+
+        $notification->save();
+        
+
+        // Mensaje de session
+        Session::flash('success', 'Notificación marcadas como leídas.');
+
+        return redirect()->back();
     }
 
     public function destroy($id)
@@ -54,12 +72,21 @@ class NotificationController extends Controller
     public function send($type, $by, $data)
     {
         /* LOG */
-        $log = new Notification([
-            'action_by' => $by->id,
-            'type' => $type,
-            'data' => $data,
-            'is_hidden' => false
-        ]);
+        if ($by == NULL) {
+            $log = new Notification([
+                'type' => $type,
+                'data' => $data,
+                'is_hidden' => false
+            ]);
+        }else{
+            $log = new Notification([
+                'action_by' => $by->id,
+                'type' => $type,
+                'data' => $data,
+                'is_hidden' => false
+            ]);
+        }
+        
         $log->save();
     }
 
@@ -73,5 +100,21 @@ class NotificationController extends Controller
             
             $message->from($config->sender_email, $config->store_name);
         });
+    }
+
+    public function markAsRead()
+    {
+        $notifications = Notification::where('read_at', NULL)->orderBy('created_at', 'desc')->get();
+
+        foreach($notifications as $notification){
+            $notification->read_at = Carbon::now();
+
+            $notification->save();
+        }
+
+        // Mensaje de session
+        Session::flash('success', 'Notificaciones marcadas como leídas.');
+
+        return redirect()->back();
     }
 }

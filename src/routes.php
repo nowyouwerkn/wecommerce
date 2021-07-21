@@ -67,6 +67,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     Route::get('exportar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@export')->name('export.products');
     Route::post('importar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@import')->name('import.products');
 
+    Route::post('/get-subcategories', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@fetchSubcategory',
+        'as' => 'dynamic.subcategory',
+    ]);
+
     Route::post('products/new-image', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeImage',
         'as' => 'image.store',
@@ -125,7 +130,13 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
 
     Route::resource('coupons', Nowyouwerkn\WeCommerce\Controllers\CouponController::class); //
     Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class); //  
-   
+
+    Route::get('/reviews/{id}',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ReviewController@approve',
+        'as' => 'review.approve',
+    ]);
+
+
     //Administration
     Route::resource('seo', Nowyouwerkn\WeCommerce\Controllers\SEOController::class); //
     Route::resource('legals', Nowyouwerkn\WeCommerce\Controllers\LegalTextController::class);
@@ -139,7 +150,18 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     Route::resource('users', Nowyouwerkn\WeCommerce\Controllers\UserController::class); //
     Route::get('user/config', 'Nowyouwerkn\WeCommerce\Controllers\UserController@config')->name('user.config');  //
     Route::get('user/help', 'Nowyouwerkn\WeCommerce\Controllers\UserController@help')->name('user.help');  //
-    Route::resource('notifications', Nowyouwerkn\WeCommerce\Controllers\NotificationController::class); //
+    Route::resource('notifications', Nowyouwerkn\WeCommerce\Controllers\NotificationController::class)->except(['show', 'create']); //
+
+    Route::get('/notifications/all',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\NotificationController@all',
+        'as' => 'notifications.all',
+    ]);
+
+    Route::get('/notifications/all/mark-as-read',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\NotificationController@markAsRead',
+        'as' => 'notifications.mark.read',
+    ]);
+
     Route::resource('payments', Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController::class);  //
     Route::resource('shipments', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodController::class);
     Route::resource('log', Nowyouwerkn\WeCommerce\Controllers\LogController::class); 
@@ -241,6 +263,12 @@ Route::get('/catalog/{category_slug}/{slug}', [
 Route::get('/catalog-filters', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@dynamicFilter',
     'as' => 'dynamic.filter.front',
+]);
+
+/* Reseñas */
+Route::post('/catalog/{id}/review', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ReviewController@store',
+    'as' => 'reviews.store',
 ]);
 
 /* Search Functions */

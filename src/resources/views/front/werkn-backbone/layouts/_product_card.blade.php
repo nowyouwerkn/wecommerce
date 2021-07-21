@@ -38,7 +38,7 @@
         margin-top: -10px;
         left: 0px;
         border-bottom: 2px solid red;
-        display: inline-block;
+        display: inline-block !important;
         line-height: 0px;
         padding: 0px 11px;
     }

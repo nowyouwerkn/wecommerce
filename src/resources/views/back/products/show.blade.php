@@ -1,6 +1,8 @@
 @extends('wecommerce::back.layouts.main')
 
 @push('stylesheets')
+<link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
+
 <style type="text/css">
     .save-bar{
         position: fixed;
@@ -22,6 +24,18 @@
     }
 
     .hidden{
+        display: none;
+    }
+
+    .btn-add{
+        text-transform: uppercase;
+        padding: 15px 0px;
+        display: inline-block;
+        font-size: .8em;
+    }
+
+    .new-aut,
+    .new-cat{
         display: none;
     }
 
@@ -114,14 +128,14 @@
                 <div class="card-body row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="name">Nombre</label>
+                            <label for="name">Nombre <span class="text-danger">*</span></label>
                             <input type="text" name="name" class="form-control" value="{{ $product->name }}">
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="description">Descripcion</label>
+                            <label for="description">Descripcion <span class="text-danger">*</span></label>
                             <textarea name="description" cols="10" rows="3" class="form-control">{{ $product->description }}</textarea>
                         </div>
                     </div>
@@ -278,7 +292,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <label for="discount_price">Precio</label>
+                            <label for="discount_price">Precio <span class="text-danger">*</span></label>
                             <div class="input-group mg-b-10">
                               <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">MX$</span>
@@ -357,21 +371,25 @@
                 <div class="card-body row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="stock">Cantidad</label>
+                            <label for="stock">Cantidad <span class="text-danger">*</span></label>
+                            @if($product->has_variants == true)
+                            <input type="number" name="stock" class="form-control" value="{{ $total_qty }}" readonly="">
+                            @else
                             <input type="number" name="stock" class="form-control" value="{{ $product->stock }}">
+                            @endif
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="sku">SKU (Stock Keeping Unit)</label>
+                            <label for="sku">SKU (Stock Keeping Unit) <span class="text-danger">*</span></label>
                             <input type="text" name="sku" class="form-control" value="{{ $product->sku }}">
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="barcode">Código de Barras (ISBN, UPC, GTIN, etc)</label>
+                            <label for="barcode">Código de Barras (ISBN, UPC, GTIN, etc) <span class="text-info">(Opcional)</span></label>
                             <input type="text" name="barcode" class="form-control" value="{{ $product->barcode }}">
                         </div>
                     </div>
@@ -417,8 +435,9 @@
                 </div>
             </div>
 
-            @include('wecommerce::back.products.partials._variant_card')
-                    
+            @if($product->has_variants == true)
+                @include('wecommerce::back.products.partials._variant_card')
+            @endif       
         </div>
 
         <!-- Second -->
@@ -459,11 +478,38 @@
                 <div class="card-body row">
                     <div class="col-md-12">
                         <div class="form-group mb-1">
-                            <label for="category_id">Categoria Principal (Tipo)</label>
-                            <select class="custom-select tx-13" name="category_id">
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @if($categories->count() != 0)
+                                <label for="category_id">Colección <span class="text-danger">*</span></label>
+                                <select class="custom-select tx-13 old-cat" id="main_category" name="category_id" required="">
+                                    @foreach ($categories as $category)
+                                        <option {{ ($category->id == $product->category_id) ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+
+                                <input type="text" name="category_name" class="form-control new-cat">
+
+                                <small><a href="javascript:void(0)" id="newCategory" class="btn-add original-state">Crear nueva categoría</a></small>
+                            @else
+                                <label for="category_id">Colección <span class="text-danger">*</span></label>
+                                <input type="text" name="category_name" required="" class="form-control">
+                            @endif
+                        </div>
+
+                        <div class="mt-4 mb-2">
+                            <h6>Subcategorías actualmente seleccionadas</h6>
+                            @if($product->subCategory->count() == 0)
+                                <p class="text-danger">Este producto no está relacionado a ninguna subcategoría.</p>
+                            @else
+                                @foreach($product->subCategory as $fff)
+                                <span class="badge badge-primary">{{ $fff->name }}</span>
                                 @endforeach
+                            @endif
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label>Sub-Categorías</label>
+                            <select class="form-control select2" name="subcategory[]" id="subcategory" data-plugin="select2" multiple="">
+
                             </select>
                         </div>
                     </div>
@@ -473,7 +519,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group mb-1">
-                                <label for="tsearch_tagsags">Etiquetas</label>
+                                <label for="tsearch_tagsags">Etiquetas <span class="text-success">Recomendado</span></label>
                                 <input type="text" name="search_tags" class="form-control" placeholder="Algodón, Fresco, Verano" value="{{ $product->search_tags }}">
                             </div>
                         </div>
@@ -512,7 +558,15 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
+
 <script type="text/javascript">
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Selecciona una opción..."
+        });
+    });
+
     // Value Checker
     $('.value-checker').keyup(function(){
         event.preventDefault();
@@ -538,5 +592,50 @@
         }
     });
 
+    $("#newCategory").click(function() {
+        var $this = $(this);
+        $(".new-cat").toggle("slow");
+        $(".old-cat").toggle("slow");
+        $this.toggleClass("original-state");
+
+        if ($this.hasClass("original-state")) {
+            $("#newCategory").text("Crear Nueva Categoría");
+        }else{
+            $("#newCategory").text("Seleccionar Categoría");
+            
+        }
+    });
+
+    $("#hasVariants").click(function() {
+        $('#save-form').submit();
+    });
+
+    $('#main_category').on('click', function(){
+        event.preventDefault();
+
+        var value = $('#main_category').val();
+        $('#client_ip').append('<option value="0" disabled selected>Processing...</option>');
+
+        $.ajax({
+            method: 'POST',
+            url: "{{ route('dynamic.subcategory') }}",
+            data:{ 
+                value:value, 
+                _token: '{{ Session::token() }}', 
+            },
+            success: function(response){
+                //console.log(msg['mensaje']);
+                $('#subcategory').empty();
+                //$('#subcategory').append(`<option value="0" disabled selected>Select a Sub-category</option>`);
+                response.forEach(element => {
+                    $('#subcategory').append(`<option value="${element['id']}">${element['name']}</option>`);
+                });
+            },
+            error: function(response){
+                //console.log(msg['mensaje']);
+                $('.error-service').show();
+            }
+        });
+    });
 </script>
 @endpush

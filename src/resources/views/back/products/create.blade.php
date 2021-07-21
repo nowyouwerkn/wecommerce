@@ -1,6 +1,8 @@
 @extends('wecommerce::back.layouts.main')
 
 @push('stylesheets')
+<link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
+
 <style type="text/css">
     .save-bar{
         position: fixed;
@@ -241,7 +243,7 @@
                     <div class="card-body row">
                         <div class="col-md-12 mb-4">
                             <div class="custom-control custom-checkbox" >
-                                <input type="checkbox" class="custom-control-input" id="hasVariants">
+                                <input type="checkbox" class="custom-control-input" id="hasVariants" name="has_variants" value="1">
                                 <label class="custom-control-label" for="hasVariants">Este producto tiene variantes</label>
                             </div>
                         </div>
@@ -360,7 +362,7 @@
                                 -->
                                 @if($categories->count() != 0)
                                     <label for="category_id">Colección <span class="text-danger">*</span></label>
-                                    <select class="custom-select tx-13 old-cat" name="category_id" required="">
+                                    <select class="custom-select tx-13 old-cat" id="main_category"  name="category_id" required="">
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
@@ -373,6 +375,13 @@
                                     <label for="category_id">Colección <span class="text-danger">*</span></label>
                                     <input type="text" name="category_name" required="" class="form-control">
                                 @endif
+                            </div>
+
+                            <div class="form-group">
+                                <label>Sub-Categorías</label>
+                                <select class="form-control select2" name="subcategory[]" id="subcategory" data-plugin="select2" multiple="">
+
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -420,7 +429,15 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
+
 <script type="text/javascript">
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Selecciona una opción..."
+        });
+    });
+
     // Value Checker
     $('.value-checker').keyup(function(){
         event.preventDefault();
@@ -462,6 +479,34 @@
 
     $("#hasVariants").click(function() {
         $('#save-form').submit();
+    });
+
+    $('#main_category').on('click', function(){
+        event.preventDefault();
+
+        var value = $('#main_category').val();
+        $('#client_ip').append('<option value="0" disabled selected>Procesando...</option>');
+
+        $.ajax({
+            method: 'POST',
+            url: "{{ route('dynamic.subcategory') }}",
+            data:{ 
+                value:value, 
+                _token: '{{ Session::token() }}', 
+            },
+            success: function(response){
+                //console.log(msg['mensaje']);
+                $('#subcategory').empty();
+                //$('#subcategory').append(`<option value="0" disabled selected>Select a Sub-category</option>`);
+                response.forEach(element => {
+                    $('#subcategory').append(`<option value="${element['id']}">${element['name']}</option>`);
+                });
+            },
+            error: function(response){
+                //console.log(msg['mensaje']);
+                $('.error-service').show();
+            }
+        });
     });
 </script>
 @endpush

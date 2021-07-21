@@ -3,6 +3,10 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
+use Carbon\Carbon;
+
+use Auth;
+use Storage;
 use Session;
 
 use Nowyouwerkn\WeCommerce\Models\Product;
@@ -34,7 +38,7 @@ class ReviewController extends Controller
         //
     }
 
-    public function store(Request $request, $product_id)
+    public function store(Request $request, $id)
     {
         //Validar
         $this -> validate($request, array(
@@ -43,7 +47,7 @@ class ReviewController extends Controller
             'review' => 'required|min:10'
         ));
 
-        $product = Product::find($product_id);
+        $product = Product::find($id);
         $review = new Review();
 
         $review->name = $request->name;
@@ -56,14 +60,14 @@ class ReviewController extends Controller
 
         // Notificación
         $type = 'Reseña';
-        $by = Auth::user();
-        $data = 'dejó una reseña para: ' . $product->name;
+        $by = NULL;
+        $data = 'Un usuario dejó una reseña para: ' . $product->name;
 
         $this->notification->send($type, $by ,$data);
 
         Session::flash('success', 'Gracias por tu reseña. La estamos revisando para publicarla lo antes posible.');
 
-        return redirect()->route('detalle', [$product->slug]);
+        return redirect()->back();
     }
 
     public function show($id)
@@ -97,7 +101,7 @@ class ReviewController extends Controller
          $review->is_approved = false;
          $review->save();
 
-         Session::flash('success', 'Reseña bloqueada. No aparecerá en el producto.');
+         Session::flash('success', 'Reseña bloqueada. No aparecerá en el producto. Puedes eliminarla si asi lo prefieres.');
 
          return redirect()->back();
     }

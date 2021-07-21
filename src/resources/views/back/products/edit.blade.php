@@ -331,12 +331,21 @@
                     <div class="card-body row">
                         <div class="col-md-12">
                             <div class="form-group mb-1">
-                                <label for="category_id">Categoria Principal (Tipo)</label>
-                                <select class="custom-select tx-13" name="category_id">
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
+                                @if($categories->count() != 0)
+                                    <label for="category_id">Colección <span class="text-danger">*</span></label>
+                                    <select class="custom-select tx-13 old-cat" name="category_id" required="">
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    <input type="text" name="category_name" class="form-control new-cat">
+
+                                    <small><a href="javascript:void(0)" id="newCategory" class="btn-add original-state">Crear nueva categoría</a></small>
+                                @else
+                                    <label for="category_id">Colección <span class="text-danger">*</span></label>
+                                    <input type="text" name="category_name" required="" class="form-control">
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -408,6 +417,24 @@
         }else{
             $('.save-bar').addClass('show-bar');
         }
+    });
+
+    $("#newCategory").click(function() {
+        var $this = $(this);
+        $(".new-cat").toggle("slow");
+        $(".old-cat").toggle("slow");
+        $this.toggleClass("original-state");
+
+        if ($this.hasClass("original-state")) {
+            $("#newCategory").text("Crear Nueva Categoría");
+        }else{
+            $("#newCategory").text("Seleccionar Categoría");
+            
+        }
+    });
+
+    $("#hasVariants").click(function() {
+        $('#save-form').submit();
     });
 
 </script>

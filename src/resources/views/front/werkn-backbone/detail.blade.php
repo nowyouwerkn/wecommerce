@@ -148,19 +148,21 @@
                     <div class="product-details-info">
                         <span><a href="javascript:void(0)" data-toggle="modal" data-target="#sizesModal"><i class="fas fa-shoe-prints"></i> Guía de tallas</a></span>
 
-                        @if($product->variants->count() != 0)
-                        <div class="sidebar-product-size mb-30">
-                            <h4 class="widget-title">Escoge tu variante</h4>
-                            <div class="shop-size-list">
-                                <ul>
-                                    @foreach($product->variants as $variant)
-                                        <li>
-                                            <a id="variant{{ $variant->id }}" data-value="{{ $variant->value }}" class="" href="javascript:void(0)">{{ $variant->value }}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
+                        @if($product->has_variants == true)
+                            @if($product->variants->count() != 0)
+                            <div class="sidebar-product-size mb-30">
+                                <h4 class="widget-title">Escoge tu variante</h4>
+                                <div class="shop-size-list">
+                                    <ul>
+                                        @foreach($product->variants as $variant)
+                                            <li>
+                                                <a id="variant{{ $variant->id }}" data-value="{{ $variant->value }}" class="" href="javascript:void(0)">{{ $variant->value }}</a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
+                            @endif
                         @endif
                     </div>
                     <div class="perched-info">
@@ -175,13 +177,19 @@
                             </form>
                         </div>
                         -->
-                        @if($product->variants->count() == 0)
-                            <div class="mr-3">
-                                <p class="no-existance-btn mb-0"><i class="fas fa-heartbeat"></i> Sin Existencias</p>
-                                <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>
-                            </div>
+                        @if($product->has_variants == true)
+                            @if($product->variants->count() == 0)
+                                <div class="mr-3">
+                                    <p class="no-existance-btn mb-0"><i class="fas fa-heartbeat"></i> Sin Existencias</p>
+                                    <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>
+                                </div>
+                            @else
+                                <a href="#" id="cartBtn" class="btn" role="button">
+                                    <i class="fas fa-cart-plus"></i> Agregar al carrito
+                                </a>
+                            @endif
                         @else
-                            <a href="#" id="cartBtn" class="btn" role="button">
+                            <a href="{{ route('add-cart', ['id' => $product->id, 'variant' => 'unique']) }}" id="cartBtn" class="btn" role="button">
                                 <i class="fas fa-cart-plus"></i> Agregar al carrito
                             </a>
                         @endif
@@ -227,7 +235,7 @@
                         </li>
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews"
-                                aria-selected="false">Reseñas</a>
+                                aria-selected="false">Reseñas ({{ $product->approved_reviews->count() ?? '0' }})</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -249,36 +257,68 @@
                         </div>
                         <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
                             <div class="product-desc-title mb-30">
-                                <h4 class="title">Reseñas (0) :</h4>
+                                <h4 class="title">Reseñas ({{ $product->approved_reviews->count() ?? '0' }}) :</h4>
                             </div>
-                            <p>Your email address will not be published. Required fields are marked</p>
-                            <p class="adara-review-title">Be the first to review “Adara”</p>
-                            <div class="review-rating">
-                                <span>Your rating *</span>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                            <form action="#" class="comment-form review-form">
-                                <span>Your review *</span>
-                                <textarea name="message" id="comment-message" placeholder="Your Comment"></textarea>
+                            @if($product->approved_reviews->count() != 0)
+                                @foreach($product->approved_reviews as $review)
+                                    <div class="media">
+                                        <img class="mr-3 rounded-circle" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($review->email))) . '?404' }}" width="50" alt="{{ $review->name }}">
+                                        <div class="media-body">
+                                            <h5 class="mt-0 mb-0">{{ $review->name }}</h5>
+                                            <p class="mb-2"><small><i>Publicado: {{ date( 'd, m, Y' ,strtotime($review->created_at)) }}</i></small></p>
+                                            <p>{{ $review->review }}</p>
+                                        </div>
+                                    </div>
+
+                                    <hr>
+                                @endforeach
+                            @else
+                                <p class="adara-review-title">No hay reseñas para este producto todavía. Se el primero en hablar de "{{ $product->name }}"</p>
+                            @endif
+
+                            <form action="{{ route('reviews.store', $product->id) }}" method="POST" class="comment-form review-form">
+                                {{ csrf_field() }}
+
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                                <span>Tu reseña <span class="text-danger">*</span></span>
+
+                                <textarea id="review" name="review" rows="4" class="form-control" placeholder="Este producto es genial..."></textarea>
+
+                                @guest
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <input type="text" placeholder="Your Name*">
+                                        <input type="text" name="name" placeholder="Tu nombre *" required="">
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="email" placeholder="Your Email*">
+                                        <input type="email" name="email" placeholder="Tu correo electrónico *" required="">
                                     </div>
                                 </div>
+                                @else
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" name="name" placeholder="Tu nombre *" required="" value="{{ Auth::user()->name }}" readonly="">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="email" name="email" placeholder="Tu correo electrónico *" required="" value="{{ Auth::user()->email }}" readonly="">
+                                    </div>
+                                </div>
+                                <small class="d-block mb-4">Tienes sesión iniciada como {{ Auth::user()->name }}. ¿No eres tu? 
+                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="text-danger"><span>Cerrar Sesión</span>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            @csrf
+                                        </form>
+                                    </a>
+                                </small>
+                                @endguest
+
+                                <!--
                                 <div class="comment-check-box">
                                     <input type="checkbox" id="comment-check">
                                     <label for="comment-check">Save my name and email in this browser for the next time I comment.</label>
                                 </div>
-                                <button class="btn">Submit</button>
+                                -->
+                                <button type="submit" class="btn">Publicar Reseña</button>
                             </form>
                         </div>
                     </div>

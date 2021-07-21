@@ -37,6 +37,11 @@ class Product extends Model
         return $this->hasMany(Review::class, 'product_id');
     }
 
+    public function approved_reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id')->where('is_approved', true);
+    }
+
     public function subCategory()
     {
         return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'category_id');

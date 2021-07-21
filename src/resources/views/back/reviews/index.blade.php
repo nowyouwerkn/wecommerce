@@ -39,11 +39,11 @@
                 <th scope="row">{{ $rp->id }}</th>
         
                 <td>{{ $rp->name }} <br> {{ $rp->email }}</td>
-                <td><a href="{{ route('product.detail', $rp->product->slug) }}">{{ $rp->product->name }}</a></td>
+                <td><a href="">{{ $rp->product->name }}</a></td>
                 <td>{{ $rp->review }}</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Acciones">
-                    <a href="{{ route('review.approve', $rp->id) }}" class="btn btn-success"><i class="ionicons ion-checkmark"></i> Aprobar</a>
+                        <a href="{{ route('review.approve', $rp->id) }}" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5"><i class="fas fa-check-circle"></i> Aprobar</a>
                     </div>
                 </td>
                 </tr>
@@ -70,16 +70,14 @@
             <tbody>
                 @foreach($reviews as $review)
                 <tr>
-                <th scope="row">{{ $review->id }}</th>
-        
-                <td>{{ $review->name }} <br> {{ $review->email }}</td>
-                <td><a href="{{ route('product.detail', $review->product->slug) }}">{{ $review->product->name }}</a></td>
-                <td>{{ $review->review }}</td>
-                <td>
-                    <div class="btn-group" role="group" aria-label="Acciones">
-                    <a href="#" class="btn btn-danger"><i class="ionicons ion-checkmark"></i> Borrar</a>
-                    </div>
-                </td>
+                    <th scope="row">{{ $review->id }}</th>
+            
+                    <td>{{ $review->name }} <br> {{ $review->email }}</td>
+                    <td><a href="">{{ $review->product->name }}</a></td>
+                    <td>{{ $review->review }}</td>
+                    <td>
+                        <a href="#" class="btn btn-sm pd-x-15 btn-outline-danger btn-uppercase mg-l-5"><i class="fas fa-ban"></i> Borrar</a>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

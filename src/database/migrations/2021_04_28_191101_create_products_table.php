@@ -42,6 +42,8 @@ class CreateProductsTable extends Migration
             $table->string('barcode')->nullable();
             $table->string('stock')->nullable();
 
+            $table->boolean('has_variants')->nullable()->default(false);
+
             /* Aditional Info */
             $table->string('size_chart_file')->nullable();            
             $table->string('height')->nullable();

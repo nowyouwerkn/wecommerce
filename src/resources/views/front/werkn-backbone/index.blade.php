@@ -77,7 +77,13 @@
                 <div class="col-lg-3 col-md-6 col-sm-8">
                     <div class="cat-banner-item mb-20">
                         <div class="thumb">
-                            <a href="{{ route('catalog', $category->slug) }}"><img src="{{ asset('img/categories/' . $category->image) }}" alt=""></a>
+                            <a href="{{ route('catalog', $category->slug) }}">
+                                @if($category->image == NULL)
+                                <img src="{{ asset('img/categories/no_category.jpg') }}" alt="" style="min-height: 250px;">
+                                @else
+                                <img src="{{ asset('img/categories/' . $category->image) }}" alt="">
+                                @endif
+                            </a>
                         </div>
                         <div class="content">
                             <span>Colección</span>
