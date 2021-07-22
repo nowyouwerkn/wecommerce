@@ -62,15 +62,7 @@
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal_{{ $category->id }}" class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-edit"></i></a></li>
                     <li class="list-inline-item"><a href="{{ route('categories.show', $category->id) }}"  data-toggle="tooltip" data-original-title="Detalle"class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-eye"></i></a></li>
 
-                    <li class="list-inline-item">
-                        <form method="POST" action="{{ route('categories.destroy', $category->id) }}" style="display: inline-block;">
-                            <button type="submit" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Eliminar">
-                                <i class="fas fa-times" aria-hidden="true"></i>
-                            </button>
-                            {{ csrf_field() }}
-                            {{ method_field('DELETE') }}
-                        </form>
-                    </li>                    
+                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalDelete_{{ $category->id }}" class="btn btn-rounded btn-icon btn-danger"><i class="fas fa-times" aria-hidden="true"></i></a></li>                  
                 </ul>
 
                 <div class="modal fade" id="editModal_{{ $category->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -109,6 +101,36 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="modalDelete_{{ $category->id }}" class="modal fade">
+                    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+                        <div class="modal-content bd-0 tx-14">
+                            <div class="modal-header">
+                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Aviso</h6>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body pd-25">
+                                <h4 class="text-warning">¡Atención!</h4>
+                                <p>Al eliminar esta colección <em>({{ $category->name }})</em> se eliminarán tambien cualquier subcategoría que tenga. Los productos relacionados serán cambiados a "Borrador" y perderán su categorización (<strong>NO</strong> elimina productos). Esta acción es irreversible.</p>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Regresar</button>
+                                <form method="POST" action="{{ route('categories.destroy', $category->id) }}" style="display: inline-block;">
+                                    <button type="submit" class="btn btn-danger">
+                                        Eliminar <i class="fas fa-times" aria-hidden="true"></i>
+                                    </button>
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
+                                </form>
+
+                            </div>
+                        </div>
+                    </div><!-- modal-dialog -->
+                </div><!-- modal -->
             </div>
 
             @if($category->image == NULL)

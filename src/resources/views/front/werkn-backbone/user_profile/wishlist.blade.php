@@ -33,6 +33,7 @@
                             </div>
                             <div class="col">
                                 <ul class="my-0 float-right list-inline">
+                                    <!--
                                     <li class="list-inline-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                           Compartir
@@ -46,7 +47,8 @@
                                            
                                         </div>
                                     </li>
-
+                                    -->
+                                    
                                     <!--
                                     @if($wishlist->count())
                                         <li class="list-inline-item"><a href="#" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> ¡Comprar ahora!</a></li>

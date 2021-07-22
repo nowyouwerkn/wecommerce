@@ -104,6 +104,21 @@
                                 </div>
                             </div>
 
+                            @php
+                                $legals = Nowyouwerkn\WeCommerce\Models\Legal::all();
+                            @endphp
+
+                            <div class="form-group pl-4">
+                                <input class="form-check-input" type="checkbox" name="accept" id="accept" required="">
+                                <label style="text-transform: uppercase; font-weight: bold; font-size: .8em; display: inline-block; margin-bottom: 10px; margin-top: 5px;" for="accept">
+                                    Al registrar tu cuenta con nosotros aceptas nuestro  
+                                    @foreach($legals as $legal)
+                                    <a style="font-size: 1em !important;" href="#">{{ $legal->name }}, </a>
+                                    @endforeach
+                                    . Solo mandamos correos de notificación de compra o seguimiento de orden.
+                                </label>
+                            </div>
+
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">

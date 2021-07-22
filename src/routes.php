@@ -308,6 +308,12 @@ Route::group(['prefix' => 'profile', 'middleware' => 'auth'], function(){
     Route::get('address', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@address')->name('address');
     Route::get('address/create', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@addAddress')->name('address.create');
     Route::get('account', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@account')->name('account');
+
+    Route::put('/account/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@updateAccount',
+        'as' => 'profile.update',
+    ]);
+
 });
 
 

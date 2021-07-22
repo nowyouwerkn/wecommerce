@@ -44,7 +44,7 @@ class ProductController extends Controller
 
     public function create()
     {
-        $categories = Category::where('parent_id', NULL)->get();
+        $categories = Category::where('parent_id', NULL)->orWhere('parent_id', '0')->get();
 
         return view('wecommerce::back.products.create')
         ->with('categories', $categories);
@@ -146,7 +146,7 @@ class ProductController extends Controller
     {
         
         $product = Product::findOrFail($id);
-        $categories = Category::where('parent_id', NULL)->get();
+        $categories = Category::where('parent_id', NULL)->orWhere('parent_id', '0')->get();
         $variant_stock = ProductVariant::where('product_id', $product->id)->get();
 
         $total_qty = 0;

@@ -5,7 +5,18 @@
 @endpush
 
 @push('stylesheets')
+<style type="text/css">
+    .card-default{
+        position: relative;
+    }
 
+    .badge-process{
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 10;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -26,31 +37,24 @@
                     @include('front.theme.werkn-backbone.layouts.nav-user')
                 </div>
 
-                <div class="col-md-9">
-                    <div class="row">
-                        <div class="col-md-4 text-center mb-5">
-                            <a href="">
-                                <!-- Image -->
-                                <img src="http://placehold.jp/99ccff/2475c7/300x300.png?text=w" alt="">
-        
-                                <!-- Info -->
-                                <div class="row">
-                                    <div class="col text-start">
-                                        <p>Ladies Grey v Neck Reebok T Shirt</p>
-                                    </div>
-                                    <div class="col text-end">
-                                        <p>$45</p>
-                                    </div>
-                                </div>
-                            </a>
+                <!-- PROFILE INFORMATION -->
+                    <section class="col-md-9">
+                        @if($orders->count())
+                        <div class="row">
+                            @foreach($orders as $order)v
+                            <div class="col-md-6">
+                                @include('front.theme.werkn-backbone.layouts._order_card')
+                            </div>
+                            @endforeach
                         </div>
-
-                        <!-- Button -->
-                        <div class="col-md-6 offset-md-3 text-center">
-                            <a href="#" class="btn btn-primary">Cargar mas</a>
-                        </div>
-                    </div>
-                </div>
+                            
+                        @else
+                            <div class="text-center my-5">
+                                <h4 class="mb-0">No tienes compras recientes.</h4>
+                                <p>Visita la tienda <a href="{{ route('catalog.all') }}">aqui</a> y disfruta.</p>
+                            </div>
+                        @endif
+                    </section>
             </div>
         </div>
     </section>

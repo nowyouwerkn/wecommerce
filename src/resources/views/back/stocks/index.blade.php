@@ -46,13 +46,6 @@
     <div class="row">
         <div class="col-lg-12 col-xl-12 mg-t-10">
             <div class="card mg-b-10">
-                <div class="card-body pd-y-30">
-                    <!-- Filters -->
-                    <div class="mb-4">
-
-                    </div>
-                </div>
-
                 <!-- Table -->
                 <div class="table-responsive">
                     <table class="table table-dashboard mg-b-0">

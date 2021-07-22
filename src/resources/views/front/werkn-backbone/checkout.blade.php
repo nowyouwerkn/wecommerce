@@ -313,7 +313,7 @@
                                             <p>Sub total <ion-icon data-toggle="tooltip" data-placement="left" title="Productos + Envío sin I.V.A" name="information-circle-outline"></ion-icon ></p>
                                         </div>
                                         <div class="col-md-6 text-right">
-                                            <p>$ <span id="cartTotal">{{ number_format($total, 2) }}</span></p>
+                                            <p>$ <span id="cartTotal">{{ number_format($subtotal, 2) }}</span></p>
                                             <input type="hidden" name="sub_total" id="subTotal" value="0">
                                         </div>
 
@@ -327,7 +327,15 @@
                                         
 
                                         <!-- DISCOUNT DIV -->
-                                        @if($store_tax)
+                                        @if(empty($store_tax))
+                                        <div class="col-md-6">
+                                            <p class="text-muted small">IVA (16%) <ion-icon data-toggle="tooltip" data-placement="left" title="Desglose de I.V.A" name="information-circle-outline"></ion-icon ></p>
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <p class="text-muted small">$ <span id="taxValue">{{ number_format($tax, 2) }}</span></p>
+                                            <input type="hidden" name="tax_rate" value="" id="taxRate">
+                                        </div>
+                                        @else
                                         <div class="col-md-6">
                                             <p class="text-muted small">IVA (16%) <ion-icon data-toggle="tooltip" data-placement="left" title="Desglose de I.V.A" name="information-circle-outline"></ion-icon ></p>
                                         </div>

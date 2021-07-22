@@ -45,10 +45,45 @@
                             <div class="navbar-wrap main-menu d-none d-lg-flex">
                                 @php
                                     $categories = Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
+
+                                    $main_categories = Nowyouwerkn\WeCommerce\Models\Category::inRandomOrder()->where('parent_id', 0)->orWhere('parent_id', NULL)->take(2)->get();
                                 @endphp
 
                                 <ul class="navigation left">
                                     <li class="active"><a href="{{ route('index') }}">Inicio</a></li>
+
+                                    <li class="has--mega--menu"><a href="#">Catálogo</a>
+                                        <ul class="mega-menu">
+                                            <li class="mega-menu-wrap">
+                                                @foreach($categories as $category)
+                                                <ul class="mega-menu-col">
+                                                    <li class="mega-title"><a href="{{ route('catalog', $category->slug) }}">{{ $category->name }}</a></li>
+                                                    @foreach($category->children as $sub)
+                                                    <li><a href="{{ route('catalog', $sub->slug) }}">{{ $sub->name }}</a></li>
+                                                    @endforeach
+                                                </ul>
+                                                @endforeach
+
+                                                @foreach($main_categories as $category)
+                                                <ul class="mega-menu-col sub-cat-post">
+                                                    <li>
+                                                        <a href="{{ route('catalog', $category->slug) }}">
+                                                            @if($category->image == NULL)
+                                                            <img src="{{ asset('img/categories/no_category.jpg') }}" alt="" style="min-height: 250px;">
+                                                            @else
+                                                            <img src="{{ asset('img/categories/' . $category->image) }}" alt="">
+                                                            @endif
+
+                                                            <span class="btn">{{ $category->name }}</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                @endforeach
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <!--
                                     <li class="has--mega--menu"><a href="#">Catálogo</a>
                                         <ul class="mega-menu">
                                             <li class="mega-menu-wrap">
@@ -65,6 +100,7 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    -->
                                     <!--
                                     <li><a href="shop.html">Promociones</a></li>
                                     <li><a href="about-us.html">Acerca de</a></li>

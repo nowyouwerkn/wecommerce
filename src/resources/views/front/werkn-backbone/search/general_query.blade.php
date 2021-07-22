@@ -10,6 +10,7 @@
 
 @section('content')
 <!-- shop-area -->
+<!-- shop-area -->
 <section class="shop-area pt-100 pb-100">
     <div class="container">
         <div class="catalog-hero">
@@ -17,6 +18,7 @@
             <h2 class="margin-text-2">{{ Request::input('query') }}</h2>
             <p>Actualmente {{ $products->count() }} resultado(s)</p>
         </div>
+
 
         @if($products->count() == 0)
         <div class="text-center" style="padding:80px 0px 100px 0px;">
@@ -30,8 +32,8 @@
                 <form method="get" action="{{ route('dynamic.filter.front') }}" id="product_filter_form">
                     @php
                         $popular_products = Nowyouwerkn\WeCommerce\Models\Product::where('is_favorite', true)->get();
-                        $categories = Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
-                        $variants = Nowyouwerkn\WeCommerce\Models\Variant::get();
+                        $categories = \Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
+                        $variants = \Nowyouwerkn\WeCommerce\Models\Variant::get();
                     @endphp
 
                     <aside class="shop-sidebar pr-5">
@@ -94,18 +96,18 @@
                                     @foreach($popular_products as $product)
                                     <li>
                                         <div class="sidebar-product-thumb">
-                                        <a href="{{ route('detail', [$product->category->slug, $product->slug]) }}"><img src="{{ asset('img/products/' . $product->image) }}" alt=""></a>
+                                            <a href="{{ route('detail', [$product->category->slug, $product->slug]) }}">
+                                                <img src="{{ asset('img/products/' . $product->image) }}" width="100%">
+                                            </a>
                                         </div>
                                         <div class="sidebar-product-content">
-                                            <div class="rating">
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                            </div>
-                                            <h5><a href="#">{{ $product->name }}</a></h5>
-                                            <span>$ {{ number_format($product->price, 2) }}</span>
+                                            <h5><a href="{{ route('detail', [$product->category->slug, $product->slug]) }}">{{ $product->name }}</a></h5>
+                                            @if($product->has_discount == true)
+                                            <span>${{ number_format($product->discount_price, 2) }}</span>
+                                            <span class="price-discounted">${{ number_format($product->price, 2) }}</span>
+                                            @else
+                                            <span>${{ number_format($product->price, 2) }}</span>
+                                            @endif
                                         </div>
                                     </li>
                                     @endforeach
@@ -122,7 +124,8 @@
                         <div class="col-md-6">
                             <div class="shop-top-left">
                                 <ul>
-                                    <li>Mostrando 1–9 de 80 resultados</li>
+                                    <!--<li><a href="#"><i class="flaticon-menu"></i> FILTER</a></li>-->
+                                    <!--<li>Mostrando 1–9 de 80 resultados</li>-->
                                 </ul>
                             </div>
                         </div>
@@ -150,6 +153,18 @@
                 </div>
                 <div class="pagination-wrap">
                     {{ $products->links() }}
+                    {{-- 
+                    <ul>
+                        <li class="prev"><a href="#">Prev</a></li>
+                        <li><a href="#">1</a></li>
+                        <li class="active"><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">...</a></li>
+                        <li><a href="#">10</a></li>
+                        <li class="next"><a href="#">Next</a></li>
+                    </ul>
+                    --}}
                 </div>
             </div>
             

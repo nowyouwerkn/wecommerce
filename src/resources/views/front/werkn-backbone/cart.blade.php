@@ -80,7 +80,8 @@
                                         </div>
                                     </td>
                                     <td class="product-subtotal"><span>$ {{ number_format($product['price'], 2) }} </span></td>
-                                    <td class="product-delete"><a href="#"><i class="flaticon-trash"></i></a></td>
+
+                                    <td class="product-delete"><a href="{{ route( 'cart.delete', ['id' => $product['item']['id'], 'variant' => $variant ] ) }}"><i class="far fa-trash-alt"></i></a></td>
                                 </tr>
                             @endforeach
                             </tbody>

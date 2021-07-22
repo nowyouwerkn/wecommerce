@@ -9,6 +9,7 @@ use Image;
 use Str;
 
 use Nowyouwerkn\WeCommerce\Models\Category;
+use Nowyouwerkn\WeCommerce\Models\Product;
 
 /* Notificaciones */
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
@@ -174,7 +175,20 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::find($id);
+        $products = Product::where('category_id', $category->id)->get();
+
+        foreach ($products as $product) {
+            $product->subCategory()->detach();
+            $product->category_id = NULL;
+            $product->status = 'Borrado';
+
+            $product->save();
+        }
             
+        foreach($category->children as $sub){
+            $sub->delete();
+        }
+
         // Notificación
         $type = 'Colección';
         $by = Auth::user();
@@ -184,8 +198,9 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        Session::flash('info', 'Elemento eliminado correctamente de la base de datos.');
+        Session::flash('success', 'Elemento eliminado correctamente de la base de datos.');
 
         return redirect()->route('categories.index');
+        
     }
 }
