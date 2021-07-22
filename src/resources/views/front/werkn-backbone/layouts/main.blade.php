@@ -40,19 +40,18 @@
         @stack('stylesheets')
     </head>
     <body>
+        @php
+            $store_config = Nowyouwerkn\WeCommerce\Models\StoreConfig::first();
+        @endphp
+
         @if(Auth::check())
             @if(Auth::user()->hasRole(['webmaster', 'admin', 'analyst']))
-            @php
-                $config = Nowyouwerkn\WeCommerce\Models\StoreConfig::first();
-            @endphp
-
             <style type="text/css">
                 .werkn-admin-bar{
                     direction: ltr;
                     color: #c3c4c7;
                     font-size: 13px;
                     font-weight: 400;
-                    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
                     line-height: 2.46153846;
                     height: 32px;
                     position: fixed;
@@ -78,6 +77,10 @@
 
                 body{
                     margin-top: 32px;
+                }
+
+                .sticky-menu{
+                    top: 30px !important;
                 }
             </style>
 

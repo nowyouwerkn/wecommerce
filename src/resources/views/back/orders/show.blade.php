@@ -57,7 +57,7 @@
                     <div class="card-body text-secondary">
                         <div class="row align-items-center">
                             <div class="col-md-2">
-                                <img class="img-fluid" src="{{ asset('assets/images/ups-logo.png') }}">
+                                <img class="img-fluid" src="{{ asset('assets/img/brands/ups.png') }}">
                             </div>
                             <div class="col-md-9">
                                 <h5 class="card-title text-secondary mb-1">UPS Tracking Number</h5>
@@ -73,7 +73,7 @@
                     <div class="card-body text-secondary">
                         <div class="row align-items-center">
                             <div class="col-md-3">
-                                <img class="img-fluid" src="{{ asset('assets/images/ups-logo.png') }}">
+                                <img class="img-fluid" src="{{ asset('assets/img/brands/ups.png') }}">
                             </div>
                             <div class="col-md-9">
                                 <h5 class="card-title text-secondary mb-1">UPS Shipping Label</h5>
@@ -90,7 +90,7 @@
                     <div class="card-body text-secondary">
                         <div class="row align-items-center">
                             <div class="col-md-2">
-                                <img class="img-fluid" src="{{ asset('assets/images/stripe-logo.png') }}">
+                                <img class="img-fluid" src="{{ asset('assets/img/brands/stripe.png') }}">
                             </div>
                             <div class="col-md-9">
                                 <h5 class="card-title text-secondary mb-1">Stripe Payment ID</h5>

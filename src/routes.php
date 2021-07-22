@@ -178,14 +178,19 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
         'as' => 'general.config',
     ]);
 
+    Route::post('store-logo',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\IntegrationController@storeLogo',
+        'as' => 'store.logo',
+    ]);
+
     // Sección Soporte
     Route::get('support', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@shipping')->name('support.help');
 
     /* Rutas de Correo */
-    Route::get('send_order_email','Nowyouwerkn\WeCommerce\Controllers\MailController@order_email');
+    Route::get('send_order_email','Nowyouwerkn\WeCommerce\Controllers\NotificationController@order_email');
 
     Route::post('/resend-mail/{order_id}', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\MailController@resendOrder',
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\NotificationController@resendOrder',
         'as' => 'resend.order.mail',
     ]);
 });

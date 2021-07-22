@@ -5,11 +5,13 @@ use App\Http\Controllers\Controller;
 
 use Carbon\Carbon;
 
+use Image;
 use Session;
 use Auth;
 use Str;
 
 use Nowyouwerkn\WeCommerce\Models\Integration;
+use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 
 use Illuminate\Http\Request;
 
@@ -19,7 +21,31 @@ class IntegrationController extends Controller
     {
         $integrations = Integration::all();
 
-        return view('wecommerce::back.store_config.index', compact('integrations'));
+        $store_logo = StoreConfig::first();
+
+        return view('wecommerce::back.store_config.index', compact('integrations', 'store_logo'));
+    }
+
+    public function storeLogo(Request $request)
+    {
+        $config = StoreConfig::first();
+
+        if ($request->hasFile('logo')) {
+            $image = $request->file('logo');
+            $filename = 'logo-store' . '.' . $image->getClientOriginalExtension();
+            $location = public_path('assets/img/' . $filename);
+
+            Image::make($image)->resize(400,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $config->store_logo = $filename;
+        }
+
+        $config->save();
+
+        //Session message
+        Session::flash('success', 'Guardado exitoso, se guardó el logo correctamente en tu sitio web.');
+
+        return redirect()->back();
     }
 
     public function create()

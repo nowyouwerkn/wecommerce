@@ -19,6 +19,7 @@ class CreateStoreConfigsTable extends Migration
             // Store Config
             $table->boolean('install_completed')->default(false);
 
+            $table->string('store_logo')->nullable();
             $table->string('store_name')->nullable();
             $table->string('contact_email')->nullable();
             $table->string('sender_email')->nullable();

@@ -108,7 +108,10 @@
                                 </ul>
 
                                 <div class="logo">
-                                    <a href="{{ route('index') }}"><img src="{{ asset('themes/werkn-backbone/img/logo/logo.svg') }}" alt="Logo"></a>
+                                    <a href="{{ route('index') }}">
+
+                                        <img src="{{ asset('assets/img/' . $store_config->store_logo ?? 'logo.png') }}" alt="Logo" style="width: 55%;margin: 0 auto;display: block;">
+                                    </a>
                                 </div>
 
                                 <ul class="navigation right">

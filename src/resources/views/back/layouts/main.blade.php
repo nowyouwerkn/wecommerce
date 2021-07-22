@@ -42,6 +42,10 @@
     <link rel="stylesheet" href="{{ asset('assets/css/dashforge.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/dashforge.dashboard.css') }}">
 
+    @php
+        $store_config = Nowyouwerkn\WeCommerce\Models\StoreConfig::first();
+    @endphp
+
     <style>
         .image-table {
             width: 120px;
@@ -54,7 +58,7 @@
         }
 
         .aside-logo {
-            background: url("{{ asset('assets/img/logo.png') }}");
+            background: url("{{ asset('assets/img/' . $store_config->store_logo ?? 'logo.png') }}");
             background-position: center center;
             background-size: contain;
             background-repeat: no-repeat;

@@ -55,6 +55,27 @@
     </div>
     <div class="col-md-8">
         <div class="card card-body mb-4">
+            <h4>Logotipo de Tienda</h4>
+            <p class="mb-4"><strong>Operativo</strong></p>
+
+            @if($store_logo->store_logo == NULL)
+            <div class="text-center">
+                <img src="{{ asset('assets/img/logo.png') }}" class="ml-auto mr-auto mb-5">
+            </div>
+            @else
+            <div class="text-center">
+                <img src="{{ asset('assets/img/' . $store_logo->store_logo ?? 'logo-store.png') }}" class="ml-auto mr-auto mb-5">
+            </div>
+            @endif
+
+            @if($store_logo->store_logo == NULL)
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#modalLogo" class="btn btn-sm btn-outline-light btn-uppercase btn-block mt-3">Subir Logotipo</a>
+            @else
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#modalLogo" class="btn btn-sm btn-outline-light btn-uppercase btn-block mt-3">Editar Logotipo</a>
+            @endif
+        </div>
+
+        <div class="card card-body mb-4">
             <h4>Integraciones del Sitio</h4>
             <p class="mb-4"><strong>Operativo</strong></p>
 
@@ -142,6 +163,34 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Integrar Ahora</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<div id="modalLogo" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Subir Logotipo</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <form method="POST" action="{{ route('store.logo') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+                <div class="modal-body pd-25">
+                    <div class="form-group mt-2">
+                        <label>Imágen <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" id="logo" name="logo" />
+                        <small>RECOMENDACIONES: Sube un archivo en .PNG optimizado que no supere 400px de ancho.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Subir Logotipo</button>
                 </div>
             </form>
         </div>
