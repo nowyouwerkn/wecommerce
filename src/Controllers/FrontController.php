@@ -21,10 +21,12 @@ use PayPal\Api\PaymentExecution;
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 
+
 /* E-commerce Models */
 use Config;
 use Mail;
 
+use Nowyouwerkn\WeCommerce\Models\MailConfig;
 use Nowyouwerkn\WeCommerce\Models\Banner;
 use Nowyouwerkn\WeCommerce\Models\Cart;
 use Nowyouwerkn\WeCommerce\Models\Product;
@@ -657,24 +659,33 @@ class FrontController extends Controller
         $name = $user->name;
         $email = $user->email;
 
-        /*
+        $mail = MailConfig::first();
+
+        config(['mail.driver'=> $mail->mail_driver]);
+        config(['mail.host'=>$mail->mail_host]);
+        config(['mail.port'=>$mail->mail_port]);   
+        config(['mail.username'=>$mail->mail_username]);
+        config(['mail.password'=>$mail->mail_password]);
+        config(['mail.encryption'=>$mail->mail_encryption]);
+
+
         $data = array('order_id' => $order->id, 'user_id' => $user->id, 'name'=> $user->name, 'email' => $user->email, 'orden'=> $order, 'total'=> $cart->totalPrice, 'num_orden'=> $order->id );
 
-        Mail::send('mail.order_completed', $data, function($message) use($name, $email) {
+        Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email) {
 
             $message->to($email, $name)->subject
-            ('Gracias por comprar Manfort');
+            ('Gracias por comprar Werkn');
             
-            $message->from('noreply@manfort.com.mx','Manfort México');
+            $message->from('noreply@wecommerce.mx','WeCommerce');
         });
         
-        Mail::send('mail.new_order_notification', $data, function($message) {
-            $message->to('atencion@manfort.com.mx', 'Ventas Manfort')->subject
+        Mail::send('wecommerce::mail.new_order', $data, function($message) {
+            $message->to('atencion@wecommerce.mx', 'Ventas Werkn')->subject
             ('¡Nueva Compra en tu Tienda!');
             
-            $message->from('noreply@manfort.com.mx','Manfort México');
+            $message->from('noreply@wecommerce.mx','WeCommerce');
         });
-        */
+        
 
         $purchase_value = number_format($cart->totalPrice,2);
 
@@ -707,7 +718,9 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
-        return view('front.theme.werkn-backbone.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
+        //return view('front.theme.werkn-backbone.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
+
+        return redirect()->route('profile');
     }
 
     /*
@@ -727,7 +740,6 @@ class FrontController extends Controller
 
     public function profile ()
     {
-
         $orders = Order::where('user_id', Auth::user()->id)->paginate(3);
 
         $orders->transform(function($order, $key){

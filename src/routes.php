@@ -150,7 +150,9 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     Route::resource('users', Nowyouwerkn\WeCommerce\Controllers\UserController::class); //
     Route::get('user/config', 'Nowyouwerkn\WeCommerce\Controllers\UserController@config')->name('user.config');  //
     Route::get('user/help', 'Nowyouwerkn\WeCommerce\Controllers\UserController@help')->name('user.help');  //
-    Route::resource('notifications', Nowyouwerkn\WeCommerce\Controllers\NotificationController::class)->except(['show', 'create']); //
+
+    Route::resource('mail', Nowyouwerkn\WeCommerce\Controllers\MailController::class)->except(['show, create, index']);
+    Route::resource('notifications', Nowyouwerkn\WeCommerce\Controllers\NotificationController::class)->except(['show']); //
 
     Route::get('/notifications/all',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\NotificationController@all',

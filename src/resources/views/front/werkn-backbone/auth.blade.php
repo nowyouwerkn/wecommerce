@@ -105,7 +105,7 @@
                             </div>
 
                             @php
-                                $legals = Nowyouwerkn\WeCommerce\Models\Legal::all();
+                                $legals = Nowyouwerkn\WeCommerce\Models\LegalText::all();
                             @endphp
 
                             <div class="form-group pl-4">
@@ -113,9 +113,30 @@
                                 <label style="text-transform: uppercase; font-weight: bold; font-size: .8em; display: inline-block; margin-bottom: 10px; margin-top: 5px;" for="accept">
                                     Al registrar tu cuenta con nosotros aceptas nuestro  
                                     @foreach($legals as $legal)
-                                    <a style="font-size: 1em !important;" href="#">{{ $legal->name }}, </a>
+                                    <a style="font-size: 1em !important;" href="#">
+                                        @switch($legal->type)
+                                            @case('Returns')
+                                                Política de Devoluciones
+                                                @break
+
+                                            @case('Privacy')
+                                                Política de Privacidad
+                                                @break
+
+                                            @case('Terms')
+                                                Términos y Condiciones
+                                                @break
+
+                                            @case('Shipment')
+                                                Política de Envíos
+                                                @break
+
+                                            @default
+                                                Hubo un problema, intenta después.
+                                        @endswitch 
+                                    </a>
                                     @endforeach
-                                    . Solo mandamos correos de notificación de compra o seguimiento de orden.
+                                    . Solo mandamos correos de <strong>notificación</strong> de compra o <strong>seguimiento</strong> de orden.
                                 </label>
                             </div>
 

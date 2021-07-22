@@ -112,7 +112,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <div class="copyright-text">
-                        <p>&copy; <script type="text/javascript"> Date.getFullYear()</script> <a href="index.html">LagerHaus by Werkn</a>. Todos los derechos reservados | Tel. (477) 555 55 55</p>
+                        <p>&copy; 2021 <a href="index.html">LagerHaus by Werkn</a>. Todos los derechos reservados | Tel. (477) 555 55 55</p>
                     </div>
                 </div>
                 <div class="col-lg-6">

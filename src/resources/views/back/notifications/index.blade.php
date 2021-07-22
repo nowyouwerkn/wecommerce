@@ -12,206 +12,90 @@
             <h4 class="mg-b-0 tx-spacing--1">Notificaciones</h4>
         </div>
         <div class="d-none d-md-block">
-            <a href="{{ route('notifications.create') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Agregar Notificación
-            </a>
+
         </div>
     </div>
+
+    <style type="text/css">
+        .status-circle{
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px;
+            border-radius: 100%;
+        }
+    </style>
 @endsection
 
 @section('content')
+<form method="POST" action="{{ route('mail.update', $mail->id) }}" enctype="multipart/form-data">
+    {{ csrf_field() }}
+    {{ method_field('PUT') }}
+
     <div class="row">
-        <!-- Pedidos -->
-        <div class="col-md-10 mb-4">
-            <div class="card p-3">
-                <!-- Header -->
-                <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                    <h5 class="mg-b-5">Pedidos</h5>
-                    <p class="tx-12 tx-color-03 mg-b-0">Pedidos.</p>
+        <div class="col-md-4">
+            <div class="pr-5 pt-1 pl-3">
+                <div class="d-flex align-items-center mb-4">
+                    <a href="{{ route('configuration') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i></a>
+                    <h4 class="mb-0 ml-2">Regresar</h4>
                 </div>
 
-                <!-- Body -->
-                <div class="card-body">
-                    <!-- Body -->
-                    <div class="row mt-3">
-                        <div class="col">
-                            Confirmación del pedido
-                        </div>
-                        <div class="col">
-                            Enviado automáticamente al cliente después de realizar su pedido.
-                        </div>
-                        <div class="col-2">
-                            <a href="#">Ver</a>
-                        </div>
-                    </div>
+                <h3>Notificaciones</h3>
+                <p>Para comunicarte por medio de correo electrónico por medio de tu plataforma necesitas configurar los datos del servidor.</p>
+                <p>Las plantillas de correo son prediseñadas especialmente para mejorar la conversión y comunicación de tu marca con tus clientes.</p>
 
-                    <div class="row mt-3">
-                        <div class="col">
-                            Pedido editado
-                        </div>
-                        <div class="col">
-                            Se envía al cliente cuando su pedido se edita (si seleccionas esta opción) 
-                        </div>
-                        <div class="col-2">
-                            <a href="#">Ver</a>
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col">
-                            Factura del pedido
-                        </div>
-                        <div class="col">
-                            Se envía al cliente cuando el pedido tiene un saldo pendiente.  
-                        </div>
-                        <div class="col-2">
-                            <a href="#">Ver</a>
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col">
-                            Carritos abandonados
-                        </div>
-                        <div class="col">
-                            Se le envía al cliente si abandona la pantalla de pagos antes de comprar los artículos en su carrito. Configura opciones en  
-                        </div>
-                        <div class="col-2">
-                            <a href="#">Ver</a>
-                        </div>
-                    </div>
-                </div>
+                <button type="submit" class="btn btn-primary btn-lg">Guardar Cambios <i class="far fa-save"></i></button>
             </div>
         </div>
-
-        <!-- Envios -->
-        <div class="col-md-10 mb-4">
-            <div class="card p-3">
-                <!-- Header -->
-                <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                    <h5 class="mg-b-5">Envios</h5>
-                    <p class="tx-12 tx-color-03 mg-b-0">Envios.</p>
-                </div>
-
-                <!-- Body -->
+        <div class="col-md-8">
+            
+            <div class="card mb-4">
                 <div class="card-body">
-                    <div class="row mt-3">
-                        <div class="col">
-                            Actualización de envío
+                
+                <h6 class="text-uppercase mb-3">Configuración de Correo</h6>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="mail_host">Host del Servidor de Correos <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="mail_host" name="mail_host" value="{{ $mail->mail_host ?? '' }}" placeholder="smtp.postmarkapp.com" />
+                            </div>
                         </div>
-                        <div class="col">
-                            Se envía automáticamente al cliente si el número de seguimiento del pedido enviado se actualiza (si seleccionas esta opción). 
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="mail_port">Puerto <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="mail_port" name="mail_port" value="{{ $mail->mail_port ?? '' }}" placeholder="587" />
+                            </div>
                         </div>
-                        <div class="col-2">
-                            <a href="#">Ver</a>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="mail_username">Usuario <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="mail_username" name="mail_username" value="{{ $mail->mail_username ?? '' }}" placeholder="" />
+                            </div>
                         </div>
-                    </div>
-    
-                    <div class="row mt-3">
-                        <div class="col">
-                            Enviado al destinatario
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="mail_password">Contraseña <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="mail_password" name="mail_password" value="{{ $mail->mail_password ?? '' }}" placeholder="" />
+                            </div>
                         </div>
-                        <div class="col">
-                            Se envía al cliente automáticamente después de que los pedidos con información de seguimiento estén en proceso de entrega.
-                        </div>
-                        <div class="col-2">
-                            <a href="#">Ver</a>
+
+                        <div class="col-md-12">
+                            <label for="mail_encryption">Tipo de Encriptación <span class="text-danger">*</span></label>
+                            <select class="form-control" name="mail_encryption">
+                                <option value="tls">TLS</option>
+                                <option value="ssl">SSL</option>
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Retiro Local -->
-        <div class="col-md-10 mb-4">
-            <div class="card p-3">
-                <!-- Header -->
-                <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                    <h5 class="mg-b-5">Retiro Local</h5>
-                    <p class="tx-12 tx-color-03 mg-b-0">Retiro Local.</p>
-                </div>
-
-                <!-- Body -->
-                <div class="card-body">
-                    <div class="row mt-3">
-                        <div class="col">
-                            Listo para ser retirado
-                        </div>
-                        <div class="col">
-                            Envío de forma manual al cliente a través del Point of Sale o del panel de control. Informa al cliente que su pedido está listo para ser retirado. 
-                        </div>
-                        <div class="col-2">
-                            <a href="#">Ver</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cliente -->
-        <div class="col-md-10 mb-4">
-            <div class="card p-3">
-                <!-- Header -->
-                <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                    <h5 class="mg-b-5">Cliente</h5>
-                    <p class="tx-12 tx-color-03 mg-b-0">Cliente.</p>
-                </div>
-
-                <!-- Body -->
-                <div class="card-body">
-                    <div class="row mt-3">
-                        <div class="col">
-                            Bienvenida a la cuenta de cliente
-                        </div>
-                        <div class="col">
-                            Se envía de manera automática al cliente cuando completa la activación de la cuenta. 
-                        </div>
-                        <div class="col-2">
-                            <a href="#">Ver</a>
-                        </div>
-                    </div>
-    
-                    <!-- Body -->
-                    <div class="row mt-3">
-                        <div class="col">
-                            Restablecimiento de contraseña de cuenta de cliente
-                        </div>
-                        <div class="col">
-                            Se envía de manera automática a los clientes cuando solicitan restablecer la contraseña de sus cuentas.  
-                        </div>
-                        <div class="col-2">
-                            <a href="#">Ver</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Devoluciones -->
-        <div class="col-md-10 mb-4">
-            <h3>Devoluciones</h3>
-            <div class="card p-3">
-                <!-- Header -->
-                <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                    <h5 class="mg-b-5">Cliente</h5>
-                    <p class="tx-12 tx-color-03 mg-b-0">Cliente.</p>
-                </div>
-
-                <!-- Body -->
-                <div class="card-body">
-                    <div class="row mt-3">
-                        <div class="col">
-                            Instrucciones de etiqueta de devolución
-                        </div>
-                        <div class="col">
-                            Enviada al cliente después de crear una etiqueta de devolución.  
-                        </div>
-                        <div class="col-2">
-                            <a href="#">Ver</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </div>
+
+</form>
 @endsection

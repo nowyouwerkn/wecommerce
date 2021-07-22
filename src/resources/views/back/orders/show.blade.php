@@ -6,31 +6,15 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-style1 mg-b-10">
             <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Ordenes</li>
+            <li class="breadcrumb-item"><a href="{{ route('orders.index') }}">Ordenes</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Orden # {{ $order->id }}</li>
             </ol>
         </nav>
-        <h4 class="mg-b-0 tx-spacing--1">Ordenes</h4>
+        <h4 class="mg-b-0 tx-spacing--1">Orden # {{ $order->id }}</h4>
     </div>
+
     <div class="d-none d-md-block">
-        <a href="#" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
-            Exportar
-        </a>
-    </div>
-</div>
-@endsection
-
-@section('content')
-<div class="row mb-4">
-    <div class="col-md-6 text-left">
-        <a href="{{ route('orders.index') }}" class="btn btn-info mr-2"><i class="simple-icon-arrow-left" aria-hidden="true"></i> Regresar</a>
-    </div>
-
-    <div class="col-md-6 text-right">
-        @if($order->has_return == true)
-
-        @else
-        @endif
-        <a class="btn btn-outline-danger" href="#" onclick="event.preventDefault(); document.getElementById('status-form').submit();">
+        <a class="btn btn-sm pd-x-15 btn-warning btn-uppercase mg-l-5" href="#" onclick="event.preventDefault(); document.getElementById('status-form').submit();">
             Cancelar Orden
 
             <form id="status-form" action="{{ route('order.status', $order->id) }}" method="POST" style="display: none;">
@@ -38,8 +22,89 @@
                 <input type="text" name="status" value="Cancelar Orden">
             </form>
         </a>
+
+        <a href="{{ route('orders.index') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
+            <i class="fas fa-undo mr-1"></i> Regresar al listado
+        </a>
     </div>
 </div>
+@endsection
+
+@push('stylesheets')
+<style type="text/css">
+    .payment_id{
+        width: 100%;
+        line-height: 1.3em;
+        padding: 10px 20px;
+        color: #fff;
+        background-color: #C4B795 !important;
+    }
+
+    .note-row{
+        margin-bottom: 30px;
+    }
+
+    .speech-bubble {
+        position: relative;
+        background: #c8d6e5;
+        border-radius: .4em;
+        color: #222f3e;
+        padding: 20px 30px;
+    }
+
+    .speech-bubble:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 0;
+        height: 0;
+        border: 22px solid transparent;
+        border-right-color: #c8d6e5;
+        border-left: 0;
+        border-top: 0;
+        margin-top: -11px;
+        margin-left: -22px;
+    }
+
+    .just-one-image{
+        width: 85px;
+        height: 85px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .just-one-image img{
+        position: absolute;
+        top: 0px;
+    }
+
+    .icon-cards-row .card-text{
+        height: 20px;
+    }
+
+    .icon-cards-row small{
+        text-transform: uppercase;
+        opacity: .8;
+        color: #8f8f8f;
+        margin-bottom: 10px;
+        font-size: .6em;
+        display: block;
+    }
+
+    .icon-cards-row .card-body {
+        padding: 1.3rem 0.5rem;
+    }
+
+    .well{
+        border-radius: 15px;
+        border: 1px solid rgba(0,0,0,.2);
+        padding: 20px 30px;
+    }
+</style>
+@endpush
+
+@section('content')
 
 <div class="row">
     <div class="col-md-3">
@@ -424,3 +489,22 @@
 </div>
  
 @endsection
+
+@push('scripts')
+<script src="{{ asset('assets/js/jquery.PrintArea.js') }}" type="text/JavaScript"></script>
+
+<script>
+$(document).ready(function() {
+    $("#print").click(function() {
+        var mode = 'iframe'; //popup
+        var close = mode == "popup";
+        var options = {
+            mode: mode,
+            popClose: true,
+            extraCss : "{{ asset('assets/css/PrintArea.css') }}"
+        };
+        $("span.printableArea").printArea(options);
+    });
+});
+</script>
+@endpush

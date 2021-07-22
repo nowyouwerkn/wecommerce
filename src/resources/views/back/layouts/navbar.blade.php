@@ -28,9 +28,9 @@
                     </a>
                     -->
                     
-                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" data-toggle="tooltip" title="Cerrar Sesión">
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-1').submit();" data-toggle="tooltip" title="Cerrar Sesión">
                         <i data-feather="log-out"></i>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        <form id="logout-form-1" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
                     </a>
