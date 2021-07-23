@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Nowyouwerkn\WeCommerce\Models\StoreTheme; 
 
-class PaymentMethodSeeder extends Seeder
+class StoreThemeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
