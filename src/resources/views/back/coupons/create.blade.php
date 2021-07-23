@@ -1,5 +1,9 @@
 @extends('wecommerce::back.layouts.main')
 
+@push('stylesheets')
+<link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
+@endpush
+
 @section('title')
     <div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">
         <div>
@@ -26,8 +30,8 @@
         <div class="col-md-8">
             <div class="card card-body mb-4">
                 <div class="form-group mt-2">
-                    <label>Código de Descuento</label>
-                    <input type="text" class="form-control" id="code" name="code" />
+                    <label>Código de Descuento <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="code" name="code" required="" />
                     <small>Los clientes introducirán este código de descuento en la pantalla de pago.</small>
                 </div>
 
@@ -41,8 +45,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mt-2">
-                            <label>Tipo</label>
-                            <select class="form-control" name="type">
+                            <label>Tipo <span class="text-danger">*</span></label>
+                            <select class="form-control" name="type" required="">
                                 <option value="percentage_amount">Porcentaje</option>
                                 <option value="fixed_amount">Monto Fijo</option>
                                 <option value="free_shipping">Envío Gratis</option>
@@ -51,8 +55,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group mt-2">
-                            <label>Valor del descuento</label>
-                            <input type="text" class="form-control" id="qty" name="qty" />
+                            <label>Valor del descuento <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="qty" name="qty" required="" />
                         </div>
                     </div>
                 </div>
@@ -92,12 +96,12 @@
                         </div>
                     </div>
                 </div>
-                {{-- 
+                
                 <div class="form-group mt-2">
                     <label>Excluir categorías</label>
-                    <select class="form-control" multiple="" name="categories[]">
+                    <select class="form-control select2" multiple="" name="categories[]">
                         @php
-                            $categories = App\Models\Category::all();
+                            $categories = Nowyouwerkn\WeCommerce\Models\Category::all();
                         @endphp 
                         @foreach($categories as $cat)
                         <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -107,16 +111,15 @@
 
                 <div class="form-group mt-2">
                     <label>Excluir Productos</label>
-                    <select class="form-control" multiple="" name="products[]">
+                    <select class="form-control select2" multiple="" name="products[]">
                         @php
-                            $products = App\Models\Product::all();
+                            $products = Nowyouwerkn\WeCommerce\Models\Product::all();
                         @endphp 
                         @foreach($products as $pro)
                         <option value="{{ $pro->id }}">{{ $pro->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                --}}
             </div>
 
             <div class="card card-body mb-4">
@@ -140,14 +143,14 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-group mt-2">
-                            <label>Fecha de Inicio</label>
-                            <input type="date" class="form-control" name="start_date" value="" />
+                            <label>Fecha de Inicio <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="start_date" value="" required="" />
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group mt-2">
-                            <label>Fecha de Finalización</label>
-                            <input type="date" class="form-control" name="end_date" value="" />
+                            <label>Fecha de Finalización <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="end_date" value="" required="" />
                         </div>
                     </div>
                 </div>
@@ -161,3 +164,15 @@
     </div>
 </form>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Selecciona una opción..."
+        });
+    });
+</script>
+@endpush

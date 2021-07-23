@@ -46,9 +46,10 @@
                             <th>Código</th>
                             <th>Descripción</th>
                             <th>Tipo</th>
+                            <th>Cantidad</th>
                             <th>Envio Gratis</th>
                             <th>Expira</th>
-                            <th>Creado el</th>
+                            <th>Creado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -61,13 +62,14 @@
                             <td>{{ $cup->type }}</td>
                             <td>{{ $cup->qty }}</td>
                             <td>
-                                @if($cup->free_shipping == true)
-                                <span class="badge badge-success">Yes</span>
+                                @if($cup->is_free_shipping == true)
+                                <span class="badge badge-success">Si</span>
                                 @else
                                 <span class="badge badge-info">No</span>
                                 @endif 
                             </td>
                             <td>{{ Carbon\Carbon::parse($cup->expires_at)->diffForHumans() }}</td>
+                            <td>{{ Carbon\Carbon::parse($cup->created_at)->diffForHumans() }}</td>
                             
                             <td class="d-flex">
                                 <a href="javascript:void(0)" data-toggle="modal" data-target="#editModal_{{ $cup->id }}" class="btn btn-sm btn-light" data-toggle="tooltip" data-original-title="Editar">

@@ -39,6 +39,9 @@ class CouponController extends Controller
         //Validar
         $this -> validate($request, array(
             'code' => 'required|max:255',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'qty' => 'required|max:255'
         ));
 
         // Guardar datos en la base de datos
@@ -55,7 +58,6 @@ class CouponController extends Controller
         $coupon->exclude_discounted_items = $request->exclude_discounted_items;
         $coupon->individual_use = $request->individual_use;
         $coupon->is_free_shipping = $request->is_free_shipping;
-
 
         $coupon->start_date = $request->start_date;
         $coupon->end_date = $request->end_date;
