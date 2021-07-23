@@ -87,7 +87,11 @@
                                 <div class="logo">
                                     <a href="{{ route('index') }}">
                                         @if(!empty($store_config))
-                                        <img src="{{ asset('assets/img/' . $store_config->store_logo ?? 'logo.png') }}" alt="Logo" style="width: 55%;margin: 0 auto;display: block;">
+                                            @if($store_config->store_logo == NULL)
+                                            <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" style="width: 55%;margin: 0 auto;display: block;">
+                                            @else
+                                            <img src="{{ asset('assets/img/' . $store_config->store_logo) }}" alt="Logo" style="width: 55%;margin: 0 auto;display: block;">
+                                            @endif
                                         @else
                                         <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" style="width: 55%;margin: 0 auto;display: block;">
                                         @endif

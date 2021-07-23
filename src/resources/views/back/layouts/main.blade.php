@@ -56,23 +56,43 @@
             height: 100%;
             object-fit: cover;
         }
-
-        .aside-logo {
-            background: url("{{ asset('assets/img/' . $store_config->store_logo ?? 'logo.png') }}");
-            background-position: center center;
-            background-size: contain;
-            background-repeat: no-repeat;
-            width: 50%;
-            margin: 0;
-            position: relative;
-            display: inline-block;
-
-            text-indent: 110%;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
     </style>
+
+    @if($store_config->store_logo == NULL)
+        <style type="text/css">
+            .aside-logo {
+                background: url("{{ asset('assets/img/logo.png') }}");
+                background-position: center center;
+                background-size: contain;
+                background-repeat: no-repeat;
+                width: 50%;
+                margin: 0;
+                position: relative;
+                display: inline-block;
+
+                text-indent: 110%;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+        </style>
+    @else
+        <style type="text/css">
+            .aside-logo {
+                background: url("{{ asset('assets/img/' . $store_config->store_logo) }}");
+                background-position: center center;
+                background-size: contain;
+                background-repeat: no-repeat;
+                width: 50%;
+                margin: 0;
+                position: relative;
+                display: inline-block;
+
+                text-indent: 110%;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+        </style>
+    @endif
 
     @stack('stylesheets')
 </head>
