@@ -27,6 +27,7 @@ use Config;
 use Mail;
 
 use Nowyouwerkn\WeCommerce\Models\StoreConfig;
+use Nowyouwerkn\WeCommerce\Models\StoreTheme;
 use Nowyouwerkn\WeCommerce\Models\MailConfig;
 use Nowyouwerkn\WeCommerce\Models\Banner;
 use Nowyouwerkn\WeCommerce\Models\Cart;
@@ -63,7 +64,7 @@ class FrontController extends Controller
     public function __construct()
     {
         $this->notification = new NotificationController;
-        $this->theme = 'werkn-backbone';
+        $this->theme = new StoreTheme;
         $this->store_config = new StoreConfig;
     }
     public function index ()
@@ -73,7 +74,7 @@ class FrontController extends Controller
 
         $banner = Banner::where('is_active', true)->first();
 
-        return view('front.theme.' . $this->theme . '.index')
+        return view('front.theme.' . $this->theme->get_name() . '.index')
         ->with('products', $products)
         ->with('main_categories', $main_categories)
         ->with('banner', $banner);
@@ -102,12 +103,12 @@ class FrontController extends Controller
         $products = $query->paginate(30)->withQueryString();
 
         if($products->count() > 0){
-            return view('front.theme.' . $this->theme . '.catalog_filter')
+            return view('front.theme.' . $this->theme->get_name() . '.catalog_filter')
             ->with('products', $products);
         }else{
             $products = collect([]);
 
-            return view('front.theme.' . $this->theme . '.catalog_filter')
+            return view('front.theme.' . $this->theme->get_name() . '.catalog_filter')
             ->with('products', $products);
         }
     }
@@ -116,7 +117,7 @@ class FrontController extends Controller
     {
         $products = Product::orderBy('created_at', 'desc')->where('status', 'Publicado')->paginate(15);
 
-        return view('front.theme.' . $this->theme . '.catalog')
+        return view('front.theme.' . $this->theme->get_name() . '.catalog')
         ->with('products', $products);
     }
 
@@ -125,7 +126,7 @@ class FrontController extends Controller
         $catalog = Category::where('slug', $category_slug)->first();
         $products = Product::where('category_id', $catalog->id)->where('status', 'Publicado')->paginate(15);
 
-        return view('front.theme.' . $this->theme . '.catalog')
+        return view('front.theme.' . $this->theme->get_name() . '.catalog')
         ->with('catalog', $catalog)
         ->with('products', $products);
     }
@@ -153,7 +154,7 @@ class FrontController extends Controller
         if (empty($product)) {
             return redirect()->back();
         }else{
-            return view('front.theme.' . $this->theme . '.detail')
+            return view('front.theme.' . $this->theme->get_name() . '.detail')
             ->with('product', $product)
             ->with('products_selected', $products_selected)
             ->with('next_product', $next_product)
@@ -166,10 +167,10 @@ class FrontController extends Controller
         $variants = collect();
 
         // Regresar a Vista
-        //return view('front.theme.' . $this->theme . '.detail')->with('product', $product)->with('products_selected', $products_selected)->with('variants');
+        //return view('front.theme.' . $this->theme->get_name() . '.detail')->with('product', $product)->with('products_selected', $products_selected)->with('variants');
         */
 
-        //return view('front.theme.' . $this->theme . '.detail', compact('product', 'products_selected', 'variants' ));
+        //return view('front.theme.' . $this->theme->get_name() . '.detail', compact('product', 'products_selected', 'variants' ));
     }
 
     /*
@@ -205,7 +206,7 @@ class FrontController extends Controller
         $tax = ($cart->totalPrice) * ($tax_rate);
         $totalPrice = ($cart->totalPrice + $shipping);
 
-        return view('front.theme.' . $this->theme . '.cart')->with('products', $cart->items)->with('totalPrice', $totalPrice)->with('tax', $tax)->with('shipping', $shipping)->with('subtotal', $subtotal);
+        return view('front.theme.' . $this->theme->get_name() . '.cart')->with('products', $cart->items)->with('totalPrice', $totalPrice)->with('tax', $tax)->with('shipping', $shipping)->with('subtotal', $subtotal);
     }
 
     public function checkout ()
@@ -254,7 +255,7 @@ class FrontController extends Controller
 
                 $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-                return view('front.theme.' . $this->theme . '.checkout')
+                return view('front.theme.' . $this->theme->get_name() . '.checkout')
                 ->with('total', $total)
                 ->with('user', $user)
                 ->with('addresses', $addresses)
@@ -275,7 +276,7 @@ class FrontController extends Controller
 
                 $addresses = UserAddress::where('user_id', '000998')->get();
 
-                return view('front.theme.' . $this->theme . '.checkout')
+                return view('front.theme.' . $this->theme->get_name() . '.checkout')
                 ->with('total', $total)
                 ->with('addresses', $addresses)
                 ->with('payment_method', $payment_method)
@@ -418,7 +419,7 @@ class FrontController extends Controller
 
                 $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-                return view('front.theme.' . $this->theme . '.checkout_cash')
+                return view('front.theme.' . $this->theme->get_name() . '.checkout_cash')
                 ->with('total', $total)
                 ->with('user', $user)
                 ->with('addresses', $addresses)
@@ -439,7 +440,7 @@ class FrontController extends Controller
 
                 $addresses = UserAddress::where('user_id', '000998')->get();
 
-                return view('front.theme.' . $this->theme . '.checkout_cash')
+                return view('front.theme.' . $this->theme->get_name() . '.checkout_cash')
                 ->with('total', $total)
                 ->with('addresses', $addresses)
                 ->with('payment_method', $payment_method)
@@ -843,7 +844,7 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
-        //return view('front.theme.' . $this->theme . '.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
+        //return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
 
         return redirect()->route('profile');
     }
@@ -855,7 +856,7 @@ class FrontController extends Controller
 
     public function auth ()
     {
-        return view('front.theme.' . $this->theme . '.auth');
+        return view('front.theme.' . $this->theme->get_name() . '.auth');
     }
 
     /*
@@ -875,14 +876,14 @@ class FrontController extends Controller
         
         $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-        return view('front.theme.' . $this->theme . '.user_profile.profile')->with('orders', $orders)->with('addresses', $addresses);;
+        return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')->with('orders', $orders)->with('addresses', $addresses);;
     }
 
     public function wishlist ()
     {
         $wishlist = Wishlist::where('user_id', Auth::user()->id)->get();
 
-        return view('front.theme.' . $this->theme . '.user_profile.wishlist')->with('wishlist', $wishlist);
+        return view('front.theme.' . $this->theme->get_name() . '.user_profile.wishlist')->with('wishlist', $wishlist);
     }
 
     public function shopping ()
@@ -894,20 +895,20 @@ class FrontController extends Controller
             return $order;
         });
 
-        return view('front.theme.' . $this->theme . '.user_profile.shopping')->with('orders', $orders);
+        return view('front.theme.' . $this->theme->get_name() . '.user_profile.shopping')->with('orders', $orders);
     }
 
     public function address ()
     {
         $addresses = UserAddress::paginate(10);
-        return view('front.theme.' . $this->theme . '.user_profile.address', compact('addresses'));
+        return view('front.theme.' . $this->theme->get_name() . '.user_profile.address', compact('addresses'));
     }
 
     public function account ()
     {
         $user = Auth::user();
 
-        return view('front.theme.' . $this->theme . '.user_profile.account')->with('user', $user);
+        return view('front.theme.' . $this->theme->get_name() . '.user_profile.account')->with('user', $user);
     }
 
     public function updateAccount(Request $request, $id)

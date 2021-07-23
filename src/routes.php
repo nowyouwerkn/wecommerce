@@ -180,6 +180,8 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
         'as' => 'general.config',
     ]);
 
+    Route::resource('themes', Nowyouwerkn\WeCommerce\Controllers\StoreThemeController::class); 
+
     Route::post('store-logo',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\IntegrationController@storeLogo',
         'as' => 'store.logo',
