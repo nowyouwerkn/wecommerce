@@ -292,10 +292,16 @@ Route::get('/busqueda-general', [
 
 Route::get('cart', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@cart')->name('cart');
 Route::get('/checkout', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkout')->name('checkout');
+Route::get('/checkout-cash', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutCash')->name('checkout.cash');
 
 Route::post('/checkout',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckout',
     'as' => 'checkout',
+]);
+
+Route::post('/checkout-cash',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutCash',
+    'as' => 'checkout.cash',
 ]);
 
 /* Cuopon Validation on Checkout */

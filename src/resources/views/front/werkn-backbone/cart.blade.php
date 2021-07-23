@@ -127,8 +127,20 @@
                                 -->
                                 <li class="cart-total-amount"><span>Total</span> <span class="amount">${{ number_format($totalPrice) }}</span></li>
                             </ul>
-                        
-                            <a href="{{ route('checkout') }}" class="btn">PAGAR</a>
+                            
+                            @php
+                                $card_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'card')->where('is_active', true)->first();
+                                $cash_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
+                            @endphp
+                                            
+                            @if(!empty($card_payment))
+                            <a class="btn" href="{{ route('checkout') }}">Pagar con Tarjeta</a>
+                            @endif
+
+                            @if(!empty($cash_payment))
+                            <a class="btn mt-2" href="{{ route('checkout.cash') }}">Pagar en Efectivo</a>
+                            @endif
+                            
                         </form>
                     </div>
                 </div>

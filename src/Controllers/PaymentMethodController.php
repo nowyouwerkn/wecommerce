@@ -44,13 +44,19 @@ class PaymentMethodController extends Controller
         ));
 
         // Desactivar cualquier otro método activo
+        if ($request->type == 'card') {
+            $deactivate = PaymentMethod::where('type', 'card')->where('is_active', true)->get();
+        }
 
-        $deactivate = PaymentMethod::where('type', 'card')->where('is_active', 'true');
-
+        if ($request->type == 'cash') {
+            $deactivate = PaymentMethod::where('type', 'cash')->where('is_active', true)->get();
+        }
+        
         foreach ($deactivate as $dt) {
             $dt->is_active = false;
             $dt->save();
         }
+
 
         $payment = PaymentMethod::where('type', $request->type)->where('supplier', $request->supplier)->first();
 
@@ -78,7 +84,6 @@ class PaymentMethodController extends Controller
             ]);
         }
         
-
         //Session message
         Session::flash('success', 'El elemento fue registrado exitosamente.');
 

@@ -133,11 +133,14 @@
                                         <ul class="minicart">
                                         @if(Session::has('cart'))
                                         @php
-                                        $oldCart = Session::get('cart');
-                                        $cart = new Nowyouwerkn\WeCommerce\Models\Cart($oldCart);
+                                            $oldCart = Session::get('cart');
+                                            $cart = new Nowyouwerkn\WeCommerce\Models\Cart($oldCart);
 
-                                        $products = $cart->items;
-                                        $totalPrice = $cart->totalPrice
+                                            $products = $cart->items;
+                                            $totalPrice = $cart->totalPrice;
+
+                                            $card_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'card')->where('is_active', true)->first();
+                                            $cash_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
                                         @endphp
                                             
                                             @foreach($products as $product)
@@ -174,12 +177,20 @@
                                                     <span class="f-right">${{ number_format($totalPrice, 2) }}</span>
                                                 </div>
                                             </li>
+                                            
                                             <li>
                                                 <div class="checkout-link">
                                                     <a href="{{ route('cart') }}">Ver tu carrito</a>
-                                                    <a class="black-color" href="{{ route('checkout') }}">Terminar tu compra</a>
+                                                    @if(!empty($card_payment))
+                                                    <a class="black-color" href="{{ route('checkout') }}">Pagar con Tarjeta</a>
+                                                    @endif
+
+                                                    @if(!empty($cash_payment))
+                                                    <a class="black-color" href="{{ route('checkout.cash') }}">Pagar en Efectivo</a>
+                                                    @endif
                                                 </div>
                                             </li>
+
                                             <li>
                                                 @guest
                                                 <p class="alert alert-warning" style="display: inline-block;"><ion-icon name="alert-circle-outline" class="mr-1"></ion-icon> Estas comprando como <strong>invitado.</strong> Compra más rápido creando una cuenta <a href="{{ route('register') }}">Regístrate</a></p>

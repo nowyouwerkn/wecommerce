@@ -175,7 +175,7 @@ class FrontController extends Controller
     public function cart ()
     {
         if (!Session::has('cart')) {
-            return view('checkout.cart');
+            return redirect()->route('cart');
         }
 
         $oldCart = Session::get('cart');
@@ -338,6 +338,78 @@ class FrontController extends Controller
         return redirect('/results')->with(compact('status'));
     }
 
+    public function checkoutCash ()
+    {
+        if (!Session::has('cart')) {
+            return redirect()->route('cart');
+        }
+        
+        //Facebook Event
+        /*
+        $event = new FacebookEvents;
+        $event->initiateCheckout();
+        */
+
+        $oldCart = Session::get('cart');
+        $cart = new Cart($oldCart);
+        $total = $cart->totalPrice;
+        
+        $payment_method = PaymentMethod::where('is_active', true)->where('type', 'cash')->first();
+        $store_tax = StoreTax::take(1)->first();
+
+        if (empty($store_tax)) {
+            $tax_rate = .16;
+        }else{
+            $tax_rate = $store_tax->tax_rate;
+        }
+        
+        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
+        $tax = ($cart->totalPrice) * ($tax_rate);
+
+        if (!empty($payment_method)) {
+            if(Auth::check()){
+                $user = Auth::user();
+
+                $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
+
+               return view('front.theme.werkn-backbone.checkout_cash')
+               ->with('total', $total)
+               ->with('user', $user)
+               ->with('addresses', $addresses)
+               ->with('payment_method', $payment_method)
+               ->with('subtotal', $subtotal)
+                ->with('tax', $tax)
+               ->with('store_tax', $store_tax)
+               ->with('products', $cart->items);
+            }else{
+                // COMPRA DE INVITADO
+                $count = 0;
+                foreach ($cart->items as $product) {
+                    $qty = $product['qty'];
+                    $count += $qty;
+                };
+                $count;
+
+                $addresses = UserAddress::where('user_id', '000998')->get();
+
+                return view('front.theme.werkn-backbone.checkout_cash')
+                ->with('total', $total)
+                ->with('addresses', $addresses)
+                ->with('payment_method', $payment_method)
+                ->with('store_tax', $store_tax)
+                ->with('subtotal', $subtotal)
+                ->with('tax', $tax)
+                ->with('products', $cart->items)
+                ->with('cart_count', $count);
+            }
+        }else{
+            //Session message
+            Session::flash('info', 'No se han configurado metodos de pago en esta tienda. Contacta con un administrador de sistema.');
+
+            return redirect()->route('index');
+        }
+    }
+
     public function postCheckout(Request $request)
     {
         if (!Auth::check()) {
@@ -351,7 +423,12 @@ class FrontController extends Controller
             return redirect()->view('checkout.cart');
         }
 
-        $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
+        if ($request->method == 'Pago con Oxxo') {
+            $payment_method = PaymentMethod::where('is_active', true)->where('type', 'cash')->first();
+        }else{
+            $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
+        }
+        
         $paypal_express_checkout = PaymentMethod::where('is_active', true)->where('supplier', 'Paypal')->first();
 
         if ($payment_method->supplier == 'Conekta') {
@@ -416,7 +493,7 @@ class FrontController extends Controller
                             "customer_info" => array(
                                 'name' => $client_name,
                                 'phone' => $request->phone,
-                                'email' => Auth::user()->email
+                                'email' => $request->email
                             ),
 
                             "charges" => array(

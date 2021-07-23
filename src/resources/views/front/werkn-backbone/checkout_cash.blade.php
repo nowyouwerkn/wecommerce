@@ -33,6 +33,8 @@
         <div class="col-md-12">
             <div class="checkout-container mt-4">
                 <form action="{{ route('checkout') }}" method="POST" id="checkout-form" data-parsley-validate>
+                    <input type="hidden" name="method" value="Pago con Oxxo">
+
                     <div class="row">
                         <!-- Shipping Detail -->
                         <div class="col-md-4 mb-3">
@@ -184,76 +186,14 @@
                             </div>
                         </div>
 
-                        <!-- Payment Method -->
-                        <div class="col-md-4 mb-3 hidden-step" id="payment_step">
-                            <!-- Title -->
-                            <div class="row">
-                                <div class="col-md-12 center">
-                                    <div class="checkout-title">
-                                        <div class="number-title">
-                                            <p class="mb-0">2</p>
-                                        </div>
-                                        <div class="text-title">
-                                            <p class="mb-0">Información de Pago <i id="two-check" class="complete-icon"></i></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Form -->
-                            <div class="card">
-                                <div id="card_spinner" class="section-spinner" style="display: none;">
-                                    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-                                </div>              
-                                <div class="card-body text-left bg-gains">
-                                    <div class="center mb-3">
-                                        <div class="card-wrapper"></div>    
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="card-number">Número de Tarjeta <span class="text-danger">*</span></label>
-                                        <input type="text" id="card-number" name="card_number" class="card-input form-control form-control" data-parsley-trigger="change" required="">
-                                    </div>
-    
-                                    <div class="form-group">
-                                        <label for="card-name">Nombre en la Tarjeta <span class="text-danger">*</span> </label>
-                                        <input type="text" id="card-name" name="card-name" class="form-control form-control" data-parsley-trigger="change" required="">
-                                    </div>
-    
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="card-month">Mes <span class="text-danger">*</span></label>
-                                                <input type="text" id="card-month" name="card-month" maxlenght="2" class="form-control form-control" data-parsley-trigger="change" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="card-year">Año <span class="text-danger">*</span></label>
-                                                <input type="text" id="card-year" name="card-year" maxlenght="2" class="form-control form-control" data-parsley-trigger="change" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="card-ccv">CCV <span class="text-danger">*</span></label>
-                                                <input type="text" id="card-cvc" name="card-cvc" class="form-control form-control" data-parsley-trigger="change" required="" maxlength="3">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <button id="two_step_finish" style="display: none;" class="btn bg-orange btn-lg btn-block mt-3 btn-strong">Continuar <i class="fas fa-arrow-right" ></i></button>
-                                </div>                                            
-                            </div>
-                        </div>
-
                         <!-- Confirm Order -->
-                        <div class="col-md-4 hidden-step" id="confirmation_step">
+                        <div class="col-md-8 hidden-step" id="confirmation_step">
                             <!-- Title -->
                             <div class="row">
                                 <div class="col-md-12 center">
                                     <div class="checkout-title">
                                     <div class="number-title">
-                                        <p class="mb-0">3</p>
+                                        <p class="mb-0">2</p>
                                     </div>
                                     <div class="text-title">
                                         <p class="mb-0">Confirma tu Pedido</p>
@@ -409,9 +349,7 @@
                                         @endforeach
                                     </small></p>
 
-                                    <div class="alert alert-danger pay-error" style="display: none;" role="alert"></div>
-                                    
-                                    <button type="submit" id="btnBuy" style="display: none;" class="btn bg-orange btn-lg btn-block mt-3 btn-strong">Confirmar Compra <ion-icon name="shield-checkmark-outline"></ion-icon></button>
+                                    <button type="submit" id="btnBuy" style="display: none;" class="btn bg-orange btn-lg btn-block mt-3 btn-strong">Generar Referencia de Pago <ion-icon name="shield-checkmark-outline"></ion-icon></button>
 
                                     <p class=" bg-transparent btn-lg btn-block border-left border-bottom border-right text-black text-center" style="color: black !important; border-radius: 0px; font-size: 10px; padding-bottom: 13px; margin-top: 0px;">Todos los pagos procesados por {{ $payment_method->supplier ?? 'N/A' }}</p>
 
@@ -488,26 +426,14 @@
 
         $('#payment_step').removeClass('hidden-step'); 
         $('#first_step_finish').hide();
-        $('#two_step_finish').show();
-
-        /* --- Smoth Scroll --- */        
-        $("html, body").animate({
-            scrollTop: $('#payment_step').offset().top
-        },500); 
-    });
-
-    $('#two_step_finish').on('click', function(){
-        event.preventDefault();
-        $('#card_spinner').fadeIn(500);
-        $('#two-check').show(); 
-        $('#btnBuy').show(); 
         $('#confirmation_step').removeClass('hidden-step');  
-        $('#two_step_finish').hide();
+
+        $('#btnBuy').show(); 
+
         /* --- Smoth Scroll --- */        
         $("html, body").animate({
             scrollTop: $('#confirmation_step').offset().top
         },500);
-        $('#card_spinner').fadeOut(200);
     });
 
     /* Información de Cupón */
@@ -584,205 +510,25 @@
     });
 </script>
 
-<!-- CARD JS -->
-<script type="text/javascript" src="{{ asset('packages/card-master/dist/card.js') }}"></script>
-
-<script type="text/javascript">
-    var card = new Card({
-        form: '#checkout-form',
-        container: '.card-wrapper',
-
-        formSelectors: {
-            numberInput: 'input[name="card_number"]', 
-            expiryInput: 'input[name="card-month"], input[name="card-year"]',
-            cvcInput: 'input[name="card-cvc"]',
-            nameInput: 'input[name="card-name"]'
-        },
-
-        formatting: true,
-
-        placeholders: {
-            number: '**** **** **** ****',
-            name: 'Tommy Shelby',
-            expiry: '**/**',
-            cvc: '***'
-        },
-
-        masks: {
-            cardNumber: '•'
-        },
-
-        debug: false
-    });
-</script>
-<!-- / CARD JS -->
-
 <!-- CONEKTA TOKENIZE API -->
 @if($payment_method->supplier == 'Conekta')
-<script type="text/javascript" src="https://cdn.conekta.io/js/latest/conekta.js"></script>
-
 <script type="text/javascript">
-    Conekta.setPublicKey('{{ $payment_method->public_key }}');
-    Conekta.setLanguage("es");
-
     var $form = $('#checkout-form');
 
     $form.submit(function(event){
         // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
         $form.find('button').prop('disabled', true);
 
-        Conekta.Token.create({
-            "card": {
-                "number": $('#card-number').val().replace(/ /g,''),
-                "name": $('#card-name').val(),
-                "exp_year": $('#card-year').val(),
-                "exp_month": $('#card-month').val(),
-                "cvc": $('#card-cvc').val(),
-                "address": {
-                    "street1": $('#street').val(),
-                    "city": $('#city').val(),
-                    "state": $('#state').val(),
-                    "zip": $('#postal_code').val().replace(/ /g,''),
-                    "country": $('#country').val()
-                }
-            }
-        }, onSuccess, onError);
-
-        return false;
-    }); 
-
-    function onSuccess(response) {
-        //alert('Successful operation');
-        
         $('.loader-standby').removeClass('hidden');
-        console.log(response.id);
-
-        $form.find('button').prop('disabled', true);
-
-        $('#checkout-form').append($('<input type="hidden" name="conektaTokenId" id="conektaTokenId" />').val(response.id));
+        //console.log(response.id);
 
         $form.get(0).submit();
-    }
- 
-    function onError(response) {
-        $('.loader-standby').addClass('hidden');
-
-        $('.pay-error').show();
-        $('.pay-error').text(response['error'].message);
-
-        $form.find('button').prop('disabled', false);
-        console.log(response);
-    }
-</script>
-@endif
-
-@if($payment_method->supplier == 'Stripe')
-<!-- STRIPE -->
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-<script>
-    Stripe.setPublishableKey('{{ $payment_method->public_key }}');
-
-    var $form = $('#checkout-form');
-
-    $form.submit(function(event){
-        // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
-        $form.find('button').prop('disabled', true);
-
-        Stripe.card.createToken({
-            name: $('#card-name').val(),
-            number: $('#card-number').val().replace(/ /g,''),
-            cvc: $('#card-cvc').val(),
-            exp_month: $('#card-month').val(),
-            exp_year: $('#card-year').val()
-        }, stripeResponseHandler);
-
-        return false;
     }); 
-
-    function stripeResponseHandler(status, response){
-        if (response.error) {
-            $form.find('button').prop('disabled', false);
-            $('.loader-standby').addClass('hidden');
-            console.log(response);
-
-            $('.pay-error').show();
-            $('.pay-error').text(response['error'].message);
-
-        }else{
-            $('.loader-standby').removeClass('hidden');
-            $form.find('button').prop('disabled', true);
-
-            $('.pay-error').hide();
-
-            console.log(response.id);
-            var token = response.id;
-
-            // Insert the token into the form so it gets submitted to the server:
-            $('#checkout-form').append($('<input type="hidden" name="stripeToken" id="stripeToken" />').val(token));
-
-            // Submit the form:
-            $form.get(0).submit();
-        }
-    };
 </script>
 @endif
 
 @if($payment_method->supplier == 'OpenPay')
-<!-- OPEN PAY API -->
-<script type="text/javascript" src="{{ asset('packages/openpay/lib/openpay.v1.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/openpay/lib/openpay-data.v1.min.js') }}"></script>
 
-<script>
-    OpenPay.setId('{{ $payment_method->merchant_id }}');
-    OpenPay.setApiKey('{{ $payment_method->public_key }}');
-
-    OpenPay.setSandboxMode('{{ env("OPENPAY_SANDBOX_MODE", " ") }}');
-
-
-    var deviceSessionId = OpenPay.deviceData.setup('checkout-form', "device_hidden");
-    console.log(deviceSessionId);
-
-    var $form = $('#checkout-form');
-
-    $form.submit(function(event){
-
-        // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
-        $form.find('button').prop('disabled', true);
-        
-        $('.loader-standby').removeClass('hidden');
-
-        OpenPay.token.create({
-              "card_number":$('#card-number').cleanVal(),
-              "holder_name":$('#card-name').val(),
-              "expiration_year":$('#card-year').val(),
-              "expiration_month":$('#card-month').val(),
-              "cvv2":$('#card-cvc').val(),
-        }, onSuccess, onError);
-
-        return false;
-        
-    }); 
-
-    function onSuccess(response) {
-        console.log(response.data.id);
-
-        $form.find('button').prop('disabled', true);
-
-        $form.append($('<input type="hidden" name="openPayToken" />').val(response.data.id));
-        $form.get(0).submit()
-    }
-
-    function onError(response) {
-        $('.loader-standby').addClass('hidden');
-
-        $('.pay-error').show();
-        $('.pay-error').text(response['error'].message);
-
-        $form.find('button').prop('disabled', false);
-        console.log(response);
-    }
-</script>
-<!-- // OPEN PAY API -->
 @endif
 
 <!-- Animation Checkout -->

@@ -74,7 +74,6 @@
             <h4>Express Checkout</h4>
             <p class="mb-4">Un botón que les permite a los clientes utilizar PayPal directamente desde tu pantalla de pago.</p>
             <a href="" data-toggle="modal" data-target="#modalCreatePaypal" class="btn btn-outline-primary btn-sm">Configurar Paypal Checkout</a>
-
         </div>
 
         <div class="card card-body mb-4">
@@ -134,13 +133,32 @@
                     </div>
                 </div>
             </div>
-            <a href="{{ route('payments.create') }}" class="btn btn-sm btn-outline-light btn-uppercase btn-block mt-3">Agregar Otro Método</a>
+            <!--<a href="{{ route('payments.create') }}" class="btn btn-sm btn-outline-light btn-uppercase btn-block mt-3">Agregar Otro Método</a>-->
         </div>
 
         <div class="card card-body">
-            <h4>Pagos en Efectivo <span class="badge badge-primary">PROXIMAMENTE</span></h4>
+            <h4>Pagos en Efectivo</h4>
             <p class="mb-4">Empieza a cargar uno en tu plataforma usando el botón superior.</p>
             <!--<a href="{{ route('payments.create') }}" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Agregar Nuevo Método</a>-->
+
+            <div class="row payment-methods">
+                <div class="col-md-6">
+                    <div class="card card-body h-100">
+                        @if($oxxo_pay->is_active == false)
+                        <span class="badge badge-danger">Desactivado</span>
+                        @else
+                        <span class="badge badge-success">Activado</span>
+                        @endif
+                        <img src="{{ asset('assets/img/brands/oxxopay.png') }}" width="120" style="margin: 10px 0px;">
+
+                        <p class="mt-2">Comisión: 3.9% + IVA Por transacción exitosa. Tienda OXXO Cobrará una comisión adicional de $13.00 pesos en cajas.</p>
+
+                        
+                        <a href="" data-toggle="modal" data-target="#modalCreateOxxoConekta" class="btn btn-outline-secondary btn-sm">Configurar OxxoPay de Conekta</a>
+                        <a href="http://www.conekta.com" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -175,6 +193,49 @@
 
                     <div class="alert alert-success">
                         <p class="mb-0">Este método de pago puede funcionar en conjunto con otros métodos de pago con tarjeta. </p>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+
+<div id="modalCreateOxxoConekta" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Conectar con OxxoPay de Conekta</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+             <form method="POST" action="{{ route('payments.store') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+                <input type="hidden" name="type" value="cash">
+                <input type="hidden" name="supplier" value="Conekta">
+
+                <div class="modal-body pd-25">
+                    <img src="{{ asset('assets/img/brands/oxxopay.png') }}" width="250" style="margin: 10px 0px;">
+
+                    <div class="form-group mt-2">
+                        <label>Llave Privada</label>
+                        <input type="text" class="form-control" name="private_key" />
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label>Llave Pública</label>
+                        <input type="text" class="form-control" name="public_key" />
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <p class="mb-0">Al guardar la información de este método de pago se activará automáticamente. Si tienes otro método de pagó se desactivará.</p>
                     </div>
 
                 </div>
