@@ -82,42 +82,23 @@
                                             </li>
                                         </ul>
                                     </li>
-
-                                    <!--
-                                    <li class="has--mega--menu"><a href="#">Catálogo</a>
-                                        <ul class="mega-menu">
-                                            <li class="mega-menu-wrap">
-                                                <ul class="mega-menu-col">
-                                                    <li class="mega-title">Colecciones</li>
-                                                    <li><a href="{{ route('catalog.all') }}">Ver Todo</a></li>
-
-                                                    @foreach($categories as $category)
-                                                    <li>
-                                                        <a href="{{ route('catalog', $category->slug) }}">{{ $category->name }}</a>
-                                                    </li>
-                                                    @endforeach
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    -->
-                                    <!--
-                                    <li><a href="shop.html">Promociones</a></li>
-                                    <li><a href="about-us.html">Acerca de</a></li>
-                                -->
                                 </ul>
 
                                 <div class="logo">
                                     <a href="{{ route('index') }}">
-
+                                        @if(!empty($store_config))
                                         <img src="{{ asset('assets/img/' . $store_config->store_logo ?? 'logo.png') }}" alt="Logo" style="width: 55%;margin: 0 auto;display: block;">
+                                        @else
+                                        <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" style="width: 55%;margin: 0 auto;display: block;">
+                                        @endif
                                     </a>
                                 </div>
 
                                 <ul class="navigation right">
                                     <!--
                                     <li><a href="#">Blog</a></li>
-                                    <li><a href="contact.html">Contáctanos</a></li>-->
+                                    <li><a href="contact.html">Contáctanos</a></li>
+                                    -->
                                 </ul>
                             </div>
                             <div class="header-action d-none d-md-block">
