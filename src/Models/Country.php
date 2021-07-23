@@ -15,4 +15,9 @@ class Country extends Model
     {
         return $this->hasMany(StoreTax::class, 'store_taxes', 'country_id');
     }
+
+    public function config()
+    {
+        return $this->belongsTo(StoreConfig::class);
+    }
 }

@@ -3,6 +3,9 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
+use Session;
+
+use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
 use Illuminate\Http\Request;
 
@@ -10,13 +13,18 @@ class ShipmentMethodController extends Controller
 {
     public function index()
     {
+        $config = StoreConfig::first();
+
         $shipments = ShipmentMethod::all();
 
         $ups_method = ShipmentMethod::where('supplier', 'UPS')->first();
+        $manual_method = ShipmentMethod::where('type', 'manual')->first();
 
         return view('wecommerce::back.shipments.index')
+        ->with('config', $config)
         ->with('shipments', $shipments)
-        ->with('ups_method', $ups_method);
+        ->with('ups_method', $ups_method)
+        ->with('manual_method', $manual_method);
     }
 
     public function create()
@@ -46,6 +54,7 @@ class ShipmentMethodController extends Controller
             $payment->update([
                 'type' => $request->type,
                 'supplier' => $request->supplier,
+                'cost' => $request->cost,
                 'public_key' => $request->public_key,
                 'private_key' => $request->private_key,
                 'sandbox_mode' => true,
@@ -57,6 +66,7 @@ class ShipmentMethodController extends Controller
             $payment = ShipmentMethod::create([
                 'type' => $request->type,
                 'supplier' => $request->supplier,
+                'cost' => $request->cost,
                 'public_key' => $request->public_key,
                 'private_key' => $request->private_key,
                 'sandbox_mode' => true,

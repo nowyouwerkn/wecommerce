@@ -15,4 +15,9 @@ class StoreConfig extends Model
     {
         return $this->where('id', '=', 1)->value('country_id');
     }
+
+    public function get_country_name()
+    {
+        return $this->hasOne(Country::class, 'id', 'country_id')->value('name');
+    }
 }

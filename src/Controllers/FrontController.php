@@ -39,6 +39,7 @@ use Nowyouwerkn\WeCommerce\Models\Wishlist;
 
 use Nowyouwerkn\WeCommerce\Models\StoreTax;
 use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
+use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
@@ -186,6 +187,7 @@ class FrontController extends Controller
         $cart = new Cart($oldCart);
 
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
+        $store_shipping = ShipmentMethod::where('is_active', true)->first();
 
         if (empty($store_tax)) {
             $tax_rate = .16;
@@ -193,10 +195,17 @@ class FrontController extends Controller
             $tax_rate = ($store_tax->tax_rate)/100;
         }
 
+        if (empty($store_shipping)) {
+            $shipping = '0';
+        }else{
+            $shipping = $store_shipping->cost;
+        }
+
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
         $tax = ($cart->totalPrice) * ($tax_rate);
+        $totalPrice = ($cart->totalPrice + $shipping);
 
-        return view('front.theme.' . $this->theme . '.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice)->with('tax', $tax)->with('subtotal', $subtotal);
+        return view('front.theme.' . $this->theme . '.cart')->with('products', $cart->items)->with('totalPrice', $totalPrice)->with('tax', $tax)->with('shipping', $shipping)->with('subtotal', $subtotal);
     }
 
     public function checkout ()
@@ -217,15 +226,27 @@ class FrontController extends Controller
         
         $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
+        $store_shipping = ShipmentMethod::where('is_active', true)->first();
 
         if (empty($store_tax)) {
             $tax_rate = .16;
         }else{
             $tax_rate = ($store_tax->tax_rate)/100;
         }
+
+        if (empty($store_shipping)) {
+            $shipping = '0';
+        }else{
+            $shipping = $store_shipping->cost;
+        }
         
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
         $tax = ($cart->totalPrice) * ($tax_rate);
+        $totalPrice = ($cart->totalPrice + $shipping);
+        /*
+        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
+        $tax = ($cart->totalPrice) * ($tax_rate);
+        */
 
         if (!empty($payment_method)) {
             if(Auth::check()){
@@ -233,15 +254,16 @@ class FrontController extends Controller
 
                 $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-               return view('front.theme.' . $this->theme . '.checkout')
-               ->with('total', $total)
-               ->with('user', $user)
-               ->with('addresses', $addresses)
-               ->with('payment_method', $payment_method)
-               ->with('subtotal', $subtotal)
+                return view('front.theme.' . $this->theme . '.checkout')
+                ->with('total', $total)
+                ->with('user', $user)
+                ->with('addresses', $addresses)
+                ->with('payment_method', $payment_method)
+                ->with('subtotal', $subtotal)
                 ->with('tax', $tax)
-               ->with('store_tax', $store_tax)
-               ->with('products', $cart->items);
+                ->with('shipping', $shipping)
+                ->with('store_tax', $store_tax)
+                ->with('products', $cart->items);
             }else{
                 // COMPRA DE INVITADO
                 $count = 0;
@@ -260,6 +282,7 @@ class FrontController extends Controller
                 ->with('store_tax', $store_tax)
                 ->with('subtotal', $subtotal)
                 ->with('tax', $tax)
+                ->with('shipping', $shipping)
                 ->with('products', $cart->items)
                 ->with('cart_count', $count);
             }
@@ -367,15 +390,27 @@ class FrontController extends Controller
         $payment_method = PaymentMethod::where('is_active', true)->where('type', 'cash')->first();
         
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
+        $store_shipping = ShipmentMethod::where('is_active', true)->first();
 
         if (empty($store_tax)) {
             $tax_rate = .16;
         }else{
             $tax_rate = ($store_tax->tax_rate)/100;
         }
+
+        if (empty($store_shipping)) {
+            $shipping = '0';
+        }else{
+            $shipping = $store_shipping->cost;
+        }
         
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
         $tax = ($cart->totalPrice) * ($tax_rate);
+        $totalPrice = ($cart->totalPrice + $shipping);
+        /*
+        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
+        $tax = ($cart->totalPrice) * ($tax_rate);
+        */
 
         if (!empty($payment_method)) {
             if(Auth::check()){
@@ -383,15 +418,16 @@ class FrontController extends Controller
 
                 $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-               return view('front.theme.' . $this->theme . '.checkout_cash')
-               ->with('total', $total)
-               ->with('user', $user)
-               ->with('addresses', $addresses)
-               ->with('payment_method', $payment_method)
-               ->with('subtotal', $subtotal)
+                return view('front.theme.' . $this->theme . '.checkout_cash')
+                ->with('total', $total)
+                ->with('user', $user)
+                ->with('addresses', $addresses)
+                ->with('payment_method', $payment_method)
+                ->with('subtotal', $subtotal)
                 ->with('tax', $tax)
-               ->with('store_tax', $store_tax)
-               ->with('products', $cart->items);
+                ->with('shipping', $shipping)
+                ->with('store_tax', $store_tax)
+                ->with('products', $cart->items);
             }else{
                 // COMPRA DE INVITADO
                 $count = 0;
@@ -410,6 +446,7 @@ class FrontController extends Controller
                 ->with('store_tax', $store_tax)
                 ->with('subtotal', $subtotal)
                 ->with('tax', $tax)
+                ->with('shipping', $shipping)
                 ->with('products', $cart->items)
                 ->with('cart_count', $count);
             }

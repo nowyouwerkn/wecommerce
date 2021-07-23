@@ -107,25 +107,20 @@
                     <div class="shop-cart-widget" style="display:inline-block;">
                         <form action="#">
                             <ul>
-                                <li class="sub-total"><span>Subtotal</span> ${{ number_format($subtotal) }}</li>
-                                <li class="sub-total"><span>Impuestos</span> ${{ number_format($tax) }}</li>
-                                <!--
-                                <li>
-                                    <span>SHIPPING</span>
-                                    <div class="shop-check-wrap">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                            <label class="custom-control-label" for="customCheck1">FLAT RATE: $15</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck2">
-                                            <label class="custom-control-label" for="customCheck2">FREE SHIPPING</label>
-                                        </div>
-                                        <a href="#" class="calculate">Calculate shipping</a>
-                                    </div>
+                                <li class="sub-total"><span>Subtotal</span> ${{ number_format($subtotal,2) }}</li>
+                            
+                                <li class="sub-total"><span>Impuestos</span> ${{ number_format($tax,2) }}</li>
+                                
+                                <li class="sub-total">
+                                    <span>Envío</span>
+                                    @if($shipping == '0')
+                                    Gratis
+                                    @else
+                                    ${{ number_format($shipping,2) }}
+                                    @endif
                                 </li>
-                                -->
-                                <li class="cart-total-amount"><span>Total</span> <span class="amount">${{ number_format($totalPrice) }}</span></li>
+
+                                <li class="cart-total-amount"><span>Total</span> <span class="amount">${{ number_format($totalPrice,2) }}</span></li>
                             </ul>
                             
                             @php

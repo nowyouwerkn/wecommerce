@@ -19,6 +19,8 @@ class CreateShipmentMethodsTable extends Migration
             $table->enum('type', ['auto', 'manual']);
             $table->string('supplier');
 
+            $table->string('cost')->nullable();
+
             $table->string('merchant_id')->nullable();
             
             $table->string('public_key')->nullable();

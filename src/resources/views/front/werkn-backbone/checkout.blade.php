@@ -302,7 +302,7 @@
                                                 <p  style="font-size: 15px;"><ion-icon name="cube-outline"></ion-icon> Envío</p>
                                             </div>
                                             <div class="col-md-6 text-right">
-                                                <p  style="font-size: 15px;">$ <span id="shippingRate">0.00</span></p>
+                                                <p  style="font-size: 15px;">$ <span id="shippingRate">{{ number_format($shipping, 2) }}</span></p>
                                                 <input type="hidden" name="shipping_rate" id="shippingInput" value="0">
                                             </div>
                                         </div>
@@ -327,7 +327,7 @@
                                         
 
                                         <!-- DISCOUNT DIV -->
-                                        @if(empty($store_tax))
+                                        @if(!empty($store_tax))
                                         <div class="col-md-6">
                                             <p class="text-muted small">IVA (16%) <ion-icon data-toggle="tooltip" data-placement="left" title="Desglose de I.V.A" name="information-circle-outline"></ion-icon ></p>
                                         </div>
@@ -410,7 +410,7 @@
                                     </small></p>
 
                                     <div class="alert alert-danger pay-error" style="display: none;" role="alert"></div>
-                                    
+
                                     <button type="submit" id="btnBuy" style="display: none;" class="btn bg-orange btn-lg btn-block mt-3 btn-strong">Confirmar Compra <ion-icon name="shield-checkmark-outline"></ion-icon></button>
 
                                     <p class=" bg-transparent btn-lg btn-block border-left border-bottom border-right text-black text-center" style="color: black !important; border-radius: 0px; font-size: 10px; padding-bottom: 13px; margin-top: 0px;">Todos los pagos procesados por {{ $payment_method->supplier ?? 'N/A' }}</p>

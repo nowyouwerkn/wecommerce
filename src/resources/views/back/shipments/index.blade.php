@@ -48,10 +48,50 @@
         
     </div>
     <div class="col-md-8">
-        <div class="card card-body mb-4 payment-methods">
-            <h4>Configuración Manual</h4>
-            <p class="mb-4">Guarda tu configuración de envíos en tu plataforma.</p>
-            <a href="{{ route('shipments.create') }}" class="btn btn-sm btn-outline-light btn-uppercase btn-block mt-2">Configurar Manualmente</a>
+        <div class="card mb-4 payment-methods">
+            <div class="card-body">
+                <h4>Configuración Manual</h4>
+                <p class="mb-0">Guarda tu configuración de envíos en tu plataforma. El valor predeterminado es $0.00</p>
+            </div>
+            
+            <div class="card-header">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0">
+                        <i class="fas fa-shipping-fast"></i>
+                        Tarifa Regular
+                    </h4>
+                    <div class="d-flex align-items-center">
+                        @if(!empty($manual_method))
+                            <span class="badge badge-success">Activado</span>
+                        @else
+                            <span class="badge badge-primary">Sin Configurar</span>
+                        @endif
+
+                        <form method="POST" action="{{ route('shipments.store') }}" enctype="multipart/form-data">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="type" value="manual">
+                        <input type="hidden" name="supplier" value="WeCommerce">
+                            <div class="d-flex">
+                                <div class="input-group wd-150">
+                                    <input type="text" class="form-control" name="cost" placeholder="0.00" value="{{ $manual_method->cost ?? '' }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            @if($config->get_country_name() == 'México')
+                                            MXN
+                                            @else
+                                            USD
+                                            @endif
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-sm pd-x-15 btn-white btn-uppercase ml-1" type="submit"><i class="fas fa-save"></i> Guardar</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="card card-body mb-4">
@@ -87,7 +127,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-             <form method="POST" action="{{ route('shipments.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('shipments.store') }}" enctype="multipart/form-data">
             {{ csrf_field() }}
                 <input type="hidden" name="type" value="auto">
                 <input type="hidden" name="supplier" value="UPS">

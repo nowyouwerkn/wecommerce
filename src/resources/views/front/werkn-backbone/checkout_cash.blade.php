@@ -242,7 +242,7 @@
                                                 <p  style="font-size: 15px;"><ion-icon name="cube-outline"></ion-icon> Envío</p>
                                             </div>
                                             <div class="col-md-6 text-right">
-                                                <p  style="font-size: 15px;">$ <span id="shippingRate">0.00</span></p>
+                                                <p  style="font-size: 15px;">$ <span id="shippingRate">{{ number_format($shipping, 2) }}</span></p>
                                                 <input type="hidden" name="shipping_rate" id="shippingInput" value="0">
                                             </div>
                                         </div>
@@ -267,7 +267,7 @@
                                         
 
                                         <!-- DISCOUNT DIV -->
-                                        @if(empty($store_tax))
+                                        @if(!empty($store_tax))
                                         <div class="col-md-6">
                                             <p class="text-muted small">IVA (16%) <ion-icon data-toggle="tooltip" data-placement="left" title="Desglose de I.V.A" name="information-circle-outline"></ion-icon ></p>
                                         </div>
