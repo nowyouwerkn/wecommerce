@@ -191,7 +191,7 @@ Estructura:
 
 Para hacer cambios en los estilos puedes modificar libremente el archivo `main.blade.php` dentro de `layouts` para modificar o eliminar los archivos originales de la plantilla. Para sobreescribir los preexistentes recomendamos hacer todo dentro de la carpeta `css` en el archivo `w-custom.css`
 
-Siguiendo la estructura de la sección anterior el controlador `FrontController` vinculará automaticamente las vistas a la carpeta dentro de `theme`. Este cambio de estilo se debe configurar en el panel administrativo en Configuración > Apariencia y dar de alta el nombre de la carpeta.
+Si prefieres crear un nuevo tema que no se sobreescriba al actualizar puedes copiar y pegar la carpeta `werkn-backbone` y ponerle el nombre de tu proyecto. Siguiendo la estructura de la sección anterior el controlador `FrontController` vinculará automaticamente las vistas a la carpeta dentro de `theme`. <strong>Este cambio de estilo se debe configurar en el panel administrativo en Configuración > Apariencia y dar de alta el nombre de la carpeta.</strong>
 
 <strong>Recomendación:</strong> Para mantener limpio el proyecto para facilitar su actualización a futuro lo mejor es colocar los estilos básicos de tu nuevo tema dentro de la carpeta public > themes > [NOMBRE DE TU TEMA]. Los estilos particulares los puedes encontrar en la carpeta css.
 
