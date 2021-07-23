@@ -187,8 +187,26 @@ Estructura:
     * index.blade.php :house:
 
 
+## Personalizar
+
 Para hacer cambios en los estilos puedes modificar libremente el archivo `main.blade.php` dentro de `layouts` para modificar o eliminar los archivos originales de la plantilla. Para sobreescribir los preexistentes recomendamos hacer todo dentro de la carpeta `css` en el archivo `w-custom.css`
 
+Siguiendo la estructura de la sección anterior el controlador `FrontController` vinculará automaticamente las vistas a la carpeta dentro de `theme`. Este cambio de estilo se debe configurar en el panel administrativo en Configuración > Apariencia y dar de alta el nombre de la carpeta.
+
+<strong>Recomendación:</strong> Para mantener limpio el proyecto para facilitar su actualización a futuro lo mejor es colocar los estilos básicos de tu nuevo tema dentro de la carpeta public > themes > [NOMBRE DE TU TEMA]. Los estilos particulares los puedes encontrar en la carpeta css.
+
+Estructura de carpeta theme
+
+* :open_file_folder: themes
+  * werkn-backbone
+    * [...]
+  * [TU PROYECTO]
+
+Estructura de carpeta css:
+
+* :open_file_folder: css
+  * w-custom.css (Estilos particulares globales)
+  * w-checkout.css (Para personalizar tu checkout)
 
 <!-- ROADMAP -->
 ## Roadmap
