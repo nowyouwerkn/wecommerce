@@ -77,34 +77,12 @@ class StoreConfigController extends Controller
         $config->zip_code = $request->zip_code;
         $config->city = $request->city;
         $config->state = $request->state;
-        $config->country = $request->country;
+        $config->country_id = $request->country_id;
         $config->timezone = $request->timezone;
         $config->unit_system = $request->unit_system;
         $config->weight_system = $request->weight_system;
  
         $config->save();
-        /*
-        $config->update([
-            'store_name' => $request->store_name,
-            'contact_email' => $request->contact_email,
-            'sender_email' => $request->sender_email,
-            'store_industry' => $request->store_industry,
-            'google_analytics' => $request->google_analytics,
-            'facebook_pixel' => $request->facebook_pixel,
-            'rfc_name' => $request->rfc_name,
-            'phone' => $request->phone,
-            'street' => $request->street,
-            'street_num' => $request->street_num,
-            'zip_code' => $request->zip_code,
-            'city' => $request->city,
-            'state' => $request->state,
-            'country' => $request->country,
-            'timezone' => $request->timezone,
-            'unit_system' => $request->unit_system,
-            'weight_system' => $request->weight_system,
-            'currency_id' => $request->currency_id
-        ]);
-        */
 
         //Session message
         Session::flash('success', 'Excelente, tu tienda esta lista para usarse. Sigue las recomendaciones para completarla correctamente.');
