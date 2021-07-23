@@ -42,6 +42,7 @@
       </ul>
     </li>
     <li><a href="#uso">Uso</a></li>
+    <li><a href="#personalizar">Personalizar</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contirbuir</a></li>
     <li><a href="#licencia">Licencia</a></li>

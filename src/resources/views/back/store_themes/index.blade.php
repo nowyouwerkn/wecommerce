@@ -64,9 +64,9 @@
                         @endif
 
                         @if($theme->image == NULL)
-                            <img src="{{ asset('assets/themes/no-image.jpg') }}" class="card-img-top" alt="{{ $theme->name }}">
+                            <img src="{{ asset('assets/img/themes/no-image.jpg') }}" class="card-img-top" alt="{{ $theme->name }}">
                         @else
-                            <img src="{{ asset('assets/themes/' . $theme->image) }}" class="card-img-top" alt="{{  $theme->name }}">
+                            <img src="{{ asset('assets/img/themes/' . $theme->image) }}" class="card-img-top" alt="{{  $theme->name }}">
                         @endif
                         <div class="card-body">
                             <h6 class="card-title">{{ $theme->name }}</h6>

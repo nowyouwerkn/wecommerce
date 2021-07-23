@@ -49,7 +49,7 @@ class StoreThemeController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $filename = Str::slug( $request->name , '-') . '.' . $image->getClientOriginalExtension();
-            $location = public_path('assets/themes/' . $filename);
+            $location = public_path('assets/img/themes/' . $filename);
 
             Image::make($image)->resize(400,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
 
@@ -57,7 +57,7 @@ class StoreThemeController extends Controller
         }
 
         $theme->is_active = true;
-        
+
         $theme->save();
 
         //Session message

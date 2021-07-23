@@ -1,10 +1,14 @@
 <!doctype html>
 <html class="no-js" lang="">
     <head>
+        @php
+            $store_config = Nowyouwerkn\WeCommerce\Models\StoreConfig::first();
+        @endphp
+
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Werkn Lagerhaus - E-commerce Plataform</title>
-        <meta name="description" content="Plataforma E-Commerce de Werkn">
+        <title>{{ $store_config->store_name ?? 'WeCommerce' }}</title>
+        <meta name="description" content="{{ $store_config->store_name ?? 'WeCommerce' }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         @stack('seo')
@@ -34,16 +38,9 @@
         <link rel="stylesheet" href="{{ asset('themes/werkn-backbone/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('themes/werkn-backbone/css/responsive.css') }}">
 
-        <!-- This is the file for your custom styles -->
-        <link rel="stylesheet" href="{{ asset('css/w-custom.css') }}">
-
         @stack('stylesheets')
     </head>
     <body>
-        @php
-            $store_config = Nowyouwerkn\WeCommerce\Models\StoreConfig::first();
-        @endphp
-
         @if(Auth::check())
             @if(Auth::user()->hasRole(['webmaster', 'admin', 'analyst']))
             <style type="text/css">
