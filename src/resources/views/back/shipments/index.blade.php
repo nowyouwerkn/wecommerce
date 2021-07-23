@@ -51,7 +51,7 @@
         <div class="card card-body mb-4 payment-methods">
             <h4>Configuración Manual</h4>
             <p class="mb-4">Guarda tu configuración de envíos en tu plataforma.</p>
-            <a href="" class="btn btn-outline-primary btn-sm">Configurar Manualmente</a>
+            <a href="{{ route('shipments.create') }}" class="btn btn-sm btn-outline-light btn-uppercase btn-block mt-2">Configurar Manualmente</a>
         </div>
 
         <div class="card card-body mb-4">
@@ -74,7 +74,6 @@
                     </div>
                 </div>
             </div>
-            <a href="{{ route('shipments.create') }}" class="btn btn-sm btn-outline-light btn-uppercase btn-block mt-3">Agregar Otro Método</a>
         </div>
     </div>
 </div>

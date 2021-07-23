@@ -26,6 +26,7 @@ use PayPal\Auth\OAuthTokenCredential;
 use Config;
 use Mail;
 
+use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 use Nowyouwerkn\WeCommerce\Models\MailConfig;
 use Nowyouwerkn\WeCommerce\Models\Banner;
 use Nowyouwerkn\WeCommerce\Models\Cart;
@@ -55,12 +56,15 @@ use Illuminate\Support\Str;
 class FrontController extends Controller
 {
     private $notification;
+    private $theme;
+    private $store_config;
 
     public function __construct()
     {
         $this->notification = new NotificationController;
+        $this->theme = 'werkn-backbone';
+        $this->store_config = new StoreConfig;
     }
-
     public function index ()
     {
         $products = Product::where('in_index', true)->where('status', 'Publicado')->get()->take(6);
@@ -68,7 +72,7 @@ class FrontController extends Controller
 
         $banner = Banner::where('is_active', true)->first();
 
-        return view('front.theme.werkn-backbone.index')
+        return view('front.theme.' . $this->theme . '.index')
         ->with('products', $products)
         ->with('main_categories', $main_categories)
         ->with('banner', $banner);
@@ -97,12 +101,12 @@ class FrontController extends Controller
         $products = $query->paginate(30)->withQueryString();
 
         if($products->count() > 0){
-            return view('front.theme.werkn-backbone.catalog_filter')
+            return view('front.theme.' . $this->theme . '.catalog_filter')
             ->with('products', $products);
         }else{
             $products = collect([]);
 
-            return view('front.theme.werkn-backbone.catalog_filter')
+            return view('front.theme.' . $this->theme . '.catalog_filter')
             ->with('products', $products);
         }
     }
@@ -111,7 +115,7 @@ class FrontController extends Controller
     {
         $products = Product::orderBy('created_at', 'desc')->where('status', 'Publicado')->paginate(15);
 
-        return view('front.theme.werkn-backbone.catalog')
+        return view('front.theme.' . $this->theme . '.catalog')
         ->with('products', $products);
     }
 
@@ -120,7 +124,7 @@ class FrontController extends Controller
         $catalog = Category::where('slug', $category_slug)->first();
         $products = Product::where('category_id', $catalog->id)->where('status', 'Publicado')->paginate(15);
 
-        return view('front.theme.werkn-backbone.catalog')
+        return view('front.theme.' . $this->theme . '.catalog')
         ->with('catalog', $catalog)
         ->with('products', $products);
     }
@@ -148,7 +152,7 @@ class FrontController extends Controller
         if (empty($product)) {
             return redirect()->back();
         }else{
-            return view('front.theme.werkn-backbone.detail')
+            return view('front.theme.' . $this->theme . '.detail')
             ->with('product', $product)
             ->with('products_selected', $products_selected)
             ->with('next_product', $next_product)
@@ -161,10 +165,10 @@ class FrontController extends Controller
         $variants = collect();
 
         // Regresar a Vista
-        //return view('front.theme.werkn-backbone.detail')->with('product', $product)->with('products_selected', $products_selected)->with('variants');
+        //return view('front.theme.' . $this->theme . '.detail')->with('product', $product)->with('products_selected', $products_selected)->with('variants');
         */
 
-        //return view('front.theme.werkn-backbone.detail', compact('product', 'products_selected', 'variants' ));
+        //return view('front.theme.' . $this->theme . '.detail', compact('product', 'products_selected', 'variants' ));
     }
 
     /*
@@ -181,12 +185,18 @@ class FrontController extends Controller
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
 
-        $tax_rate = .16;
+        $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
+
+        if (empty($store_tax)) {
+            $tax_rate = .16;
+        }else{
+            $tax_rate = ($store_tax->tax_rate)/100;
+        }
 
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
         $tax = ($cart->totalPrice) * ($tax_rate);
 
-        return view('front.theme.werkn-backbone.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice)->with('tax', $tax)->with('subtotal', $subtotal);
+        return view('front.theme.' . $this->theme . '.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice)->with('tax', $tax)->with('subtotal', $subtotal);
     }
 
     public function checkout ()
@@ -206,12 +216,12 @@ class FrontController extends Controller
         $total = $cart->totalPrice;
         
         $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
-        $store_tax = StoreTax::take(1)->first();
+        $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
 
         if (empty($store_tax)) {
             $tax_rate = .16;
         }else{
-            $tax_rate = $store_tax->tax_rate;
+            $tax_rate = ($store_tax->tax_rate)/100;
         }
         
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
@@ -223,7 +233,7 @@ class FrontController extends Controller
 
                 $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-               return view('front.theme.werkn-backbone.checkout')
+               return view('front.theme.' . $this->theme . '.checkout')
                ->with('total', $total)
                ->with('user', $user)
                ->with('addresses', $addresses)
@@ -243,7 +253,7 @@ class FrontController extends Controller
 
                 $addresses = UserAddress::where('user_id', '000998')->get();
 
-                return view('front.theme.werkn-backbone.checkout')
+                return view('front.theme.' . $this->theme . '.checkout')
                 ->with('total', $total)
                 ->with('addresses', $addresses)
                 ->with('payment_method', $payment_method)
@@ -355,12 +365,13 @@ class FrontController extends Controller
         $total = $cart->totalPrice;
         
         $payment_method = PaymentMethod::where('is_active', true)->where('type', 'cash')->first();
-        $store_tax = StoreTax::take(1)->first();
+        
+        $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
 
         if (empty($store_tax)) {
             $tax_rate = .16;
         }else{
-            $tax_rate = $store_tax->tax_rate;
+            $tax_rate = ($store_tax->tax_rate)/100;
         }
         
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
@@ -372,7 +383,7 @@ class FrontController extends Controller
 
                 $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-               return view('front.theme.werkn-backbone.checkout_cash')
+               return view('front.theme.' . $this->theme . '.checkout_cash')
                ->with('total', $total)
                ->with('user', $user)
                ->with('addresses', $addresses)
@@ -392,7 +403,7 @@ class FrontController extends Controller
 
                 $addresses = UserAddress::where('user_id', '000998')->get();
 
-                return view('front.theme.werkn-backbone.checkout_cash')
+                return view('front.theme.' . $this->theme . '.checkout_cash')
                 ->with('total', $total)
                 ->with('addresses', $addresses)
                 ->with('payment_method', $payment_method)
@@ -795,7 +806,7 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
-        //return view('front.theme.werkn-backbone.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
+        //return view('front.theme.' . $this->theme . '.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
 
         return redirect()->route('profile');
     }
@@ -807,7 +818,7 @@ class FrontController extends Controller
 
     public function auth ()
     {
-        return view('front.theme.werkn-backbone.auth');
+        return view('front.theme.' . $this->theme . '.auth');
     }
 
     /*
@@ -827,14 +838,14 @@ class FrontController extends Controller
         
         $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-        return view('front.theme.werkn-backbone.user_profile.profile')->with('orders', $orders)->with('addresses', $addresses);;
+        return view('front.theme.' . $this->theme . '.user_profile.profile')->with('orders', $orders)->with('addresses', $addresses);;
     }
 
     public function wishlist ()
     {
         $wishlist = Wishlist::where('user_id', Auth::user()->id)->get();
 
-        return view('front.theme.werkn-backbone.user_profile.wishlist')->with('wishlist', $wishlist);
+        return view('front.theme.' . $this->theme . '.user_profile.wishlist')->with('wishlist', $wishlist);
     }
 
     public function shopping ()
@@ -846,20 +857,20 @@ class FrontController extends Controller
             return $order;
         });
 
-        return view('front.theme.werkn-backbone.user_profile.shopping')->with('orders', $orders);
+        return view('front.theme.' . $this->theme . '.user_profile.shopping')->with('orders', $orders);
     }
 
     public function address ()
     {
         $addresses = UserAddress::paginate(10);
-        return view('front.theme.werkn-backbone.user_profile.address', compact('addresses'));
+        return view('front.theme.' . $this->theme . '.user_profile.address', compact('addresses'));
     }
 
     public function account ()
     {
         $user = Auth::user();
 
-        return view('front.theme.werkn-backbone.user_profile.account')->with('user', $user);
+        return view('front.theme.' . $this->theme . '.user_profile.account')->with('user', $user);
     }
 
     public function updateAccount(Request $request, $id)

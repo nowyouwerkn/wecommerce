@@ -41,20 +41,27 @@
     <div class="col-md-8">
         <div class="card">
             @foreach($countries as $country)
+            @php
+                $tax = Nowyouwerkn\WeCommerce\Models\StoreTax::where('country_id', $country->id)->where('parent_tax_id', NULL)->first();
+            @endphp
+
             <div class="card-header">
                 <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="mb-0"><i class="fas fa-globe"></i> {{ $country->name }}</h4>
-                    <div class="d-flex align-items-center">
-                        @if(!empty($country->taxes))
-                            <span class="badge badge-success">Activado</span>
-                            @php
-                                $tax = App\Models\StoreTax::where('country_id', $country->id)->where('parent_tax_id', NULL)->first();
-                            @endphp
+                    <h4 class="mb-0">
+                        <i class="fas fa-globe"></i> 
+                        {{ $country->name }} 
 
-                            @if(!empty($tax))
-                            <a href="{{ route('taxes.show', $tax->id) }}" class="btn btn-outline-secondary btn-sm ml-3">Gestionar</a>     
-                            @endif
+                        @if(!empty($tax))
+                            <small class="ml-4">{{ $tax->tax_rate }} %</small>
+                        @endif
+                    </h4>
+                    <div class="d-flex align-items-center">
                         
+
+                        @if(!empty($tax))
+                            <span class="badge badge-success">Activado</span>
+                            <a href="{{ route('taxes.create', $country->id) }}" class="btn btn-outline-secondary btn-sm ml-3">Gestionar</a>
+
                         @else
                             <span class="badge badge-primary">Sin Configurar</span>
                             <a href="{{ route('taxes.create', $country->id) }}" class="btn btn-outline-secondary btn-sm ml-3">Configurar</a>

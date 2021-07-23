@@ -36,7 +36,7 @@ class CreateStoreConfigsTable extends Migration
             $table->string('zip_code')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->string('country')->nullable();
+            $table->integer('country_id')->nullable();
             
             // Standard Measures
             $table->string('timezone')->nullable();

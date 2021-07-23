@@ -15,21 +15,6 @@ use Nowyouwerkn\WeCommerce\Models\Cart;
 
 class CartController extends Controller
 {
-    public function cart()
-    {
-        if (!Session::has('cart')) {
-            return view('front.cart');
-        }
-
-        $oldCart = Session::get('cart');
-        $cart = new Cart($oldCart);
-
-        $subtotal = 10;
-        $tax = 5;
-
-        return view('front.cart')->with('products', $cart->items)->with('totalPrice', $cart->totalPrice)->with('tax', $tax)->with('subtotal', $subtotal);
-    }
-
     public function addCart(Request $request, $id, $variant)
     {
         $product = Product::find($id);

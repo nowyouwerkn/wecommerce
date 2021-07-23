@@ -13,6 +13,6 @@ class Country extends Model
 
     public function taxes()
     {
-        return $this->belongsTo(StoreTax::class, 'store_taxes', 'country_id');
+        return $this->hasMany(StoreTax::class, 'store_taxes', 'country_id');
     }
 }

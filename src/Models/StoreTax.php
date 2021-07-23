@@ -10,4 +10,9 @@ class StoreTax extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function regions()
+    {
+        return $this->hasMany(self::class, 'parent_tax_id');
+    }
 }

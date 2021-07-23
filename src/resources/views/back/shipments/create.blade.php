@@ -1,3 +1,30 @@
+
+@extends('wecommerce::back.layouts.main')
+
+@section('title')
+    <div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-style1 mg-b-10">
+                <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Envíos</li>
+                </ol>
+            </nav>
+            <h4 class="mg-b-0 tx-spacing--1">Envíos</h4>
+        </div>
+    </div>
+
+    <style type="text/css">
+        .payment-methods .badge{
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+        }
+    </style>
+@endsection
+
+@section('content')
    <!-- Form -->
     <form action="" method="POST">
         <div class="row">
@@ -241,3 +268,4 @@
             </div>
         </div>
     </form>
+    @endsection

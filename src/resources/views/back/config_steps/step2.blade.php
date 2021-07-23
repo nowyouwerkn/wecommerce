@@ -59,7 +59,7 @@
 
                 <div class="row">
                     @php
-                        $countries = \Nowyouwerkn\WeCommerce\Models\Country::all();
+                        $countries = \Nowyouwerkn\WeCommerce\Models\Country::orderBy('id', 'desc')->get();
                     @endphp
 
                     <div class="col-md-6">
@@ -101,7 +101,7 @@
                             <label for="name">País / Región</label>
                             <select class="form-control" name="country">
                                 @foreach($countries as $country)
-                                <option value="{{ $country->name }}" selected>{{ $country->name }}</option>
+                                <option value="{{ $country->id }}" selected>{{ $country->name }}</option>
                                 @endforeach
                             </select>
                         </div>
