@@ -60,9 +60,11 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-3 d-none d-lg-block">
+                @if(!empty($last_product))
                 <div class="previous-product">
                     <a href="{{ route('detail', [$last_product->category->slug, $last_product->slug]) }}"><i class="fas fa-angle-left"></i> Producto anterior</a>
                 </div>
+                @endif
             </div>
             <div class="col-lg-6">
                 <div class="breadcrumb-content">
@@ -77,9 +79,11 @@
                 </div>
             </div>
             <div class="col-lg-3 d-none d-lg-block">
+                @if(!empty($next_product))
                 <div class="next-product">
                     <a href="{{ route('detail', [$next_product->category->slug, $next_product->slug]) }}">Siguiente producto <i class="fas fa-angle-right"></i></a>
                 </div>
+                @endif
             </div>
         </div>
     </div>
