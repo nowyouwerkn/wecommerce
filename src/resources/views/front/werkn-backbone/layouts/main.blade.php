@@ -66,6 +66,8 @@
                 .werkn-admin-bar ul{
                     display: flex;
                     align-items: center;
+                    list-style: none;
+                    margin-bottom: 0px;
                 }
 
                 .werkn-admin-bar ul li{

@@ -4,6 +4,8 @@ namespace Nowyouwerkn\WeCommerce;
 
 use Illuminate\Support\ServiceProvider;
 
+use Nowyouwerkn\WeCommerce\Models\StoreTheme;
+
 /* Fortify Auth */
 use Nowyouwerkn\WeCommerce\Responses\LoginResponse;
 use Laravel\Fortify\Fortify;
@@ -57,13 +59,15 @@ class WeCommerceServiceProvider extends ServiceProvider
      */
     public function boot()
     {   
+        $this->theme = new StoreTheme;
+
         // Vistas de autenticación usando Fortify
         Fortify::loginView(function () {
-            return view('front.theme.werkn-backbone.auth');
+            return view('front.theme.' . $this->theme->get_name() . '.auth');
         });
 
         Fortify::registerView(function () {
-            return view('front.theme.werkn-backbone.auth');
+            return view('front.theme.' . $this->theme->get_name() . '.auth');
         });
 
         $this->app->singleton(LoginResponseContract::class, LoginResponse::class);

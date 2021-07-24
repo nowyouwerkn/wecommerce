@@ -325,6 +325,7 @@
                 </div>
             </div>
         </div>
+        @if($products_selected->count() != 0)
         <div class="related-product-wrap">
             <div class="row">
                 <div class="col-12">
@@ -341,6 +342,7 @@
                 @endforeach
             </div>
         </div>
+        @endif
     </div>
 </section>
 <!-- shop-details-area-end -->

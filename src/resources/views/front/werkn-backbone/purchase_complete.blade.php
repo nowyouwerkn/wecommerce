@@ -4,9 +4,9 @@
 <meta property="og:image" content="{{ asset('img/logo-color.png') }}">
 <meta property="og:image:width" content="279">
 <meta property="og:image:height" content="279">
-<meta property="og:description" content="Everything in Gearcom comes from manufacturers who have the same values as us including high quality products and an excellent customer service.">
-<meta property="og:title" content="Gearcom Shop |&nbsp;America Works Hard">
-<meta property="og:url" content="https://gearcom.shop">
+<meta property="og:description" content="">
+<meta property="og:title" content="">
+<meta property="og:url" content="">
 @endpush
 
 @section('content')
@@ -104,8 +104,6 @@
                 </div>
                 <div class="col-md-8">
                     <div class="special-text">
-                        <p>We hope you enjoy the quality and confort that our top brands provide</p>
-                        <hr>
                         <h4>Siguientes pasos...</h4>
                         @guest
                         <p class="alert alert-warning text-left" style="display: inline-block;"><ion-icon name="alert-circle-outline" class="mr-1"></ion-icon> Compraste esto como invitado pero se creó una cuenta para ti por si acas. Puedes acceder usando tu correo con el compraste y la contraseña: "<strong>wkshop</strong>"</p>
@@ -120,7 +118,7 @@
                         <h5>Any questions?</h5>
                         <p class="mb-0">Puedes leer nuestros textos legales
                             @foreach($legals as $legal)
-                                <a class="btn btn-link" href="{{ route('legal.help', [$legal->type, $legal->slug]) }}">{{ $legal->name }}</a> , 
+                                <a class="btn btn-link" href="">{{ $legal->name }}</a> 
                             @endforeach</p>
 
                         <a href="{{ route('profile') }}" class="btn btn-secondary btn-lg">Ir a mi perfil <ion-icon name="arrow-forward"></ion-icon></a>
