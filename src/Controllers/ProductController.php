@@ -246,7 +246,7 @@ class ProductController extends Controller
         $var_imagen->save();
 
         // Mensaje de session
-        Session::flash('success', 'Image saved correctly on the database.');
+        Session::flash('success', 'Imagen guardada correctamente y vinculada al producto.');
 
         // Enviar a vista
         return redirect()->back();
@@ -259,7 +259,7 @@ class ProductController extends Controller
 
         $var_imagen->delete();
 
-        Session::flash('success', 'The Image was succesfully deleted.');
+        Session::flash('success', 'Imagen eliminada exitosamente.');
 
 
         return redirect()->back();
@@ -343,7 +343,7 @@ class ProductController extends Controller
         $this->notification->send($type, $by ,$data);
 
         // Mensaje de session
-        Session::flash('success', 'Your product was saved correctly in the database.');
+        Session::flash('success', 'Producto actualizado exitosamente.');
 
         // Enviar a vista
         return redirect()->route('products.show', $product->id);

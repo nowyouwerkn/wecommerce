@@ -45,7 +45,7 @@
             <div class="col-xl-3 col-lg-4">
                 <form method="get" action="{{ route('dynamic.filter.front') }}" id="product_filter_form">
                     @php
-                        $popular_products = Nowyouwerkn\WeCommerce\Models\Product::where('is_favorite', true)->get();
+                        $popular_products = Nowyouwerkn\WeCommerce\Models\Product::where('is_favorite', true)->where('status', 'Publicado')->get();
                         $categories = \Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
                         $variants = \Nowyouwerkn\WeCommerce\Models\Variant::get();
                     @endphp

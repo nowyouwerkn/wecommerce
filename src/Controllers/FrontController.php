@@ -134,7 +134,7 @@ class FrontController extends Controller
     public function detail ($category_slug, $slug)
     {
         $catalog = Category::where('slug', $category_slug)->first();
-        $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->first();
+        $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->firstOrFail();
 
         $products_selected = Product::where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->take(4)->get();
 
