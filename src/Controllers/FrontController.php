@@ -124,7 +124,15 @@ class FrontController extends Controller
     public function catalog($category_slug)
     {
         $catalog = Category::where('slug', $category_slug)->first();
-        $products = Product::where('category_id', $catalog->id)->where('status', 'Publicado')->paginate(15);
+        $products_category = Product::where('category_id', $catalog->id)->where('status', 'Publicado')->get();
+        
+        $products_subcategory = Product::whereHas('subCategory', function($q) use ($catalog){
+            $q->where('category_id', $catalog->id);
+        })->get();
+
+        $products_merge = $products_category->merge($products_subcategory);
+
+        $products = $products_merge->paginate(15);
 
         return view('front.theme.' . $this->theme->get_name() . '.catalog')
         ->with('catalog', $catalog)
