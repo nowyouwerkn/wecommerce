@@ -1061,4 +1061,5 @@ class FrontController extends Controller
         
         return view('weecommerce:feeds.xml')->with('items', $items);
     }
+
 }

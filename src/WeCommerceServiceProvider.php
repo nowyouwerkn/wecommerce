@@ -63,7 +63,7 @@ class WeCommerceServiceProvider extends ServiceProvider
      */
     public function boot()
     {   
-        // Enable pagination
+        // Permitir paginación para Colecciones (se utiliza en FrontController)
         if (!Collection::hasMacro('paginate')) {
 
             Collection::macro('paginate', 
@@ -75,6 +75,7 @@ class WeCommerceServiceProvider extends ServiceProvider
             });
         }
 
+        // Definir el Tema Usado en el Sistema
         $this->theme = new StoreTheme;
 
         // Vistas de autenticación usando Fortify
@@ -101,7 +102,7 @@ class WeCommerceServiceProvider extends ServiceProvider
         // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
         $this->publishes([
             __DIR__.'/resources/views/front' => resource_path('views/front/theme/'),
-        ], 'theme');
+        ], 'theme_views');
 
         // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
         $this->publishes([
@@ -116,21 +117,21 @@ class WeCommerceServiceProvider extends ServiceProvider
         // Publicar Assets de Estilos
         $this->publishes([
             __DIR__.'/assets' => public_path(''),
-        ], 'public');
+        ], 'styles');
 
         // Publicar archivos de config
         $this->publishes([
             __DIR__.'/config' => config_path(''),
-        ], 'config');
+        ], 'config_files');
 
         // Publicar archivos de base de datos
         $this->publishes([
             __DIR__.'/database/migrations' => database_path('migrations/'),
-        ], 'migrations');
+        ], 'migration_files');
 
         $this->publishes([
             __DIR__.'/database/seeders' => database_path('seeders/'),
-        ], 'seeders');
+        ], 'seeder_files');
     }
 
     /*

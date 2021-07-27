@@ -1,6 +1,6 @@
 @php
-$user = App\Models\User::where('id', $user_id)->first();
-$order = App\Models\Order::where('id', $order_id)->first();
+$user = Nowyouwerkn\WeCommerce\Models\User::where('id', $user_id)->first();
+$order = Nowyouwerkn\WeCommerce\Models\Order::where('id', $order_id)->first();
 $order->cart = unserialize($order->cart);
 
 $tax = $order->cart->totalPrice * 0.0825;
