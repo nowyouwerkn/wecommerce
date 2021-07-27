@@ -340,7 +340,7 @@
                                             <p class="text-muted small">IVA (16%) <ion-icon data-toggle="tooltip" data-placement="left" title="Desglose de I.V.A" name="information-circle-outline"></ion-icon ></p>
                                         </div>
                                         <div class="col-md-6 text-right">
-                                            <p class="text-muted small">$ <span id="taxValue">0.00</span></p>
+                                            <p class="text-muted small">$ <span id="taxValue">{{ number_format($tax, 2) }}</span></p>
                                             <input type="hidden" name="tax_rate" value="" id="taxRate">
                                         </div>
                                         @endif

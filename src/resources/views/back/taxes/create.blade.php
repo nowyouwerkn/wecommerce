@@ -68,18 +68,19 @@
                 <h6 class="text-uppercase">Regiones</h6>
                 <p>Registra aqui cualquier impuesto adicional de acuerdo a una región dentro del país. (Estado, Comunidad, Etc.)</p>
 
-                @foreach($tax->regions as $region)
-                    <div class="d-flex align-items-center justify-content-between px-2 py-3" style="border-top: 1px solid rgba(0, 0, 0, .1);">
-                        <h5 class="mb-0">
-                            <i class="fas fa-map-pin"></i>
-                            {{ $region->description }} 
-                        </h5>
-                        <div class="d-flex align-items-center">
-                            <p class="mb-0">{{ $region->tax_rate }} %</p>
+                @if(!empty($tax->regions)
+                    @foreach($tax->regions as $region)
+                        <div class="d-flex align-items-center justify-content-between px-2 py-3" style="border-top: 1px solid rgba(0, 0, 0, .1);">
+                            <h5 class="mb-0">
+                                <i class="fas fa-map-pin"></i>
+                                {{ $region->description }} 
+                            </h5>
+                            <div class="d-flex align-items-center">
+                                <p class="mb-0">{{ $region->tax_rate }} %</p>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
-
+                    @endforeach
+                @endif
                 <a href="javascript:void(0)" class="btn btn-outline-secondary btn-block btn-sm mt-4" data-toggle="modal" data-target="#modalCreate">Crear nueva región</a>
             </div>
         </div>

@@ -6,11 +6,19 @@ use App\Http\Controllers\Controller;
 use DB;
 
 use Nowyouwerkn\WeCommerce\Models\Product;
+use Nowyouwerkn\WeCommerce\Models\StoreTheme;
 
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
+    private $theme;
+
+    public function __construct()
+    {
+        $this->theme = new StoreTheme;
+    }
+
     public function query(Request $request)
     {   
         $search_query = $request->input('query');
@@ -23,6 +31,6 @@ class SearchController extends Controller
             $query->where(strtolower('name'), 'LIKE', '%' . strtolower($search_query) . '%');
         })->paginate(30);
 
-        return view('front.theme.werkn-backbone.search.general_query')->with('products', $products);
+        return view('front.theme.' . $this->theme->get_name() . '.search.general_query')->with('products', $products);
     }
 }

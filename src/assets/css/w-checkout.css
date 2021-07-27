@@ -424,6 +424,11 @@
     background-color: #fff !important;
 }
 
+.text-title p,
+.number-title p{
+    font-size: inherit;
+}
+
 @media (max-width: 490px) {
     .checkout-style {
         padding-top: 150px;

@@ -166,7 +166,7 @@
 
         @foreach($integrations as $integration)
             <!-- {{ $integration->name }} -->
-            {{ $integration->code }}
+            {!! $integration->code !!}
         @endforeach
 	</body>
 </html>
