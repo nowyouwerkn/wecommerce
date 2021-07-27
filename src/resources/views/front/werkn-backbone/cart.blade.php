@@ -37,6 +37,7 @@
 </section>
 <!-- breadcrumb-area-end -->
 
+@if(Session::has('cart'))
 <!-- cart-area -->
 <div class="cart-area pt-100 pb-100">
     <div class="container">
@@ -144,6 +145,17 @@
     </div>
 </div>
 <!-- cart-area-end -->
+@else
+<div class="container shopping-cart color-wrap py-5">
+    <div class="row">
+        <div class="col-md-6 ml-auto mr-auto text-center my-5">
+            <h2>No hay productos en el carrito.<i class="fa fa-frown-o"></i></h2>
+            <br>
+            <a href="{{ route('catalog') }}" class="btn btn-lg btn-primary">¡Empieza a llenarlo!</a>
+        </div>
+    </div>
+</div>
+@endif
 @endsection
 
 @push('scripts')

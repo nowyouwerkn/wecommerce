@@ -181,7 +181,7 @@ class FrontController extends Controller
     public function cart ()
     {
         if (!Session::has('cart')) {
-            return redirect()->route('cart');
+            return view('front.theme.' . $this->theme->get_name() . '.cart');
         }
 
         $oldCart = Session::get('cart');
@@ -212,7 +212,7 @@ class FrontController extends Controller
     public function checkout ()
     {
         if (!Session::has('cart')) {
-            return view('checkout.cart');
+            return view('front.theme.' . $this->theme->get_name() . '.cart');
         }
         
         //Facebook Event
@@ -375,7 +375,7 @@ class FrontController extends Controller
     public function checkoutCash ()
     {
         if (!Session::has('cart')) {
-            return redirect()->route('cart');
+            return view('front.theme.' . $this->theme->get_name() . '.cart');
         }
         
         //Facebook Event
