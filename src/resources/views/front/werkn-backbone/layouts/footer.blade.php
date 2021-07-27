@@ -68,7 +68,7 @@
                                 <li><a href="{{ route('catalog.all') }}">Catálogo</a></li>
                                 @foreach($legals as $legal)
                                 <li>
-                                    <a href="">
+                                    <a href="{{ route('legal.text' , $legal->type) }}">
                                         @switch($legal->type)
                                             @case('Returns')
                                                 Política de Devoluciones

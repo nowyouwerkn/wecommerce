@@ -328,7 +328,8 @@ Route::group(['prefix' => 'profile', 'middleware' => 'auth'], function(){
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@updateAccount',
         'as' => 'profile.update',
     ]);
-
 });
+
+Route::get('legals/{type}', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@legalText')->name('legal.text');
 
 

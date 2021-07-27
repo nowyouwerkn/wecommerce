@@ -37,6 +37,7 @@ use Nowyouwerkn\WeCommerce\Models\Variant;
 use Nowyouwerkn\WeCommerce\Models\Category;
 use Nowyouwerkn\WeCommerce\Models\Order;
 use Nowyouwerkn\WeCommerce\Models\Wishlist;
+use Nowyouwerkn\WeCommerce\Models\LegalText;
 
 use Nowyouwerkn\WeCommerce\Models\StoreTax;
 use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
@@ -1060,6 +1061,13 @@ class FrontController extends Controller
         $items = Product::all();
         
         return view('weecommerce:feeds.xml')->with('items', $items);
+    }
+
+    public function legalText($type)
+    {
+        $text = LegalText::where('type', $type)->first();
+
+        return view('front.theme.arenas.legal')->with('text', $text);
     }
 
 }
