@@ -149,7 +149,7 @@ class NotificationController extends Controller
         Mail::send('wecommerce::mail.order_completed', $data, function($message) {
             $message->to('hey@werkn.mx', $user->name)->subject
             ('Gracias por tu compra');
-            $message->from('noreply@wecommerce.mx','Tienda');
+            $message->from('noreply@werkn.mx','Tienda');
         });
 
         echo "Correo HTML Estándar. Revisa tu bandeja de entrada.";
@@ -178,13 +178,14 @@ class NotificationController extends Controller
                 $message->to($email, $name)->subject
                 ('Gracias por tu compra');
                 
-                $message->from('noreply@wecommerce.mx','Tienda');
+                $message->from('noreply@werkn.mx','Tienda');
             });
         } catch (Exception $e) {
             Session::flash('error', 'No se ha identificado servidor SMTP en la plataforma. Configuralo correctamente para enviar correos desde tu sistema.');
         }
 
-        Session::flash('exito', 'Correo reenviado al usuario exitosamente.');
+        Session::flash('success', 'Correo reenviado al usuario exitosamente.');
+
         return redirect()->back();
     }
 
@@ -195,7 +196,7 @@ class NotificationController extends Controller
             ('Enviado un archivo adjunto.');
             $message->attach('C:\laravel-master\laravel\public\uploads\image.png');
             $message->attach('C:\laravel-master\laravel\public\uploads\test.txt');
-            $message->from('noreply@wecommerce.mx','Tienda');
+            $message->from('noreply@werkn.mx','Tienda');
         });
         echo "Correo enviado con un adjunto. Revisa tu bandeja de entrada.";
     }

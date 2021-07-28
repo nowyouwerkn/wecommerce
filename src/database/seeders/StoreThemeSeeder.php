@@ -16,7 +16,7 @@ class StoreThemeSeeder extends Seeder
     {
         StoreTheme::create([
             'name' => 'werkn-backbone',
-            'description' => 'Plantilla Inicial para cualquier excelente plataforma de e-commerce',
+            'description' => 'Apariencia inicial para cualquier excelente plataforma de e-commerce usando wecommerce',
             'image' => 'werkn-backbone.jpg',
             'is_active' => true,
             'version' => '1.0.0'

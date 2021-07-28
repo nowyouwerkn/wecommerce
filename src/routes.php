@@ -109,7 +109,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
         'as' => 'stock.update',
     ]);
 
-    Route::put('/variants/delete-stock/{id}', [
+    Route::delete('/variants/delete-stock/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@destroy',
         'as' => 'stock.destroy',
     ]);

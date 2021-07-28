@@ -307,12 +307,7 @@
                                         <input type="email" name="email" placeholder="Tu correo electrónico *" required="" value="{{ Auth::user()->email }}" readonly="">
                                     </div>
                                 </div>
-                                <small class="d-block mb-4">Tienes sesión iniciada como {{ Auth::user()->name }}. ¿No eres tu? 
-                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="text-danger"><span>Cerrar Sesión</span>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            @csrf
-                                        </form>
-                                    </a>
+                                <small class="d-block mb-4">Tienes sesión iniciada como {{ Auth::user()->name }} 
                                 </small>
                                 @endguest
 

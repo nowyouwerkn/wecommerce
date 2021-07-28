@@ -68,7 +68,7 @@
                 <h6 class="text-uppercase">Regiones</h6>
                 <p>Registra aqui cualquier impuesto adicional de acuerdo a una región dentro del país. (Estado, Comunidad, Etc.)</p>
 
-                @if(!empty($tax->regions)
+                @if(!empty($tax->regions))
                     @foreach($tax->regions as $region)
                         <div class="d-flex align-items-center justify-content-between px-2 py-3" style="border-top: 1px solid rgba(0, 0, 0, .1);">
                             <h5 class="mb-0">

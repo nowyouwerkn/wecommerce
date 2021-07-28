@@ -29,7 +29,7 @@ class Product extends Model
 
     public function variants_stock()
     {
-        return $this->belongsToMany(Variant::class, 'product_variants', 'product_id', 'variant_id')->withPivot('stock', 'id');
+        return $this->hasMany(ProductVariant::class, 'product_id');
     }
 
     public function reviews()

@@ -126,31 +126,33 @@
 	                <td>{{ $variant->variants->type ?? 'Talla'}}</td>
 	                <td class="text-right">{{ $variant->variants->value }}</td>
 	                <td class="text-right">
-	                    @if($variant->new_price == NULL)
-	                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $product->price }}">
-	                    @else
-	                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $variant->new_price }}">
-	                    @endif
+	                	<div class="input-group">
+	                		<div class="input-group-prepend">
+							    <span class="input-group-text" id="basic-addon1" style="height:36px">$</span>
+							 </div>
+		                
+		                    @if($variant->new_price == NULL)
+		                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $product->price }}" style="width:50px;">
+		                    @else
+		                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $variant->new_price }}" style="width:50px;">
+		                    @endif
+	                    </div>
 	                </td>
 	                <td class="text-right">
-	                	<input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $variant->stock }}">
+	                	<input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $variant->stock }}" style="width:80px;">
 	                </td>
-	                <td class="text-right">{{ $variant->sku }}</td>
+	                <td class="text-right">
+	                	<input type="text" name="sku_variant" class="form-control variant-form-control" value="{{ $variant->sku }}">
+	                </td>
 
 	                <td class="text-nowrap text-right">
 	                	<button type="submit" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
 	                        <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
 	                    </button>
 
-	                    {{-- 
-	                    <form method="POST" action="{{ route('stock.destroy', $variant->id) }}" style="display: inline-block;">
-	                        <button type="submit" class="btn btn-sm btn-icon btn-flat btn-default" data-toggle="tooltip" data-original-title="Borrar">
-	                            <i class="fas fa-trash" aria-hidden="true"></i>
-	                        </button>
-	                        {{ csrf_field() }}
-	                        {{ method_field('DELETE') }}
-	                    </form>
-	                    --}}
+	                    <button type="button" id="deleteVariant_{{ $variant->id }}" class="btn btn-sm pd-x-15 btn-outline-danger btn-uppercase mg-l-5">
+	                        <i class="fas fa-trash" aria-hidden="true"></i>
+	                    </button>
 	                </td>
 	            </tr>
             </form>
@@ -165,8 +167,24 @@
     @endif
 </div>
 
-				
 @push('scripts')
+
+@foreach($variant_stock as $variant)
+
+<form method="POST" id="deleteVariantForm_{{ $variant->id }}" action="{{ route('stock.destroy', $variant->id) }}" style="display: inline-block;">
+    {{ csrf_field() }}
+    {{ method_field('DELETE') }}
+</form>
+
+<script type="text/javascript">
+	$('#deleteVariant_{{ $variant->id }}').on('click', function(){
+		event.preventDefault();
+		$('#deleteVariantForm_{{ $variant->id }}').submit();
+	});
+</script>
+
+@endforeach
+
 <script type="text/javascript">
 	$('#openVariants').on('click', function(){
 		event.preventDefault();

@@ -100,6 +100,7 @@ class StockController extends Controller
         
         $stock->stock = $request->stock_variant;
         $stock->new_price = $request->price_variant;
+        $stock->sku = $request->sku_variant;
 
         $stock->save();
 
@@ -112,6 +113,15 @@ class StockController extends Controller
 
     public function destroy($id)
     {
-        //
+        // Obtener datos de variante
+        $stock = ProductVariant::find($id);
+
+        $stock->delete();
+
+        // Mensaje de session
+        Session::flash('success', 'Se eliminó exitosamente la variante de este producto.');
+
+        // Enviar a vista
+        return redirect()->back();
     }
 }

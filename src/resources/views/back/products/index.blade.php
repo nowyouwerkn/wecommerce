@@ -82,9 +82,9 @@
                                     {{ $product->sku }}
                                     <small><em>{{ $product->barcode }}</em></small>
                                 </td>
-                                <td>$ {{ number_format($product->price,2) }}</td>
+                                <td>${{ number_format($product->price,2) }}</td>
                                 <td>
-                                    $ {{ number_format($product->discount_price,2) }}
+                                    ${{ number_format($product->discount_price,2) }}
                                 </td>
                                 <!--
                                 <td class="sizes-td">

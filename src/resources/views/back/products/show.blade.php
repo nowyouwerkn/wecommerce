@@ -193,15 +193,26 @@
                     @foreach($product->images as $image)
                         <div class="col-md-4">
                             <div class="thumbnail-wrap">
-                                {{-- 
-                                <form method="POST" action="{{ route('image.destroy', $image->id) }}" style="display: inline-block;">
-                                    <button type="submit" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
+                                <button type="button" id="deleteImage_{{ $image->id }}" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
                                         <i class="fas fa-times" aria-hidden="true"></i>
                                     </button>
+
+                                @push('scripts')
+
+                                <form method="POST" id="deleteImageForm_{{ $image->id }}" action="{{ route('image.destroy', $image->id) }}" style="display: none;">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
                                 </form>
-                                --}}
+
+                                <script type="text/javascript">
+                                    $('#deleteImage_{{ $image->id }}').on('click', function(){
+                                        event.preventDefault();
+                                        $('#deleteImageForm_{{ $image->id }}').submit();
+                                    });
+                                </script>
+                                @endpush
+                                
+                                
                                 <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}">
                             </div>
                             <p>{{ $image->descripcion }}</p>
@@ -528,6 +539,7 @@
                 </div>
             </div>
 
+            {{-- 
             <!-- Disponibility -->
             <div class="card mg-t-10 mb-4">
                 <!-- Header -->
@@ -546,14 +558,15 @@
                     </div>
                 </div>
             </div>
-        </div>
+            --}}
 
-        <!-- Button -->
-        <div class="col-md-4 offset-md-8 text-center">
-            <button type="submit" class="btn btn-block pd-x-15 btn-primary btn-uppercase mg-l-5">
-                <i class="fas fa-save mr-1"></i> Guardar Producto
-            </button>
+            <div class="text-center">
+                <button type="submit" class="btn btn-block btn-big pd-x-15 btn-primary btn-uppercase mg-l-5">
+                    <i class="fas fa-save mr-1"></i> Guardar Producto
+                </button>
+            </div>
         </div>
+        <!-- Button -->
     </div>
 </form>
 @endsection

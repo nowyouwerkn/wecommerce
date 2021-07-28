@@ -85,6 +85,7 @@ Es necesario agregar proveedores al proyecto para poder utilizar todas las funci
     Nowyouwerkn\WeCommerce\WeCommerceServiceProvider::class,
     Intervention\Image\ImageServiceProvider::class,
     Maatwebsite\Excel\ExcelServiceProvider::class,
+    App\Providers\FortifyServiceProvider::class,
 ];
 
 'aliases' => [

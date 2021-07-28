@@ -104,7 +104,7 @@
                             $categories = Nowyouwerkn\WeCommerce\Models\Category::all();
                         @endphp 
                         @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        <option value="{{ $cat->id }}">{{ $cat->slug }}</option>
                         @endforeach
                     </select>
                 </div>

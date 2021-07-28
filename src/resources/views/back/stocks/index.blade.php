@@ -61,9 +61,13 @@
                             </tr>
                         </thead>
                         <tbody>
+
                             @foreach($products as $product)
                             <tr class="parent" id="row{{ $product->id }}" title="Click to expand/collapse" style="cursor: pointer;">
-                                <td>{{ $product->variants->count() }}</td>
+                                <td>
+                                    <span class="bg-success p-1 text-white mr-2"><i class="fas fa-plus-circle"></i></span>
+                                    <span style="font-weight: bold; font-size:1.2em;">{{ $product->variants->count() }}</span>
+                                </td>
                                 <td class="tx-color-03 tx-normal image-table td-tight">
                                     <img style="width: 100%;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
                                     <div class="text-center margin-top-10">
@@ -89,21 +93,17 @@
                                 <td>
                                     @if($product->has_variants == true)
                                         @php
-                                        $variant_stock = Nowyouwerkn\WeCommerce\Models\ProductVariant::where('product_id', $product->id)->get();
+                                            $total_qty = 0;
 
-                                        $total_qty = 0;
+                                            foreach ($product->variants_stock as $v_stock) {
+                                                $total_qty += $v_stock->stock;
+                                            };
 
-                                        foreach ($variant_stock as $v_stock) {
-                                            $total_qty += $v_stock->stock;
-                                        };
-
-                                        $total_qty;
-
+                                            $total_qty;
                                         @endphp
-
                                         {{ $total_qty }}
                                     @else
-                                    {{ $product->stock }}
+                                        {{ $product->stock }}
                                     @endif
 
                                     
@@ -118,8 +118,7 @@
                                 </td>
                                 <td></td>
                             </tr>
-                                @foreach($product->variants as $variant)
-                                
+                                @foreach($product->variants_stock as $variant)
                                 <tr class="bg-light child-row{{ $product->id }}" style="display: none;">
                                     <form method="POST" action="{{ route('stock.update', $variant->id) }}" style="display: inline-block;">
                                         {{ csrf_field() }}
@@ -131,31 +130,56 @@
                                         <td>
                                             
                                         </td>
-                                        <td>{{ $variant->pivot->sku }}</td>
+                                        <td>
+                                            <input type="text" name="sku_variant" class="form-control variant-form-control" value="{{ $variant->sku }}" style="width: 150px;">
+                                        </td>
                                         <td><strong>{{ $variant->value }}</strong> <br><p>{{ $variant->type }}</p></td>
                                         <td>
-                                            <nav class="nav nav-icon-only">
-                                                <div class="form-group w-50">
-                                                    @if($variant->pivot->new_price == NULL)
-                                                    <input type="number" name="price_variant" class="form-control" value="{{ $product->price }}">
-                                                    @else
-                                                    <input type="number" name="price_variant" class="form-control" value="{{ $variant->pivot->new_price }}">
-                                                    @endif
-                                                </div>
-                                            </nav>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1" style="height:36px">$</span>
+                                                 </div>
+                                            
+                                                @if($variant->new_price == NULL)
+                                                <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $product->price }}" style="width:50px;">
+                                                @else
+                                                <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $variant->new_price }}" style="width:50px;">
+                                                @endif
+                                            </div>
                                         </td>
 
                                         <td>
-                                            <nav class="nav nav-icon-only">
-                                                <div class="form-group w-50">
-                                                    <input type="number" name="stock_variant" class="form-control" value="{{ $variant->pivot->stock }}">
-                                                </div>
-                                            </nav>
+                                            <input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $variant->stock }}" style="width:80px;">
                                         </td>
                                         <td>
                                             <button type="submit" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
                                                 <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
                                             </button>
+
+                                            <button type="button" id="deleteVariant_{{ $variant->id }}" class="btn btn-sm pd-x-15 btn-outline-danger btn-uppercase mg-l-5">
+                                                <i class="fas fa-trash" aria-hidden="true"></i>
+                                            </button>
+
+                                            @push('scripts')
+                                            <form method="POST" id="deleteVariantForm_{{ $variant->id }}" action="{{ route('stock.destroy', $variant->id) }}" style="display: inline-block;">
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
+                                            </form>
+
+                                            <script type="text/javascript">
+                                                $('#deleteVariant_{{ $variant->id }}').on('click', function(){
+                                                    event.preventDefault();
+                                                    $('#deleteVariantForm_{{ $variant->id }}').submit();
+                                                });
+                                            </script>
+
+                                            @endpush
+
+                                            {{-- 
+                                            <button type="submit" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
+                                                <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
+                                            </button>
+                                            --}}
                                         </td>
                                     </form>
                                 </tr>

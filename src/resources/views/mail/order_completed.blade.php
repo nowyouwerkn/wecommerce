@@ -131,7 +131,7 @@ $tax = $order->cart->totalPrice * 0.0825;
                       <tr>
                         <td width="225" align="left" valign="top" class="two-left"><table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="full">
                           <tr>
-                            <td align="left" valign="top" style="font-family:'Open Sans', Verdana, Arial; font-size:14px; color:#FFF; font-weight:bold;" mc:edit="tm5-04"><multiline>Bill to</multiline></td>
+                            <td align="left" valign="top" style="font-family:'Open Sans', Verdana, Arial; font-size:14px; color:#FFF; font-weight:bold;" mc:edit="tm5-04"><multiline>Envio a:</multiline></td>
                           </tr>
                           <tr>
                             <td height="5" align="left" valign="top" style="font-size:5px; line-height:5px;">&nbsp;</td>
@@ -148,7 +148,7 @@ $tax = $order->cart->totalPrice * 0.0825;
                               <td height="15" align="left" valign="top" style="font-size:15px; line-height:15px;">&nbsp;</td>
                             </tr>
                             <tr>
-                              <td align="left" valign="top" style="font-family:'Open Sans', Verdana, Arial; font-size:14px; color:#FFF; font-weight:bold;" mc:edit="tm5-06"><multiline>Invoice No</multiline></td>
+                              <td align="left" valign="top" style="font-family:'Open Sans', Verdana, Arial; font-size:14px; color:#FFF; font-weight:bold;" mc:edit="tm5-06"><multiline>Orden #</multiline></td>
                             </tr>
                             <tr>
                               <td height="5" align="left" valign="top" style="font-size:5px; line-height:5px;">&nbsp;</td>
@@ -167,7 +167,7 @@ $tax = $order->cart->totalPrice * 0.0825;
                                   <td height="15" align="left" valign="top" style="font-size:15px; line-height:15px;">&nbsp;</td>
                                 </tr>
                                 <tr>
-                                  <td align="left" valign="top" style="font-family:'Open Sans', Verdana, Arial; font-size:12px; color:#FFF; font-weight:bold;" mc:edit="tm5-08"><multiline>Invoice Total</multiline></td>
+                                  <td align="left" valign="top" style="font-family:'Open Sans', Verdana, Arial; font-size:12px; color:#FFF; font-weight:bold;" mc:edit="tm5-08"><multiline>Total de Compra</multiline></td>
                                 </tr>
                                 <tr>
                                   <td height="5" align="left" valign="top" style="font-size:5px; line-height:5px;">&nbsp;</td>
@@ -192,45 +192,6 @@ $tax = $order->cart->totalPrice * 0.0825;
           </tr>
         </table>
 
-        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
-          <tr>
-            <td align="center" valign="top"><table width="500" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
-              <tr>
-                <td align="center" valign="top" style="background:#FFF;"><table width="600" border="0" cellspacing="0" cellpadding="0" class="two-left-inner">
-                  <tr>
-                    <td height="20" align="center" valign="middle" style="line-height:20px; font-size:80px;">&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td align="center" valign="top"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
-
-                      <tr>
-                        <td align="center" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:24px; color:#000; line-height:50px; font-weight:bold;" mc:edit="tm6-04"><multiline>Your Tracking Number</multiline></td>
-                      </tr>
-                      <tr>
-                        <td height="5" align="center" valign="top" style="font-size:5px; line-height:5px;">&nbsp;</td>
-                      </tr>
-                      <tr>
-                        <td align="center" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:13px; color:#71746f; line-height:22px; font-weight:normal;" mc:edit="tm6-05"><multiline>Track it via UPS: <a href="https://www.ups.com/track?loc=en_US&requester=ST/" target="_blank" style="color: #f16321;">here</a></multiline></td>
-                      </tr>
-                      <tr>
-                        <td align="center" valign="top"><table width="160" border="0" align="center" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td height="30" align="center" valign="top">&nbsp;</td>
-                          </tr>
-                          <tr>
-                            <td height="60" align="center" valign="middle" style="font-family:'Open Sans', Verdana, Arial; font-size:20px; font-weight:bold; text-transform:uppercase; color:#000; border:#CCC dotted 2px; padding: 0px 20px;" mc:edit="tm6-06"><multiline>{{ $order->main_tracking }}</multiline></td>
-                          </tr>
-                        </table></td>
-                      </tr>
-                    </table></td>
-                  </tr>
-
-                </table></td>
-              </tr>
-            </table></td>
-          </tr>
-        </table>
-
         <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="menu-icon">
           <tr>
             <td align="center" valign="top"><table width="600" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
@@ -242,10 +203,10 @@ $tax = $order->cart->totalPrice * 0.0825;
                   <tr>
                     <td height="35" align="center" valign="top" style="font-size:35px; line-height:35px;"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td width="155" align="left" valign="top" class="two-left" style="font-family:'Open Sans', sans-serif, Verdana; font-size:15px; color:#333; line-height:22px; font-weight:bold;" mc:edit="tm5-10"><multiline>Description</multiline></td>
-                        <td width="115" align="left" valign="top" class="two-left" style="font-family:'Open Sans', sans-serif, Verdana; font-size:15px; color:#333; line-height:22px; font-weight:bold;" mc:edit="tm5-11"><multiline>Unit Price</multiline></td>
-                        <td width="115" align="left" valign="top" class="two-left" style="font-family:'Open Sans', sans-serif, Verdana; font-size:15px; color:#333; line-height:22px; font-weight:bold;" mc:edit="tm5-12"><multiline>Quantity</multiline></td>
-                        <td width="115" align="left" valign="top" class="two-left" style="font-family:'Open Sans', sans-serif, Verdana; font-size:15px; color:#333; line-height:22px; font-weight:bold;" mc:edit="tm5-13"><multiline>Amount</multiline></td>
+                        <td width="155" align="left" valign="top" class="two-left" style="font-family:'Open Sans', sans-serif, Verdana; font-size:15px; color:#333; line-height:22px; font-weight:bold;" mc:edit="tm5-10"><multiline>Descripción</multiline></td>
+                        <td width="115" align="left" valign="top" class="two-left" style="font-family:'Open Sans', sans-serif, Verdana; font-size:15px; color:#333; line-height:22px; font-weight:bold;" mc:edit="tm5-11"><multiline>Precio Unitario</multiline></td>
+                        <td width="115" align="left" valign="top" class="two-left" style="font-family:'Open Sans', sans-serif, Verdana; font-size:15px; color:#333; line-height:22px; font-weight:bold;" mc:edit="tm5-12"><multiline>Cantidad</multiline></td>
+                        <td width="115" align="left" valign="top" class="two-left" style="font-family:'Open Sans', sans-serif, Verdana; font-size:15px; color:#333; line-height:22px; font-weight:bold;" mc:edit="tm5-13"><multiline>Subtotal</multiline></td>
                       </tr>
                     </table></td>
                   </tr>
@@ -272,7 +233,7 @@ $tax = $order->cart->totalPrice * 0.0825;
                         <td colspan="4" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:13px; color:#333; line-height:30px; font-weight:normal;">&nbsp;</td>
                       </tr>
                       <tr>
-                        <td width="155" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:12px; color:#71746f; line-height:22px; font-weight:normal;" class="two-left" mc:edit="tm5-14"><multiline><b style="font-size:15px;">{{ $item['item']['name'] }}</b> <br/>Size: {{ $item['size'] }}</multiline></td>
+                        <td width="155" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:12px; color:#71746f; line-height:22px; font-weight:normal;" class="two-left" mc:edit="tm5-14"><multiline><b style="font-size:15px;">{{ $item['item']['name'] }}</b> <br/>Talla: {{ $item['variant'] }}</multiline></td>
                         <td width="115" align="left" valign="bottom" style="font-family:'Open Sans', sans-serif, Verdana; font-size:13px; color:#71746f; line-height:22px; font-weight:normal;" class="two-left" mc:edit="tm5-15"><multiline>$ {{ number_format($item['item']['price']) }}</multiline></td>
                         <td width="115" align="left" valign="bottom" style="font-family:'Open Sans', sans-serif, Verdana; font-size:13px; color:#71746f; line-height:22px; font-weight:normal;" class="two-left" mc:edit="tm5-16"><multiline>{{ $item['qty'] }}</multiline></td>
                         <td width="115" align="left" valign="bottom" style="font-family:'Open Sans', sans-serif, Verdana; font-size:13px; color:#71746f; line-height:22px; font-weight:normal;" class="two-left" mc:edit="tm5-17"><multiline>$ {{ number_format($item['price']) }}</multiline></td>
@@ -304,7 +265,7 @@ $tax = $order->cart->totalPrice * 0.0825;
                           <tr>
                             <td align="left" valign="top"><table width="215" border="0" align="left" cellpadding="0" cellspacing="0">
                               <tr>
-                                <td width="100" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:26px; color:#71746f; line-height:22px; font-weight:bold;" class="two-left" mc:edit="tm5-26"><multiline>Tax</multiline></td>
+                                <td width="100" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:26px; color:#71746f; line-height:22px; font-weight:bold;" class="two-left" mc:edit="tm5-26"><multiline>Impuestos</multiline></td>
                                 <td width="115" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:20px; color:#71746f; line-height:22px; font-weight:bold;" class="two-left" mc:edit="tm5-27"><multiline>$ {{ number_format($tax, 2) }}</multiline></td>
                               </tr>
                             </table></td>
@@ -379,15 +340,9 @@ $tax = $order->cart->totalPrice * 0.0825;
                     <td height="40" align="center" valign="top" style="font-size:40px; line-height:40px;">&nbsp;</td>
                   </tr>
                   <tr>
-                    <td align="center" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:12px; color:#4b4b4c; line-height:30px; font-weight:normal;" mc:edit="tm5-30"><multiline>&copy; 2020 Gearcom Shop</multiline></td>
+                    <td align="center" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:12px; color:#4b4b4c; line-height:30px; font-weight:normal;" mc:edit="tm5-30"><multiline>&copy; 2020 WeCommerce</multiline></td>
                   </tr>
-                  <tr>
-                    <td align="center" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:13px; color:#4b4b4c; line-height:20px; font-weight:bold;" mc:edit="tm5-31"><multiline>518 Union Pacific Blvd Suite B2<br />
-                    Laredo Tx, 78045</multiline></td>
-                  </tr>
-<!--<tr>
-<td align="center" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:12px; color:#4b4b4c; line-height:30px; font-weight:bold; text-decoration:underline;" mc:edit="tm5-32"><unsubscribe>Unsubscribe</unsubscribe></td>
-</tr>-->
+
 </table></td>
 </tr>
 </table></td>

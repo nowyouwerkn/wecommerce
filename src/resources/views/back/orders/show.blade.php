@@ -106,19 +106,20 @@
 
 @section('content')
 
-<div class="row">
-    <div class="col-md-3">
-        <div class="card text-white bg-info" style="height: 100px;">
+<div class="row mb-3">
+    <div class="col-md-4">
+        <div class="card text-white bg-info" style="height:91%;">
             <div class="card-body">
-                <h2 class="card-title display-4 mb-1 text-white" style="font-size: 3rem !important;">Order #{{ $order->id }}</h2>               
+                <h2 class="card-title text-white" style="font-size: 3vw !important;">Order #{{ $order->id }}</h2>
             </div>
         </div>
     </div>
-    <div class="col-md-9">
-        <div class="row mb-4">
+
+    <div class="col-md-8">
+        <div class="row">
             @if(!empty($shipment_method))
-            <div class="col-md-4">
-                <div class="card border border-primary" style="height: 100px ">
+            <div class="col-md-6">
+                <div class="card border border-primary h-100">
                     <div class="card-body text-secondary">
                         <div class="row align-items-center">
                             <div class="col-md-2">
@@ -133,8 +134,8 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="card border border-secondary" style="height: 100px ">
+            <div class="col-md-6">
+                <div class="card border border-secondary h-100">
                     <div class="card-body text-secondary">
                         <div class="row align-items-center">
                             <div class="col-md-3">
@@ -150,8 +151,8 @@
             </div>
             @endif
 
-            <div class="col-md-5">
-                <div class="card border border-secondary" style="height: 100px ">
+            <div class="col-md-6">
+                <div class="card border border-secondary h-100">
                     <div class="card-body text-secondary">
                         <div class="row align-items-center">
                             <div class="col-md-2">
