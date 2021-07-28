@@ -111,6 +111,21 @@ Etiquetas de elementos publicables:
 * --tag=migrations
 * --tag=seeders
 
+<strong>IMPORTANTE: </strong> El sistema utiliza Fortify para Autenticar usuarios asi que es importante publicar tambien los recursos de fortify con el siguiente comando:
+
+```
+php artisan vendor:publish --provider="Laravel\Fortify\FortifyServiceProvider"
+```
+Esto creará una carpeta llamada `Actions` dentro de `app`. En esta carpeta se encuentran los archivos de autenticación de Fortify. Si no has eliminado o editado tu archivo `User` dentro de tu carpeta de Modelos no necesitas hacer más, en caso contrario para que funcione con WeCommerce tendrás que editar el archivo `CreateNewUser` cambiando lo siguiente:
+
+```
+use App\Models\User;
+
+cambiar por...
+
+use Nowyouwerkn\WeCommerce\Models\User;
+```
+
 Limpia el caché de tu configuración
 ```
 php artisan optimize:clear

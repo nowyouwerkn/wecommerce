@@ -147,8 +147,8 @@ class FrontController extends Controller
 
         $products_selected = Product::where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->take(4)->get();
 
-        $next_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->first();
-        $last_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->first();
+        $next_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
+        $last_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
 
         /*
         if (empty($next_product)) {
