@@ -33,9 +33,6 @@
                                 <div class="col">
                                     <h3>Lista de Direcciones</h3>
                                 </div>
-                                <div class="col">
-                                    <a href="{{ route('address.create') }}" class="btn btn-auth float-right"><i class="fa fa-plus"></i> Nueva Dirección</a>
-                                </div>
                             </div>
                             
                             <hr>
@@ -45,7 +42,12 @@
                                     <div class="card my-3">
                                         <div class="card-header">
                                             <ul class="list-inline mb-0">
-               
+                                                <li class="list-inline-item">
+                                                    <a class="" href="{{ route('address.edit', $address->id) }}"><i class="fa fa-pencil-square-o"></i> Editar</a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <a class="" href="{{ route('address.destroy', $address->id) }}"><i class="fa fa-trash"></i> Borrar</a>
+                                                </li>
                                             </ul>
                                         </div>
                                         <div class="card-body">
@@ -79,7 +81,6 @@
                                 @else
                                 <div class="text-center my-5">
                                     <h4 class="mb-0">No haz guardado ninguna dirección.</h4>
-                                    <p>Crea una nueva <a href="{{ route('address.create') }}">aqui</a> o en el botón superior.</p>
                                 </div>
                             @endif
                 </div>

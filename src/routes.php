@@ -321,12 +321,22 @@ Route::group(['prefix' => 'profile', 'middleware' => 'auth'], function(){
     Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
     Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
     Route::get('address', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@address')->name('address');
-    Route::get('address/create', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@addAddress')->name('address.create');
+    Route::get('address/{id}/edit', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@editAddress')->name('address.edit');
     Route::get('account', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@account')->name('account');
 
     Route::put('/account/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@updateAccount',
         'as' => 'profile.update',
+    ]);
+
+    Route::put('/address/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@updateAddress',
+        'as' => 'address.update',
+    ]);
+
+    Route::delete('/address/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@destroyAddress',
+        'as' => 'address.destroy',
     ]);
 });
 

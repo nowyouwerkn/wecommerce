@@ -97,7 +97,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label for="phone">Teléfono de Contacto <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control phone-input" name="phone" value="" required="" />
+                                                <input type="text" class="form-control phone-input" name="phone" value="{{ $address->phone ?? '' }}" required="" />
 
                                                 <small>En casos muy raros es posible que tengamos que contactarte respecto a tu orden.</small>
                                             </div>
@@ -120,7 +120,11 @@
                                                 @endphp
                                                 <select class="form-control" id="state" name="state" data-parsley-trigger="change" required="">
                                                     @foreach($states as $state)
-                                                        <option value="{{ $state->name }}">{{ $state->name }}</option>
+                                                        @if(!empty($address))
+                                                            <option {{ ($state->name == $address->state) ? 'selected' : '' }} value="{{ $state->name }}">{{ $state->name }}</option>
+                                                        @else
+                                                            <option value="{{ $state->name }}">{{ $state->name }}</option>
+                                                        @endif
                                                     @endforeach
                                                 </select>
                                                 <!--      
@@ -132,28 +136,28 @@
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label for="city">Ciudad / Municipio <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="city" name="city" value="" required="" />
+                                                <input type="text" class="form-control" id="city" name="city" value="{{ $address->city ?? '' }}" required="" />
                                             </div>
                                         </div>
 
                                         <div class="col-md-8">
                                             <div class="form-group mb-3">
                                                 <label for="last-name">Calle <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="street" name="street" value="" required="" />
+                                                <input type="text" class="form-control" id="street" name="street" value="{{ $address->street ?? '' }}" required="" />
                                             </div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label for="last-name">Num <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="street_num" name="street_num" value="" required="" />
+                                                <input type="text" class="form-control" id="street_num" name="street_num" value="{{ $address->street_num ?? '' }}" required="" />
                                             </div>
                                         </div>
                                         
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label for="zip">Colonia / Fraccionamiento <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="suburb" name="suburb" value="" required="" />
+                                                <input type="text" class="form-control" id="suburb" name="suburb" value="{{ $address->suburb ?? '' }}" required="" />
                                             </div>
                                         </div>
 
@@ -167,7 +171,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label for="zip">Código Postal <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="postal_code" name="postal_code" value="" required="" />
+                                                <input type="text" class="form-control" id="postal_code" name="postal_code" value="{{ $address->postal_code ?? '' }}" required="" />
                                             </div>
                                         </div>
 

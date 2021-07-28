@@ -262,12 +262,12 @@ class FrontController extends Controller
             if(Auth::check()){
                 $user = Auth::user();
 
-                $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
+                $address = UserAddress::where('user_id', Auth::user()->id)->first();
 
                 return view('front.theme.' . $this->theme->get_name() . '.checkout')
                 ->with('total', $total)
                 ->with('user', $user)
-                ->with('addresses', $addresses)
+                ->with('address', $address)
                 ->with('payment_method', $payment_method)
                 ->with('subtotal', $subtotal)
                 ->with('tax', $tax)
@@ -283,11 +283,11 @@ class FrontController extends Controller
                 };
                 $count;
 
-                $addresses = UserAddress::where('user_id', '000998')->get();
+                $address = UserAddress::where('user_id', '000998')->first();
 
                 return view('front.theme.' . $this->theme->get_name() . '.checkout')
                 ->with('total', $total)
-                ->with('addresses', $addresses)
+                ->with('address', $address)
                 ->with('payment_method', $payment_method)
                 ->with('store_tax', $store_tax)
                 ->with('subtotal', $subtotal)
@@ -426,12 +426,12 @@ class FrontController extends Controller
             if(Auth::check()){
                 $user = Auth::user();
 
-                $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
+                $address = UserAddress::where('user_id', Auth::user()->id)->first();
 
                 return view('front.theme.' . $this->theme->get_name() . '.checkout_cash')
                 ->with('total', $total)
                 ->with('user', $user)
-                ->with('addresses', $addresses)
+                ->with('address', $address)
                 ->with('payment_method', $payment_method)
                 ->with('subtotal', $subtotal)
                 ->with('tax', $tax)
@@ -447,11 +447,11 @@ class FrontController extends Controller
                 };
                 $count;
 
-                $addresses = UserAddress::where('user_id', '000998')->get();
+                $address = UserAddress::where('user_id', '000998')->first();
 
                 return view('front.theme.' . $this->theme->get_name() . '.checkout_cash')
                 ->with('total', $total)
-                ->with('addresses', $addresses)
+                ->with('address', $address)
                 ->with('payment_method', $payment_method)
                 ->with('store_tax', $store_tax)
                 ->with('subtotal', $subtotal)
@@ -862,7 +862,6 @@ class FrontController extends Controller
     * Autenticación
     * Esta vista maneja el LOGIN/REGISTRO
     */
-
     public function auth ()
     {
         return view('front.theme.' . $this->theme->get_name() . '.auth');
@@ -881,7 +880,6 @@ class FrontController extends Controller
             $order->cart = unserialize($order->cart);
             return $order;
         });
-        
         
         $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
@@ -909,8 +907,74 @@ class FrontController extends Controller
 
     public function address ()
     {
-        $addresses = UserAddress::paginate(10);
+        $addresses = UserAddress::where('user_id', Auth::user()->id)->paginate(10);
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.address', compact('addresses'));
+    }
+
+    public function createAddress()
+    {
+        return view ('front.theme.' . $this->theme->get_name() . 'user-profile.addresses.create');
+    }
+
+    public function storeAddress(Request $request)
+    {
+        // Validate
+        $this -> validate($request, array(
+
+        ));
+
+        // Save request in database
+        $address = new Address;
+        $address->name = $request->name;
+        $address->user_id = $request->user_id;
+        $address->street = $request->street;
+        $address->street_num = $request->street_num;
+        $address->between_streets = $request->between_streets;
+        $address->postal_code = $request->postal_code;
+        $address->city = $request->city;
+        $address->country = $request->country;
+        $address->state = $request->state;
+        $address->phone = $request->phone;
+        $address->suburb = $request->suburb;
+        $address->references = $request->references;
+
+        $address->save();
+
+        return redirect()->route('address');
+    }
+
+    public function editAddress($id)
+    {
+        $address = UserAddress::find($id);
+
+        return view ('front.theme.' . $this->theme->get_name() . '.user_profile.edit_address')->with('address', $address);
+    }
+
+    public function updateAddress(Request $request, $id)
+    {
+        // Validate
+        $this -> validate($request, array(
+
+        ));
+
+        // Save request in database
+        $address = UserAddress::find($id);
+        $address->name = $request->name;
+        $address->user_id = $request->user_id;
+        $address->street = $request->street;
+        $address->street_num = $request->street_num;
+        $address->between_streets = $request->between_streets;
+        $address->postal_code = $request->postal_code;
+        $address->city = $request->city;
+        $address->country = $request->country;
+        $address->state = $request->state;
+        $address->phone = $request->phone;
+        $address->suburb = $request->suburb;
+        $address->references = $request->references;
+
+        $address->save();
+
+        return redirect()->route('address');
     }
 
     public function account ()
