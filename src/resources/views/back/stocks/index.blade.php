@@ -133,7 +133,7 @@
                                         <td>
                                             <input type="text" name="sku_variant" class="form-control variant-form-control" value="{{ $variant->sku }}" style="width: 150px;">
                                         </td>
-                                        <td><strong>{{ $variant->value }}</strong> <br><p>{{ $variant->type }}</p></td>
+                                        <td><strong>{{ $variant->variants->value }}</strong> <br><p>{{ $variant->variants->type ?? 'Talla'}}</p></td>
                                         <td>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
@@ -174,12 +174,6 @@
                                             </script>
 
                                             @endpush
-
-                                            {{-- 
-                                            <button type="submit" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
-                                                <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
-                                            </button>
-                                            --}}
                                         </td>
                                     </form>
                                 </tr>
