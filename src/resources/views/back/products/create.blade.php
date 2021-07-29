@@ -241,13 +241,6 @@
 
                     <!-- Form -->
                     <div class="card-body row">
-                        <div class="col-md-12 mb-4">
-                            <div class="custom-control custom-checkbox" >
-                                <input type="checkbox" class="custom-control-input" id="hasVariants" name="has_variants" value="1">
-                                <label class="custom-control-label" for="hasVariants">Este producto tiene variantes</label>
-                            </div>
-                        </div>
-
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="stock">Cantidad <span class="text-danger">*</span></label>
@@ -266,6 +259,13 @@
                             <div class="form-group">
                                 <label for="barcode">Código de Barras (ISBN, UPC, GTIN, etc) <span class="text-info">(Opcional)</span></label>
                                 <input type="text" name="barcode" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mb-4">
+                            <div class="custom-control custom-checkbox" >
+                                <input type="checkbox" class="custom-control-input" id="hasVariants" name="has_variants" value="1">
+                                <label class="custom-control-label" for="hasVariants">Este producto tiene variantes</label>
                             </div>
                         </div>
                     </div>
