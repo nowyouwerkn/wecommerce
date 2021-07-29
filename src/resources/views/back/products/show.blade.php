@@ -362,7 +362,7 @@
 
                         <div class="col-md-12 mt-3">
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="has_tax" {{ ($product->has_tax == '1') ? 'checked' : '' }}>
+                              <input type="checkbox" class="custom-control-input" id="has_tax" name="has_tax" value="1" {{ ($product->has_tax == '1') ? 'checked' : '' }}>
                               <label class="custom-control-label" for="has_tax">Este producto tiene impuestos (I.V.A 16%)</label>
                               <span class="tx-13 tx-color-03 d-block wd-60p">Aparecerá un anuncio informativo en el detalle de producto indicando los impuestos de acuerdo a tu configuración de cuenta.</span>
                             </div>
