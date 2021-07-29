@@ -86,34 +86,34 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="name">Nombre <span class="text-danger">*</span></label>
-                                <input type="text" name="name" class="form-control" required="">
+                                <input type="text" name="name" class="form-control" value="{{ old('name') }}" required="">
                             </div>
                         </div>
     
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="description">Descripcion <span class="text-danger">*</span></label>
-                                <textarea name="description" cols="10" rows="3" class="form-control" required=""></textarea>
+                                <textarea name="description" cols="10" rows="3" class="form-control" required="">{{ old('description') }}</textarea>
                             </div>
                         </div>
     
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="materials">Materiales</label>
-                                <textarea name="materials" cols="10" rows="3" class="form-control"></textarea>
+                                <textarea name="materials" cols="10" rows="3" class="form-control">{{ old('materiales') }}</textarea>
                             </div>
                         </div>
     
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="color">Color</label>
-                                <input type="text" name="color" class="form-control" placeholder="Ej. Negro">
+                                <input type="text" name="color" class="form-control" placeholder="Ej. Negro" value="{{ old('color') }}">
                             </div>
                         </div>
     
                         <div class="col-md-6">
                             <label for="pattern">Patron</label>
-                            <input type="text" name="pattern"class="form-control" placeholder="Ej. Liso, Lunares">
+                            <input type="text" name="pattern"class="form-control" placeholder="Ej. Liso, Lunares" value="{{ old('patron') }}">
                         </div>
     
                         <div class="col-md-6">
@@ -168,7 +168,7 @@
                                   <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">MX$</span>
                                   </div>
-                                    <input type="number" id="price" name="price" class="form-control" required="">
+                                    <input type="number" id="price" name="price" class="form-control" value="{{ old('price') }}" required="">
                                 </div>
                             </div>
         
@@ -178,7 +178,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">MX$</span>
                                     </div>
-                                    <input type="number" id="discount_price" name="discount_price" class="form-control">
+                                    <input type="number" id="discount_price" name="discount_price" value="{{ old('discount_price') }}" class="form-control">
                                 </div>
                             </div>
 
@@ -201,7 +201,7 @@
                                   <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">MX$</span>
                                   </div>
-                                    <input type="number" id="production_cost" name="production_cost" class="form-control value-checker">
+                                    <input type="number" id="production_cost" name="production_cost" value="{{ old('production_cost') }}" class="form-control value-checker">
                                 </div>
                                 <span class="tx-13 tx-color-03 d-block">Tus clientes no verán esto.</span>
                             </div>
@@ -244,21 +244,21 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="stock">Cantidad <span class="text-danger">*</span></label>
-                                <input type="number" name="stock" class="form-control" value="1">
+                                <input type="number" name="stock" class="form-control" value="{{ old('stock') }}" value="1">
                             </div>
                         </div>
     
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="sku">SKU (Stock Keeping Unit) <span class="text-danger">*</span></label>
-                                <input type="text" name="sku" class="form-control">
+                                <input type="text" name="sku" class="form-control" value="{{ old('sku') }}">
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="barcode">Código de Barras (ISBN, UPC, GTIN, etc) <span class="text-info">(Opcional)</span></label>
-                                <input type="text" name="barcode" class="form-control">
+                                <input type="text" name="barcode" class="form-control" value="{{ old('barcode') }}">
                             </div>
                         </div>
 
@@ -283,28 +283,28 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="height">Alto</label>
-                                <input type="number" name="height" class="form-control">
+                                <input type="number" name="height" class="form-control" value="{{ old('height') }}">
                             </div>
                         </div>
     
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="width">Ancho</label>
-                                <input type="number" name="width" class="form-control">
+                                <input type="number" name="width" class="form-control" value="{{ old('width') }}">
                             </div>
                         </div>
     
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="lenght">Largo</label>
-                                <input type="number" name="lenght" class="form-control">
+                                <input type="number" name="lenght" class="form-control" value="{{ old('lenght') }}">
                             </div>
                         </div>
     
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="weight">Peso</label>
-                                <input type="number" name="weight" class="form-control">
+                                <input type="number" name="weight" class="form-control" value="{{ old('weight') }}">
                             </div>
                         </div>
                     </div>
@@ -391,7 +391,7 @@
                             <div class="col-md-12">
                                 <div class="form-group mb-1">
                                     <label for="tsearch_tagsags">Etiquetas <span class="text-success">Recomendado</span></label>
-                                    <input type="text" name="search_tags" class="form-control" placeholder="Algodón, Fresco, Verano">
+                                    <input type="text" name="search_tags" class="form-control" placeholder="Algodón, Fresco, Verano" value="{{ old('search_tags') }}">
                                 </div>
                             </div>
                         </div>
@@ -399,23 +399,23 @@
                 </div>
     
                 <!-- Disponibility -->
+                {{-- 
                 <div class="card mg-t-10 mb-4">
-                    <!-- Header -->
                     <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                         <h5 class="mg-b-5">Disponibilidad</h5>
                         <p class="tx-12 tx-color-03 mg-b-0">Disponibilidad.</p>
                     </div>
 
-                    <!-- Form -->
                     <div class="card-body row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="available_date_start">Disponibilidad</label>
-                                <input type="date" name="available_date_start" class="form-control">
+                                <input type="date" name="available_date_start" class="form-control" value="">
                             </div>
                         </div>
                     </div>
                 </div>
+                --}}
             </div>
 
             <!-- Button -->
