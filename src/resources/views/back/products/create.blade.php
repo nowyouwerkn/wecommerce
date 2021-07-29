@@ -113,7 +113,7 @@
     
                         <div class="col-md-6">
                             <label for="pattern">Patron</label>
-                            <input type="text" name="pattern"class="form-control" placeholder="Ej. Liso, Lunares" value="{{ old('patron') }}">
+                            <input type="text" name="pattern"class="form-control" placeholder="Ej. Liso, Lunares" value="{{ old('pattern') }}">
                         </div>
     
                         <div class="col-md-6">
