@@ -2,6 +2,12 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.0.3 - 2021-07-14
+
+### Agregado
+- Sistema de Búsqueda General en el panel administrativo. Solo se puede buscar por producto.
+- Modo Oscuro/Claro configurable por usuario administrativo de forma manual.
+
 ## 1.0.2 - 2021-07-14
 
 ### Agregado

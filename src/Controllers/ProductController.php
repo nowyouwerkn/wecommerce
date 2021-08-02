@@ -333,7 +333,9 @@ class ProductController extends Controller
 
         $product->save();
 
-        $product->subCategory()->sync($request->subcategory);
+        if (isset($request->subcategory)) {
+            $product->subCategory()->sync($request->subcategory);
+        }
 
         // Notificación
         $type = 'Producto';

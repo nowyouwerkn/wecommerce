@@ -46,6 +46,13 @@
             <div class="collapse" id="loggedinMenu">
                 <ul class="nav nav-aside mg-b-0">
                     <li class="nav-item">
+                        @if(Auth::user()->color_mode == false)
+                        <a href="{{ route('change.color') }}" class="nav-link"><i data-feather="moon"></i> <span>Modo Oscuro</span></a>
+                        @else
+                        <a href="{{ route('change.color') }}" class="nav-link"><i data-feather="sun"></i> <span>Modo Claro</span></a>
+                        @endif
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('user.help') }}" class="nav-link"><i data-feather="help-circle"></i> <span>Ayuda</span></a>
                     </li>
                     <li class="nav-item">

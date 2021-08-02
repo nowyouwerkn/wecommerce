@@ -127,7 +127,7 @@ class FrontController extends Controller
         $catalog = Category::where('slug', $category_slug)->first();
         $products_category = Product::where('category_id', $catalog->id)->where('status', 'Publicado')->get();
         
-        $products_subcategory = Product::whereHas('subCategory', function($q) use ($catalog){
+        $products_subcategory = Product::where('status', 'Publicado')->whereHas('subCategory', function($q) use ($catalog){
             $q->where('category_id', $catalog->id);
         })->get();
 
@@ -145,7 +145,7 @@ class FrontController extends Controller
         $catalog = Category::where('slug', $category_slug)->first();
         $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->firstOrFail();
 
-        $products_selected = Product::where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->take(4)->get();
+        $products_selected = Product::where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->take(4)->get();
 
         $next_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
         $last_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
@@ -169,24 +169,12 @@ class FrontController extends Controller
             ->with('next_product', $next_product)
             ->with('last_product', $last_product);
         }
-
-        /*
-        $product = Product::where('slug', '=', $slug)->first();
-        $products_selected = Product::where('slug', '!=' , $product->slug)->take(4)->get();
-        $variants = collect();
-
-        // Regresar a Vista
-        //return view('front.theme.' . $this->theme->get_name() . '.detail')->with('product', $product)->with('products_selected', $products_selected)->with('variants');
-        */
-
-        //return view('front.theme.' . $this->theme->get_name() . '.detail', compact('product', 'products_selected', 'variants' ));
     }
 
     /*
     * Checkout
     * Lógica de carrito, checkout y compra exitosa
     */
-
     public function cart ()
     {
         if (!Session::has('cart')) {

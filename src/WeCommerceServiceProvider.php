@@ -75,6 +75,9 @@ class WeCommerceServiceProvider extends ServiceProvider
             });
         }
 
+        // Utilizar estilos de Bootstrap en la paginación
+        Paginator::useBootstrap();
+
         // Definir el Tema Usado en el Sistema
         $this->theme = new StoreTheme;
 
@@ -87,9 +90,10 @@ class WeCommerceServiceProvider extends ServiceProvider
             return view('front.theme.' . $this->theme->get_name() . '.auth');
         });
 
+        // Redirección personalizada en Fortify
         $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
 
-        /*
+        /* 
         if ($this->app->runningInConsole()) {
             $this->publishResources();
         }
@@ -139,26 +143,37 @@ class WeCommerceServiceProvider extends ServiceProvider
     {
         // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
         $this->publishes([
-            __DIR__.'/views/front' => resource_path('views/front/theme/'),
-        ]);
+            __DIR__.'/resources/views/front' => resource_path('views/front/theme/'),
+        ], 'theme_views');
+
+        // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
+        $this->publishes([
+            __DIR__.'/resources/views/errors' => resource_path('views/errors'),
+        ], 'error-views');
+
+        // Publica los archivos de traducción del sistema
+        $this->publishes([
+            __DIR__.'/resources/lang' => resource_path('lang/'),
+        ], 'translations');
 
         // Publicar Assets de Estilos
         $this->publishes([
             __DIR__.'/assets' => public_path(''),
-        ], 'public');
+        ], 'styles');
 
         // Publicar archivos de config
         $this->publishes([
             __DIR__.'/config' => config_path(''),
-        ]);
+        ], 'config_files');
 
         // Publicar archivos de base de datos
         $this->publishes([
             __DIR__.'/database/migrations' => database_path('migrations/'),
-        ]);
+        ], 'migration_files');
+
         $this->publishes([
             __DIR__.'/database/seeders' => database_path('seeders/'),
-        ]);
+        ], 'seeder_files');
     }
     */
 }

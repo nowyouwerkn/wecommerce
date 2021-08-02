@@ -1,11 +1,11 @@
 <div class="content-header">
-    <div class="content-search">
-        <i data-feather="search"></i>
-        <input type="search" class="form-control" placeholder="Búsqueda General...">
-    </div>
+    <form class="content-search" role="search" action="{{ route('back.search.query') }}" style="width: 300px;">
+        <button type="submit" class="btn btn-link p-0"><i data-feather="search"></i></button>
+        <input type="search" name="query" class="form-control" placeholder="Buscar por SKU, Nombre o Etiquetas...">
+    </form>
     
     <nav class="nav">
-        <div class="dropdown dropdown-notification">
+        <div class="dropdown dropdown-notification ml-3">
             @php
                 $notifications = Nowyouwerkn\WeCommerce\Models\Notification::where('read_at', NULL)->orderBy('created_at', 'desc')->take(5)->get();
 
@@ -52,6 +52,8 @@
         </div><!-- dropdown -->
 
         <a href="{{ route('configuration') }}" class="nav-link ml-4"><i data-feather="settings"></i></a>
+
+        <a href="https://github.com/nowyouwerkn/wecommerce/blob/main/CHANGELOG.md" target="_blank" class="badge badge-info ml-3" style="line-height: 14px;">v. 1.0.3</a>
     </nav>
 
 </div>

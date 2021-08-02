@@ -126,7 +126,7 @@
 	                <td>{{ $variant->variants->type ?? 'Talla'}}</td>
 	                <td class="text-right">{{ $variant->variants->value }}</td>
 	                <td class="text-right">
-	                	<div class="input-group">
+	                	<div class="input-group" style="min-width: 80px;">
 	                		<div class="input-group-prepend">
 							    <span class="input-group-text" id="basic-addon1" style="height:36px">$</span>
 							 </div>

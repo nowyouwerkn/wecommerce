@@ -46,7 +46,7 @@
                 <li>Facebook Pixel</li>
                 <li>Jivo Chat</li>
                 <li>Sirvoy</li>
-                <li>Acuity Sscheduling</li>
+                <li>Acuity Scheduling</li>
                 <li>Calendly</li>
                 <li>y mas...</li>
             </ul>

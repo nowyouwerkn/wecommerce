@@ -50,11 +50,11 @@
                         <h4>
                             @switch($legal->type)
                                 @case('Returns')
-                                    Política de Devoluciones
+                                    Cambios y Devoluciones
                                     @break
 
                                 @case('Privacy')
-                                    Política de Privacidad
+                                    Aviso de Privacidad
                                     @break
 
                                 @case('Terms')

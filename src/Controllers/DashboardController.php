@@ -148,4 +148,38 @@ class DashboardController extends Controller
 
         return view('wecommerce::back.config_steps.step2')->with('config', $config);
     }
+
+    public function changeColor()
+    {
+        $user_id = Auth::user()->id;
+
+        $user = User::find($user_id);
+
+        if ($user->color_mode == 0) {
+            $user->color_mode = 1;
+        }else{
+            $user->color_mode = 0;
+        }
+        $user->save();
+
+        // Mensaje de session
+        Session::flash('success', 'Modo de color cambiado exitosamente.');
+
+        return redirect()->back();
+    }
+
+    public function generalSearch(Request $request)
+    {   
+        $search_query = $request->input('query');
+
+        $products = Product::where('name', 'LIKE', "%{$search_query}%")
+        ->where('category_id', '!=', NULL)
+        ->orWhere('description', 'LIKE', "%{$search_query}%")
+        ->orWhere('search_tags', 'LIKE', "%{$search_query}%")
+        ->orWhereHas('category', function ($query) use ($search_query) {
+            $query->where(strtolower('name'), 'LIKE', '%' . strtolower($search_query) . '%');
+        })->paginate(30);
+
+        return view('wecommerce::back.general_search')->with('products', $products);
+    }
 }

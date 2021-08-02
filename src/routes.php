@@ -42,6 +42,13 @@ Route::prefix('/instalador')->group(function () {
 Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     //Dashboard
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@index')->name('dashboard'); //
+    Route::get('/change-color', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@changeColor',
+        'as' => 'change.color',
+    ]);
+
+
+
     Route::resource('banners', 'Nowyouwerkn\WeCommerce\Controllers\BannerController');
 
     Route::post('/banners/status/{id}', [
@@ -197,6 +204,13 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\NotificationController@resendOrder',
         'as' => 'resend.order.mail',
     ]);
+
+    // Búsqueda
+    Route::get('/busqueda-general', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@generalSearch',
+        'as' => 'back.search.query',
+    ]);
+
 });
 
 // Shopping Cart

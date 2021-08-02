@@ -40,6 +40,11 @@
 
     <!-- DashForge CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/dashforge.css') }}">
+
+    @if(Auth::user()->color_mode == true)
+    <link rel="stylesheet" href="{{ asset('assets/css/skin.dark.css') }}">
+    @endif
+
     <link rel="stylesheet" href="{{ asset('assets/css/dashforge.dashboard.css') }}">
 
     @php

@@ -13,10 +13,20 @@ use Str;
 use Nowyouwerkn\WeCommerce\Models\Integration;
 use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 
+/* Notificaciones */
+use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
+
 use Illuminate\Http\Request;
 
 class IntegrationController extends Controller
 {
+    private $notification;
+
+    public function __construct()
+    {
+        $this->notification = new NotificationController;
+    }
+    
     public function index()
     {
         $integrations = Integration::all();
@@ -84,6 +94,20 @@ class IntegrationController extends Controller
 
     public function destroy($id)
     {
+        $config = Integration::find($id);
+
+        // Notificación
+        $type = 'delete';
+        $by = Auth::user();
+        $data = 'eliminó la integración "' . $config->name . '" de la página web.';
+
+        $this->notification->send($type, $by ,$data);
+
         //
+        $config->delete();
+
+        Session::flash('success', 'Se eliminó la integración correctamente.');
+
+        return redirect()->back();
     }
 }

@@ -24,7 +24,7 @@ class Product extends Model
 
     public function variants()
     {
-        return $this->belongsToMany(Variant::class, 'product_variants', 'product_id', 'variant_id')->withPivot('stock', 'sku', 'new_price');
+        return $this->belongsToMany(Variant::class, 'product_variants', 'product_id', 'variant_id')->orderBy('value', 'asc')->withPivot('stock', 'sku', 'new_price');
     }
 
     public function variants_stock()
