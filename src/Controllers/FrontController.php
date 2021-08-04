@@ -1119,7 +1119,7 @@ class FrontController extends Controller
     {
         $text = LegalText::where('type', $type)->first();
 
-        return view('front.theme.arenas.legal')->with('text', $text);
+        return view('front.theme.' . $this->theme->get_name() . '.legal')->with('text', $text);
     }
 
 }

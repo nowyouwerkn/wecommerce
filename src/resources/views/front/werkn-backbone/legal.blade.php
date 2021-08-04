@@ -48,8 +48,8 @@
 
 				<br>
 				<br>
-
-				{{ $text->description }}
+                
+				{!! $text->description !!}
 
 				<br>
 				<br>

@@ -29,6 +29,37 @@
             color: rgba(0, 0, 0, 0.8);
             font-size: .9em;
         }
+
+        .circle-icon{
+            border-radius: 100%;
+            text-align: center;
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            padding: 4px 5px;
+        }
+
+        .success-update{
+            background-color: #10b759;
+            width: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 100%;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            z-index: 2;
+            color: #fff;
+            opacity: .7;
+            padding: 27px 0px;
+            display: none;
+        }
+
+        .child-row{
+            position: relative;
+            overflow: hidden;
+        }
     </style>
 @endsection
 
@@ -65,7 +96,7 @@
                             @foreach($products as $product)
                             <tr class="parent" id="row{{ $product->id }}" title="Click to expand/collapse" style="cursor: pointer;">
                                 <td>
-                                    <span class="bg-success p-1 text-white mr-2"><i class="fas fa-plus-circle"></i></span>
+                                    <span class="circle-icon bg-success text-white"><i class="fas fa-plus-circle"></i></span>
                                     <span style="font-weight: bold; font-size:1.2em;">{{ $product->variants->count() }}</span>
                                 </td>
                                 <td class="tx-color-03 tx-normal image-table td-tight">
@@ -119,40 +150,40 @@
                                 <td></td>
                             </tr>
                                 @foreach($product->variants_stock as $variant)
-                                <tr class="bg-light child-row{{ $product->id }}" style="display: none;">
-                                    <form method="POST" action="{{ route('stock.update', $variant->id) }}" style="display: inline-block;">
+                                <tr class="bg-light child-row child-row{{ $product->id }}" style="display: none;">
+                                    <form method="POST" id="form{{ $variant->id }}" action="{{ route('stock.update', $variant->id) }}" style="display: inline-block;">
                                         {{ csrf_field() }}
                                         {{ method_field('PUT') }}
 
                                         <td class="tx-color-03 tx-normal image-table">
-                                            
+                                            <span id="success-update{{ $variant->id }}" class="success-update"><i class="fas fa-check mr-2"></i> Actualización exitosa </span>
                                         </td>
                                         <td>
                                             
                                         </td>
                                         <td>
-                                            <input type="text" name="sku_variant" class="form-control variant-form-control" value="{{ $variant->sku }}" style="width: 150px;">
+                                            <input type="text" name="sku_variant" class="form-control variant-form-control" value="{{ $variant->sku }}" id="skuVariant{{ $variant->id }}" style="width: 150px;">
                                         </td>
                                         <td><strong>{{ $variant->variants->value }}</strong> <br><p>{{ $variant->variants->type ?? 'Talla'}}</p></td>
                                         <td>
-                                            <div class="input-group">
+                                            <div class="input-group" style="min-width: 80px;">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text" id="basic-addon1" style="height:36px">$</span>
                                                  </div>
                                             
                                                 @if($variant->new_price == NULL)
-                                                <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $product->price }}" style="width:50px;">
+                                                <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $product->price }}" id="priceVariant{{ $variant->id }}" style="width:50px;">
                                                 @else
-                                                <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $variant->new_price }}" style="width:50px;">
+                                                <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $variant->new_price }}" id="priceVariant{{ $variant->id }}" style="width:50px;">
                                                 @endif
                                             </div>
                                         </td>
 
                                         <td>
-                                            <input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $variant->stock }}" style="width:80px;">
+                                            <input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $variant->stock }}" id="stockVariant{{ $variant->id }}" style="width:80px;">
                                         </td>
                                         <td>
-                                            <button type="submit" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
+                                            <button id="updateForm{{ $variant->id }}" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
                                                 <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
                                             </button>
 
@@ -167,6 +198,34 @@
                                             </form>
 
                                             <script type="text/javascript">
+                                                $('#updateForm{{ $variant->id }}').on('click', function(){
+                                                    event.preventDefault();
+
+                                                    $.ajax({
+                                                        method: 'POST',
+                                                        url: "{{ route('stock.update', $variant->id) }}",
+                                                        data:{
+                                                            sku_variant: $('#skuVariant{{ $variant->id }}').val(),
+                                                            price_variant: $('#priceVariant{{ $variant->id }}').val(),
+                                                            stock_variant: $('#stockVariant{{ $variant->id }}').val(),
+                                                            _method: "PUT",
+                                                            _token: "{{ Session::token() }}", 
+                                                        },
+                                                        success: function(msg){
+                                                            console.log(msg['mensaje']);
+
+                                                            $('#success-update{{ $variant->id }}').fadeIn();
+
+                                                            setTimeout(function () {
+                                                                $('#success-update{{ $variant->id }}').fadeOut();
+                                                            }, 500);
+                                                        },
+                                                        error: function(msg){
+                                                            console.log(msg);         
+                                                        }
+                                                    });
+                                                });
+
                                                 $('#deleteVariant_{{ $variant->id }}').on('click', function(){
                                                     event.preventDefault();
                                                     $('#deleteVariantForm_{{ $variant->id }}').submit();

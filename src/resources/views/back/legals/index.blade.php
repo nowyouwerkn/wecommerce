@@ -1,5 +1,18 @@
 @extends('wecommerce::back.layouts.main')
 
+
+@push('stylesheets')
+<link href="{{ asset('lib/quill/quill.core.css') }}" rel="stylesheet">
+<link href="{{ asset('lib/quill/quill.snow.css') }}" rel="stylesheet">
+<link href="{{ asset('lib/quill/quill.bubble.css') }}" rel="stylesheet">
+
+<style type="text/css">
+    .ht-350{
+        height: 350px;
+    }
+</style>
+@endpush
+
 @section('title')
     <div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">
         <div>
@@ -47,7 +60,7 @@
                 {{ method_field('PUT') }}
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h4>
+                        <h4 class="mb-3">
                             @switch($legal->type)
                                 @case('Returns')
                                     Cambios y Devoluciones
@@ -70,10 +83,16 @@
                             @endswitch
                         </h4>
 
-                        <div class="form-group">
+                    
                             <input type="hidden" name="type" value="{{ $legal->type }}">
-                            <textarea name="description" id="" class="form-control" cols="30" rows="10">{!! $legal->description ?? '' !!}</textarea>
+                            <!--<textarea name="description" id="" class="form-control" cols="30" rows="10">{!! $legal->description ?? '' !!}</textarea>-->
+
+
+                        <div id="editor-container-{{ $legal->id }}" class="ht-350 mb-4">
+                            {!! $legal->description ?? '' !!}
                         </div>
+                        
+                        <textarea id="justHtml_{{ $legal->id }}" name="description" required="" style="display:none;">{!! $legal->description ?? '' !!}</textarea>
 
                         <button type="submit" class="btn btn-outline-success"><i class="far fa-save"></i> Guardar información</a>
                     </div>
@@ -84,3 +103,53 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('lib/quill/quill.min.js') }}"></script>
+
+@foreach($legals as $legal)
+<script type="text/javascript">
+    
+    var options_{{ $legal->id }} = {
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic'],
+                ['link'],
+                [{ list: 'ordered' }, { list: 'bullet' }]
+            ]
+        },
+        placeholder: 'Comienza a escribir aqui...',
+        theme: 'snow'
+    };
+
+    var editor_{{ $legal->id }} = new Quill('#editor-container-{{ $legal->id }}', options_{{ $legal->id }});
+    var justHtmlContent_{{ $legal->id }} = document.getElementById('justHtml_{{ $legal->id }}');
+
+    editor_{{ $legal->id }}.on('text-change', function() {
+      var justHtml_{{ $legal->id }} = editor_{{ $legal->id }}.root.innerHTML;
+      justHtmlContent_{{ $legal->id }}.innerHTML = justHtml_{{ $legal->id }};
+    });
+
+
+    /*
+    $(function(){
+        'use strict'
+
+        var quill = new Quill('#editor-container-{{ $legal->id }}', {
+          modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic'],
+                ['link'],
+                [{ list: 'ordered' }, { list: 'bullet' }]
+            ]
+          },
+          placeholder: 'Comienza a escribir aqui...',
+          theme: 'snow'
+        });
+    });
+    */
+</script>
+@endforeach
+@endpush

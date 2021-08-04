@@ -159,7 +159,7 @@
                                 <img class="img-fluid" src="{{ asset('assets/img/brands/stripe.png') }}">
                             </div>
                             <div class="col-md-9">
-                                <h5 class="card-title text-secondary mb-1">Stripe Payment ID</h5>
+                                <h5 class="card-title text-secondary mb-1">ID de Pago</h5>
                                 <p class="card-text">{{ $order->payment_id }}</p>
                             </div>
                         </div>
@@ -170,7 +170,6 @@
         </div>
     </div> 
 </div>
-
 <!-- Modal -->
 
 @if($shipping_method != 0)
@@ -352,26 +351,109 @@
                     </div>
                 </div>
 
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h5 class="mb-2 mt-1">Dirección de Envío </h5>
-                                <ul class="list-unstyled">
-                                    <li><strong>Calle + Num:</strong> {{ $order->street }} {{ $order->street_num }}</li>
-                                    <li><strong>Código Postal:</strong> {{ $order->postal_code }}</li>
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="mb-0">Guía de Envío</h4>
+                                    </div>
+                                    <div class="col text-right dont-print">
+                                        <a data-toggle="modal" data-target="#trackingModal" class="btn btn-outline-secondary"><i class="iconsminds-box-close"></i> Adjuntar Guía</a>
+                                    </div>
+                                </div>
+                                <hr>
 
-                                    <li><strong>Ciudad:</strong> {{ $order->city }}</li>
-                                    <li><strong>Estado:</strong> {{ $order->state }}</li>
-                                    <li><strong>País:</strong> {{ $order->country }}</li>
-                                </ul>
+                                @if($order->trackings->count())
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Servicio</th>
+                                                <th>Guía</th>
+                                                <th>Notas</th>
+                                                <th>Estado</th>
+                                                <th>Entrega</th>
+                                                <th class="dont-print">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($order->trackings as $tracking)
+                                            <tr>
+                                                <td>{{ $tracking->service_name }}</td>
+                                                <td>{{ $tracking->tracking_number }}</td>
+                                                <td>{{ $tracking->products_on_order }}</td>
+                                                <td>
+                                                    @if($tracking->status == 'En proceso')
+                                                    <span class="badge badge-warning">{{ $tracking->status }}</span>
+                                                    @endif
+                                                    @if($tracking->status == 'Completado')
+                                                    <span class="badge badge-success">{{ $tracking->status }}</span>
+                                                    @endif
+                                                    @if($tracking->status == 'Perdido')
+                                                    <span class="badge badge-warning">{{ $tracking->status }}</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($tracking->is_delivered  == true)
+                                                    <a href="javascript:void(0)" class="btn btn-sm btn-success disabled"><i class="simple-icon-check"></i> Entregado</a>
+                                                    @else
+                                                    <a href="{{ route('tracking.complete', $tracking->id) }}" class="btn btn-sm btn-info"><i class="simple-icon-check"></i> Marcar Entrega</a>
+                                                    @endif
+                                                </td>
+                                                <td class="text-nowrap dont-print">
+                                                    <a href="" class="btn btn-sm btn-icon btn-flat btn-default" data-toggle="tooltip" data-original-title="Reenviar correo">
+                                                        <i class="iconsminds-mail-send"></i> Reenviar correo
+                                                    </a>
+
+                                                    <form method="POST" action="{{ route('tracking.destroy', $tracking->id) }}" style="display: inline-block;">
+                                                        <button type="submit" class="btn btn-sm btn-icon btn-flat btn-default" data-toggle="tooltip" data-original-title="Borrar">
+                                                            <i class="simple-icon-trash" aria-hidden="true"></i>
+                                                        </button>
+                                                        {{ csrf_field() }}
+                                                        {{ method_field('DELETE') }}
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                @else
+                                <div class="text-center my-5">
+                                    <h4 class="mb-0">¡Todavía no se asigna una guía para esta orden!</h4>
+                                    <p>¡Realiza el proceso necesario para comenzar!</p>
+                                </div>
+                                @endif
                             </div>
-                            <div class="col-md-8">
-                                <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDhjSfxxL1-NdSlgkiDo5KErlb7rXU5Yw4&q={{ str_replace(' ', '-', $order->street . ' ' . $order->street_num) }},{{ $order->city }},{{ $order->state }},{{ $order->country }}" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen class="mt-0 dont-print"></iframe>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5 class="mb-2 mt-1">Dirección de Envío </h5>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Calle + Num:</strong> {{ $order->street }} {{ $order->street_num }}</li>
+                                            <li><strong>Código Postal:</strong> {{ $order->postal_code }}</li>
+
+                                            <li><strong>Ciudad:</strong> {{ $order->city }}</li>
+                                            <li><strong>Estado:</strong> {{ $order->state }}</li>
+                                            <li><strong>País:</strong> {{ $order->country }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDhjSfxxL1-NdSlgkiDo5KErlb7rXU5Yw4&q={{ str_replace(' ', '-', $order->street . ' ' . $order->street_num) }},{{ $order->city }},{{ $order->state }},{{ $order->country }}" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen class="mt-0 dont-print"></iframe>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                
 
                 <div class="card mb-4">
                     <div class="card-body">
@@ -426,7 +508,54 @@
         </div> 
     </div>
 
-    <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="trackingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Guía de Envío</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ route('tracking.store') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Servicio / Proveedor</label>
+                                <input type="text" class="form-control" name="service_name" placeholder="" required="">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Número de Guía</label>
+                                <input type="text" class="form-control" name="tracking_number" placeholder="" required="">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Nota de Guía / Productos en Envio</label>
+                                <textarea class="form-control" name="products_on_order" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="order_id" value="{{ $order->id }}">
+                    <input type="hidden" name="user_id" value="{{ $order->user->id }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">

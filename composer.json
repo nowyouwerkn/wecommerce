@@ -9,7 +9,7 @@
         "checkout"
     ],
     "type": "library",
-    "version": "1.0.0-alpha",
+    "version": "1.0.3",
     "authors": [
         {
             "name": "Jorge Peña Lama",
@@ -35,7 +35,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require":{
-        "php": "^7.3|^8.0",
+        "php": "^8.0",
         "ext-fileinfo": "*",
         "laravel/framework": "^8.12",
         "conekta/conekta-php": "^4.3",

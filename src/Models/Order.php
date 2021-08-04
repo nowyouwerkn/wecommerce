@@ -19,4 +19,9 @@ class Order extends Model
     	return $this->hasMany(OrderNote::class, 'order_id');
     }
 
+    public function trackings()
+    {
+        return $this->hasMany(OrderTracking::class, 'order_id');
+    }
+
 }

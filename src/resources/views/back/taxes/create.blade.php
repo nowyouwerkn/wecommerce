@@ -99,7 +99,7 @@
             <form method="POST" action="{{ route('taxes.store') }}" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <input type="hidden" name="country_id" value="{{ $country->id }}">
-                <input type="hidden" name="parent_tax_id" value="{{ $tax->id }}">
+                <input type="hidden" name="parent_tax_id" value="{{ $tax->id ?? '' }}">
 
                 <div class="modal-body pd-25">
                     <div class="row">

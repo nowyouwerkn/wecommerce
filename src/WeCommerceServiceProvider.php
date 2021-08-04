@@ -11,8 +11,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Nowyouwerkn\WeCommerce\Models\StoreTheme;
 
 /* Fortify Auth */
-use Nowyouwerkn\WeCommerce\Responses\LoginResponse;
 use Laravel\Fortify\Fortify;
+use Nowyouwerkn\WeCommerce\Services\Auth\CreateNewUser as NewUser;
+
+use Nowyouwerkn\WeCommerce\Responses\LoginResponse;
 
 class WeCommerceServiceProvider extends ServiceProvider
 {
@@ -82,6 +84,8 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->theme = new StoreTheme;
 
         // Vistas de autenticación usando Fortify
+        Fortify::createUsersUsing(NewUser::class);
+
         Fortify::loginView(function () {
             return view('front.theme.' . $this->theme->get_name() . '.auth');
         });

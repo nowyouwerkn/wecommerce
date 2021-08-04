@@ -135,6 +135,13 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
 
     Route::resource('orders/notes', Nowyouwerkn\WeCommerce\Controllers\OrderNoteController::class); //
 
+    Route::resource('/orders/tracking',  Nowyouwerkn\WeCommerce\Controllers\OrderTrackingController::class);
+    
+    Route::get('/orders/tracking/complete/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderTrackingController@updateComplete',
+        'as' => 'tracking.complete',
+    ]);
+
     Route::resource('coupons', Nowyouwerkn\WeCommerce\Controllers\CouponController::class); //
     Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class); //  
 

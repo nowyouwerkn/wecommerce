@@ -19,8 +19,15 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
-        $roles = Role::all();
+        //$users = User::all();
+
+        $webmaster = User::role('webmaster')->get();
+        $admin  = User::role('admin')->get();
+        $analyst  = User::role('analyst')->get();
+
+        $users = $webmaster->merge($admin->merge($analyst));
+
+        $roles = Role::where('name', '!=', 'customer')->get();
 
         return view('wecommerce::back.users.index')->with('users', $users)->with('roles', $roles);
     }
