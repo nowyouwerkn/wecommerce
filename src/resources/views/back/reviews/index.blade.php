@@ -76,7 +76,13 @@
                     <td><a href="">{{ $review->product->name }}</a></td>
                     <td>{{ $review->review }}</td>
                     <td>
-                        <a href="#" class="btn btn-sm pd-x-15 btn-outline-danger btn-uppercase mg-l-5"><i class="fas fa-ban"></i> Borrar</a>
+                        <form method="POST" action="{{ route('reviews.destroy', $review->id) }}" style="display: inline-block;">
+                            <button type="submit" class="btn btn-sm pd-x-15 btn-outline-danger btn-uppercase mg-l-5">
+                                Eliminar <i class="fas fa-times" aria-hidden="true"></i>
+                            </button>
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+                        </form>
                     </td>
                 </tr>
                 @endforeach

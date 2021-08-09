@@ -21,7 +21,6 @@ use PayPal\Api\PaymentExecution;
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 
-
 /* E-commerce Models */
 use Config;
 use Mail;
@@ -68,10 +67,11 @@ class FrontController extends Controller
         $this->theme = new StoreTheme;
         $this->store_config = new StoreConfig;
     }
+    
     public function index ()
     {
         $products = Product::where('in_index', true)->where('status', 'Publicado')->get()->take(6);
-        $main_categories = Category::where('parent_id', '0')->orWhere('parent_id', NULL)->get()->take(3);
+        $main_categories = Category::where('parent_id', '0')->orWhere('parent_id', NULL)->get()->take(4);
 
         $banner = Banner::where('is_active', true)->first();
 
@@ -88,18 +88,24 @@ class FrontController extends Controller
 
     public function dynamicFilter(Request $request)
     {
+        /*
         $total_products = Product::all()->count();
 
-        $selected_cat_type = $request->cat_type;
-        //$selected_variant = $request->variant;
-        
-        $query = Product::select('*')->where('in_index', true)->where('status', 'Publicado');
+        $selected_cat_type = $request->category;
+        $selected_variant = $request->variant;
+            
+        //$query = Product::select('*')->where('in_index', true)->where('status', 'Publicado');
+        $query = Product::where('in_index', true)->where('status', 'Publicado');
 
-        if (isset($selected_cat_type)) {
+        if ($request->has('category')) {
             $category = Category::where('slug', $selected_cat_type)->first();
-
             $query->where('category_id', $category->id);
         }
+
+        if ($request->has('variant')) {
+            $query->where('category_id', $category->id);
+        }
+
 
         $products = $query->paginate(30)->withQueryString();
 
@@ -112,6 +118,47 @@ class FrontController extends Controller
             return view('front.theme.' . $this->theme->get_name() . '.catalog_filter')
             ->with('products', $products);
         }
+        */
+
+        $total_products = Product::all()->count();
+
+        $input = $request->all();
+
+        $selected_category = $request->category;
+        $selected_variant = $request->variant;
+        
+        //$query = DB::table('products');
+        $query = Product::select('*')->where('in_index', true)->where('status', 'Publicado');
+
+        if (isset($selected_category)) {
+            $query->whereHas('category', function ($query) use ($selected_category) {
+                $query->whereIn('slug', $selected_category);
+            });
+        }
+
+        if (isset($selected_variant)) {
+            $query->whereHas('variants', function ($query) use ($selected_variant) {
+                $query->whereIn('value', $selected_variant);
+            });
+        }
+
+        $products = $query->paginate(30)->withQueryString();
+
+        if($products->count() > 0){
+            return view('front.theme.' . $this->theme->get_name() . '.catalog_filter')
+            ->with('products', $products)
+            ->with('total_products', $total_products)
+            ->with('selected_category', $selected_category)
+            ->with('selected_variant', $selected_variant);
+        }else{
+            $products = collect([]);
+
+            return view('front.theme.' . $this->theme->get_name() . '.catalog_filter')
+            ->with('products', $products)
+            ->with('total_products', $total_products)
+            ->with('selected_category', $selected_category)
+            ->with('selected_variant', $selected_variant);
+        }   
     }
 
     public function catalogAll()
@@ -1112,7 +1159,7 @@ class FrontController extends Controller
     {   
         $items = Product::all();
         
-        return view('weecommerce:feeds.xml')->with('items', $items);
+        return view('wecommerce::feeds.xml')->with('items', $items);
     }
 
     public function legalText($type)

@@ -347,7 +347,7 @@
                         @endforeach
 
                         <hr class="dont-print">
-                        <a href="javascript:void(0)" data-toggle="modal" data-target="#resendMail" class="btn btn-outline-info dont-print"><i class="iconsminds-mail-send"></i> Reenviar confirmación de orden</a>
+                        <a href="javascript:void(0)" data-toggle="modal" data-target="#resendMail" class="btn btn-outline-info dont-print"><i class="fas fa-envelope"></i> Reenviar confirmación de orden</a>
                     </div>
                 </div>
 
@@ -397,14 +397,14 @@
                                                 </td>
                                                 <td>
                                                     @if($tracking->is_delivered  == true)
-                                                    <a href="javascript:void(0)" class="btn btn-sm btn-success disabled"><i class="simple-icon-check"></i> Entregado</a>
+                                                    <a href="javascript:void(0)" class="btn btn-sm btn-success disabled"><i class="fas fa-check"></i> Entregado</a>
                                                     @else
-                                                    <a href="{{ route('tracking.complete', $tracking->id) }}" class="btn btn-sm btn-info"><i class="simple-icon-check"></i> Marcar Entrega</a>
+                                                    <a href="{{ route('tracking.complete', $tracking->id) }}" class="btn btn-sm btn-info"><i class="fas fa-check"></i> Marcar Entrega</a>
                                                     @endif
                                                 </td>
                                                 <td class="text-nowrap dont-print">
                                                     <a href="" class="btn btn-sm btn-icon btn-flat btn-default" data-toggle="tooltip" data-original-title="Reenviar correo">
-                                                        <i class="iconsminds-mail-send"></i> Reenviar correo
+                                                        <i class="fas fa-envelope"></i> Reenviar correo
                                                     </a>
 
                                                     <form method="POST" action="{{ route('tracking.destroy', $tracking->id) }}" style="display: inline-block;">

@@ -12,119 +12,163 @@
             <h4 class="mg-b-0 tx-spacing--1">Variantes</h4>
         </div>
         <div class="d-none d-md-block">
-            <a href="#" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
-                Exportar
-            </a>
-            <a href="#" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5">
-                Importar
-            </a>
-            <a href="{{ route('variants.create') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Agregar categorias
+            <a data-toggle="modal" data-target="#modalCreate" href="javascript:void(0)" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
+                Agregar Variante
             </a>
         </div>
     </div>
 @endsection
+
+@push('stylesheets')
+<style type="text/css">
+    .action-btns{
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+    }
+
+    .action-btns .btn-rounded{
+        padding: 0px;
+        height: 20px;
+        width: 20px;
+        text-align: center;
+        line-height: 16px;
+        font-size: .8em;
+    }
+</style>
+@endpush
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 col-xl-12 mg-t-10">
-            <div class="card mg-b-10">
-                <div class="card-body pd-y-30">
-                    <!-- Filters -->
-                    <div class="mb-4">
-                        <form action="{{ route('variants.index') }}" method="GET" class="d-flex">
-                            <div class="content-search col-6">
-                                <i data-feather="search"></i>
-                                <input type="search" class="form-control" name="name" placeholder="Buscar categoria...">
-                            </div>
+@if($variants->count() == 0)
+<div class="card card-body text-center" style="padding:80px 0px 100px 0px;">
+    <img src="{{ asset('assets/img/group.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
+    <h4>¡No hay variantes guardadas en la base de datos!</h4>
+    <p class="mb-4">Empieza a cargar categorías en tu plataforma usando el botón superior.</p>
+    <a href="{{ route('variants.create') }}" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Agregar Nueva Variante</a>
+</div>
+@else
+<div class="row">
+    @foreach($variants as $variant)
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="action-btns">
+                <ul class="list-inline">
+                    <!--
+                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal_{{ $variant->id }}" class="btn btn-rounded btn-icon btn-dark waves-effect waves-light"><i class="fa fa-wrench"></i></a></li>
+                    <li class="list-inline-item"><a  data-toggle="tooltip" title="" data-original-title="Detalle" href="{{ route('variants.show', $variant->id) }}" class="btn btn-rounded btn-icon btn-dark waves-effect waves-light"><i class="fa fa-eye"></i></a></li>
+                    -->
 
-                            <select class="custom-select tx-13" name="order">
-                                <option selected disabled="disabled">Ordenar</option>
-                                <option value="desc">Recientes</option>
-                                <option value="asc">Antiguos</option>
-                            </select>
+                    @if($variant->products->count() === 0)
+                    <li class="list-inline-item">
+                        <form method="POST" action="{{ route('variants.destroy', $variant->id) }}" style="display: inline-block;">
+                            <button type="submit" class="btn btn-rounded btn-icon btn-danger waves-effect waves-light" data-toggle="tooltip" data-original-title="Borrar">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
                         </form>
+                    </li>
+                    @endif
+                </ul>
+
+                <div class="modal fade" id="editModal_{{ $variant->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Editar Elemento</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form method="POST" action="{{ route('variants.update', $variant->id) }}" enctype="multipart/form-data">
+                            {{ csrf_field() }}
+                            {{ method_field('PUT') }}
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Nombre de Variante</label>
+                                                <input type="text" class="form-control" name="value" value="{{ $variant->value }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Table -->
-                <div class="table-responsive">
-                    <table class="table table-dashboard mg-b-0">
-                        <thead>
-                            <tr>
-                                <th>Tipo</th>
-                                <th>Variante</th>
-                                <th class="text-right">Fecha de creación</th>
-                                <th class="text-right">Fecha de edición</th>
-                                <th class="text-right">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($variantTypes as $variantType)
-                                <tr>
-                                    <td>
-                                        {{ $variantType->name }}
-                                    </td>
-                                    <td class="d-flex">
-                                        @foreach ($variantType->variants as $vars)
-                                            {{ $vars->name }} 
-                                        @endforeach
-                                    </td>
-                                    <td class="text-right">{{ $variantType->created_at }}</td>
-                                    <td class="text-right">{{ $variantType->updated_at }}</td>
-                                    <td class="text-right">
-                                        <nav class="nav nav-icon-only justify-content-end">
-                                            <a href="{{ route('variants.edit', $variantType) }}" class="nav-link d-none d-sm-block">
-                                                <i class="far fa-edit"></i>
-                                            </a>
-
-                                            <form action="{{ route('variants.destroy', $variantType) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn nav-link d-none d-sm-block">
-                                                    <i class="far fa-trash-alt"></i>
-                                                </button>
-                                            </form>
-
-                                            <a href="#add" data-toggle="modal" class="nav-link d-none d-sm-block">
-                                                <i class="far fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('variants.storeStock') }}" method="POST">
-                                                @csrf
-                                                @method('POST')
-                                                <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                                        <div class="modal-content tx-14">
-                                                            <div class="modal-header">
-                                                                <h6 class="modal-title" id="exampleModalLabel2">Modal Title</h6>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <label for="name">Nombre de la variante</label>
-                                                                        <input type="text" name="name" class="form-control" >
-                                                                        <input type="text" name="type_id" value="{{ $variantType->id }}">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="submit" class="btn btn-primary tx-13">Save changes</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </nav>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title display-4 mb-1">{{ $variant->value }}</h5>               
+                <p>Productos con esta variante: {{ $variant->products->count() }}</p>
+                <p class="card-text mb-0 mt-3">
+                    <small class="text-muted">Actualizado por última vez: <br>{{ $variant->updated_at }}</small>
+                </p>
             </div>
         </div>
-    </div>
+    </div>      
+    @endforeach
+</div>
+@endif
+
+<div id="modalCreate" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear Nuevo Elemento</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ route('variants.store') }}">
+            {{ csrf_field() }}
+                <div class="modal-body pd-25">
+                    <div class="row">
+                        <div class="form-group col-12">
+                            <label class="form-control-label" for="value">Nombre de Variante</label>
+                            <input type="text" class="form-control" name="value" value="" required autofocus>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
 @endsection
+
+@push('scripts')
+<script>
+    $(".delete").on("submit", function(){
+        return confirm("¿Estas seguro de querer eliminar este registro?");
+    });
+
+    $(function(){
+        'use strict';
+
+        // Initialize tooltip
+        $('[data-toggle="tooltip"]').tooltip();
+
+        // colored tooltip
+        $('[data-toggle="tooltip-primary"]').tooltip({
+          template: '<div class="tooltip tooltip-primary" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+        });
+
+        $('[data-toggle="tooltip-info"]').tooltip({
+          template: '<div class="tooltip tooltip-info" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+        });
+
+        $('[data-toggle="tooltip-danger"]').tooltip({
+          template: '<div class="tooltip tooltip-danger" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+        });
+    });
+</script>
+@endpush

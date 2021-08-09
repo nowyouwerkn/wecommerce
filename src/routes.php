@@ -47,8 +47,6 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
         'as' => 'change.color',
     ]);
 
-
-
     Route::resource('banners', 'Nowyouwerkn\WeCommerce\Controllers\BannerController');
 
     Route::post('/banners/status/{id}', [
@@ -95,6 +93,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     ]);
 
     Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
+    Route::resource('variants', Nowyouwerkn\WeCommerce\Controllers\VariantController::class); //
     Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
     /*
     Route::post('variants/storeStock', 'Nowyouwerkn\WeCommerce\Controllers\VariantTypeController@storeStock')->name('variants.storeStock');
@@ -145,7 +144,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     Route::resource('coupons', Nowyouwerkn\WeCommerce\Controllers\CouponController::class); //
     Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class); //  
 
-    Route::get('/reviews/{id}',[
+    Route::get('/reviews/aprobar/{id}',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ReviewController@approve',
         'as' => 'review.approve',
     ]);

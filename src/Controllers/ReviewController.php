@@ -124,6 +124,8 @@ class ReviewController extends Controller
 
         $this->notification->send($type, $by ,$data);
 
+        Session::flash('success', 'Reseña eliminada exitosamente. Ya no se mostrará en los productos.');
+
         return redirect()->back();
     }
 }

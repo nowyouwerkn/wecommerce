@@ -88,6 +88,9 @@
                         <a href="{{ route('stocks.index') }}">Inventario</a>
                     </li>
                     <li>
+                        <a href="{{ route('variants.index') }}">Variantes</a>
+                    </li>
+                    <li>
                         <a href="{{ route('categories.index') }}">Colecciones</a>
                     </li>
                 </ul>
