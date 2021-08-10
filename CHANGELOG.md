@@ -9,6 +9,7 @@ Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
 ### Reparado
 - Funcionalidad de filtrado de catálogo ahora funciona correctamente. Toma en cuenta todas las variantes y las filtra de acuerdo a la selección.
+- Problema de integridad de base de datos al borrar cupones solucionado.
 
 
 ## 1.0.3 - 2021-07-14
