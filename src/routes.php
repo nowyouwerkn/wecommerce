@@ -315,6 +315,7 @@ Route::get('/busqueda-general', [
 Route::get('cart', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@cart')->name('cart');
 Route::get('/checkout', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkout')->name('checkout');
 Route::get('/checkout-cash', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutCash')->name('checkout.cash');
+Route::get('/checkout-paypal', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutPaypal')->name('checkout.paypal');
 
 Route::post('/checkout',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckout',
@@ -324,6 +325,16 @@ Route::post('/checkout',[
 Route::post('/checkout-cash',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutCash',
     'as' => 'checkout.cash',
+]);
+
+Route::post('/checkout-paypal',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutPaypal',
+    'as' => 'checkout.paypal',
+]);
+
+Route::get('/paypal/status',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@payPalStatus',
+    'as' => 'paypal.status',
 ]);
 
 /* Cuopon Validation on Checkout */

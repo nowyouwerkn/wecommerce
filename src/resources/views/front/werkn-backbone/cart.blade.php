@@ -125,12 +125,17 @@
                             </ul>
                             
                             @php
-                                $card_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'card')->where('is_active', true)->first();
+                                $card_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', '!=','Paypal')->where('type', 'card')->where('is_active', true)->first();
                                 $cash_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
+                                $paypal_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
                             @endphp
                                             
+                            @if(!empty($paypal_payment))
+                            <a class="btn" href="{{ route('checkout.paypal') }}">Pagar con Paypal</a>
+                            @endif
+
                             @if(!empty($card_payment))
-                            <a class="btn" href="{{ route('checkout') }}">Pagar con Tarjeta</a>
+                            <a class="btn mt-2" href="{{ route('checkout') }}">Pagar con Tarjeta</a>
                             @endif
 
                             @if(!empty($cash_payment))
@@ -151,7 +156,7 @@
         <div class="col-md-6 ml-auto mr-auto text-center my-5">
             <h2>No hay productos en el carrito.<i class="fa fa-frown-o"></i></h2>
             <br>
-            <a href="{{ route('catalog') }}" class="btn btn-lg btn-primary">¡Empieza a llenarlo!</a>
+            <a href="{{ route('catalog.all') }}" class="btn btn-lg btn-primary">¡Empieza a llenarlo!</a>
         </div>
     </div>
 </div>

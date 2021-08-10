@@ -20,7 +20,7 @@ return [
     'STRIPE_PRIVATE_KEY' => env('STRIPE_PRIVATE_KEY', 'sk_test_51J2JE1BahV2wbB1NBhl3DBb8JMZvGGUTuS6Urnm5ZshhC7wj5Dk8QMmtsFIILaeKh2MGrDfvdIWF8McFRIuHwYuS00YuqRqSqu'),
     'STRIPE_PUBLIC_KEY' => env('STRIPE_PUBLIC_KEY', 'pk_test_51J2JE1BahV2wbB1NXiWU2jVcgXFQlYgM9rTnou1uwpeJTbvcPn4isDtnJqhHFdXMynHzTAQXUFwjA9rXay6r2gGJ00LWMNiSdP'),
 
-    // OpenPay Keys
+    // Paypal Keys
     'PAYPAL_CLIENT_ID' => env('PAYPAL_CLIENT_ID', '11'),
     'PAYPAL_SECRET' => env('PAYPAL_SECRET', '11'),
     'PAYPAL_SETTINGS' => [

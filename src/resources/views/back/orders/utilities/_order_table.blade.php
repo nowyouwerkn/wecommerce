@@ -3,6 +3,7 @@
         <tr>
             <th>Orden</th>
             <th>ID Pago</th>
+            <th>Método</th>
             <th>Comprador</th>
             <th>Fecha de Compra</th>
             <th>Cantidad Pagada</th>
@@ -27,7 +28,20 @@
                     @endif
                 </a>
             </td>
+            
+
             <td>{{ $order->payment_id }}</td>
+            <td class="text-muted">
+            	@if($order->payment_method == 'Paypal')
+            	<i class="fab fa-paypal"></i>
+            	@else
+            	<i class="fas fa-credit-card"></i>
+            	@endif
+
+
+            	{{ $order->payment_method }}
+            </td>
+            
             <td>{{ $order->user->name }}</td>
             <td>
                 <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($order->created_at)->format('d M Y - h:ia') }}</span>

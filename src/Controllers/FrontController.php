@@ -12,14 +12,17 @@ use Stripe\Stripe;
 use Stripe\Charge;
 
 /* Paypal Helpers */
+use PayPal\Rest\ApiContext;
+use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\Payer;
+use PayPal\Api\Item;
+use PayPal\Api\ItemList;
 use PayPal\Api\Amount;
 use PayPal\Api\Transaction;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
-use PayPal\Rest\ApiContext;
-use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Exception\PayPalConnectionException;
 
 /* E-commerce Models */
 use Config;
@@ -85,7 +88,6 @@ class FrontController extends Controller
     * Catálogo
     * Controladores para vistas de catálogo y producto
     */
-
     public function dynamicFilter(Request $request)
     {
         /*
@@ -222,7 +224,7 @@ class FrontController extends Controller
     * Checkout
     * Lógica de carrito, checkout y compra exitosa
     */
-    public function cart ()
+    public function cart()
     {
         if (!Session::has('cart')) {
             return view('front.theme.' . $this->theme->get_name() . '.cart');
@@ -253,7 +255,7 @@ class FrontController extends Controller
         return view('front.theme.' . $this->theme->get_name() . '.cart')->with('products', $cart->items)->with('totalPrice', $totalPrice)->with('tax', $tax)->with('shipping', $shipping)->with('subtotal', $subtotal);
     }
 
-    public function checkout ()
+    public function checkout()
     {
         if (!Session::has('cart')) {
             return view('front.theme.' . $this->theme->get_name() . '.cart');
@@ -269,7 +271,7 @@ class FrontController extends Controller
         $cart = new Cart($oldCart);
         $total = $cart->totalPrice;
         
-        $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
+        $payment_method = PaymentMethod::where('supplier', '!=', 'Paypal')->where('is_active', true)->where('type', 'card')->first();
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $store_shipping = ShipmentMethod::where('is_active', true)->first();
 
@@ -299,7 +301,7 @@ class FrontController extends Controller
 
                 $address = UserAddress::where('user_id', Auth::user()->id)->first();
 
-                return view('front.theme.' . $this->theme->get_name() . '.checkout')
+                return view('front.theme.' . $this->theme->get_name() . '.checkout.card')
                 ->with('total', $total)
                 ->with('user', $user)
                 ->with('address', $address)
@@ -320,7 +322,7 @@ class FrontController extends Controller
 
                 $address = UserAddress::where('user_id', '000998')->first();
 
-                return view('front.theme.' . $this->theme->get_name() . '.checkout')
+                return view('front.theme.' . $this->theme->get_name() . '.checkout.card')
                 ->with('total', $total)
                 ->with('address', $address)
                 ->with('payment_method', $payment_method)
@@ -340,9 +342,18 @@ class FrontController extends Controller
     }
 
     public function getOpenPayInstance(){
+        $openpay_config = PaymentMethod::where('is_active', true)->where('supplier', 'OpenPay')->first();
+
+        /*
         $openpayId = env('OPENPAY_MERCHANT_ID', '');
         $openpayApiKey = env('OPENPAY_PRIVATE_KEY', '');
         $openpaySandboxMode = env('OPENPAY_SANDBOX_MODE', true);
+        */
+
+        $openpayId = $openpay_config->merchant_id; 
+        $openpayApiKey = $openpay_config->private_key; 
+        $openpaySandboxMode = env('OPENPAY_SANDBOX_MODE', true);
+
         try {
             Openpay::setId($openpayId);
             Openpay::setApiKey($openpayApiKey);
@@ -376,44 +387,71 @@ class FrontController extends Controller
     }
 
     public function getPaypalInstance(){
-        $paypal_config = Config::get('werkn-commerce');
+        $paypal_config = PaymentMethod::where('is_active', true)->where('supplier', 'Paypal')->first();
+        $config = Config::get('werkn-commerce');
 
         $api_context = new ApiContext(
             new OAuthTokenCredential(
-                $paypal_config['PAYPAL_CLIENT_ID'],
-                $paypal_config['PAYPAL_SECRET']
+                $paypal_config->email_access,
+                $paypal_config->password_access
             )
         );
 
-        $api_context->setConfig($paypal_config['PAYPAL_SETTINGS']);
+        $api_context->setConfig($config['PAYPAL_SETTINGS']);
+
+        return $api_context;
     }
 
     public function payPalStatus(Request $request)
     {
+        $config = $this->getPaypalInstance();
+
         $paymentId = $request->input('paymentId');
         $payerId = $request->input('PayerID');
         $token = $request->input('token');
 
         if (!$paymentId || !$payerId || !$token) {
             $status = 'Lo sentimos! El pago a través de PayPal no se pudo realizar.';
-            return redirect('/paypal/failed')->with(compact('status'));
+
+            Session::flash('error', 'Lo sentimos! El pago a través de PayPal no se pudo realizar.');
+
+            return redirect()->route('checkout.paypal');
         }
 
-        $payment = Payment::get($paymentId, $this->apiContext);
+        $payment = Payment::get($paymentId, $config);
 
         $execution = new PaymentExecution();
         $execution->setPayerId($payerId);
 
         /** Ejecutar el Pago **/
-        $result = $payment->execute($execution, $this->apiContext);
+        $result = $payment->execute($execution, $config);
 
         if ($result->getState() === 'approved') {
             $status = 'Gracias! El pago a través de PayPal se ha ralizado correctamente.';
-            return redirect('/results')->with(compact('status'));
+
+            $oldCart = Session::get('cart');
+            $cart = new Cart($oldCart);
+            $purchase_value = number_format($cart->totalPrice,2);
+
+            $user = Auth::user();
+
+            // Notificación
+            $type = 'Orden';
+            $by = $user;
+            $data = 'hizo una compra por $' . $purchase_value;
+
+            $this->notification->send($type, $by ,$data);
+
+            Session::forget('cart');
+            Session::flash('purchase_complete', 'Compra Exitosa.');
+
+            return redirect()->route('profile');
         }
 
         $status = 'Lo sentimos! El pago a través de PayPal no se pudo realizar.';
-        return redirect('/results')->with(compact('status'));
+        // Mensaje de session
+        Session::flash('error', 'Lo sentimos! El pago a través de PayPal no se pudo realizar.');
+        return redirect()->route('checkout.paypal')->with(compact('status'));
     }
 
     public function checkoutCash ()
@@ -463,7 +501,7 @@ class FrontController extends Controller
 
                 $address = UserAddress::where('user_id', Auth::user()->id)->first();
 
-                return view('front.theme.' . $this->theme->get_name() . '.checkout_cash')
+                return view('front.theme.' . $this->theme->get_name() . '.checkout.cash')
                 ->with('total', $total)
                 ->with('user', $user)
                 ->with('address', $address)
@@ -484,7 +522,93 @@ class FrontController extends Controller
 
                 $address = UserAddress::where('user_id', '000998')->first();
 
-                return view('front.theme.' . $this->theme->get_name() . '.checkout_cash')
+                return view('front.theme.' . $this->theme->get_name() . '.checkout.cash')
+                ->with('total', $total)
+                ->with('address', $address)
+                ->with('payment_method', $payment_method)
+                ->with('store_tax', $store_tax)
+                ->with('subtotal', $subtotal)
+                ->with('tax', $tax)
+                ->with('shipping', $shipping)
+                ->with('products', $cart->items)
+                ->with('cart_count', $count);
+            }
+        }else{
+            //Session message
+            Session::flash('info', 'No se han configurado metodos de pago en esta tienda. Contacta con un administrador de sistema.');
+
+            return redirect()->route('index');
+        }
+    }
+
+    public function checkoutPaypal ()
+    {
+        if (!Session::has('cart')) {
+            return view('front.theme.' . $this->theme->get_name() . '.cart');
+        }
+        
+        //Facebook Event
+        /*
+        $event = new FacebookEvents;
+        $event->initiateCheckout();
+        */
+
+        $oldCart = Session::get('cart');
+        $cart = new Cart($oldCart);
+        $total = $cart->totalPrice;
+        
+        $payment_method = PaymentMethod::where('is_active', true)->where('supplier', 'Paypal')->first();
+        $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
+        $store_shipping = ShipmentMethod::where('is_active', true)->first();
+
+        if (empty($store_tax)) {
+            $tax_rate = .16;
+        }else{
+            $tax_rate = ($store_tax->tax_rate)/100;
+        }
+
+        if (empty($store_shipping)) {
+            $shipping = '0';
+        }else{
+            $shipping = $store_shipping->cost;
+        }
+        
+        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
+        $tax = ($cart->totalPrice) * ($tax_rate);
+        $totalPrice = ($cart->totalPrice + $shipping);
+        /*
+        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
+        $tax = ($cart->totalPrice) * ($tax_rate);
+        */
+
+        if (!empty($payment_method)) {
+            if(Auth::check()){
+                $user = Auth::user();
+
+                $address = UserAddress::where('user_id', Auth::user()->id)->first();
+
+                return view('front.theme.' . $this->theme->get_name() . '.checkout.paypal')
+                ->with('total', $total)
+                ->with('user', $user)
+                ->with('address', $address)
+                ->with('payment_method', $payment_method)
+                ->with('subtotal', $subtotal)
+                ->with('tax', $tax)
+                ->with('shipping', $shipping)
+                ->with('store_tax', $store_tax)
+                ->with('products', $cart->items);
+            }else{
+                // COMPRA DE INVITADO
+                $count = 0;
+                foreach ($cart->items as $product) {
+                    $qty = $product['qty'];
+                    $count += $qty;
+                };
+                $count;
+
+                $address = UserAddress::where('user_id', '000998')->first();
+
+                return view('front.theme.' . $this->theme->get_name() . '.checkout.paypal')
                 ->with('total', $total)
                 ->with('address', $address)
                 ->with('payment_method', $payment_method)
@@ -516,13 +640,19 @@ class FrontController extends Controller
             return redirect()->view('checkout.cart');
         }
 
-        if ($request->method == 'Pago con Oxxo') {
-            $payment_method = PaymentMethod::where('is_active', true)->where('type', 'cash')->first();
-        }else{
-            $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
+        switch ($request->method) {
+            case 'Pago con Oxxo':
+                $payment_method = PaymentMethod::where('is_active', true)->where('type', 'cash')->first();
+
+                break;
+            case 'Pago con Paypal':
+                $payment_method = PaymentMethod::where('is_active', true)->where('supplier', 'Paypal')->first();
+
+                break;
+            default:
+                $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
+                break;
         }
-        
-        $paypal_express_checkout = PaymentMethod::where('is_active', true)->where('supplier', 'Paypal')->first();
 
         if ($payment_method->supplier == 'Conekta') {
             require_once(base_path() . '/vendor/conekta/conekta-php/lib/Conekta/Conekta.php');
@@ -534,7 +664,6 @@ class FrontController extends Controller
         if ($payment_method->supplier == 'Stripe') {
             Stripe::setApiKey($payment_method->private_key);
         }
-
         
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
@@ -698,7 +827,7 @@ class FrontController extends Controller
                 $chargeRequest = array(
                     'method' => 'card',
                     'source_id' => $request->input('openPayToken'),
-                    'amount' => $cart->totalPrice,
+                    'amount' => $request->final_total,
                     'currency' => 'MXN',
                     'description' => 'Compra Exitosa',
                     'device_session_id' => $request->device_hidden,
@@ -711,18 +840,20 @@ class FrontController extends Controller
             }
         }
 
-        if (!empty($paypal_express_checkout)) {
+        if ($payment_method->supplier == 'Paypal') {
             try {
+                $config = $this->getPaypalInstance();
+
                 $payer = new Payer();
                 $payer->setPaymentMethod('paypal');
 
                 $amount = new Amount();
-                $amount->setTotal($cart->totalPrice);
+                $amount->setTotal($request->final_total);
                 $amount->setCurrency('MXN');
 
                 $transaction = new Transaction();
                 $transaction->setAmount($amount);
-                $transaction->setDescription('Compra Exitosa');
+                $transaction->setDescription('Compra en tu Tienda en Linea');
 
                 $callbackUrl = url('/paypal/status');
 
@@ -736,7 +867,73 @@ class FrontController extends Controller
                     ->setTransactions(array($transaction))
                     ->setRedirectUrls($redirectUrls);
 
-                $payment->create($this->apiContext);
+                $payment->create($config);
+
+                if (!Auth::check()) {
+                    $user = User::create([
+                        'name' => $client_name,
+                        'email' => $request->email,
+                        'password' => bcrypt('wkshop'),
+                    ]);
+                }else{
+                    $user = Auth::user();
+                }
+
+                // GUARDAR LA ORDEN
+                $order = new Order();
+
+                $order->cart = serialize($cart);
+                $order->street = $request->input('street');
+                $order->street_num = $request->input('street_num');
+                //$order->between_streets = $request->input('between_streets');
+                $order->country = $request->input('country');
+                $order->state = $request->input('state');
+                $order->postal_code = $request->input('postal_code');
+                $order->city = $request->input('city');
+                $order->country = $request->input('country');
+                $order->phone = $request->input('phone');
+                //$order->suburb = $request->input('suburb');
+                $order->references = $request->input('references');
+
+                /* Money Info */
+                $order->cart_total = $cart->totalPrice;
+                $order->shipping_rate = $request->shipping_rate;
+                $order->sub_total = $request->sub_total;
+                $order->tax_rate = $request->tax_rate;
+                $order->discounts = $request->discounts;
+                $order->total = $request->final_total;
+                $order->payment_total = $request->final_total;
+                /*------------*/
+                    
+                $order->card_digits = Str::substr($request->card_number, 15);
+                $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
+
+                if ($payment_method->supplier == 'Paypal') {
+                    $order->payment_id = $payment->id;
+                }else{
+                    $order->payment_id = $charge->id;   
+                }
+                $order->payment_method = $payment_method->supplier;
+                
+                // Identificar al usuario para guardar sus datos.
+                $user->orders()->save($order);
+
+                // Actualizar existencias del carrito
+                foreach ($cart->items as $product) {
+                    $get_product = ProductVariant::where('product_id', $product['item']['id'])->get();
+
+                    foreach($get_product as $search_variant){
+                        $get_variant = Variant::find($search_variant->variant_id);
+
+                        if($get_variant->name == $product['variant']){
+                            $actual_stock = $search_variant->stock;
+                            $new_stock = $actual_stock - $product['qty'];
+                            $search_variant->stock = $new_stock;
+
+                            $search_variant->save();
+                        }
+                    }
+                }
 
                 return redirect()->away($payment->getApprovalLink());
 
@@ -778,12 +975,18 @@ class FrontController extends Controller
         $order->tax_rate = $request->tax_rate;
         $order->discounts = $request->discounts;
         $order->total = $request->final_total;
+        $order->payment_total = $request->final_total;
         /*------------*/
             
         $order->card_digits = Str::substr($request->card_number, 15);
         $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
-        $order->payment_id = $charge->id;
-        $order->payment_total = $request->final_total;
+
+        if ($payment_method->supplier == 'Paypal') {
+            $order->payment_id = $payment->id;
+        }else{
+            $order->payment_id = $charge->id;   
+        }
+        $order->payment_method = $payment_method->supplier;
 
         // Identificar al usuario para guardar sus datos.
         $user->orders()->save($order);
@@ -838,7 +1041,6 @@ class FrontController extends Controller
         config(['mail.password'=>$mail->mail_password]);
         config(['mail.encryption'=>$mail->mail_encryption]);
 
-
         $data = array('order_id' => $order->id, 'user_id' => $user->id, 'name'=> $user->name, 'email' => $user->email, 'orden'=> $order, 'total'=> $cart->totalPrice, 'num_orden'=> $order->id );
 
         Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email) {
@@ -856,7 +1058,6 @@ class FrontController extends Controller
             $message->from('noreply@wecommerce.mx','WeCommerce');
         });
         
-
         $purchase_value = number_format($cart->totalPrice,2);
 
         // Notificación
