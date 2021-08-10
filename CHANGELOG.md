@@ -6,6 +6,7 @@ Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
 ### Agregado
 - Módulo de Variantes. Se permite ahora visualizar y borrar las variantes que se han creado en el sistema.
+- Información de Metodo de pago para las órdenes. Esta información se puede visualizar en la tabla de ordenes del panel administrativo y en el listado de ordenes del perfil del cliente.
 
 ### Reparado
 - Funcionalidad de filtrado de catálogo ahora funciona correctamente. Toma en cuenta todas las variantes y las filtra de acuerdo a la selección.

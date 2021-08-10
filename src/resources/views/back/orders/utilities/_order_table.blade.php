@@ -28,20 +28,18 @@
                     @endif
                 </a>
             </td>
-            
-
+          
             <td>{{ $order->payment_id }}</td>
             <td class="text-muted">
             	@if($order->payment_method == 'Paypal')
-            	<i class="fab fa-paypal"></i>
+            		<i class="fab fa-paypal"></i>
             	@else
-            	<i class="fas fa-credit-card"></i>
+            		<i class="fas fa-credit-card"></i>
             	@endif
-
 
             	{{ $order->payment_method }}
             </td>
-            
+
             <td>{{ $order->user->name }}</td>
             <td>
                 <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($order->created_at)->format('d M Y - h:ia') }}</span>

@@ -1110,6 +1110,8 @@ class FrontController extends Controller
 
     public function profile ()
     {
+        $total_orders = Order::where('user_id', Auth::user()->id)->get();
+
         $orders = Order::where('user_id', Auth::user()->id)->paginate(3);
 
         $orders->transform(function($order, $key){
@@ -1119,7 +1121,10 @@ class FrontController extends Controller
         
         $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
-        return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')->with('orders', $orders)->with('addresses', $addresses);;
+        return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')
+        ->with('total_orders', $total_orders)
+        ->with('orders', $orders)
+        ->with('addresses', $addresses);
     }
 
     public function wishlist ()
@@ -1131,19 +1136,24 @@ class FrontController extends Controller
 
     public function shopping ()
     {
-        $orders = Order::where('user_id', Auth::user()->id)->paginate(3);
+        $total_orders = Order::where('user_id', Auth::user()->id)->get();
+
+        $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
 
         $orders->transform(function($order, $key){
             $order->cart = unserialize($order->cart);
             return $order;
         });
 
-        return view('front.theme.' . $this->theme->get_name() . '.user_profile.shopping')->with('orders', $orders);
+        return view('front.theme.' . $this->theme->get_name() . '.user_profile.shopping')
+        ->with('total_orders', $total_orders)
+        ->with('orders', $orders);
     }
 
     public function address ()
     {
         $addresses = UserAddress::where('user_id', Auth::user()->id)->paginate(10);
+
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.address', compact('addresses'));
     }
 

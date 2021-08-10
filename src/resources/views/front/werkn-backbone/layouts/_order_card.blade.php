@@ -1,4 +1,4 @@
-<div class="card card-order">
+<div class="card card-order mb-5">
     <div class="card-body">
         <h3 class="card-order-title">Orden #00{{ $order->id }}</h3>
 
@@ -46,11 +46,13 @@
                     <div class="bg-primary text-white">
                         <h6 class="title-order-separator">Método de Pago</h6>
                         <p class="order-info-big">
-                            @if(substr($order->payment_id, 0, 3) == 'ord')
-                            Tarjeta {{ $order->card_digits }}
+                            @if($order->payment_method == 'Paypal')
+                            <i class="fab fa-paypal"></i>
                             @else
-                            OXXO PAY
+                                <i class="fas fa-credit-card"></i>
                             @endif
+
+                            {{ $order->payment_method }}
                         </p>
                     </div>
                 </div>
@@ -80,7 +82,7 @@
             </div>
             <div class="col-md-6 text-right">
                 <h6 class="title-order-separator">Fecha de Compra</h6>
-                <p>{{ Carbon\Carbon::parse($order->created_at)->format('d M Y, H:i') }}</p>
+                <p>{{ Carbon\Carbon::parse($order->created_at)->format('d M Y, h:ia') }}</p>
             </div>
         </div>
     </div>

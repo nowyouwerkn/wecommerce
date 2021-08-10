@@ -40,7 +40,7 @@
                         <div class="col-md-6">
                             <div class="card p-3">
                                 <p>Pedidos Totales</p>
-                                <h2>{{ $orders->count() }}</h2>
+                                <h2>{{ $total_orders->count() }}</h2>
                             </div>
                         </div>
 

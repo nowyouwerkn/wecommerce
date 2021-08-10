@@ -38,23 +38,29 @@
                 </div>
 
                 <!-- PROFILE INFORMATION -->
-                    <section class="col-md-9">
-                        @if($orders->count())
-                        <div class="row">
-                            @foreach($orders as $order)v
-                            <div class="col-md-6">
-                                @include('front.theme.werkn-backbone.layouts._order_card')
-                            </div>
-                            @endforeach
+                <section class="col-md-9">
+                    @if($orders->count())
+                    <div class="row">
+                        @foreach($orders as $order)
+                        <div class="col-md-6">
+                            @include('front.theme.werkn-backbone.layouts._order_card')
                         </div>
-                            
-                        @else
-                            <div class="text-center my-5">
-                                <h4 class="mb-0">No tienes compras recientes.</h4>
-                                <p>Visita la tienda <a href="{{ route('catalog.all') }}">aqui</a> y disfruta.</p>
-                            </div>
-                        @endif
-                    </section>
+                        @endforeach
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ $orders->links() }}
+                        </div>
+                        
+                    </div>
+                    @else
+                        <div class="text-center my-5">
+                            <h4 class="mb-0">No tienes compras recientes.</h4>
+                            <p>Visita la tienda <a href="{{ route('catalog.all') }}">aqui</a> y disfruta.</p>
+                        </div>
+                    @endif
+                </section>
             </div>
         </div>
     </section>
