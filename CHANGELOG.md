@@ -8,7 +8,7 @@ Todos los cambios notables para `wecommerce` serán documentados en este archivo
 - Módulo de Variantes. Se permite ahora visualizar y borrar las variantes que se han creado en el sistema.
 
 ### Reparado
-- Funcionalidad de filtrado de catálogo.
+- Funcionalidad de filtrado de catálogo ahora funciona correctamente. Toma en cuenta todas las variantes y las filtra de acuerdo a la selección.
 
 
 ## 1.0.3 - 2021-07-14

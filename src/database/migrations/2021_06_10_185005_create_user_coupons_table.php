@@ -17,10 +17,10 @@ class CreateUserCouponsTable extends Migration
             $table->id();
 
             //$table->integer('user_id');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
             //$table->integer('coupon_id');
-            $table->foreignId('coupon_id')->constrained('coupons');
+            $table->foreignId('coupon_id')->constrained('coupons')->onDelete('cascade');
 
             $table->timestamps();
         });

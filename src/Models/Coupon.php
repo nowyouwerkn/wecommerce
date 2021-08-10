@@ -15,4 +15,9 @@ class Coupon extends Model
     {
         return $this->belongsToMany(Coupon::class, 'user_coupons', 'user_id', 'coupon_id');
     }
+
+    public function coupons()
+    {
+        return $this->hasMany(UserCoupon::class, 'coupon_id', 'id');
+    }
 }

@@ -357,6 +357,11 @@
                     </div>
 
                     <div class="form-group mt-2">
+                        <label>Llave Privada</label>
+                        <input type="text" class="form-control" name="private_key" />
+                    </div>
+
+                    <div class="form-group mt-2">
                         <label>Llave Pública</label>
                         <input type="text" class="form-control" name="public_key" />
                     </div>

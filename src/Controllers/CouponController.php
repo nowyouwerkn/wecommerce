@@ -131,6 +131,8 @@ class CouponController extends Controller
         $this->notification->send($type, $by ,$data);
 
         //
+        $coupon->coupons()->delete();
+
         $coupon->delete();
 
         Session::flash('success', 'Se eliminó el cupón correctamente.');
