@@ -256,8 +256,10 @@ class FrontController extends Controller
             $shipping = $store_shipping->cost;
         }
 
-        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
-        $tax = ($cart->totalPrice) * ($tax_rate);
+        //$subtotal = ($cart->totalPrice) / ($tax_rate + 1);
+        $subtotal = ($cart->totalPrice);
+        //$tax = ($cart->totalPrice) * ($tax_rate);
+        $tax = 0;
         $totalPrice = ($cart->totalPrice + $shipping);
 
         return view('front.theme.' . $this->theme->get_name() . '.cart')->with('products', $cart->items)->with('totalPrice', $totalPrice)->with('tax', $tax)->with('shipping', $shipping)->with('subtotal', $subtotal);
@@ -295,8 +297,9 @@ class FrontController extends Controller
             $shipping = $store_shipping->cost;
         }
         
-        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
-        $tax = ($cart->totalPrice) * ($tax_rate);
+        $subtotal = ($cart->totalPrice);
+        //$tax = ($cart->totalPrice) * ($tax_rate);
+        $tax = 0;
         $totalPrice = ($cart->totalPrice + $shipping);
         /*
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
@@ -349,119 +352,6 @@ class FrontController extends Controller
         }
     }
 
-    public function getOpenPayInstance(){
-        $openpay_config = PaymentMethod::where('is_active', true)->where('supplier', 'OpenPay')->first();
-
-        /*
-        $openpayId = env('OPENPAY_MERCHANT_ID', '');
-        $openpayApiKey = env('OPENPAY_PRIVATE_KEY', '');
-        $openpaySandboxMode = env('OPENPAY_SANDBOX_MODE', true);
-        */
-
-        $openpayId = $openpay_config->merchant_id; 
-        $openpayApiKey = $openpay_config->private_key; 
-        $openpaySandboxMode = env('OPENPAY_SANDBOX_MODE', true);
-
-        try {
-            Openpay::setId($openpayId);
-            Openpay::setApiKey($openpayApiKey);
-            Openpay::setSandboxMode($openpaySandboxMode);
-            $openpay = Openpay::getInstance();
-            return $openpay;
-        } catch (OpenpayApiTransactionError $e) {
-        error('ERROR en la transacción: ' . $e->getMessage() .
-        ' [código de error: ' . $e->getErrorCode() .
-        ', categoría de error: ' . $e->getCategory() .
-        ', código HTTP: '. $e->getHttpCode() .
-        ', id petición: ' . $e->getRequestId() . ']');
-
-        } catch (OpenpayApiRequestError $e) {
-            error('ERROR en la petición: ' . $e->getMessage());
-
-        } catch (OpenpayApiConnectionError $e) {
-            error('ERROR en la conexión al API: ' . $e->getMessage());
-
-        } catch (OpenpayApiAuthError $e) {
-            error('ERROR en la autenticación: ' . $e->getMessage());
-
-        } catch (OpenpayApiError $e) {
-            error('ERROR en el API: ' . $e->getMessage());
-
-        } catch (\Exception $e) {
-            error('Error en el script: ' . $e->getMessage());
-        }
-
-        return null;
-    }
-
-    public function getPaypalInstance(){
-        $paypal_config = PaymentMethod::where('is_active', true)->where('supplier', 'Paypal')->first();
-        $config = Config::get('werkn-commerce');
-
-        $api_context = new ApiContext(
-            new OAuthTokenCredential(
-                $paypal_config->email_access,
-                $paypal_config->password_access
-            )
-        );
-
-        $api_context->setConfig($config['PAYPAL_SETTINGS']);
-
-        return $api_context;
-    }
-
-    public function payPalStatus(Request $request)
-    {
-        $config = $this->getPaypalInstance();
-
-        $paymentId = $request->input('paymentId');
-        $payerId = $request->input('PayerID');
-        $token = $request->input('token');
-
-        if (!$paymentId || !$payerId || !$token) {
-            $status = 'Lo sentimos! El pago a través de PayPal no se pudo realizar.';
-
-            Session::flash('error', 'Lo sentimos! El pago a través de PayPal no se pudo realizar.');
-
-            return redirect()->route('checkout.paypal');
-        }
-
-        $payment = Payment::get($paymentId, $config);
-
-        $execution = new PaymentExecution();
-        $execution->setPayerId($payerId);
-
-        /** Ejecutar el Pago **/
-        $result = $payment->execute($execution, $config);
-
-        if ($result->getState() === 'approved') {
-            $status = 'Gracias! El pago a través de PayPal se ha ralizado correctamente.';
-
-            $oldCart = Session::get('cart');
-            $cart = new Cart($oldCart);
-            $purchase_value = number_format($cart->totalPrice,2);
-
-            $user = Auth::user();
-
-            // Notificación
-            $type = 'Orden';
-            $by = $user;
-            $data = 'hizo una compra por $' . $purchase_value;
-
-            $this->notification->send($type, $by ,$data);
-
-            Session::forget('cart');
-            Session::flash('purchase_complete', 'Compra Exitosa.');
-
-            return redirect()->route('profile');
-        }
-
-        $status = 'Lo sentimos! El pago a través de PayPal no se pudo realizar.';
-        // Mensaje de session
-        Session::flash('error', 'Lo sentimos! El pago a través de PayPal no se pudo realizar.');
-        return redirect()->route('checkout.paypal')->with(compact('status'));
-    }
-
     public function checkoutCash ()
     {
         if (!Session::has('cart')) {
@@ -495,8 +385,9 @@ class FrontController extends Controller
             $shipping = $store_shipping->cost;
         }
         
-        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
-        $tax = ($cart->totalPrice) * ($tax_rate);
+        $subtotal = ($cart->totalPrice);
+        //$tax = ($cart->totalPrice) * ($tax_rate);
+        $tax = 0;
         $totalPrice = ($cart->totalPrice + $shipping);
         /*
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
@@ -581,8 +472,9 @@ class FrontController extends Controller
             $shipping = $store_shipping->cost;
         }
         
-        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
-        $tax = ($cart->totalPrice) * ($tax_rate);
+        $subtotal = ($cart->totalPrice);
+        //$tax = ($cart->totalPrice) * ($tax_rate);
+        $tax = 0;
         $totalPrice = ($cart->totalPrice + $shipping);
         /*
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
@@ -1100,6 +992,119 @@ class FrontController extends Controller
         //return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
 
         return redirect()->route('profile');
+    }
+
+    public function getOpenPayInstance(){
+        $openpay_config = PaymentMethod::where('is_active', true)->where('supplier', 'OpenPay')->first();
+
+        /*
+        $openpayId = env('OPENPAY_MERCHANT_ID', '');
+        $openpayApiKey = env('OPENPAY_PRIVATE_KEY', '');
+        $openpaySandboxMode = env('OPENPAY_SANDBOX_MODE', true);
+        */
+
+        $openpayId = $openpay_config->merchant_id; 
+        $openpayApiKey = $openpay_config->private_key; 
+        $openpaySandboxMode = env('OPENPAY_SANDBOX_MODE', true);
+
+        try {
+            Openpay::setId($openpayId);
+            Openpay::setApiKey($openpayApiKey);
+            Openpay::setSandboxMode($openpaySandboxMode);
+            $openpay = Openpay::getInstance();
+            return $openpay;
+        } catch (OpenpayApiTransactionError $e) {
+        error('ERROR en la transacción: ' . $e->getMessage() .
+        ' [código de error: ' . $e->getErrorCode() .
+        ', categoría de error: ' . $e->getCategory() .
+        ', código HTTP: '. $e->getHttpCode() .
+        ', id petición: ' . $e->getRequestId() . ']');
+
+        } catch (OpenpayApiRequestError $e) {
+            error('ERROR en la petición: ' . $e->getMessage());
+
+        } catch (OpenpayApiConnectionError $e) {
+            error('ERROR en la conexión al API: ' . $e->getMessage());
+
+        } catch (OpenpayApiAuthError $e) {
+            error('ERROR en la autenticación: ' . $e->getMessage());
+
+        } catch (OpenpayApiError $e) {
+            error('ERROR en el API: ' . $e->getMessage());
+
+        } catch (\Exception $e) {
+            error('Error en el script: ' . $e->getMessage());
+        }
+
+        return null;
+    }
+
+    public function getPaypalInstance(){
+        $paypal_config = PaymentMethod::where('is_active', true)->where('supplier', 'Paypal')->first();
+        $config = Config::get('werkn-commerce');
+
+        $api_context = new ApiContext(
+            new OAuthTokenCredential(
+                $paypal_config->email_access,
+                $paypal_config->password_access
+            )
+        );
+
+        $api_context->setConfig($config['PAYPAL_SETTINGS']);
+
+        return $api_context;
+    }
+
+    public function payPalStatus(Request $request)
+    {
+        $config = $this->getPaypalInstance();
+
+        $paymentId = $request->input('paymentId');
+        $payerId = $request->input('PayerID');
+        $token = $request->input('token');
+
+        if (!$paymentId || !$payerId || !$token) {
+            $status = 'Lo sentimos! El pago a través de PayPal no se pudo realizar.';
+
+            Session::flash('error', 'Lo sentimos! El pago a través de PayPal no se pudo realizar.');
+
+            return redirect()->route('checkout.paypal');
+        }
+
+        $payment = Payment::get($paymentId, $config);
+
+        $execution = new PaymentExecution();
+        $execution->setPayerId($payerId);
+
+        /** Ejecutar el Pago **/
+        $result = $payment->execute($execution, $config);
+
+        if ($result->getState() === 'approved') {
+            $status = 'Gracias! El pago a través de PayPal se ha ralizado correctamente.';
+
+            $oldCart = Session::get('cart');
+            $cart = new Cart($oldCart);
+            $purchase_value = number_format($cart->totalPrice,2);
+
+            $user = Auth::user();
+
+            // Notificación
+            $type = 'Orden';
+            $by = $user;
+            $data = 'hizo una compra por $' . $purchase_value;
+
+            $this->notification->send($type, $by ,$data);
+
+            Session::forget('cart');
+            Session::flash('purchase_complete', 'Compra Exitosa.');
+
+            return redirect()->route('profile');
+        }
+
+        $status = 'Lo sentimos! El pago a través de PayPal no se pudo realizar.';
+        // Mensaje de session
+        Session::flash('error', 'Lo sentimos! El pago a través de PayPal no se pudo realizar.');
+        return redirect()->route('checkout.paypal')->with(compact('status'));
     }
 
     /*
