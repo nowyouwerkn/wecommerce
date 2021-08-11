@@ -717,10 +717,10 @@ class FrontController extends Controller
                 $openpay = $this->getOpenPayInstance();
 
                 $customer = array(
-                    'name' => $request->client_name,
-                    'last_name' => $request->client_name,
+                    'name' => $request->name,
+                    'last_name' => $request->last_name,
                     'phone_number' => $request->phone,
-                    'email' => Auth::user()->email,
+                    'email' => $request->email,
                     'requires_account' => false
                 );
 
@@ -1005,12 +1005,12 @@ class FrontController extends Controller
 
         $openpayId = $openpay_config->merchant_id; 
         $openpayApiKey = $openpay_config->private_key; 
-        $openpaySandboxMode = env('OPENPAY_SANDBOX_MODE', true);
+        //$openpaySandboxMode = env('OPENPAY_SANDBOX_MODE', true);
 
         try {
             Openpay::setId($openpayId);
             Openpay::setApiKey($openpayApiKey);
-            Openpay::setSandboxMode($openpaySandboxMode);
+            //Openpay::setSandboxMode($openpaySandboxMode);
             $openpay = Openpay::getInstance();
             return $openpay;
         } catch (OpenpayApiTransactionError $e) {
