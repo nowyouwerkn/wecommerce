@@ -809,7 +809,7 @@ class FrontController extends Controller
                 $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
 
                 if ($payment_method->supplier == 'Paypal') {
-                    $order->payment_id = $payment->id;
+                    $order->payment_id = 'paypal_00' . $order->id;
                 }else{
                     $order->payment_id = $charge->id;   
                 }
