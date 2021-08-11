@@ -1,6 +1,8 @@
-@extends('front.theme.werkn-backbone.layouts.main')
+@php
+    $theme = Nowyouwerkn\WeCommerce\Models\StoreTheme::where('is_active', 1)->first();
+@endphp
 
-@push('seo')
+@extends('front.theme.' . $theme->name . '.layouts.main')
 
 @endpush
 
