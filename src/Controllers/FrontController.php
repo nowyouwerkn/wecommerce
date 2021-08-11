@@ -1281,16 +1281,17 @@ class FrontController extends Controller
 
         if (empty($coupon)) {
             // Regresar Respuesta a la Vista
-            return response()->json(['mensaje' => 'Ese cupón no existe. Intenta con otro.'], 400);
+            return response()->json(['mensaje' => 'Ese cupón no existe o ya no está disponible. Intenta con otro o contacta con nosotros.'], 400);
         }else{
-            /* Definir Usuario usando el sistema */
+
+            /* Definir Usuario usando el sistema 
             $user = Auth::user();
-            /* Contar cuopones usados que compartan el codigo */
+            /* Contar cuopones usados que compartan el codigo 
             $count_coupons = UserCoupon::where('coupon_id', $coupon->id)->count();
-            /* Contar los cupones con el codigo que el usuario haya usado anteriormente */
+            /* Contar los cupones con el codigo que el usuario haya usado anteriormente 
             $count_user_coupons = UserCoupon::where('user_id', $user->id)->where('coupon_id', $coupon->id)->count();
 
-            /* Revisar si el coupon no ha sobrepasado su limite de uso */
+            /* Revisar si el coupon no ha sobrepasado su limite de uso 
             if ($count_user_coupons < $coupon->usage_limit_per_code) {
                 /* Si no se ha alcanzado el limite de uso de cuopon ejecutar el codigo */
                 if ($count_user_coupons < $coupon->usage_limit_per_user) {
@@ -1356,18 +1357,56 @@ class FrontController extends Controller
                 }else{
                     return response()->json(['mensaje' => "Alcanzaste el limite de uso para este cupón. Intenta con otro.", 'type' => 'exception'], 200);
                 }
-            /* EJECUTAR EXCEPCIÓN SI EL CUPÓN YA ALCANZÓ EL LIMITE */        
+            /* EJECUTAR EXCEPCIÓN SI EL CUPÓN YA ALCANZÓ EL LIMITE         
             }else{
                 return response()->json(['mensaje' => "Ya no quedan existencias de este cupón. Intenta con otro.", 'type' => 'exception'], 200);
             }
+            */
             
+            /* Recuperar el tipo de cupon */
+            $coupon_type = $coupon->type;
+
+            switch($coupon_type){
+                case 'percentage_amount':
+                    // Este cupon resta un porcentaje del subtotal en el checkout
+                    $qty = $coupon->qty / 100;
+                    $discount = $subtotal * $qty;
+
+                    break;
+                
+                case 'fixed_amount':
+                    // Este cupon le resta un valor fijo al subtotal en el checkout
+                    $qty = $coupon->qty;
+                    $discount = $subtotal - $qty;
+
+                    break;
+
+                case 'free_shipping':
+
+                    break;
+
+                default:
+                    /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO */    
+                    return response()->json(['mensaje' => 'Este tipo de cupón no existe, revisa con administración.', 'type' => 'exception'], 200);
+                    break;
+            }
+
+            if ($coupon->is_free_shipping == true) {
+                $free_shipping = $shipping * 0;
+            }else{
+                $free_shipping = $shipping;
+            }
+
+            // Guardar el uso del cupon por el usuario
             /*
-            $free_shipping = 'no';
-            $discount = 29;
+            $used = new UserCoupon;
+            $used->user_id = Auth::user()->id;
+            $used->coupon_id = $coupon->id;
+            $used->save();
+            */
 
             // Regresar Respuesta a la Vista
             return response()->json(['mensaje' => 'Aplicado el descuento correctamente... disfruta', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
-            */
         }
     }
 
