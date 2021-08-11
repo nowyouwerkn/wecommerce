@@ -1377,8 +1377,9 @@ class FrontController extends Controller
     public function xmlFeed()
     {   
         $items = Product::all();
+        $config = StoreConfig::first();
         
-        return view('wecommerce::feeds.xml')->with('items', $items);
+        return view('wecommerce::feeds.xml')->with('items', $items)->with('config', $config);
     }
 
     public function legalText($type)

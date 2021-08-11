@@ -20,4 +20,9 @@ class StoreConfig extends Model
     {
         return $this->hasOne(Country::class, 'id', 'country_id')->value('name');
     }
+
+    public function currency()
+    {
+        return $this->hasOne(Currency::class, 'id', 'currency_id')->first();
+    }
 }

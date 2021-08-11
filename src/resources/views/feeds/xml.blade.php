@@ -11,8 +11,8 @@
 
 		@foreach($items as $product)
 		<item>
-			<g:item_group_id>product_{{ $product->id }}</g:item_group_id>
-			<g:id>{{ $product->sku }}</g:id>
+			<g:item_group_id>product_{{ $product->sku }}</g:item_group_id>
+			<g:id>{{ $product->id }}</g:id>
 			<g:mpn>{{ $product->barcode ?? $product->sku }}</g:mpn>
 			<g:title>{{ $product->name }}</g:title>
 			<g:description>{{ $product->description }}</g:description>
@@ -45,9 +45,9 @@
 
 			<age_group>adult</age_group>
 
-			{{-- 
-			<gender>{{ $product->gender->name ?? 'male'}}</gender>
-			<brand>{{ $product->brand->name ?? 'Gearcom'}}</brand>
+			<gender>{{ $product->gender ?? 'male'}}</gender>
+			{{--
+			<brand>{{ $product->brand ?? 'Brand'}}</brand>
 			--}}
 
 			<g:condition>New</g:condition>
@@ -70,17 +70,17 @@
 
 			<g:inventory>{{ $size_total }}</g:inventory>
 
-			<g:price>{{ number_format($product->price, 2) }} USD</g:price>
-			<g:sale_price>{{ number_format($product->discount_price, 2) }} USD</g:sale_price>
+			<g:price>{{ number_format($product->price, 2) }} @if($config->currency_id == 2)MXN @else USD @endif</g:price>
+			<g:sale_price>{{ number_format($product->discount_price, 2) }} @if($config->currency_id == 2)MXN @else USD @endif</g:sale_price>
 
-			<g:sale_price>{{ number_format($product->discount_price, 2) }} USD</g:sale_price>
+			<g:sale_price>{{ number_format($product->discount_price, 2) }} @if($config->currency_id == 2)MXN @else USD @endif</g:sale_price>
 			<g:sale_price_effective_date>{{ Carbon\Carbon::parse($product->discount_start)->format('Y-m-d') }}T08:00-06:00/{{ Carbon\Carbon::parse($product->discount_end)->format('Y-m-d') }}T08:00-06:00</g:sale_price_effective_date>
 
 			<g:product_type>Apparel &amp; Accessories &gt; Shoes</g:product_type>
 			
 			{{-- 
 			@if($product->gender->name == 'male')
-			<g:fb_product_category>clothing &amp; accessories &gt; shoes &amp; footwear &gt; men's shoes</g:fb_product_category>
+			<g:fb_product_category>clothing &amp; accessories &gt; shoes &amp; footwear &gt; shoes</g:fb_product_category>
 			@else
 			<g:fb_product_category>clothing &amp; accessories &gt; shoes &amp; footwear &gt; women's shoes</g:fb_product_category>
 			@endif
