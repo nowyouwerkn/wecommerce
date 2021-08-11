@@ -142,7 +142,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     ]);
 
     Route::resource('coupons', Nowyouwerkn\WeCommerce\Controllers\CouponController::class); //
-    Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class); //  
+    Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class)->except(['store']); //  
 
     Route::get('/reviews/aprobar/{id}',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ReviewController@approve',
@@ -153,7 +153,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     //Administration
     Route::resource('seo', Nowyouwerkn\WeCommerce\Controllers\SEOController::class); //
     Route::resource('legals', Nowyouwerkn\WeCommerce\Controllers\LegalTextController::class);
-    Route::resource('taxes', Nowyouwerkn\WeCommerce\Controllers\StoreTaxController::class); //
+    Route::resource('taxes', Nowyouwerkn\WeCommerce\Controllers\StoreTaxController::class)->except(['create']); //
 
     Route::get('/taxes/create/{country_id}',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StoreTaxController@create',
@@ -179,7 +179,6 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
 
     Route::resource('payments', Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController::class);  //
     Route::resource('shipments', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodController::class);
-    Route::resource('log', Nowyouwerkn\WeCommerce\Controllers\LogController::class); 
 
     //Country
     Route::resource('countries', Nowyouwerkn\WeCommerce\Controllers\CountryController::class); 
@@ -313,23 +312,24 @@ Route::get('/busqueda-general', [
 ]);
 
 Route::get('cart', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@cart')->name('cart');
+
 Route::get('/checkout', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkout')->name('checkout');
 Route::get('/checkout-cash', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutCash')->name('checkout.cash');
 Route::get('/checkout-paypal', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutPaypal')->name('checkout.paypal');
 
 Route::post('/checkout',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckout',
-    'as' => 'checkout',
+    'as' => 'checkout.store',
 ]);
 
 Route::post('/checkout-cash',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutCash',
-    'as' => 'checkout.cash',
+    'as' => 'checkout.cash.store',
 ]);
 
 Route::post('/checkout-paypal',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutPaypal',
-    'as' => 'checkout.paypal',
+    'as' => 'checkout.paypal.store',
 ]);
 
 Route::get('/paypal/status',[

@@ -24,14 +24,6 @@ use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Exception\PayPalConnectionException;
 
-/* OpenPay Helpers */
-use Openpay;
-use OpenpayApiAuthError;
-use OpenpayApiRequestError;
-use OpenpayApiError;
-use OpenpayApiTransactionError;
-use OpenpayApiConnectionError;
-
 /* E-commerce Models */
 use Config;
 use Mail;
@@ -65,6 +57,13 @@ use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+
+use Openpay;
+use OpenpayApiError;
+use OpenpayApiAuthError;
+use OpenpayApiRequestError;
+use OpenpayApiConnectionError;
+use OpenpayApiTransactionError;
 
 class FrontController extends Controller
 {
@@ -550,9 +549,10 @@ class FrontController extends Controller
 
                 break;
             default:
-                $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
+                $payment_method = PaymentMethod::where('supplier', '!=', 'Paypal')->where('is_active', true)->where('type', 'card')->first();
                 break;
         }
+
 
         if ($payment_method->supplier == 'Conekta') {
             require_once(base_path() . '/vendor/conekta/conekta-php/lib/Conekta/Conekta.php');
@@ -735,7 +735,8 @@ class FrontController extends Controller
                 );
 
                 $charge = $openpay->charges->create($chargeRequest);
-            } catch(\Excepton $e) {
+
+            } catch(\Exception $e) {
                 return redirect()->route('checkout')->with('error', $e->getMessage() );
             }
         }
@@ -997,22 +998,21 @@ class FrontController extends Controller
     public function getOpenPayInstance(){
         $openpay_config = PaymentMethod::where('is_active', true)->where('supplier', 'OpenPay')->first();
 
-        /*
-        $openpayId = env('OPENPAY_MERCHANT_ID', '');
-        $openpayApiKey = env('OPENPAY_PRIVATE_KEY', '');
-        $openpaySandboxMode = env('OPENPAY_SANDBOX_MODE', true);
-        */
+        //require_once(base_path() . '/vendor/openpay/sdk/Openpay.php');
 
-        $openpayId = $openpay_config->merchant_id; 
-        $openpayApiKey = $openpay_config->private_key; 
-        //$openpaySandboxMode = env('OPENPAY_SANDBOX_MODE', true);
+        $openpayId = $openpay_config->merchant_id;
+        $openpayApiKey = $openpay_config->private_key;
+        $openpayProductionMode = env('OPENPAY_PRODUCTION_MODE', false);
 
         try {
             Openpay::setId($openpayId);
             Openpay::setApiKey($openpayApiKey);
-            //Openpay::setSandboxMode($openpaySandboxMode);
+            Openpay::setProductionMode($openpayProductionMode);
+
             $openpay = Openpay::getInstance();
+
             return $openpay;
+
         } catch (OpenpayApiTransactionError $e) {
         error('ERROR en la transacción: ' . $e->getMessage() .
         ' [código de error: ' . $e->getErrorCode() .
@@ -1021,19 +1021,19 @@ class FrontController extends Controller
         ', id petición: ' . $e->getRequestId() . ']');
 
         } catch (OpenpayApiRequestError $e) {
-            error('ERROR en la petición: ' . $e->getMessage());
+            echo('ERROR en la petición: ' . $e->getMessage());
 
         } catch (OpenpayApiConnectionError $e) {
-            error('ERROR en la conexión al API: ' . $e->getMessage());
+            echo('ERROR en la conexión al API: ' . $e->getMessage());
 
         } catch (OpenpayApiAuthError $e) {
-            error('ERROR en la autenticación: ' . $e->getMessage());
+            echo('ERROR en la autenticación: ' . $e->getMessage());
 
         } catch (OpenpayApiError $e) {
-            error('ERROR en el API: ' . $e->getMessage());
+            echo('ERROR en el API: ' . $e->getMessage());
 
         } catch (\Exception $e) {
-            error('Error en el script: ' . $e->getMessage());
+            echo('Error en el script: ' . $e->getMessage());
         }
 
         return null;
