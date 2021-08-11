@@ -1293,7 +1293,7 @@ class FrontController extends Controller
 
             /* Revisar si el coupon no ha sobrepasado su limite de uso 
             if ($count_user_coupons < $coupon->usage_limit_per_code) {
-                /* Si no se ha alcanzado el limite de uso de cuopon ejecutar el codigo */
+                /* Si no se ha alcanzado el limite de uso de cuopon ejecutar el codigo 
                 if ($count_user_coupons < $coupon->usage_limit_per_user) {
                     // Verificar que el cupon es solo de FREE SHIPPING
                     if ($coupon->qty == 0) {
@@ -1311,7 +1311,7 @@ class FrontController extends Controller
                         }
                     }
 
-                    /* Recuperar el tipo de cupon */
+                    /* Recuperar el tipo de cupon 
                     $coupon_type = $coupon->type;
 
                     switch($coupon_type){
@@ -1334,7 +1334,7 @@ class FrontController extends Controller
                             break;
 
                         default:
-                            /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO */    
+                            /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO 
                             return response()->json(['mensaje' => 'Este tipo de cupón no existe, revisa con administración.', 'type' => 'exception'], 200);
                             break;
                     }
@@ -1353,7 +1353,7 @@ class FrontController extends Controller
                     // Regresar Respuesta a la Vista
                     return response()->json(['mensaje' => 'Aplicado el descuento correctamente... disfruta', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
 
-                /* EJECUTAR EXCEPCIÓN SI EL USUARIO YA ALCANZÓ EL LIMITE */    
+                /* EJECUTAR EXCEPCIÓN SI EL USUARIO YA ALCANZÓ EL LIMITE   
                 }else{
                     return response()->json(['mensaje' => "Alcanzaste el limite de uso para este cupón. Intenta con otro.", 'type' => 'exception'], 200);
                 }
