@@ -45,7 +45,7 @@ class PaymentMethodController extends Controller
 
         // Desactivar cualquier otro método activo
         if ($request->type == 'card') {
-            $deactivate = PaymentMethod::where('type', 'card')->where('is_active', true)->get();
+            $deactivate = PaymentMethod::where('supplier', '!=', 'Paypal')->where('type', 'card')->where('is_active', true)->get();
         }
 
         if ($request->type == 'cash') {
@@ -56,7 +56,6 @@ class PaymentMethodController extends Controller
             $dt->is_active = false;
             $dt->save();
         }
-
 
         $payment = PaymentMethod::where('type', $request->type)->where('supplier', $request->supplier)->first();
 

@@ -24,6 +24,14 @@ use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Exception\PayPalConnectionException;
 
+/* OpenPay Helpers */
+use Openpay;
+use OpenpayApiAuthError;
+use OpenpayApiRequestError;
+use OpenpayApiError;
+use OpenpayApiTransactionError;
+use OpenpayApiConnectionError;
+
 /* E-commerce Models */
 use Config;
 use Mail;
