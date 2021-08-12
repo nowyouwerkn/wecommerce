@@ -1000,7 +1000,7 @@ class FrontController extends Controller
 
         $openpayId = $openpay_config->merchant_id;
         $openpayApiKey = $openpay_config->private_key;
-        $openpayProductionMode = env('OPENPAY_PRODUCTION_MODE', false);
+        $openpayProductionMode = env('OPENPAY_PRODUCTION_MODE', true);
 
         //require_once(base_path() . '/vendor/autoload.php');
         //require_once(base_path() . '/vendor/openpay/sdk/Openpay.php');
