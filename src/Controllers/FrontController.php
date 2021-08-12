@@ -998,38 +998,40 @@ class FrontController extends Controller
     public function getOpenPayInstance(){
         $openpay_config = PaymentMethod::where('is_active', true)->where('supplier', 'OpenPay')->first();
 
-        //require_once(base_path() . '/vendor/openpay/sdk/Openpay.php');
-
         $openpayId = $openpay_config->merchant_id;
         $openpayApiKey = $openpay_config->private_key;
         $openpayProductionMode = env('OPENPAY_PRODUCTION_MODE', false);
 
-        try {
-            Openpay::setId($openpayId);
-            Openpay::setApiKey($openpayApiKey);
-            Openpay::setProductionMode($openpayProductionMode);
+        //require_once(base_path() . '/vendor/autoload.php');
+        //require_once(base_path() . '/vendor/openpay/sdk/Openpay.php');
 
-            $openpay = Openpay::getInstance();
+        try {
+            //\Openpay\Data\Openpay::setId($openpayId);
+            //\Openpay\Data\Openpay::setApiKey($openpayApiKey);
+            
+            $openpay = Openpay::getInstance($openpayId, $openpayApiKey, 'MX');
+            
+            Openpay::setProductionMode($openpayProductionMode);
 
             return $openpay;
 
-        } catch (OpenpayApiTransactionError $e) {
+        } catch (\Openpay\Data\OpenpayApiTransactionError $e) {
         error('ERROR en la transacción: ' . $e->getMessage() .
         ' [código de error: ' . $e->getErrorCode() .
         ', categoría de error: ' . $e->getCategory() .
         ', código HTTP: '. $e->getHttpCode() .
         ', id petición: ' . $e->getRequestId() . ']');
 
-        } catch (OpenpayApiRequestError $e) {
+        } catch (\Openpay\Data\OpenpayApiRequestError $e) {
             echo('ERROR en la petición: ' . $e->getMessage());
 
-        } catch (OpenpayApiConnectionError $e) {
+        } catch (\Openpay\Data\OpenpayApiConnectionError $e) {
             echo('ERROR en la conexión al API: ' . $e->getMessage());
 
-        } catch (OpenpayApiAuthError $e) {
+        } catch (\Openpay\Data\OpenpayApiAuthError $e) {
             echo('ERROR en la autenticación: ' . $e->getMessage());
 
-        } catch (OpenpayApiError $e) {
+        } catch (\Openpay\Data\OpenpayApiError $e) {
             echo('ERROR en el API: ' . $e->getMessage());
 
         } catch (\Exception $e) {

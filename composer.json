@@ -44,7 +44,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/fortify": "^1.7",
         "mews/purifier": "^3.3",
-        "openpay/sdk": "^2.2",
+        "openpay/sdk": "2.1.1",
         "paypal/rest-api-sdk-php": "^1.14",
         "rawilk/laravel-ups": "^2.1.1",
         "spatie/laravel-permission": "^4.2",

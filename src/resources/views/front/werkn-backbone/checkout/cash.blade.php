@@ -327,16 +327,4 @@
 
 @endif
 
-<!-- Animation Checkout -->
-<script>
-    $("#step-one").click(function () {
-        $("#layer-checkout-1").addClass("active");
-        $(".info-pay-layer-1").addClass("active");
-    });
-
-    $("#step-two").click(function () {
-        $("#layer-checkout-2").addClass("active");
-        $(".info-pay-layer-2").addClass("active");
-    });
-</script>
 @endpush

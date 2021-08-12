@@ -32,7 +32,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="checkout-container mt-4">
-                <form action="{{ route('checkout') }}" method="POST" id="checkout-form" data-parsley-validate>
+                <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" data-parsley-validate>
                     <div class="row">
                         <!-- Shipping Detail -->
                         <div class="col-md-4 mb-3">
@@ -413,8 +413,9 @@
 </script>
 <!-- / CARD JS -->
 
-<!-- CONEKTA TOKENIZE API -->
+
 @if($payment_method->supplier == 'Conekta')
+<!-- CONEKTA TOKENIZE API -->
 <script type="text/javascript" src="https://cdn.conekta.io/js/latest/conekta.js"></script>
 
 <script type="text/javascript">
@@ -429,7 +430,7 @@
 
         Conekta.Token.create({
             "card": {
-                "number": $('#card-number').val().replace(/ /g,''),
+                "number": $('#card-number').val().replace(/\s+/g, ''),
                 "name": $('#card-name').val(),
                 "exp_year": $('#card-year').val(),
                 "exp_month": $('#card-month').val(),
@@ -486,7 +487,7 @@
 
         Stripe.card.createToken({
             name: $('#card-name').val(),
-            number: $('#card-number').val().replace(/ /g,''),
+            number: $('#card-number').val().replace(/\s+/g, ''),
             cvc: $('#card-cvc').val(),
             exp_month: $('#card-month').val(),
             exp_year: $('#card-year').val()
@@ -525,15 +526,13 @@
 
 @if($payment_method->supplier == 'OpenPay')
 <!-- OPEN PAY API -->
-<script type="text/javascript" src="{{ asset('packages/openpay/lib/openpay.v1.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/openpay/lib/openpay-data.v1.min.js') }}"></script>
+<script type="text/javascript" src="https://js.openpay.mx/openpay.v1.min.js"></script>
+<script type="text/javascript" src="https://js.openpay.mx/openpay-data.v1.min.js"></script>
 
 <script>
     OpenPay.setId('{{ $payment_method->merchant_id }}');
     OpenPay.setApiKey('{{ $payment_method->public_key }}');
-
-    OpenPay.setSandboxMode('{{ env("OPENPAY_SANDBOX_MODE", " ") }}');
-
+    OpenPay.setSandboxMode('{{ env("OPENPAY_PRODUCTION_MODE", "true") }}');
 
     var deviceSessionId = OpenPay.deviceData.setup('checkout-form', "device_hidden");
     console.log(deviceSessionId);
@@ -541,14 +540,13 @@
     var $form = $('#checkout-form');
 
     $form.submit(function(event){
-
         // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
         $form.find('button').prop('disabled', true);
         
         $('.loader-standby').removeClass('hidden');
 
         OpenPay.token.create({
-              "card_number":$('#card-number').cleanVal(),
+              "card_number": $('#card-number').val().replace(/\s+/g, ''),
               "holder_name":$('#card-name').val(),
               "expiration_year":$('#card-year').val(),
               "expiration_month":$('#card-month').val(),
@@ -556,7 +554,6 @@
         }, onSuccess, onError);
 
         return false;
-        
     }); 
 
     function onSuccess(response) {
@@ -565,6 +562,7 @@
         $form.find('button').prop('disabled', true);
 
         $form.append($('<input type="hidden" name="openPayToken" />').val(response.data.id));
+        
         $form.get(0).submit()
     }
 
@@ -581,16 +579,4 @@
 <!-- // OPEN PAY API -->
 @endif
 
-<!-- Animation Checkout -->
-<script>
-    $("#step-one").click(function () {
-        $("#layer-checkout-1").addClass("active");
-        $(".info-pay-layer-1").addClass("active");
-    });
-
-    $("#step-two").click(function () {
-        $("#layer-checkout-2").addClass("active");
-        $(".info-pay-layer-2").addClass("active");
-    });
-</script>
 @endpush
