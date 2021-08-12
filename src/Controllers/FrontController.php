@@ -24,6 +24,14 @@ use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Exception\PayPalConnectionException;
 
+/* Openpay Helpers */
+use Openpay;
+use OpenpayApiError;
+use OpenpayApiAuthError;
+use OpenpayApiRequestError;
+use OpenpayApiConnectionError;
+use OpenpayApiTransactionError;
+
 /* E-commerce Models */
 use Config;
 use Mail;
@@ -58,12 +66,7 @@ use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-use Openpay;
-use OpenpayApiError;
-use OpenpayApiAuthError;
-use OpenpayApiRequestError;
-use OpenpayApiConnectionError;
-use OpenpayApiTransactionError;
+
 
 class FrontController extends Controller
 {
@@ -1015,27 +1018,27 @@ class FrontController extends Controller
 
             return $openpay;
 
-        } catch (\Openpay\Data\OpenpayApiTransactionError $e) {
+        } catch (OpenpayApiTransactionError $e) {
         error('ERROR en la transacción: ' . $e->getMessage() .
         ' [código de error: ' . $e->getErrorCode() .
         ', categoría de error: ' . $e->getCategory() .
         ', código HTTP: '. $e->getHttpCode() .
         ', id petición: ' . $e->getRequestId() . ']');
 
-        } catch (\Openpay\Data\OpenpayApiRequestError $e) {
-            echo('ERROR en la petición: ' . $e->getMessage());
+        } catch (OpenpayApiRequestError $e) {
+            error('ERROR en la petición: ' . $e->getMessage());
 
-        } catch (\Openpay\Data\OpenpayApiConnectionError $e) {
-            echo('ERROR en la conexión al API: ' . $e->getMessage());
+        } catch (OpenpayApiConnectionError $e) {
+            error('ERROR en la conexión al API: ' . $e->getMessage());
 
-        } catch (\Openpay\Data\OpenpayApiAuthError $e) {
-            echo('ERROR en la autenticación: ' . $e->getMessage());
+        } catch (OpenpayApiAuthError $e) {
+            error('ERROR en la autenticación: ' . $e->getMessage());
 
-        } catch (\Openpay\Data\OpenpayApiError $e) {
-            echo('ERROR en el API: ' . $e->getMessage());
+        } catch (OpenpayApiError $e) {
+            error('ERROR en el API: ' . $e->getMessage());
 
         } catch (\Exception $e) {
-            echo('Error en el script: ' . $e->getMessage());
+            error('Error en el script: ' . $e->getMessage());
         }
 
         return null;

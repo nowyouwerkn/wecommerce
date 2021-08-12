@@ -532,7 +532,7 @@
 <script>
     OpenPay.setId('{{ $payment_method->merchant_id }}');
     OpenPay.setApiKey('{{ $payment_method->public_key }}');
-    OpenPay.setSandboxMode('{{ env("OPENPAY_PRODUCTION_MODE", "true") }}');
+    OpenPay.setSandboxMode('{{ env("OPENPAY_PRODUCTION_MODE", true) }}');
 
     var deviceSessionId = OpenPay.deviceData.setup('checkout-form', "device_hidden");
     console.log(deviceSessionId);
@@ -570,7 +570,7 @@
         $('.loader-standby').addClass('hidden');
 
         $('.pay-error').show();
-        $('.pay-error').text(response['error'].message);
+        $('.pay-error').text(response['data'].description);
 
         $form.find('button').prop('disabled', false);
         console.log(response);
