@@ -969,6 +969,7 @@ class FrontController extends Controller
                 
                 $message->from($sender_email, $store_name);
             });
+        }
         catch (Exception $e) {
             Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aun asi la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento.');
         }
