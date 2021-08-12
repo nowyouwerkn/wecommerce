@@ -251,40 +251,7 @@ $tax = $order->cart->totalPrice * 0.0825;
           </tr>
         </table>
         @endforeach
-        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
-          <tr>
-            <td align="center" valign="top"><table width="600" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
-              <tr>
-                <td align="center" valign="top" style="background:#FFF;"><table width="500" border="0" cellspacing="0" cellpadding="0" class="two-left-inner">
-
-                  <tr>
-                    <td height="35" align="center" valign="top" style="border-top:#CCC solid 1px;"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:13px; color:#333; line-height:30px; font-weight:normal;">&nbsp;</td>
-                      </tr>
-                      <tr>
-                        <td align="right" valign="top" class="two-left"><table border="0" align="right" cellpadding="0" cellspacing="0" class="full">
-                          <tr>
-                            <td align="left" valign="top"><table width="215" border="0" align="left" cellpadding="0" cellspacing="0">
-                              <tr>
-                                <td width="100" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:26px; color:#71746f; line-height:22px; font-weight:bold;" class="two-left" mc:edit="tm5-26"><multiline>IVA <small>(Incluido en el producto)</small></multiline></td>
-                                <td width="115" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:20px; color:#71746f; line-height:22px; font-weight:bold;" class="two-left" mc:edit="tm5-27"><multiline>$ {{ number_format($tax, 2) }}</multiline></td>
-                              </tr>
-                            </table></td>
-                          </tr>
-                        </table></td>
-                      </tr>
-                    </table></td>
-                  </tr>
-                  <tr>
-                    <td height="35" align="center" valign="top" style="font-size:35px; line-height:35px;">&nbsp;</td>
-                  </tr>
-                </table></td>
-              </tr>
-            </table></td>
-          </tr>
-        </table>
-
+        
         <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td align="center" valign="top"><table width="600" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
