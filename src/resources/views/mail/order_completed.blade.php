@@ -89,6 +89,7 @@ $tax = $order->cart->totalPrice * 0.0825;
           </tr>
         </table>
 
+        <!--
         <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td align="center" valign="top"><table width="600" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
@@ -102,7 +103,7 @@ $tax = $order->cart->totalPrice * 0.0825;
                       <tr>
                         <td width="50%" align="left" valign="top" class="two-left"><table border="0" align="left" cellpadding="0" cellspacing="0" class="full">
                           <tr>
-                            <td align="center" valign="top"><a href="#"><img mc:edit="tm5-01" editable="true" src="https://www.gearcom.shop/img/logo.png" width="100%" height="23" alt="" /></a></td>
+                            <td align="center" valign="top"><a href="#"><img mc:edit="tm5-01" editable="true" src="logo.png" width="100%" height="23" alt="" /></a></td>
                           </tr>
                         </table></td>
 
@@ -117,12 +118,13 @@ $tax = $order->cart->totalPrice * 0.0825;
             </table></td>
           </tr>
         </table>
+        -->
 
         <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td align="center" valign="top"><table width="600" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
               <tr>
-                <td align="center" valign="top" style="background:#f16321;"><table width="500" border="0" cellspacing="0" cellpadding="0" class="two-left-inner">
+                <td align="center" valign="top" style="background:#b6b9ae;"><table width="500" border="0" cellspacing="0" cellpadding="0" class="two-left-inner">
                   <tr>
                     <td height="55" align="center" valign="top" style="font-size:55px; line-height:55px;">&nbsp;</td>
                   </tr>
@@ -265,7 +267,7 @@ $tax = $order->cart->totalPrice * 0.0825;
                           <tr>
                             <td align="left" valign="top"><table width="215" border="0" align="left" cellpadding="0" cellspacing="0">
                               <tr>
-                                <td width="100" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:26px; color:#71746f; line-height:22px; font-weight:bold;" class="two-left" mc:edit="tm5-26"><multiline>Impuestos</multiline></td>
+                                <td width="100" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:26px; color:#71746f; line-height:22px; font-weight:bold;" class="two-left" mc:edit="tm5-26"><multiline>IVA <small>(Incluido en el producto)</small></multiline></td>
                                 <td width="115" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:20px; color:#71746f; line-height:22px; font-weight:bold;" class="two-left" mc:edit="tm5-27"><multiline>$ {{ number_format($tax, 2) }}</multiline></td>
                               </tr>
                             </table></td>
@@ -299,7 +301,7 @@ $tax = $order->cart->totalPrice * 0.0825;
                           <tr>
                             <td align="left" valign="top"><table width="280" border="0" align="left" cellpadding="0" cellspacing="0">
                               <tr>
-                                <td width="165" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:26px; color:#333; line-height:22px; font-weight:bold;" class="two-left" mc:edit="tm5-28"><multiline>Grand Total</multiline></td>
+                                <td width="165" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:26px; color:#333; line-height:22px; font-weight:bold;" class="two-left" mc:edit="tm5-28"><multiline>Total</multiline></td>
                                 <td width="115" align="left" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:20px; color:#333; line-height:22px; font-weight:bold;" class="two-left" mc:edit="tm5-29"><multiline>$ {{ $order->payment_total }}</multiline></td>
                               </tr>
                             </table></td>
@@ -321,7 +323,7 @@ $tax = $order->cart->totalPrice * 0.0825;
           <tr>
             <td align="center" valign="top"><table width="600" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
               <tr>
-                <td align="center" valign="top" style="background:#f16321;"><table width="500" border="0" cellspacing="0" cellpadding="0" class="two-left-inner">
+                <td align="center" valign="top" style="background:#b6b9ae;"><table width="500" border="0" cellspacing="0" cellpadding="0" class="two-left-inner">
                   <tr>
                     <td height="10" align="center" valign="top" style="font-size:10px; line-height:10px;">&nbsp;</td>
                   </tr>
@@ -340,7 +342,7 @@ $tax = $order->cart->totalPrice * 0.0825;
                     <td height="40" align="center" valign="top" style="font-size:40px; line-height:40px;">&nbsp;</td>
                   </tr>
                   <tr>
-                    <td align="center" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:12px; color:#4b4b4c; line-height:30px; font-weight:normal;" mc:edit="tm5-30"><multiline>&copy; 2020 WeCommerce</multiline></td>
+                    <td align="center" valign="top" style="font-family:'Open Sans', sans-serif, Verdana; font-size:12px; color:#4b4b4c; line-height:30px; font-weight:normal;" mc:edit="tm5-30"><multiline>&copy; Notificación de Tienda</multiline></td>
                   </tr>
 
 </table></td>

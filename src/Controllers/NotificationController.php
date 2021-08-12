@@ -173,15 +173,23 @@ class NotificationController extends Controller
         $user = User::find($order->user->id);
         $name = $user->name;
 
+        $config = StoreConfig::first();
+
+        $sender_email = $config->sender_email;
+        $store_name = $config->store_name;
+        $contact_email = $config->contact_email;
+
         try {
-            Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email) {
+            Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email, $sender_email, $store_name) {
                 $message->to($email, $name)->subject
-                ('Gracias por tu compra');
+                ('¡Gracias por comprar con nosotros!');
                 
-                $message->from('noreply@werkn.mx','Tienda');
+                $message->from($sender_email, $store_name);
             });
         } catch (Exception $e) {
             Session::flash('error', 'No se ha identificado servidor SMTP en la plataforma. Configuralo correctamente para enviar correos desde tu sistema.');
+
+            return redirect()->back();
         }
 
         Session::flash('success', 'Correo reenviado al usuario exitosamente.');

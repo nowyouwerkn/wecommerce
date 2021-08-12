@@ -887,8 +887,10 @@ class FrontController extends Controller
 
         if ($payment_method->supplier == 'Paypal') {
             $order->payment_id = $payment->id;
+            $order->is_completed = false;
         }else{
-            $order->payment_id = $charge->id;   
+            $order->payment_id = $charge->id;
+            $order->is_completed = true;
         }
         $order->payment_method = $payment_method->supplier;
 
@@ -938,6 +940,12 @@ class FrontController extends Controller
 
         $mail = MailConfig::first();
 
+        $config = StoreConfig::first();
+
+        $sender_email = $config->sender_email;
+        $store_name = $config->store_name;
+        $contact_email = $config->contact_email;
+
         config(['mail.driver'=> $mail->mail_driver]);
         config(['mail.host'=>$mail->mail_host]);
         config(['mail.port'=>$mail->mail_port]);   
@@ -947,21 +955,24 @@ class FrontController extends Controller
 
         $data = array('order_id' => $order->id, 'user_id' => $user->id, 'name'=> $user->name, 'email' => $user->email, 'orden'=> $order, 'total'=> $cart->totalPrice, 'num_orden'=> $order->id );
 
-        Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email) {
+        try {
+            Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email, $sender_email, $store_name) {
+                $message->to($email, $name)->subject
+                ('¡Gracias por comprar con nosotros!');
+                
+                $message->from($sender_email, $store_name);
+            });
+            
+            Mail::send('wecommerce::mail.new_order', $data, function($message) use($sender_email, $store_name, $contact_email){
+                $message->to($contact_email, 'Ventas')->subject
+                ('¡Nueva Compra en tu Tienda!');
+                
+                $message->from($sender_email, $store_name);
+            });
+        catch (Exception $e) {
+            Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aun asi la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento.');
+        }
 
-            $message->to($email, $name)->subject
-            ('Gracias por comprar Werkn');
-            
-            $message->from('noreply@wecommerce.mx','WeCommerce');
-        });
-        
-        Mail::send('wecommerce::mail.new_order', $data, function($message) {
-            $message->to('atencion@wecommerce.mx', 'Ventas Werkn')->subject
-            ('¡Nueva Compra en tu Tienda!');
-            
-            $message->from('noreply@wecommerce.mx','WeCommerce');
-        });
-        
         $purchase_value = number_format($cart->totalPrice,2);
 
         // Notificación
@@ -993,9 +1004,14 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
-        //return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
+        if (!Auth::check()) {
+            return redirect()->route('index');
+        }else{
+            return redirect()->route('profile');
+        }
 
-        return redirect()->route('profile');
+        //return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
+        
     }
 
     public function getOpenPayInstance(){
