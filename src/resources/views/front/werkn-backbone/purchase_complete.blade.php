@@ -33,7 +33,7 @@
     .image-wrap{
         position: relative;
         overflow: hidden;
-        height: 990px;
+        height: 100%;
         margin-bottom: -48px;
     }
 
@@ -50,7 +50,7 @@
       line-height: .9em;
       font-size: 5em;
       position: absolute;
-      top: 25%;
+      top: 20%;
       left: 40px;
       z-index: 2;
       letter-spacing: -2px;
@@ -61,7 +61,7 @@
       padding: 50px 40px;
       padding-bottom: 100px;
       position: relative;
-        top: 20%;
+        top: 15%;
     }
 
     .tracking-purchase{
@@ -91,35 +91,60 @@
     .btn-link{
         padding: 0px 4px !important;
     }
-
 </style>
     <main class="purchase-complete">
         <div class="container text-purchase">
             <div class="row">
                 <div class="col-md-4">
                     <div class="image-wrap">
-                        <h2>Gracias por tu Compra</h2>
-                        <img src="{{ asset('img/modal-image.png') }}">    
+                        <h2>Gracias por tu compra</h2>
+                        <img src="{{ asset('img/modal-image.jpg') }}">    
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="special-text">
                         <h4>Siguientes pasos...</h4>
+
                         @guest
-                        <p class="alert alert-warning text-left" style="display: inline-block;"><ion-icon name="alert-circle-outline" class="mr-1"></ion-icon> Compraste esto como invitado pero se creó una cuenta para ti por si acas. Puedes acceder usando tu correo con el compraste y la contraseña: "<strong>wkshop</strong>"</p>
+                        <p class="alert alert-warning text-left" style="display: inline-block;"><ion-icon name="alert-circle-outline" class="mr-1"></ion-icon> Compraste esto como invitado pero se creó una cuenta para ti para que puedas dar seguimiento a tu órden. Puedes acceder usando tu correo con el que hiciste tu compra y la contraseña: "<strong>wkshop</strong>"</p>
                         @endguest
 
-                        <p>Te enviamos un corre oelectrónico con los detalles de tu orden. Esa información tambien puedes verificarla directamente en nuestro sitio dirigiendote a tus <a href="{{ route('shopping') }}">ordenes</a> en tu <a href="{{ route('profile') }}">perfil.</a></p>
+                        <p>Te enviamos un correo electrónico con los detalles de tu orden. Esa información tambien puedes verificarla directamente en nuestro sitio dirigiendote a tus <a href="{{ route('shopping') }}">ordenes</a> en tu <a href="{{ route('profile') }}">perfil.</a></p>
                         <hr>
                         @php
-                            $legals = Nowyouwerkn\WeCommerce\Models\Models\LegalText::all();
+                            $legals = Nowyouwerkn\WeCommerce\Models\LegalText::all();
                         @endphp
 
-                        <h5>Any questions?</h5>
-                        <p class="mb-0">Puedes leer nuestros textos legales
+                        <h5>¿Alguna pregunta?</h5>
+                        <p class="mb-0">Puedes leer nuestros textos legales:</p>
+                        <ul>
                             @foreach($legals as $legal)
-                                <a class="btn btn-link" href="">{{ $legal->name }}</a> 
-                            @endforeach</p>
+                            <li>
+                                <a href="{{ route('legal.text' , $legal->type) }}">
+                                    @switch($legal->type)
+                                        @case('Returns')
+                                            Política de Devoluciones
+                                            @break
+
+                                        @case('Privacy')
+                                            Política de Privacidad
+                                            @break
+
+                                        @case('Terms')
+                                            Términos y Condiciones
+                                            @break
+
+                                        @case('Shipment')
+                                            Política de Envíos
+                                            @break
+
+                                        @default
+                                            Hubo un problema, intenta después.
+                                    @endswitch 
+                                </a>
+                            </li>
+                            @endforeach
+                        </ul>
 
                         <a href="{{ route('profile') }}" class="btn btn-secondary btn-lg">Ir a mi perfil <ion-icon name="arrow-forward"></ion-icon></a>
                     </div>

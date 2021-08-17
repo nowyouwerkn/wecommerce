@@ -66,8 +66,6 @@ use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-
-
 class FrontController extends Controller
 {
     private $notification;
@@ -100,38 +98,6 @@ class FrontController extends Controller
     */
     public function dynamicFilter(Request $request)
     {
-        /*
-        $total_products = Product::all()->count();
-
-        $selected_cat_type = $request->category;
-        $selected_variant = $request->variant;
-            
-        //$query = Product::select('*')->where('in_index', true)->where('status', 'Publicado');
-        $query = Product::where('in_index', true)->where('status', 'Publicado');
-
-        if ($request->has('category')) {
-            $category = Category::where('slug', $selected_cat_type)->first();
-            $query->where('category_id', $category->id);
-        }
-
-        if ($request->has('variant')) {
-            $query->where('category_id', $category->id);
-        }
-
-
-        $products = $query->paginate(30)->withQueryString();
-
-        if($products->count() > 0){
-            return view('front.theme.' . $this->theme->get_name() . '.catalog_filter')
-            ->with('products', $products);
-        }else{
-            $products = collect([]);
-
-            return view('front.theme.' . $this->theme->get_name() . '.catalog_filter')
-            ->with('products', $products);
-        }
-        */
-
         $total_products = Product::all()->count();
 
         $input = $request->all();
@@ -208,16 +174,6 @@ class FrontController extends Controller
 
         $next_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
         $last_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
-
-        /*
-        if (empty($next_product)) {
-            $next_product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->first();
-        }
-
-        if (empty($last_product)) {
-            $last_product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->first();
-        }
-        */
 
         if (empty($product)) {
             return redirect()->back();
@@ -529,6 +485,8 @@ class FrontController extends Controller
         }
     }
 
+
+
     public function postCheckout(Request $request)
     {
         if (!Auth::check()) {
@@ -824,18 +782,17 @@ class FrontController extends Controller
 
                 // Actualizar existencias del carrito
                 foreach ($cart->items as $product) {
-                    $get_product = ProductVariant::where('product_id', $product['item']['id'])->get();
+                    if ($product['item']['has_variants'] == true) {
+                        $variant = Variant::where('value', $product['variant'])->first();
+                        $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
+                        
+                        $product_variant->stock = $product_variant->stock - $product['qty'];
+                        $product_variant->save();
+                    }else{
+                        $product_stock = Product::find($product['item']['id']);
 
-                    foreach($get_product as $search_variant){
-                        $get_variant = Variant::find($search_variant->variant_id);
-
-                        if($get_variant->name == $product['variant']){
-                            $actual_stock = $search_variant->stock;
-                            $new_stock = $actual_stock - $product['qty'];
-                            $search_variant->stock = $new_stock;
-
-                            $search_variant->save();
-                        }
+                        $product_stock->stock = $product_stock->stock - $product['qty'];
+                        $product->save();
                     }
                 }
 
@@ -869,7 +826,7 @@ class FrontController extends Controller
         $order->city = $request->input('city');
         $order->country = $request->input('country');
         $order->phone = $request->input('phone');
-        //$order->suburb = $request->input('suburb');
+        $order->suburb = $request->input('suburb');
         $order->references = $request->input('references');
 
         /* Money Info */
@@ -897,21 +854,22 @@ class FrontController extends Controller
         // Identificar al usuario para guardar sus datos.
         $user->orders()->save($order);
 
-        // Actualizar existencias del carrito
+        // Actualizar existencias del producto
         foreach ($cart->items as $product) {
-            $get_product = ProductVariant::where('product_id', $product['item']['id'])->get();
 
-            foreach($get_product as $search_variant){
-                $get_variant = Variant::find($search_variant->variant_id);
+            if ($product['item']['has_variants'] == true) {
+                $variant = Variant::where('value', $product['variant'])->first();
+                $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
+                
+                $product_variant->stock = $product_variant->stock - $product['qty'];
+                $product_variant->save();
+            }else{
+                $product_stock = Product::find($product['item']['id']);
 
-                if($get_variant->name == $product['variant']){
-                    $actual_stock = $search_variant->stock;
-                    $new_stock = $actual_stock - $product['qty'];
-                    $search_variant->stock = $new_stock;
-
-                    $search_variant->save();
-                }
+                $product_stock->stock = $product_stock->stock - $product['qty'];
+                $product_stock->save();
             }
+            
         }
 
         // GUARDAR LA DIRECCIÓN
@@ -929,8 +887,8 @@ class FrontController extends Controller
             $address->country = $request->country;
             $address->state = $request->state;
             $address->phone = $request->phone;
-            //$address->suburb = $request->suburb;
-            //$address->references = $request->references;
+            $address->suburb = $request->suburb;
+            $address->references = $request->references;
 
             $address->save();
         }
@@ -939,7 +897,6 @@ class FrontController extends Controller
         $email = $user->email;
 
         $mail = MailConfig::first();
-
         $config = StoreConfig::first();
 
         $sender_email = $config->sender_email;
@@ -1005,11 +962,15 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
+        /*
         if (!Auth::check()) {
             return redirect()->route('index');
         }else{
             return redirect()->route('profile');
         }
+        */
+
+        return redirect()->route('purchase.complete');
 
         //return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
         
@@ -1454,5 +1415,29 @@ class FrontController extends Controller
 
         return view('front.theme.' . $this->theme->get_name() . '.legal')->with('text', $text);
     }
+
+    public function purchaseComplete()
+    {   
+        return view('front.theme.' . $this->theme->get_name() . '.purchase_complete');
+    }
+
+    public function reduceStock()
+    {
+        $order = Order::find(16);
+
+        $order->cart = unserialize($order->cart);
+
+        // Actualizar existencias del carrito
+        foreach ($order->cart->items as $product) {
+            $variant = Variant::where('value', $product['variant'])->first();
+            $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
+            
+            $product_variant->stock = $product_variant->stock - $product['qty'];
+            $product_variant->save();
+        }
+
+        return redirect()->back();
+    }
+
 
 }

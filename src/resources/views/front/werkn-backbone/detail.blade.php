@@ -51,6 +51,29 @@
         line-height: 0px;
         padding: 0px 11px;
     }
+
+    .no-stock-variant{
+        opacity: .5;
+        width: 40px;
+        height: 34px;
+        line-height: 28px;
+        text-align: center;
+        border: 3px solid #ebebeb;
+        font-size: 14px;
+        color: #544842;
+        font-family: 'Jost', sans-serif;
+        position: relative;
+    }
+
+    .no-stock-variant .line{
+        height: 2px;
+        width: 120%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%) rotate(45deg);
+        background: rgba(0,0,0,.3);
+    }
 </style>
 @endpush
 
@@ -160,7 +183,11 @@
                                     <ul>
                                         @foreach($product->variants as $variant)
                                             <li>
+                                                @if($variant->pivot->stock == 0)
+                                                <div class="no-stock-variant"><span class="line"></span>{{ $variant->value }}</div>
+                                                @else
                                                 <a id="variant{{ $variant->id }}" data-value="{{ $variant->value }}" class="" href="javascript:void(0)">{{ $variant->value }}</a>
+                                                @endif
                                             </li>
                                         @endforeach
                                     </ul>
@@ -193,9 +220,16 @@
                                 </a>
                             @endif
                         @else
+                            @if($product->stock == 0)
+                            <div class="mr-3">
+                                <p class="no-existance-btn mb-0"><i class="fas fa-heartbeat"></i> Sin Existencias</p>
+                                <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>
+                            </div>
+                            @else
                             <a href="{{ route('add-cart', ['id' => $product->id, 'variant' => 'unique']) }}" id="cartBtn" class="btn" role="button">
                                 <i class="fas fa-cart-plus"></i> Agregar al carrito
                             </a>
+                            @endif
                         @endif
 
                         <div class="wishlist-compare">

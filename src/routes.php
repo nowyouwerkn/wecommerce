@@ -373,4 +373,13 @@ Route::group(['prefix' => 'profile', 'middleware' => 'auth'], function(){
 
 Route::get('legals/{type}', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@legalText')->name('legal.text');
 
+// Orden Completa
+Route::get('/compra-exitosa', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@purchaseComplete',
+    'as' => 'purchase.complete',
+]);
 
+Route::get('reducir-stock', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@reduceStock',
+    'as' => 'reduce.stock.test',
+]);

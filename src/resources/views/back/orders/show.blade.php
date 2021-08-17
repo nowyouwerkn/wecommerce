@@ -352,7 +352,7 @@
                 </div>
 
                 <div class="row mb-4">
-                    <div class="col-md-8">
+                    <div class="col-md-7">
                         <div class="card h-100">
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -430,7 +430,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
@@ -438,8 +438,11 @@
                                         <h5 class="mb-2 mt-1">Dirección de Envío </h5>
                                         <ul class="list-unstyled">
                                             <li><strong>Calle + Num:</strong> {{ $order->street }} {{ $order->street_num }}</li>
-                                            <li><strong>Código Postal:</strong> {{ $order->postal_code }}</li>
+                                            <li><strong>Colonia:</strong> {{ $order->suburb }}</li>
 
+                                            <li><strong>Código Postal:</strong> {{ $order->postal_code }}</li>
+                                            <li><strong>Referencias:</strong> {{ $order->references }}</li>
+                                            <li><hr></li>
                                             <li><strong>Ciudad:</strong> {{ $order->city }}</li>
                                             <li><strong>Estado:</strong> {{ $order->state }}</li>
                                             <li><strong>País:</strong> {{ $order->country }}</li>
