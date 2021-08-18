@@ -921,7 +921,7 @@ class FrontController extends Controller
             });
             
             Mail::send('wecommerce::mail.new_order', $data, function($message) use($sender_email, $store_name, $contact_email){
-                $message->to($contact_email, 'Ventas')->subject
+                $message->to($contact_email, $store_name)->subject
                 ('¡Nueva Compra en tu Tienda!');
                 
                 $message->from($sender_email, $store_name);
@@ -1438,6 +1438,4 @@ class FrontController extends Controller
 
         return redirect()->back();
     }
-
-
 }
