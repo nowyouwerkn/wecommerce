@@ -132,8 +132,8 @@
 
                 <div class="form-group mt-2">
                     <label>Limitar uso por usuario</label>
-                    <input type="text" class="form-control" name="usage_limit_per_user" value="1" />
-                    <small>Limita la cantidad de veces que este cupon puede ser usado por usuario.</small>
+                    <input type="text" class="form-control" name="usage_limit_per_user" value="1" required="" />
+                    <small>Limita la cantidad de veces que este cupón puede ser usado por usuario.</small>
                 </div>
             </div>
 
@@ -158,7 +158,7 @@
         </div>
 
         <div class="col-md-4">
-            <button type="submit" class="btn btn-success btn-block">Guardar cupon</button>
+            <button type="submit" class="btn btn-success btn-block">Guardar cupón</button>
             <a href="{{ route('coupons.index') }}" class="btn btn-outline-secondary btn-block">Descartar</a>
         </div>
     </div>

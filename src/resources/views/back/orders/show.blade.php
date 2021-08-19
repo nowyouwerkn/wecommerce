@@ -10,19 +10,21 @@
             <li class="breadcrumb-item active" aria-current="page">Orden # {{ $order->id }}</li>
             </ol>
         </nav>
-        <h4 class="mg-b-0 tx-spacing--1">Orden # {{ $order->id }}</h4>
+        <h4 class="mg-b-0 tx-spacing--1">
+            Orden
+            @if(strlen($order->id) == 1)
+            #00{{ $order->id }}
+            @endif
+            @if(strlen($order->id) == 2)
+            #0{{ $order->id }}
+            @endif
+            @if(strlen($order->id) > 2)
+            #{{ $order->id }}
+            @endif
+        </h4>
     </div>
 
     <div class="d-none d-md-block">
-        <a class="btn btn-sm pd-x-15 btn-warning btn-uppercase mg-l-5" href="#" onclick="event.preventDefault(); document.getElementById('status-form').submit();">
-            Cancelar Orden
-
-            <form id="status-form" action="{{ route('order.status', $order->id) }}" method="POST" style="display: none;">
-                {{ csrf_field() }}
-                <input type="text" name="status" value="Cancelar Orden">
-            </form>
-        </a>
-
         <a href="{{ route('orders.index') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
             <i class="fas fa-undo mr-1"></i> Regresar al listado
         </a>
@@ -101,76 +103,96 @@
         border: 1px solid rgba(0,0,0,.2);
         padding: 20px 30px;
     }
+
+    .status-row{
+        width: 100%;
+    }
+
+    .status-row .status-box{
+        width: 100%;
+        padding: 13px 20px;
+        line-height: 1;
+    }
+
+    .bg-pagado {
+        color: #fff;
+        background-color: #10b759;
+        border-color: #10b759;
+    }
+
+    .bg-empaquetado {
+        color: #1c273c;
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .bg-pendiente {
+        color: #fff;
+        background-color: #3b4863;
+        border-color: #3b4863;
+    }
+
+    .bg-enviado {
+        color: #fff;
+        background-color: #00b8d4;
+        border-color: #00b8d4;
+    }
+
+    .bg-entregado {
+        color: #fff;
+        background-color: #7987a1;
+        border-color: #7987a1;
+    }
+
+    .bg-cancelado {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .bg-expirado {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
 </style>
 @endpush
 
 @section('content')
 
-<div class="row mb-3">
-    <div class="col-md-4">
-        <div class="card text-white bg-info" style="height:91%;">
-            <div class="card-body">
-                <h2 class="card-title text-white" style="font-size: 3vw !important;">Order #{{ $order->id }}</h2>
+@if(!empty($shipment_method))
+<div class="col-md-6">
+    <div class="card border border-primary h-100">
+        <div class="card-body text-secondary">
+            <div class="row align-items-center">
+                <div class="col-md-2">
+                    <img class="img-fluid" src="{{ asset('assets/img/brands/ups.png') }}">
+                </div>
+                <div class="col-md-9">
+                    <h5 class="card-title text-secondary mb-1">UPS Tracking Number</h5>
+                    <p class="card-text">{{ $order->main_tracking }}</p>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="col-md-8">
-        <div class="row">
-            @if(!empty($shipment_method))
-            <div class="col-md-6">
-                <div class="card border border-primary h-100">
-                    <div class="card-body text-secondary">
-                        <div class="row align-items-center">
-                            <div class="col-md-2">
-                                <img class="img-fluid" src="{{ asset('assets/img/brands/ups.png') }}">
-                            </div>
-                            <div class="col-md-9">
-                                <h5 class="card-title text-secondary mb-1">UPS Tracking Number</h5>
-                                <p class="card-text">{{ $order->main_tracking }}</p>
-                            </div>
-                        </div>
-                    </div>
+<div class="col-md-6">
+    <div class="card border border-secondary h-100">
+        <div class="card-body text-secondary">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <img class="img-fluid" src="{{ asset('assets/img/brands/ups.png') }}">
                 </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card border border-secondary h-100">
-                    <div class="card-body text-secondary">
-                        <div class="row align-items-center">
-                            <div class="col-md-3">
-                                <img class="img-fluid" src="{{ asset('assets/img/brands/ups.png') }}">
-                            </div>
-                            <div class="col-md-9">
-                                <h5 class="card-title text-secondary mb-1">UPS Shipping Label</h5>
-                                <a class="card-text"  href="javascript:void(0)" data-toggle="modal" data-target="#guideModal">Open Guide</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endif
-
-            <div class="col-md-6">
-                <div class="card border border-secondary h-100">
-                    <div class="card-body text-secondary">
-                        <div class="row align-items-center">
-                            <div class="col-md-2">
-                                <img class="img-fluid" src="{{ asset('assets/img/brands/stripe.png') }}">
-                            </div>
-                            <div class="col-md-9">
-                                <h5 class="card-title text-secondary mb-1">ID de Pago</h5>
-                                <p class="card-text">{{ $order->payment_id }}</p>
-                            </div>
-                        </div>
-                        
-                    </div>
+                <div class="col-md-9">
+                    <h5 class="card-title text-secondary mb-1">UPS Shipping Label</h5>
+                    <a class="card-text"  href="javascript:void(0)" data-toggle="modal" data-target="#guideModal">Open Guide</a>
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
-<!-- Modal -->
+@endif
 
 @if($shipping_method != 0)
 <div class="modal fade" id="guideModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -197,28 +219,69 @@
 </div>
 @endif
 
-    @if($order->is_completed == true)
-
-    @else
-        @if($order->status == NULL)
-        @else
-        <div class="bg-danger text-white p-3 mb-4">
-            <h5 class="mb-0">Orden cancelada por Administración o Expiró el pago en la pasarela de Pago</h5>
-        </div>
-        @endif
+    @if($order->status == 'Cancelado')
+    <div class="bg-danger text-white p-3 mb-4">
+        <h5 class="mb-0">Orden cancelada por Administración o Expiró el pago en la pasarela de Pago</h5>
+    </div>
     @endif
 
-    @if($order->is_completed == true)
+    @if($order->status != 'Cancelado')
     <span class="printableArea">
     @else
-        @if($order->status == NULL)
-        <span class="printableArea">
-        @else
-        <span class="printableArea" style="opacity: .3;">
-        @endif
+    <span class="printableArea" style="opacity: .3;">
     @endif
         <div class="row">
             <div class="col-md-4">
+                <div class="d-flex align-items-center status-row">
+                    <div class="status-box bg-{{ Str::slug($order->status) }}">
+                        @switch($order->status)
+                            @case('Pendiente')
+                                <i class="fas fa-exclamation mr-1"></i> 
+                                @break
+
+                            @case('Pagado')
+                                <i class="fas fa-check mr-1"></i> 
+                                @break
+
+                            @case('Empaquetado')
+                                <i class="fas fa-box mr-1"></i>
+                                @break
+
+                            @case('Enviado')
+                                <i class="fas fa-truck mr-1"></i> 
+                                @break
+
+                            @case('Entregado')
+                                <i class="fas fa-dolly mr-1"></i>
+                                @break
+
+                            @case('Cancelado')
+                                <i class="fas fa-times mr-1"></i> 
+                                @break
+
+                            @case('Expirado')
+                                <i class="fas fa-times mr-1"></i> 
+                                @break
+
+                            @default
+                                <i class="fas fa-check mr-1"></i> 
+
+                        @endswitch
+                        
+                        <span>{{ $order->status ?? 'Pagado'}}</span>
+                    </div>
+
+                    <div class="status-box bg-dark text-white" data-toggle="tooltip" data-placement="bottom" title="ID de Pago: {{ $order->payment_id }}">
+                        @if($order->payment_method == 'Paypal')
+                            <i class="fab fa-paypal"></i>
+                        @else
+                            <i class="fas fa-credit-card"></i>
+                        @endif
+
+                        {{ $order->payment_method }}
+                    </div>
+                </div>
+
                 <div class="card mb-4">
                     <div class="card-body">
                         <h4>Información de Compra:</h4>
@@ -232,18 +295,7 @@
                         <p class="mb-0"><strong>Tarjeta:</strong> **** **** **** {{ $order->card_digits }}</p>
 
                         <h5 class="mb-1 mt-3">Horario de Compra:</h5>
-                        <p><span class="text-muted"><i class="wb wb-time"></i> {{ $order->created_at }}</span></p>
-
-                        <h5 class="mb-1 mt-3">Estado:</h5>
-                        @if($order->is_completed == true)
-                        <div class="badge badge-success"><i class="icon-check mr-1"></i> Pagado</div>
-                        @else
-                            @if($order->status == NULL)
-                            <div class="badge badge-table badge-warning"><i class="icon-close mr-1"></i> Pendiente</div>
-                            @else
-                            <div class="badge badge-table badge-danger"><i class="icon-close mr-1"></i> Cancelado</div>
-                            @endif
-                        @endif
+                        <p><span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($order->created_at)->format('d M Y - h:ia') }}</span></p>
                     </div>
                 </div>
 
@@ -262,7 +314,7 @@
 
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6 class="mb-0 mt-0">Envio:</h6>
+                                <h6 class="mb-0 mt-0">Envío:</h6>
                             </div>
                             <div class="col text-right">
                                 <p class="mb-0" style="font-size: 1.3em;"><strong>${{ number_format($order->shipping_rate, 2) ?? 'N/A' }}</strong></p>
@@ -540,7 +592,7 @@
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Nota de Guía / Productos en Envio</label>
+                                <label>Nota de Guía / Productos en Envío</label>
                                 <textarea class="form-control" name="products_on_order" rows="5"></textarea>
                             </div>
                         </div>
@@ -556,7 +608,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

@@ -127,7 +127,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
     Route::get('exportar-ordenes', 'Nowyouwerkn\WeCommerce\Controllers\OrderController@export')->name('export.orders');
 
-    Route::post('/orders/{id}/cambiar-estado', [
+    Route::put('/orders/{id}/cambiar-estado', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@changeStatus',
         'as' => 'order.status',
     ]);

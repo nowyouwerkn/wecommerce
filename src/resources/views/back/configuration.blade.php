@@ -99,7 +99,7 @@
             <a href="{{ route('shipments.index') }}">
                 <div class="card card-body">
                     <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">Envíos</h3>
-                    <h6 class="tx-12 tx-color-03 mg-b-0 mt-2">Administra las pasarelas de envio para tu tienda.</h6>
+                    <h6 class="tx-12 tx-color-03 mg-b-0 mt-2">Administra las pasarelas de envío para tu tienda.</h6>
                 </div>
             </a>
         </div>

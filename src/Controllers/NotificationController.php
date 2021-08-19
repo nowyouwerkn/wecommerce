@@ -17,6 +17,7 @@ use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\Order;
 use Nowyouwerkn\WeCommerce\Models\MailConfig;
 use Nowyouwerkn\WeCommerce\Models\StoreConfig;
+use Nowyouwerkn\WeCommerce\Models\StoreTheme;
 use Nowyouwerkn\WeCommerce\Models\Notification;
 
 use Nowyouwerkn\WeCommerce\Services\MailService;
@@ -167,17 +168,21 @@ class NotificationController extends Controller
 
         $order = Order::find($order_id);
         $order->cart = unserialize($order->cart);
-        $data = array('order_id' => $order->id, 'user_id' => $order->user->id, 'name'=> $order->user->name, 'email' => $request->input('email'), 'orden'=> $order->cart, 'total'=> $order->cart->totalPrice, 'num_orden'=> $order->id );
 
         $email = $request->email;
         $user = User::find($order->user->id);
         $name = $user->name;
 
         $config = StoreConfig::first();
+        $theme = StoreTheme::first();
 
         $sender_email = $config->sender_email;
         $store_name = $config->store_name;
         $contact_email = $config->contact_email;
+
+        $logo = asset('themes/' . $theme->get_name() . '/img/logo.svg');
+
+        $data = array('order_id' => $order->id, 'user_id' => $order->user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at);
 
         try {
             Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email, $sender_email, $store_name) {

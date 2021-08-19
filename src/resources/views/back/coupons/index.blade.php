@@ -13,7 +13,7 @@
         </div>
         <div class="d-none d-md-block">
             <a href="{{ route('coupons.create') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Agregar cupon
+                Agregar Nuevo Cupón
             </a>
         </div>
     </div>
@@ -68,7 +68,7 @@
                                 <span class="badge badge-info">No</span>
                                 @endif 
                             </td>
-                            <td>{{ Carbon\Carbon::parse($cup->expires_at)->diffForHumans() }}</td>
+                            <td>{{ Carbon\Carbon::parse($cup->end_date)->diffForHumans() }}</td>
                             <td>{{ Carbon\Carbon::parse($cup->created_at)->diffForHumans() }}</td>
                             
                             <td class="d-flex">
@@ -101,7 +101,7 @@
                                                             </div>
 
                                                             <div class="form-group mt-2">
-                                                                <label>Description</label>
+                                                                <label>Descripción</label>
                                                                 <textarea class="form-control" name="description">{{ $cup->description }}</textarea>
                                                             </div>
                                                         </div>

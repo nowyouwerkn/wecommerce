@@ -2,6 +2,20 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.0.5 - 2021-08-19
+
+### Agregado
+- Funcionalidad para cambiar estado de orden desde el listado general de ordenes.
+- Cambio de diseño en etiquetas de estado e identificador de pago en detalle de orden para simplificar visualmente la vista.
+- Cambios de diseño en los correos de notificación que se envian desde el sistema.
+- Filtros indicadores en módulo ordenes.
+- Sistema de búsqueda y filtrado para listado de ordenes.
+
+### Reparado
+- Listado de cupones cambiado para ser más descriptivo con las fechas de expiración de los cupones.
+- Detalles de ortografía en plataforma autoadministrable.
+
+
 ## 1.0.4 - 2021-08-09
 
 ### Agregado

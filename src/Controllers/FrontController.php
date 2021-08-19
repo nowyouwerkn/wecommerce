@@ -55,6 +55,8 @@ use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 /* Cuopon Models */
 use Nowyouwerkn\WeCommerce\Models\Coupon;
@@ -485,8 +487,6 @@ class FrontController extends Controller
         }
     }
 
-
-
     public function postCheckout(Request $request)
     {
         if (!Auth::check()) {
@@ -809,6 +809,8 @@ class FrontController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt('wkshop'),
             ]);
+
+            $user->assignRole('customer');
         }else{
             $user = Auth::user();
         }
@@ -845,9 +847,11 @@ class FrontController extends Controller
         if ($payment_method->supplier == 'Paypal') {
             $order->payment_id = $payment->id;
             $order->is_completed = false;
+            $order->status = 'Pendiente';
         }else{
             $order->payment_id = $charge->id;
             $order->is_completed = true;
+            $order->status = 'Pagado';
         }
         $order->payment_method = $payment_method->supplier;
 
@@ -893,6 +897,7 @@ class FrontController extends Controller
             $address->save();
         }
 
+        /*
         $name = $user->name;
         $email = $user->email;
 
@@ -911,6 +916,28 @@ class FrontController extends Controller
         config(['mail.encryption'=>$mail->mail_encryption]);
 
         $data = array('order_id' => $order->id, 'user_id' => $user->id, 'name'=> $user->name, 'email' => $user->email, 'orden'=> $order, 'total'=> $cart->totalPrice, 'num_orden'=> $order->id );
+        */
+
+        $mail = MailConfig::first();
+        $config = StoreConfig::first();
+
+        $name = $user->name;
+        $email = $user->email;
+
+        $sender_email = $config->sender_email;
+        $store_name = $config->store_name;
+        $contact_email = $config->contact_email;
+        $logo = asset('themes/' . $this->theme->get_name() . '/img/logo.svg');
+        //$logo = asset('assets/img/logo-store.jpg');
+
+        config(['mail.driver'=> $mail->mail_driver]);
+        config(['mail.host'=>$mail->mail_host]);
+        config(['mail.port'=>$mail->mail_port]);   
+        config(['mail.username'=>$mail->mail_username]);
+        config(['mail.password'=>$mail->mail_password]);
+        config(['mail.encryption'=>$mail->mail_encryption]);
+
+        $data = array('order_id' => $order->id, 'user_id' => $user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at);
 
         try {
             Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email, $sender_email, $store_name) {
@@ -1345,7 +1372,25 @@ class FrontController extends Controller
                 return response()->json(['mensaje' => "Ya no quedan existencias de este cupón. Intenta con otro.", 'type' => 'exception'], 200);
             }
             */
-            
+            if ($coupon->exclude_discounted_items == true) {
+                $oldCart = Session::get('cart');
+                $cart = new Cart($oldCart);
+
+                // Actualizar existencias del producto
+                if (count($cart->items) == 1) {
+                    return response()->json(['mensaje' => 'Este cupón no aplica para productos con descuento. Intenta con uno diferente.', 'type' => 'exception'], 200);
+                }else{
+                    foreach ($cart->items as $product) {
+
+                        if ($product['item']['has_discount'] == true) {
+                            $subtotal -= $product['item']['discount_price'];
+                        } 
+                    }
+                }
+
+                $subtotal;
+            }
+
             /* Recuperar el tipo de cupon */
             $coupon_type = $coupon->type;
 
@@ -1369,7 +1414,7 @@ class FrontController extends Controller
                     break;
 
                 default:
-                    /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO */    
+                    /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO */   
                     return response()->json(['mensaje' => 'Este tipo de cupón no existe, revisa con administración.', 'type' => 'exception'], 200);
                     break;
             }
@@ -1389,7 +1434,7 @@ class FrontController extends Controller
             */
 
             // Regresar Respuesta a la Vista
-            return response()->json(['mensaje' => 'Aplicado el descuento correctamente... disfruta', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
+            return response()->json(['mensaje' => 'Aplicado el descuento correctamente a los productos participantes. ¡Disfruta!', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
         }
     }
 

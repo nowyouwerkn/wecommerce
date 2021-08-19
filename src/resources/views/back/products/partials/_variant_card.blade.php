@@ -66,7 +66,7 @@
 	                    <th class="text-right">Valor</th>
 	                    <th class="text-right">Precio</th>
 	                    <th class="text-right">Cantidad</th>
-	                    <th class="text-right">Codigo SKU</th>
+	                    <th class="text-right">Código SKU</th>
 	                </tr>
 	            </thead>
 	            <tbody>
@@ -112,7 +112,7 @@
                 <th class="text-right">Valor</th>
                 <th class="text-right">Precio</th>
                 <th class="text-right">Cantidad</th>
-                <th class="text-right">Codigo SKU</th>
+                <th class="text-right">Código SKU</th>
                 <th class="text-right">Acciones</th>
             </tr>
         </thead>

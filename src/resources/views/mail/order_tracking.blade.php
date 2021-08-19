@@ -1,3 +1,10 @@
+@php
+	$user = Nowyouwerkn\WeCommerce\Models\User::where('id', $user_id)->first();
+	$order = Nowyouwerkn\WeCommerce\Models\Order::where('id', $order_id)->first();
+	$tracking = Nowyouwerkn\WeCommerce\Models\OrderTracking::where('order_id', $order_id)->first();
+@endphp
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -38,25 +45,51 @@
 			<tbody>
 				<tr>
 					<td>
-						<h1 style="margin-bottom:0px; text-transform: uppercase;">Nueva compra en tu tienda.</h1>
-						<p style="margin-top: 10px; line-height: 1.8;">Alguien completó exitosamente una compra en tu tienda.</p>
-
-						<a href="{{ route('orders.show', $order_id) }}" style="background: #fff; border:2px solid #2f3542; border-radius: 13px; padding:15px 20px; text-decoration: none; margin: 20px 0; display:block; text-align: center; width:50%; color: #2f3542;">Ver la órden en tu plataforma.</a>
+						<h1 style="margin-bottom:0px; text-transform: uppercase;">VAMOS EN CAMINO</h1>
+						<p style="margin-top: 10px; line-height: 1.8;">Tu pedido ha sido enviado. Si quieres saber el estado de tu pedido puedes entrar a tu cuenta en la tienda o contactar con nuestros agentes digitales.</p>
 					</td>
 				</tr>
 			</tbody>
 		</table>
+
+		<table style="width: 100%; background: #fff; text-align: center; padding: 0 20%; color: #a4b0be; font-size: 80%;"  cellspacing="20">
+			<tbody>
+				<tr>
+					<td>
+						<p style="text-transform: uppercase; margin-bottom: 5px;">Guía de seguimiento</p>
+						<h2 style="margin-top: 5px; font-size:250%;">{{ $tracking->tracking_number }}</h2>
+						<p><strong>Enviado por:</strong> {{ $tracking->service_name }}</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
 		<table style="width: 100%; background: #2f3542; color: #f1f2f6;"  cellspacing="20" cellpadding="20">
 			<tbody>
 				<tr>
 					<td style="width: 50%; vertical-align: top;">
-						<p style="margin-bottom:10px;"><strong>Fecha del pedido</strong></p>
-						<p style="margin-top:5px;">{{ $order_date }}</p>
+						<p style="margin-bottom:10px;"><strong>Enviar a:</strong></p>
+						<ul style="margin-top:5px;list-style: none; padding: 0px;">
+							<li>{{ $user->name }}</li>
+							<li>{{ $order->street . ' ' . $order->street_num }}</li>
+							<li>{{ $order->suburb }}</li>
+							<li>{{ $order->postal_code }}, {{ $order->city . ',' . $order->state }}</li>
+						</ul>
 					</td>
 
 					<td style="width: 50%; vertical-align: top;">
 						<p style="margin-bottom:10px;"><strong>Número de pedido:</strong></p>
 						<p style="margin-top:5px;">#0{{ $order_id }}</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 50%; vertical-align: top;">
+						<p style="margin-bottom:10px;"><strong>Fecha del pedido</strong></p>
+						<p style="margin-top:5px;">{{ $order->created_at }}</p>
+					</td>
+					<td style="width: 50%; vertical-align: top;">
+						<p style="margin-bottom:10px;"><strong>Método de envío</strong></p>
+						<p style="margin-top:5px;">ESTÁNDAR</p>
 					</td>
 				</tr>
 			</tbody>

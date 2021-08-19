@@ -92,7 +92,7 @@
     
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="description">Descripcion <span class="text-danger">*</span></label>
+                                <label for="description">Descripción <span class="text-danger">*</span></label>
                                 <textarea name="description" cols="10" rows="3" class="form-control" required="">{{ old('description') }}</textarea>
                             </div>
                         </div>
@@ -112,7 +112,7 @@
                         </div>
     
                         <div class="col-md-6">
-                            <label for="pattern">Patron</label>
+                            <label for="pattern">Patrón</label>
                             <input type="text" name="pattern"class="form-control" placeholder="Ej. Liso, Lunares" value="{{ old('pattern') }}">
                         </div>
     
