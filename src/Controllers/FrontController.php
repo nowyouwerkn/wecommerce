@@ -235,8 +235,10 @@ class FrontController extends Controller
         }
         
         //Facebook Event
-        $event = new FacebookEvents;
-        $event->initiateCheckout();
+        if ($this->store_config->facebook_pixel != NULL) {
+            $event = new FacebookEvents;
+            $event->initiateCheckout();
+        }
 
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
@@ -320,8 +322,10 @@ class FrontController extends Controller
         }
         
         //Facebook Event
-        $event = new FacebookEvents;
-        $event->initiateCheckout();
+        if ($this->store_config->facebook_pixel != NULL) {
+            $event = new FacebookEvents;
+            $event->initiateCheckout();
+        }
 
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
@@ -406,8 +410,10 @@ class FrontController extends Controller
         }
         
         //Facebook Event
-        $event = new FacebookEvents;
-        $event->initiateCheckout();
+        if ($this->store_config->facebook_pixel != NULL) {
+            $event = new FacebookEvents;
+            $event->initiateCheckout();
+        }
 
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
@@ -965,22 +971,24 @@ class FrontController extends Controller
         $this->notification->send($type, $by ,$data);
 
         //Facebook Event
-        $value = $purchase_value;
-        $customer_name = $request->name;
-        $customer_lastname = $request->last_name;
-        $customer_email = $user->email;
-        $customer_phone = $user->name;
+        if ($this->store_config->facebook_pixel != NULL) {
+            $value = $purchase_value;
+            $customer_name = $request->name;
+            $customer_lastname = $request->last_name;
+            $customer_email = $user->email;
+            $customer_phone = $user->name;
 
-        $collection = collect();
+            $collection = collect();
 
-        foreach($cart->items as $product){
-            $collection = $collection->merge($product['item']['sku']);
+            foreach($cart->items as $product){
+                $collection = $collection->merge($product['item']['sku']);
+            }
+            $products_sku = $collection->all();
+
+            $event = new FacebookEvents;
+            $event->purchase($products_sku, $value, $customer_email, $customer_name, $customer_lastname, $customer_phone);
         }
-        $products_sku = $collection->all();
-
-        $event = new FacebookEvents;
-        $event->purchase($products_sku, $value, $customer_email, $customer_name, $customer_lastname, $customer_phone);
-
+        
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 

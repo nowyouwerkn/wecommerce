@@ -25,9 +25,4 @@ class StoreConfig extends Model
     {
         return $this->hasOne(Currency::class, 'id', 'currency_id')->first();
     }
-
-    public function facebook_pixel()
-    {
-        return $this->first()->value('facebook_pixel');
-    }
 }

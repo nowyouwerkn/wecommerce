@@ -40,9 +40,9 @@ class FacebookEvents
 
         $this->access_token = $config->facebook_access_token;
         $this->pixel_id = $config->facebook_pixel;
-
+        
         if (is_null($this->access_token) || is_null($this->pixel_id)) {
-            throw new Exception(
+            throw Exception(
                 'Debes definir el token de acceso y el ID del pixel en tu archivo de ambiente (.env) para ejecutar los eventos.'
             );
         }

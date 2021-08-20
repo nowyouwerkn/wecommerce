@@ -5,11 +5,11 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-
 use Session;
 use Auth;
 use Carbon\Carbon;
 
+use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Cart;
 
@@ -18,6 +18,13 @@ use Nowyouwerkn\WeCommerce\Services\FacebookEvents;
 
 class CartController extends Controller
 {
+    private $store_config;
+
+    public function __construct()
+    {
+        $this->store_config = new StoreConfig;
+    }
+
     public function addCart(Request $request, $id, $variant)
     {
         $product = Product::find($id);
@@ -43,8 +50,10 @@ class CartController extends Controller
         $product_name = $product->name;
         $product_sku = $product->sku;
 
-        $event = new FacebookEvents;
-        $event->addToCart($value, $product_name, $product_sku);
+        if ($this->store_config->facebook_pixel != NULL) {
+            $event = new FacebookEvents;
+            $event->addToCart($value, $product_name, $product_sku);
+        }
 
         //dd( $request->session()->get('cart') );
         Session::flash('product_added', 'Producto guardado en el carrito.');
@@ -76,9 +85,11 @@ class CartController extends Controller
         $product_name = $product->name;
         $product_sku = $product->sku;
 
-        $event = new FacebookEvents;
-        $event->addToCart($value, $product_name, $product_sku);
-
+        if ($this->store_config->facebook_pixel != NULL) {
+            $event = new FacebookEvents;
+            $event->addToCart($value, $product_name, $product_sku);
+        }
+        
         Session::put('cart', $cart);
 
         //alert()->success('Se agregó 1 a la cantidad.', '¡Listo!')->persistent('Ok, gracias');
