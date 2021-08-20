@@ -65,6 +65,9 @@ use Nowyouwerkn\WeCommerce\Models\UserCoupon;
 /* Notificaciones */
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
+/* Facebook Events API Conversion */
+use Nowyouwerkn\WeCommerce\Services\FacebookEvents;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -172,7 +175,7 @@ class FrontController extends Controller
         $catalog = Category::where('slug', $category_slug)->first();
         $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->firstOrFail();
 
-        $products_selected = Product::where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->take(4)->get();
+        $products_selected = Product::where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->inRandomOrder()->take(6)->get();
 
         $next_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
         $last_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
@@ -232,10 +235,8 @@ class FrontController extends Controller
         }
         
         //Facebook Event
-        /*
         $event = new FacebookEvents;
         $event->initiateCheckout();
-        */
 
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
@@ -319,10 +320,8 @@ class FrontController extends Controller
         }
         
         //Facebook Event
-        /*
         $event = new FacebookEvents;
         $event->initiateCheckout();
-        */
 
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
@@ -407,10 +406,8 @@ class FrontController extends Controller
         }
         
         //Facebook Event
-        /*
         $event = new FacebookEvents;
         $event->initiateCheckout();
-        */
 
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
@@ -968,7 +965,6 @@ class FrontController extends Controller
         $this->notification->send($type, $by ,$data);
 
         //Facebook Event
-        /*
         $value = $purchase_value;
         $customer_name = $request->name;
         $customer_lastname = $request->last_name;
@@ -984,7 +980,6 @@ class FrontController extends Controller
 
         $event = new FacebookEvents;
         $event->purchase($products_sku, $value, $customer_email, $customer_name, $customer_lastname, $customer_phone);
-        */
 
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');

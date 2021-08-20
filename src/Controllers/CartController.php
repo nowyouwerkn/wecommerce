@@ -13,6 +13,9 @@ use Carbon\Carbon;
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Cart;
 
+/* Facebook Events API Conversion */
+use Nowyouwerkn\WeCommerce\Services\FacebookEvents;
+
 class CartController extends Controller
 {
     public function addCart(Request $request, $id, $variant)
@@ -32,7 +35,6 @@ class CartController extends Controller
         $request->session()->put('cart', $cart);
 
         //Facebook Event
-        /*
         if($product->has_discount == true)
             $value = $product->discount_price;
         else{
@@ -43,7 +45,6 @@ class CartController extends Controller
 
         $event = new FacebookEvents;
         $event->addToCart($value, $product_name, $product_sku);
-        */
 
         //dd( $request->session()->get('cart') );
         Session::flash('product_added', 'Producto guardado en el carrito.');
@@ -67,7 +68,6 @@ class CartController extends Controller
         $cart->addMore($id, $price, $variant);
 
         //Facebook Event
-        /*
         if($product->has_discount == true)
             $value = $product->discount_price;
         else{
@@ -78,7 +78,7 @@ class CartController extends Controller
 
         $event = new FacebookEvents;
         $event->addToCart($value, $product_name, $product_sku);
-        */
+
         Session::put('cart', $cart);
 
         //alert()->success('Se agregó 1 a la cantidad.', '¡Listo!')->persistent('Ok, gracias');

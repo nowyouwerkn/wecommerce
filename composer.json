@@ -39,7 +39,7 @@
         "ext-fileinfo": "*",
         "laravel/framework": "^8.12",
         "conekta/conekta-php": "^4.3",
-        "facebook/php-business-sdk": "^10.0",
+        "facebook/php-business-sdk": "^11.0",
         "gabrielbull/ups-api": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/fortify": "^1.7",

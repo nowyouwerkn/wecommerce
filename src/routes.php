@@ -186,6 +186,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     Route::resource('cities', Nowyouwerkn\WeCommerce\Controllers\CityController::class); 
     Route::resource('config', Nowyouwerkn\WeCommerce\Controllers\StoreConfigController::class); 
 
+    Route::post('config-api-token',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StoreConfigController@apiToken',
+        'as' => 'api.token.store',
+    ]);
+
     Route::resource('integrations', Nowyouwerkn\WeCommerce\Controllers\IntegrationController::class); 
     Route::get('general-preferences',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\IntegrationController@index',

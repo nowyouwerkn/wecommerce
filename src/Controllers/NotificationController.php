@@ -22,7 +22,6 @@ use Nowyouwerkn\WeCommerce\Models\Notification;
 
 use Nowyouwerkn\WeCommerce\Services\MailService;
 
-
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller

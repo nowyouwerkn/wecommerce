@@ -24,6 +24,16 @@
             margin-right: 5px;
             border-radius: 100%;
         }
+
+        .token-notification{
+            position: relative;
+            background-color: black;
+            color: #fff;
+            font-size: .8em;
+            padding: 8px 10px;
+            width: 92.7%;
+            border-radius: 0px 0px 10px 10px;
+        }
     </style>
 @endsection
 
@@ -128,6 +138,30 @@
             </div>
             @endif
             <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-outline-light btn-uppercase btn-block mt-3">Integrar un nuevo sistema</a>
+        </div>
+
+        <div class="card card-body mb-4">
+            <h4>API de Conversiones Facebook</h4>
+            <p class="mb-4">Al configurar tu API de conversiones se enviarán eventos desde el servidor a diferencia desde el navegador. De esta forma los bloqueos de rastreo son más laxos.</p>
+
+            @php
+                $config = Nowyouwerkn\WeCommerce\Models\StoreConfig::first();
+            @endphp
+
+            <form method="POST" action="{{ route('api.token.store') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+                <h6 class="text-uppercase">Token de Acceso</h6>
+
+                <div class="d-flex">
+                    <input type="text" class="form-control" style="width: 30%; margin-right: 15px;" name="facebook_pixel" placeholder="Identificador de pixel " value="{{ $config->facebook_pixel }}">
+
+                    <input type="text" class="form-control" style="width: 70%;" name="facebook_access_token" placeholder="Token de Acceso" value="{{ $config->facebook_access_token }}">
+
+                    <button class="btn btn-success btn-icon ml-3" type="submit"><i class="fas fa-save"></i></button>
+                </div>
+
+                <div class="token-notification">Al guardar el Token se activará automaticamente el envio de eventos desde tu plataforma. Asegurate de que los eventos estan configurados correctamente en tu perfil de Facebook.</div>
+            </form>
         </div>
     </div>
 </div>

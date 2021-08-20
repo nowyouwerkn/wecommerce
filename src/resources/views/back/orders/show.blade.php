@@ -155,6 +155,34 @@
         background-color: #dc3545;
         border-color: #dc3545;
     }
+
+    .tracking-card .badge{
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+
+    .tracking-card .tracking-number{
+        width: 100%;
+        margin-bottom: 20px;
+        text-align: center;
+        padding: 8px 20px;
+        border-radius: 15px;
+        border: 3px solid #7987a1;
+    }
+
+    .tracking-number h4{
+        line-height: 1;
+        color: #7987a1;
+    }
+
+    .tracking-card .small-title{
+        margin-bottom: 15px;
+        margin-top: 3px;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: .9em;
+    }
 </style>
 @endpush
 
@@ -218,7 +246,6 @@
     </div>
 </div>
 @endif
-
     @if($order->status == 'Cancelado')
     <div class="bg-danger text-white p-3 mb-4">
         <h5 class="mb-0">Orden cancelada por Administración o Expiró el pago en la pasarela de Pago</h5>
@@ -404,7 +431,7 @@
                 </div>
 
                 <div class="row mb-4">
-                    <div class="col-md-7">
+                    <div class="col-md-6">
                         <div class="card h-100">
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -418,61 +445,47 @@
                                 <hr>
 
                                 @if($order->trackings->count())
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Servicio</th>
-                                                <th>Guía</th>
-                                                <th>Notas</th>
-                                                <th>Estado</th>
-                                                <th>Entrega</th>
-                                                <th class="dont-print">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($order->trackings as $tracking)
-                                            <tr>
-                                                <td>{{ $tracking->service_name }}</td>
-                                                <td>{{ $tracking->tracking_number }}</td>
-                                                <td>{{ $tracking->products_on_order }}</td>
-                                                <td>
-                                                    @if($tracking->status == 'En proceso')
-                                                    <span class="badge badge-warning">{{ $tracking->status }}</span>
-                                                    @endif
-                                                    @if($tracking->status == 'Completado')
-                                                    <span class="badge badge-success">{{ $tracking->status }}</span>
-                                                    @endif
-                                                    @if($tracking->status == 'Perdido')
-                                                    <span class="badge badge-warning">{{ $tracking->status }}</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($tracking->is_delivered  == true)
-                                                    <a href="javascript:void(0)" class="btn btn-sm btn-success disabled"><i class="fas fa-check"></i> Entregado</a>
-                                                    @else
-                                                    <a href="{{ route('tracking.complete', $tracking->id) }}" class="btn btn-sm btn-info"><i class="fas fa-check"></i> Marcar Entrega</a>
-                                                    @endif
-                                                </td>
-                                                <td class="text-nowrap dont-print">
-                                                    <a href="" class="btn btn-sm btn-icon btn-flat btn-default" data-toggle="tooltip" data-original-title="Reenviar correo">
-                                                        <i class="fas fa-envelope"></i> Reenviar correo
-                                                    </a>
+                                    @foreach($order->trackings as $tracking)
+                                    <div class="card card-body tracking-card">
+                                        @if($tracking->status == 'En proceso')
+                                        <span class="badge badge-warning">{{ $tracking->status }}</span>
+                                        @endif
+                                        @if($tracking->status == 'Completado')
+                                        <span class="badge badge-success">{{ $tracking->status }}</span>
+                                        @endif
+                                        @if($tracking->status == 'Perdido')
+                                        <span class="badge badge-warning">{{ $tracking->status }}</span>
+                                        @endif
 
-                                                    <form method="POST" action="{{ route('tracking.destroy', $tracking->id) }}" style="display: inline-block;">
-                                                        <button type="submit" class="btn btn-sm btn-icon btn-flat btn-default" data-toggle="tooltip" data-original-title="Borrar">
-                                                            <i class="simple-icon-trash" aria-hidden="true"></i>
-                                                        </button>
-                                                        {{ csrf_field() }}
-                                                        {{ method_field('DELETE') }}
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                        <p class="small-title">Número de Guía</p>
+                                        <div class="tracking-number">
+                                            <h4 class="mb-0">{{ $tracking->tracking_number }}</h4>
+                                        </div>
 
+                                        <p><em>{{ $tracking->products_on_order ?? 'No hay nota adjunta a esta guía.'}}</em></p>
+
+                                        @if($tracking->is_delivered  == true)
+                                        <a href="javascript:void(0)" class="btn btn-sm btn-success disabled"><i class="fas fa-check"></i> Entregado</a>
+                                        @else
+                                        <a href="{{ route('tracking.complete', $tracking->id) }}" class="btn btn-sm btn-outline-info"><i class="fas fa-check"></i> Marcar Entregado</a>
+                                        @endif
+                                        
+                                        <div class="d-flex align-items-center justify-content-between mt-2">
+                                            
+                                            <form method="POST" action="{{ route('tracking.destroy', $tracking->id) }}" style="display: inline-block; width: 15%;">
+                                                <button type="submit" class="btn btn-sm btn-outline-light" data-toggle="tooltip" data-original-title="Borrar">
+                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                </button>
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
+                                            </form>
+
+                                            <a href="" class="btn btn-sm btn-outline-light" style="width:100%; margin-left: 8px;">
+                                                <i class="fas fa-envelope"></i> Reenviar correo
+                                            </a>
+                                        </div> 
+                                    </div>
+                                    @endforeach
                                 @else
                                 <div class="text-center my-5">
                                     <h4 class="mb-0">¡Todavía no se asigna una guía para esta orden!</h4>
@@ -482,7 +495,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">

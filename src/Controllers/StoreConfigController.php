@@ -24,6 +24,20 @@ class StoreConfigController extends Controller
         //
     }
 
+    public function apiToken(Request $request)
+    {
+        $config = StoreConfig::first();
+
+        $config->facebook_pixel = $request->facebook_pixel;
+        $config->facebook_access_token = $request->facebook_access_token;
+        $config->save();
+
+        //Session message
+        Session::flash('success', 'Guardado exitoso del token. Se activaron los eventos del servidor.');
+
+        return redirect()->back();
+    }
+
     public function store(Request $request)
     {
         //Validation

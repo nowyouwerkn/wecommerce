@@ -1,5 +1,7 @@
 <?php
 
+namespace Nowyouwerkn\WeCommerce\Services;
+
 /* Facebook SDK */
 use FacebookAds\Api;
 use FacebookAds\Logger\CurlLogger;
@@ -13,6 +15,9 @@ use FacebookAds\Object\ServerSide\UserData;
 
 /* IP Location */
 use Stevebauman\Location\Facades\Location;
+
+/* WeCommerce Models */
+use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 
 /* Regular Laravel */
 use Illuminate\Support\Facades\Hash;
@@ -31,8 +36,10 @@ class FacebookEvents
     public function __construct()
     {
         // Configuración
-        $this->access_token = env('FACEBOOK_ACCESS_TOKEN');
-        $this->pixel_id = env('FACEBOOK_PIXEL_ID');
+        $config = StoreConfig::first();
+
+        $this->access_token = $config->facebook_access_token;
+        $this->pixel_id = $config->facebook_pixel;
 
         if (is_null($this->access_token) || is_null($this->pixel_id)) {
             throw new Exception(
@@ -83,7 +90,11 @@ class FacebookEvents
         $request = (new EventRequest($this->pixel_id))
         ->setEvents($this->events);
         
-        $request->execute();
+        try {
+            $request->execute();
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage() );
+        }
     }
 
     public function addToCart($value, $product_name, $product_sku)
@@ -118,7 +129,11 @@ class FacebookEvents
         $request = (new EventRequest($this->pixel_id))
         ->setEvents($this->events);
 
-        $request->execute();
+        try {
+            $request->execute();
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage() );
+        }
     }
 
     public function addToWishlist($value, $product_name, $product_sku)
@@ -153,8 +168,11 @@ class FacebookEvents
         $request = (new EventRequest($this->pixel_id))
         ->setEvents($this->events);
 
-
-        $request->execute();
+        try {
+            $request->execute();
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage() );
+        }
     }
 
     public function initiateCheckout()
@@ -186,7 +204,12 @@ class FacebookEvents
         $request = (new EventRequest($this->pixel_id))
         ->setEvents($this->events);
 
-        $request->execute();
+        try {
+            $request->execute();
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage() );
+        }
+        
     }
 
     public function purchase($products_sku, $value, $customer_email, $customer_name, $customer_lastname, $customer_phone)
@@ -224,7 +247,11 @@ class FacebookEvents
         $request = (new EventRequest($this->pixel_id))
         ->setEvents($this->events);
 
-        $request->execute();
+        try {
+            $request->execute();
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage() );
+        }
     }
 
 }

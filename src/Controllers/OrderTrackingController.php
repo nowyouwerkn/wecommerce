@@ -55,6 +55,10 @@ class OrderTrackingController extends Controller
  
         $tracking->save();
 
+        $order = Order::where('id', $request->order_id)->first();
+        $order->status = 'Enviado';
+        $order->save();
+
         $user = User::where('id', $request->user_id)->first();
         $mail = MailConfig::first();
         $config = StoreConfig::first();
@@ -99,7 +103,7 @@ class OrderTrackingController extends Controller
         $this->notification->send($type, $by ,$data);
 
         // Mensaje de session
-        Session::flash('success', 'Tu guía de envío se guardó exitosamente en la base de datos.');
+        Session::flash('success', 'La guía de envío de esta orden se guardó exitosamente en la base de datos.');
 
         return redirect()->back();
     }
@@ -129,8 +133,12 @@ class OrderTrackingController extends Controller
  
         $tracking->save();
 
+        $order = Order::where('id', $tracking->order_id)->first();
+        $order->status = 'Entregado';
+        $order->save();
+
         // Mensaje de session
-        Session::flash('success', 'Tu guía de envío se actulizó correctamente.');
+        Session::flash('success', 'Tu guía de envío se actualizó correctamente.');
 
         // Enviar a vista
         return redirect()->back();
