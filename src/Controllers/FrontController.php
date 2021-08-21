@@ -693,7 +693,7 @@ class FrontController extends Controller
                     'source_id' => $request->input('openPayToken'),
                     'amount' => $request->final_total,
                     'currency' => 'MXN',
-                    'description' => 'Compra Exitosa',
+                    'description' => 'Orden en Tienda en Línea',
                     'device_session_id' => $request->device_hidden,
                     'customer' => $customer
                 );
@@ -880,6 +880,7 @@ class FrontController extends Controller
         }
 
         // GUARDAR LA DIRECCIÓN
+        /*
         $check = UserAddress::where('street', $request->street)->count();
 
         if ($check == NULL || $check == 0) {
@@ -899,28 +900,8 @@ class FrontController extends Controller
 
             $address->save();
         }
-
-        /*
-        $name = $user->name;
-        $email = $user->email;
-
-        $mail = MailConfig::first();
-        $config = StoreConfig::first();
-
-        $sender_email = $config->sender_email;
-        $store_name = $config->store_name;
-        $contact_email = $config->contact_email;
-
-        config(['mail.driver'=> $mail->mail_driver]);
-        config(['mail.host'=>$mail->mail_host]);
-        config(['mail.port'=>$mail->mail_port]);   
-        config(['mail.username'=>$mail->mail_username]);
-        config(['mail.password'=>$mail->mail_password]);
-        config(['mail.encryption'=>$mail->mail_encryption]);
-
-        $data = array('order_id' => $order->id, 'user_id' => $user->id, 'name'=> $user->name, 'email' => $user->email, 'orden'=> $order, 'total'=> $cart->totalPrice, 'num_orden'=> $order->id );
         */
-
+        
         $mail = MailConfig::first();
         $config = StoreConfig::first();
 
@@ -991,14 +972,6 @@ class FrontController extends Controller
         
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
-
-        /*
-        if (!Auth::check()) {
-            return redirect()->route('index');
-        }else{
-            return redirect()->route('profile');
-        }
-        */
 
         return redirect()->route('purchase.complete');
 

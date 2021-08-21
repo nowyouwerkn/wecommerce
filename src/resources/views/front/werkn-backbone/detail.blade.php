@@ -183,7 +183,7 @@
                                     <ul>
                                         @foreach($product->variants as $variant)
                                             <li>
-                                                @if($variant->pivot->stock == 0)
+                                                @if($variant->pivot->stock <= 0)
                                                 <div class="no-stock-variant"><span class="line"></span>{{ $variant->value }}</div>
                                                 @else
                                                 <a id="variant{{ $variant->id }}" data-value="{{ $variant->value }}" class="" href="javascript:void(0)">{{ $variant->value }}</a>
@@ -220,7 +220,7 @@
                                 </a>
                             @endif
                         @else
-                            @if($product->stock == 0)
+                            @if($product->stock <= 0)
                             <div class="mr-3">
                                 <p class="no-existance-btn mb-0"><i class="fas fa-heartbeat"></i> Sin Existencias</p>
                                 <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>

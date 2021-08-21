@@ -69,6 +69,11 @@ class CartController extends Controller
 
         $cart = new Cart($oldCart);
 
+        // Revisar Si hay existencias para agregar
+        
+
+        // Proceso regular
+
         if ($product->has_discount == false) {
             $price = $product->price;
         }else{
