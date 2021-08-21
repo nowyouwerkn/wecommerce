@@ -740,6 +740,8 @@ class FrontController extends Controller
                         'email' => $request->email,
                         'password' => bcrypt('wkshop'),
                     ]);
+
+                    $user->assignRole('customer');
                 }else{
                     $user = Auth::user();
                 }
@@ -784,6 +786,7 @@ class FrontController extends Controller
                 $user->orders()->save($order);
 
                 // Actualizar existencias del carrito
+                /*
                 foreach ($cart->items as $product) {
                     if ($product['item']['has_variants'] == true) {
                         $variant = Variant::where('value', $product['variant'])->first();
@@ -797,7 +800,7 @@ class FrontController extends Controller
                         $product_stock->stock = $product_stock->stock - $product['qty'];
                         $product->save();
                     }
-                }
+                }*/
 
                 return redirect()->away($payment->getApprovalLink());
 
