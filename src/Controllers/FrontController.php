@@ -1375,23 +1375,26 @@ class FrontController extends Controller
                 return response()->json(['mensaje' => "Ya no quedan existencias de este cupón. Intenta con otro.", 'type' => 'exception'], 200);
             }
             */
+
             if ($coupon->exclude_discounted_items == true) {
                 $oldCart = Session::get('cart');
                 $cart = new Cart($oldCart);
 
-                // Actualizar existencias del producto
-                if (count($cart->items) == 1) {
-                    return response()->json(['mensaje' => 'Este cupón no aplica para productos con descuento. Intenta con uno diferente.', 'type' => 'exception'], 200);
-                }else{
-                    foreach ($cart->items as $product) {
+                $subtotal = 0;
 
-                        if ($product['item']['has_discount'] == true) {
-                            $subtotal -= $product['item']['discount_price'];
-                        } 
-                    }
+                // Encontrar los productos sin descuentos en el carrito
+                foreach ($cart->items as $product) {
+                    if ($product['item']['has_discount'] == false) {
+                        $subtotal += $product['item']['price'];
+                    } 
                 }
 
                 $subtotal;
+
+                if ($subtotal == 0) {
+                    // No se puede dar descuento a productos que ya tienen descuento
+                    return response()->json(['mensaje' => 'Este cupón no aplica para productos con descuento. Intenta con uno diferente.', 'type' => 'exception'], 200);
+                }
             }
 
             /* Recuperar el tipo de cupon */
