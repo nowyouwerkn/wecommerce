@@ -2,6 +2,12 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.0.6 - 2021-08-19
+
+### Reparado
+- Cambio de orden a cancelado ahora es funcional.
+
+
 ## 1.0.5 - 2021-08-19
 
 ### Agregado

@@ -285,7 +285,7 @@
 
                             @if ($order->status != 'Entregado')
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"><span class="step-style"><i class="fas fa-times"></i></span> Cancelar Orden</a>
+                            <a class="dropdown-item text-danger" href="#" data-value="Cancelado"><span class="step-style"><i class="fas fa-times"></i></span> Cancelar Orden</a>
                             @endif
                         @endif
                     </div>
