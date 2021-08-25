@@ -4,8 +4,13 @@ Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
 ## 1.0.6 - 2021-08-19
 
+### Agregado
+- Funcionalidad para cambiar estado de banner a Activado o Desactivado permitiendo mostrar múltiples banners en la vista principal.
+
 ### Reparado
 - Cambio de orden a cancelado ahora es funcional.
+- Funcionalidad de borrado de banners
+- Funcionalidad de editar banner.
 
 
 ## 1.0.5 - 2021-08-19

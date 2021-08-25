@@ -121,7 +121,7 @@
 							<h4 class="mb-0">
 								Información del Banner 
 
-								@if($banner->active == true)
+								@if($banner->is_active == true)
 									<span class="badge badge-success">Activo</span>
 								@else
 									<span class="badge badge-danger">Desactivado</span>
@@ -174,7 +174,7 @@
 								<p id="subtitle_">{{ $banner->subtitle}}</p>
 								<a href="#" class="btn btn-light rounded" id="text_button_">{{ $banner->text_button }}</a>
 							</div>
-							<img src="{{ asset('img/banners/' . $banner->image ) }}" id="output" class="card-banner-image"/>
+							<img src="{{ asset('img/banners/' . $banner->image ) }}" id="output" class="card-banner-image" width="100">
 						</div>
 					</div>
 				</div>

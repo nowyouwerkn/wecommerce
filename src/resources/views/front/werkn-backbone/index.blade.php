@@ -39,30 +39,32 @@
 <!-- slider-area -->
 <section class="home-five-banner">
     <div class="container-fluid p-0" style="background:#f9f8f5;">
-        @if(empty($banner))
+        @if(empty($banners))
         <h2>No se ha configurado un banner</h2>
         @else
-        <div class="banner-five-wrap">
-            <div class="row">
-                <div class="col-12"> 
-                    <div class="slider-content">
-                        <h3 class="sub-title wow fadeInUp" data-wow-delay=".2s">{{ $banner->subtitle }}</h3>
-                        <h2 class="title wow fadeInUp" data-wow-delay=".4s">{{ $banner->title }}</h2>
-                        <p class="wow fadeInUp" data-wow-delay=".6s">{{ $banner->text }}</p>
+            @foreach($banners as $banner)
+            <div class="banner-five-wrap">
+                <div class="row">
+                    <div class="col-12"> 
+                        <div class="slider-content">
+                            <h3 class="sub-title wow fadeInUp" data-wow-delay=".2s">{{ $banner->subtitle }}</h3>
+                            <h2 class="title wow fadeInUp" data-wow-delay=".4s">{{ $banner->title }}</h2>
+                            <p class="wow fadeInUp" data-wow-delay=".6s">{{ $banner->text }}</p>
 
-                        @if($banner->has_button == true)
-                        <a href="{{ $banner->link }}" class="btn wow fadeInUp" data-wow-delay=".8s">{{ $banner->text_button }}</a>
-                        @endif
+                            @if($banner->has_button == true)
+                            <a href="{{ $banner->link }}" class="btn wow fadeInUp" data-wow-delay=".8s">{{ $banner->text_button }}</a>
+                            @endif
+                        </div>
                     </div>
                 </div>
+                <div class="banner-five-img">
+                    @if($banner->image == NULL)
+                    @else
+                        <img src="{{ asset('img/banners/' . $banner->image ) }}" alt="" class="main-img">
+                    @endif
+                </div>
             </div>
-            <div class="banner-five-img">
-                @if($banner->image == NULL)
-                @else
-                    <img src="{{ asset('img/banners/' . $banner->image ) }}" alt="" class="main-img">
-                @endif
-            </div>
-        </div>
+            @endforeach
         @endif
     </div>
 </section>

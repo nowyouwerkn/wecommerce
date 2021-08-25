@@ -96,7 +96,7 @@ class BannerController extends Controller
         $banner->link = $request->link;
         //$banner->image = $request->image;
         $banner->has_button = true;
-        $banner->active = true;
+        $banner->is_active = true;
         $banner->hex = $request->hex;
 
         $img2 = 'model';
@@ -126,10 +126,10 @@ class BannerController extends Controller
         // Guardar datos en la base de datos
         $banner = Banner::find($request->id);
 
-        if($banner->active == true) {
-            $banner->active = false;
+        if($banner->is_active == true) {
+            $banner->is_active = false;
         }else {
-            $banner->active = true;
+            $banner->is_active = true;
         }
 
         $banner->save();

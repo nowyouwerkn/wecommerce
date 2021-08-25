@@ -35,7 +35,7 @@
 
                 </div>
 
-                <div class="table-responsive">
+                <div class="">
                     @include('wecommerce::back.orders.utilities._order_table')
                 </div>
             </div>

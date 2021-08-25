@@ -40,8 +40,7 @@
                     <thead>
                         <tr>
                             <th>Imagen</th>
-                            <th>Titulo</th>
-                            <th>Subtitulo</th>
+                            <th>Información</th>
                             <th>Botón</th>
                             <th>Link</th>
                             <th>Estatus</th>
@@ -56,35 +55,42 @@
                                 
                             </td>
                             <td style="width: 250px;">
-                                <strong><a href="{{ route('banners.show', $banner->id) }}">{{ $banner->title }}</a></strong> 
+                                <strong>{{ $banner->title }}</strong><br>
+                                {{ $banner->subtitle }}
                             </td>
-                            <td style="width: 80px;">{{ $banner->subtitle }}</td>
-                            <td style="width: 80px;">{{ $banner->text_button }}</td>
-                            <td style="width: 80px;">{{ $banner->link }}</td>
+                            <td>{{ $banner->text_button }}</td>
+                            <td>{{ $banner->link }}</td>
 
                             <td>
-                                @if($banner->active == true)
+                                @if($banner->is_active == true)
                                     <span class="badge badge-success">Activado</span><br>
                                 @else
-                                    <span class="badge badge-info">DesActivado</span><br>
+                                    <span class="badge badge-info">Desactivado</span><br>
                                 @endif
                             </td>
                             
-                            <td class="text-nowrap">
-                                <a href="{{ route('banners.show', $banner->id) }}" class="btn btn-sm btn-icon btn-flat btn-default px-2" data-toggle="tooltip" data-original-title="Ver Detalle">
+                            <td class="d-flex">
+                                <a href="{{ route('banners.show', $banner->id) }}" class="btn btn-link text-dark px-2" data-toggle="tooltip" data-original-title="Ver Detalle">
                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                 </a>
 
-                                <a href="{{ route('banners.edit', $banner->id) }}" class="btn btn-sm btn-icon btn-flat btn-default px-2" data-toggle="tooltip" data-original-title="Editar">
+                                <a href="{{ route('banners.edit', $banner->id) }}" class="btn btn-link text-dark px-2" data-toggle="tooltip" data-original-title="Editar">
                                     <i class="fa fa-edit" aria-hidden="true"></i>
                                 </a>
 
                                 <form method="POST" action="{{ route('banners.status', $banner->id) }}">
                                     {{ csrf_field() }}
+                                    <button type="submit" class="btn btn-link text-dark px-2" data-toggle="tooltip" data-original-title="Cambiar estado">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </form>
 
-                                    <input type="hidden" value="{{ $banner->id }}" name="id">
+                    
+                                <form method="POST" action="{{ route('banners.destroy', $banner->id) }}">
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
 
-                                    <button type="submit" class="btn btn-sm btn-icon btn-flat btn-default px-2" data-toggle="tooltip" data-original-title="Cambiar estado">
+                                    <button type="submit" class="btn btn-link text-danger px-2" data-toggle="tooltip" data-original-title="Eliminar Banner">
                                         <i class="fas fa-trash" aria-hidden="true"></i>
                                     </button>
                                 </form>

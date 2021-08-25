@@ -89,12 +89,12 @@ class FrontController extends Controller
         $products = Product::where('in_index', true)->where('status', 'Publicado')->get()->take(6);
         $main_categories = Category::where('parent_id', '0')->orWhere('parent_id', NULL)->get()->take(4);
 
-        $banner = Banner::where('is_active', true)->first();
+        $banners = Banner::where('is_active', true)->get();
 
         return view('front.theme.' . $this->theme->get_name() . '.index')
         ->with('products', $products)
         ->with('main_categories', $main_categories)
-        ->with('banner', $banner);
+        ->with('banners', $banners);
     }
 
     /*
