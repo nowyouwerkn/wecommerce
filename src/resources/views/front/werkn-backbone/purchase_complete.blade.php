@@ -85,7 +85,6 @@
 
     a{
       color: #f16321;
-      font-weight: bold;
     }
 
     .btn-link{

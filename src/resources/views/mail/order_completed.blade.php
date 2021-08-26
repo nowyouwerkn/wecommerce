@@ -92,7 +92,11 @@
 						<ul style="margin-top:5px;list-style: none; padding: 0px;">
 							<li><strong>Talla:</strong> {{ $item['variant'] }}</li>
 							<li><strong>Cantidad:</strong> {{ $item['qty'] }}</li>
+							@if($item['item']['has_discount'] == true)
+							<li><strong>Precio Unt:</strong> $ {{ number_format($item['item']['discount_price']) }}</li>
+							@else
 							<li><strong>Precio Unt:</strong> $ {{ number_format($item['item']['price']) }}</li>
+							@endif
 						</ul>
 					</td>
 				</tr>
@@ -104,7 +108,16 @@
 				<tr>
 					<td style="width: 50%; vertical-align: top;">
 						<h3 style="margin-bottom:10px;">M&eacute;todo de pago</h3>
-						<p style="margin-top:5px;">Tarjeta: XXXX XXXX XXXX {{ $order->card_digits }}</p>
+						@switch($order->payment_method)
+							@case('Paypal')
+							<p style="margin-top:5px;">Paypal</p>
+							@break
+
+							@default
+							<p style="margin-top:5px;">Tarjeta: XXXX XXXX XXXX {{ $order->card_digits }}</p>
+							@break
+						@endswitch
+						
 					</td>
 					<td style="width: 50%; vertical-align: top;">
 						<ul style="margin-top:20px;list-style: none; padding: 0px;">

@@ -77,6 +77,28 @@ class OrderController extends Controller
         $order->status = $request->value;
         $order->save();
 
+        if($request->value == 'Cancelado'){
+            $cart = unserialize($order->cart);
+
+            // Actualizar existencias del producto
+            foreach ($cart->items as $product) {
+
+                if ($product['item']['has_variants'] == true) {
+                    $variant = Variant::where('value', $product['variant'])->first();
+                    $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
+                    
+                    $product_variant->stock = $product_variant->stock + $product['qty'];
+                    $product_variant->save();
+                }else{
+                    $product_stock = Product::find($product['item']['id']);
+
+                    $product_stock->stock = $product_stock->stock + $product['qty'];
+                    $product_stock->save();
+                }
+                
+            }
+        }
+
         // Notificación
         $type = 'Orden';
         $by = Auth::user();
@@ -88,7 +110,6 @@ class OrderController extends Controller
             'mensaje' => 'Estado cambiado exitosamente', 
             'status' => $request->value
         ], 200);
-
 
         /*
         if($request->status == 'Pagado'){
