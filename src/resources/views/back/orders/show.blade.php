@@ -327,15 +327,18 @@
                 </div>
 
                 <div class="card mb-4">
+                    @if($order->cart == NULL)
+                    <p class="alert alert-warning">Esta orden proviene de una importación de otro sistema. Es posible que la información mostrada esté incompleta.</p>
+                    @endif
                     <div class="card-body">  
-                        <h4>Resumen de Orden</h4>
+                        <h4>Resúmen de Orden</h4>
                         <hr>
                         <div class="row align-items-center">
                             <div class="col">
                                 <h6 class="mb-0 mt-0">Total en Carrito:</h6>
                             </div>
                             <div class="col text-right">
-                                <p class="mb-0" style="font-size: 1.3em;"><strong>${{ number_format($order->cart->totalPrice, 2) }}</strong></p>
+                                <p class="mb-0" style="font-size: 1.3em;"><strong>${{ number_format($order->cart_total, 2) }}</strong></p>
                             </div>
                         </div>
 
@@ -399,31 +402,35 @@
                                 <h4 class="mb-0">Carrito</h4>
                             </div>
                             <div class="col text-right">
-                                <p class="mb-0"><strong>Total: ${{ number_format($order->cart->totalPrice) }}</strong></p>
+                                <p class="mb-0"><strong>Total: ${{ number_format($order->cart_total) }}</strong></p>
                             </div>
                         </div>
                         <hr>
 
-                        @foreach($order->cart->items as $item)
-                        <div class="card d-flex flex-row mb-3">
-                            <a class="d-flex" href="#">
-                                <img height="40px" alt="{{ $item['item']['name'] }}" src="{{ asset('img/products/' . $item['item']['image'] ) }}" class="list-thumbnail responsive border-0 card-img-left">
-                            </a>
-                            <div class="pl-2 d-flex flex-grow-1 min-width-zero">
-                                <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
-                                    <a href="{{ route('products.show', $item['item']['id'] ) }}" class="w-40 w-sm-100">
-                                        <p class="list-item-heading mb-1 truncate">{{ $item['item']['name'] }}</p>
-                                    </a>
-                                    <p class="mb-1 text-muted text-small w-15 w-sm-100">Talla: {{ $item['variant'] }}</p>
-                                    <p class="mb-1 text-muted text-small w-15 w-sm-100">{{ $item['qty'] }} Par</p>
-                                </div>
+                        @if($order->cart == NULL)
+                            <p class="alert alert-warning">Esta orden proviene de una importación de otro sistema. El "módulo carrito" no es compatible con la información y no puede mostrar los detalles.</p>
+                        @else
+                            @foreach($order->cart->items as $item)
+                            <div class="card d-flex flex-row mb-3">
+                                <a class="d-flex" href="#">
+                                    <img height="40px" alt="{{ $item['item']['name'] }}" src="{{ asset('img/products/' . $item['item']['image'] ) }}" class="list-thumbnail responsive border-0 card-img-left">
+                                </a>
+                                <div class="pl-2 d-flex flex-grow-1 min-width-zero">
+                                    <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
+                                        <a href="{{ route('products.show', $item['item']['id'] ) }}" class="w-40 w-sm-100">
+                                            <p class="list-item-heading mb-1 truncate">{{ $item['item']['name'] }}</p>
+                                        </a>
+                                        <p class="mb-1 text-muted text-small w-15 w-sm-100">Talla: {{ $item['variant'] }}</p>
+                                        <p class="mb-1 text-muted text-small w-15 w-sm-100">{{ $item['qty'] }} Par</p>
+                                    </div>
 
-                                <div class="pl-1 align-self-center pr-4">
-                                    <span class="badge badge-pill badge-secondary float-right">$ {{ $item['price'] }}</span>
+                                    <div class="pl-1 align-self-center pr-4">
+                                        <span class="badge badge-pill badge-secondary float-right">$ {{ $item['price'] }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        @endforeach
+                            @endforeach
+                        @endif
 
                         <hr class="dont-print">
                         <a href="javascript:void(0)" data-toggle="modal" data-target="#resendMail" class="btn btn-outline-info dont-print"><i class="fas fa-envelope"></i> Reenviar confirmación de orden</a>

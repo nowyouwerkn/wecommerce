@@ -42,10 +42,12 @@ class OrderController extends Controller
 
         $orders = Order::orderBy('created_at', 'desc')->paginate(30);
         
+        /*
         $orders->transform(function($order, $key){
             $order->cart = unserialize($order->cart);
             return $order;
         });
+        */
 
         $new_orders = Order::where('created_at', '>=', Carbon::now()->subWeek())->count();
 

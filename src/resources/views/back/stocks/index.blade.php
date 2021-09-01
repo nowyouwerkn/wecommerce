@@ -100,7 +100,7 @@
                                     <span style="font-weight: bold; font-size:1.2em;">{{ $product->variants->count() }}</span>
                                 </td>
                                 <td class="tx-color-03 tx-normal image-table td-tight">
-                                    <img style="width: 100%;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
+                                    <img style="width: 100%; height: 100px;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
                                     <div class="text-center margin-top-10">
                                         <small><p>+ {{ $product->images->count() }} Imágen(es)</p></small>    
                                     </div>

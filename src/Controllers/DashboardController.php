@@ -41,19 +41,7 @@ class DashboardController extends Controller
         $category = Category::first();
 
         $orders = Order::all();
-        
-        $orders->transform(function($order, $key){
-            $order->cart = unserialize($order->cart);
-            return $order;
-        });
-
-
         $new_orders = Order::where('created_at', '>=', Carbon::now()->subWeek())->get();
-
-        $new_orders->transform(function($order, $key){
-            $order->cart = unserialize($order->cart);
-            return $order;
-        });
 
         $new_clients = User::role('customer')->where('created_at', '>=', Carbon::now()->subWeek())->count();
 
@@ -87,9 +75,7 @@ class DashboardController extends Controller
         $ven_semana = 0;
 
         foreach ($ventas_total as $v_total) {
-            $v_total->cart = unserialize($v_total->cart);
-
-            $ven_total += $v_total->cart->totalPrice;
+            $ven_total += $v_total->payment_total;
         };
 
         foreach ($ventas_mes as $v_month) {
@@ -98,9 +84,7 @@ class DashboardController extends Controller
         };
 
         foreach ($ventas_semana as $v_week) {
-            $v_week->cart = unserialize($v_week->cart);
-
-            $ven_semana += $v_week->cart->totalPrice;
+            $ven_semana += $v_week->payment_total;
         };
 
         $ven_total;
@@ -112,7 +96,6 @@ class DashboardController extends Controller
         }else{
             $avg_order = ($ven_total)/($orders->count());
         }
-        
 
         return view('wecommerce::back.index')
         ->with('product', $product)
