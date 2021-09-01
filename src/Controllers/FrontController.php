@@ -1187,12 +1187,11 @@ class FrontController extends Controller
 
         $orders = Order::where('user_id', Auth::user()->id)->paginate(3);
 
-        /*
         $orders->transform(function($order, $key){
             $order->cart = unserialize($order->cart);
             return $order;
         });
-        */
+
         
         $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
@@ -1215,13 +1214,11 @@ class FrontController extends Controller
 
         $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
 
-        /*
         $orders->transform(function($order, $key){
             $order->cart = unserialize($order->cart);
             return $order;
         });
-        */
-
+        
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.shopping')
         ->with('total_orders', $total_orders)
         ->with('orders', $orders);

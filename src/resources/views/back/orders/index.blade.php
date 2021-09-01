@@ -38,8 +38,13 @@
                 <div class="">
                     @include('wecommerce::back.orders.utilities._order_table')
                 </div>
+
+                <div class="d-flex align-items-center justify-content-center">
+                    {{ $orders->links() }}
+                </div>
+                
             </div>
         </div>
     </div>
-    @endif
+@endif
 @endsection

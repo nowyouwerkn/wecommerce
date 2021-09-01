@@ -3,40 +3,45 @@
         <h3 class="card-order-title">Orden #00{{ $order->id }}</h3>
 
         <h6 class="title-order-separator">Resumen de tu Orden</h6>
-        @foreach($order->cart->items as $product)
-        @php
-            $item_img = $product['item']['image'];
-            $variant = $product['variant'];
-        @endphp
 
-        <div class="product-checkout-line">
-            <div class="row align-items-center">
-                <div class="col-5 text-left">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <img class="mr-4" style="width: 100px;" src="{{ asset('img/products/' . $item_img ) }}" alt="{{ $product['item']['name'] }}">
-                        </div>
-                        <div class="col">
-                            <h5 class="mt-0 mb-0">{{ $product['item']['name'] }}</h5>
+        @if($order->cart == NULL)
+        <p class="alert alert-warning">No es posible mostrar la información del carrito en este momento.</p>
+        @else
+            @foreach($order->cart->items as $product)
+            @php
+                $item_img = $product['item']['image'];
+                $variant = $product['variant'];
+            @endphp
+
+            <div class="product-checkout-line">
+                <div class="row align-items-center">
+                    <div class="col-5 text-left">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <img class="mr-4" style="width: 100px;" src="{{ asset('img/products/' . $item_img ) }}" alt="{{ $product['item']['name'] }}">
+                            </div>
+                            <div class="col">
+                                <h5 class="mt-0 mb-0">{{ $product['item']['name'] }}</h5>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col col-md-2 text-center">
-                    <h5 class="mb-0"><span>Talla:</span><br> {{ $variant }}</h5>
-                </div>
-                <div class="col col-md-2 text-center">
-                    <h5 class="mb-0"><span>Cantidad:</span><br> {{ $product['qty'] }}</h5>
-                </div>
-                <div class="col-2 hid text-right">
-                    <p class="mb-0">$ {{ number_format($product['price']) }} </p>
+                    <div class="col col-md-2 text-center">
+                        <h5 class="mb-0"><span>Talla:</span><br> {{ $variant }}</h5>
+                    </div>
+                    <div class="col col-md-2 text-center">
+                        <h5 class="mb-0"><span>Cantidad:</span><br> {{ $product['qty'] }}</h5>
+                    </div>
+                    <div class="col-2 hid text-right">
+                        <p class="mb-0">$ {{ number_format($product['price']) }} </p>
+                    </div>
                 </div>
             </div>
-        </div>
-        @endforeach
+            @endforeach
+        @endif
         <hr>
         <div class="row">
             <div class="col text-right">
-                <h5 class="price-order">Total: $ {{ $order->cart->totalPrice }}</h5>
+                <h5 class="price-order">Total: $ {{ $order->cart_total }}</h5>
             </div>
         </div>
 
