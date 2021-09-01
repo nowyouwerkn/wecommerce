@@ -385,7 +385,7 @@
                                 <h6 class="mb-0 mt-0">Total cobrado al cliente:</h6>
                             </div>
                             <div class="col text-right">
-                                <p class="mb-0" style="font-size: 1.3em;"><strong>${{ number_format($order->total, 2) ?? 'N/A' }}</strong></p>
+                                <p class="mb-0" style="font-size: 1.3em;"><strong>${{ number_format($order->payment_total, 2) ?? 'N/A' }}</strong></p>
                             </div>
                         </div>
                     </div>
