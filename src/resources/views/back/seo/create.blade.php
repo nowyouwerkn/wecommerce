@@ -37,7 +37,7 @@
                     <div class="card-body row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="client">Titulo</label>
+                                <label for="client">Título</label>
                                 <input type="text" name="title" class="form-control">
                             </div>
                         </div>

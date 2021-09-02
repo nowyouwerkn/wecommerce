@@ -87,24 +87,24 @@
                     
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="title">Titulo</label>
+                            <label for="title">Título</label>
                             <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" required="" />
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="subtitle">SubTitulo</label>
+                            <label for="subtitle">Subtítulo</label>
                             <input type="text" class="form-control" id="subtitle" name="subtitle" value="{{ old('subtitle') }}" required="" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="text_button">Texto en el boton</label>
+                            <label for="text_button">Texto en el botón</label>
                             <input type="text" class="form-control" id="text_button" name="text_button" value="{{ old('text_button') }}" required="" />
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="link">URL del boton</label>
+                            <label for="link">URL del botón</label>
                             <input type="url" class="form-control" id="link" name="link" value="{{ old('link') }}" required="" />
                         </div>
                     </div>
@@ -141,8 +141,8 @@
                     <div class="d-flex">
                         <div class="card-banner d-flex justify-content-center align-items-center" id="hex_">
                             <div class="card-banner-content">
-                                <h5 id="title_">Titulo</h5>
-                                <p id="subtitle_">Subtitulo</p>
+                                <h5 id="title_">Título</h5>
+                                <p id="subtitle_">Subtítulo</p>
                                 <a href="#" class="btn btn-light rounded" id="text_button_">Texto del botón</a>
                             </div>
                             <img class="card-banner-image" id="output"/>

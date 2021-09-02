@@ -39,7 +39,7 @@
 			<div class="card-footer">
 				<ul class="list-inline mb-0">
 					<li class="list-inline-item"><strong class="profile-stat-count">{{ $client->orders->count() }}</strong>
-						<span>Ordenes</span>
+						<span>Órdenes</span>
 					</li>
 					<li class="list-inline-item">
 						<strong class="profile-stat-count">
@@ -73,7 +73,7 @@
 			<div class="card-body pt-0">
 				<ul class="nav nav-line mt-3" data-plugin="nav-tabs" role="tablist">
 					<li class="nav-item" role="presentation"><a data-toggle="tab" href="#orders" aria-controls="orders"
-					role="tab" class="nav-link active">Ordenes <span class="badge badge-danger">{{ $client->orders->count() }}</span></a></li>
+					role="tab" class="nav-link active">Órdenes <span class="badge badge-danger">{{ $client->orders->count() }}</span></a></li>
 
 					<li class="nav-item" role="presentation"><a data-toggle="tab" href="#wishlist" aria-controls="wishlist"
 					role="tab" class="nav-link">Wishlist <span class="badge badge-danger">{{ $wishlist->count() }}</span></a></li>

@@ -44,7 +44,7 @@
                             <th>Botón</th>
                             <th>Link</th>
                             <th>Estatus</th>
-                            <th>Accciones</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>

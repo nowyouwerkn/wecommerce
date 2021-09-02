@@ -2,6 +2,15 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.0.7 - 2021-09-02
+
+### Agregado
+- Indicadores contadores en la barra lateral para órdenes nuevas y reseñas por aprobar.
+
+### Reparado
+- Revisión de ortografía general del panel administrativo.
+
+
 ## 1.0.6 - 2021-08-19
 
 ### Agregado

@@ -53,6 +53,6 @@
 
         <a href="{{ route('configuration') }}" class="nav-link ml-4"><i data-feather="settings"></i></a>
 
-        <a href="https://github.com/nowyouwerkn/wecommerce/blob/main/CHANGELOG.md" target="_blank" class="badge badge-info ml-3" style="line-height: 14px;">v. 1.0.6</a>
+        <a href="https://github.com/nowyouwerkn/wecommerce/blob/main/CHANGELOG.md" target="_blank" class="badge badge-info ml-3" style="line-height: 14px;">v. 1.0.7</a>
     </nav>
 </div>

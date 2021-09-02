@@ -220,7 +220,7 @@
                     @endforeach
 
                     <div class="col-md-4">
-                        <a href="javascript:void(0)" data-target="#modalNewImage" data-toggle="modal" class="image-btn"><span class="fas fa-plus"></span> Agregar más imagenes</a>
+                        <a href="javascript:void(0)" data-target="#modalNewImage" data-toggle="modal" class="image-btn"><span class="fas fa-plus"></span> Agregar más imágenes</a>
                     </div>
 
                     <!-- Modal -->

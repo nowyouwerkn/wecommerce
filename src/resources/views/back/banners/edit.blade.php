@@ -93,7 +93,7 @@
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="subtitle">SubTitulo</label>
+                            <label for="subtitle">Subtítulo</label>
                             <input type="text" class="form-control" id="subtitle" name="subtitle" value="{{ $banner->subtitle }}" required="" />
                         </div>
                     </div>

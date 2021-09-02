@@ -65,7 +65,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="phone">Telefono</label>
+                                <label for="phone">Teléfono</label>
                                 <input type="text" name="phone" class="form-control">
                             </div>
                         </div>

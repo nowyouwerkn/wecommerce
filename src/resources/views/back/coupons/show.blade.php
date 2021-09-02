@@ -18,7 +18,7 @@
                 <p>Descripcion</p>
                 <p>Tipo</p>
                 <p>Cantidad</p>
-                <p>Envio gratis</p>
+                <p>Envío gratis</p>
                 <p>Mostrar en inicio</p>
 
                 <!-- Date -->

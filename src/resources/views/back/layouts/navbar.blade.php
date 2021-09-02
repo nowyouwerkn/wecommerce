@@ -96,8 +96,12 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="{{ route('orders.index') }}" class="nav-link">
-                    <i data-feather="shopping-bag"></i> <span>Ordenes</span>
+                @php
+                    $new_orders_kpi = Nowyouwerkn\WeCommerce\Models\Order::where('created_at', '>=', Carbon\Carbon::now()->subWeek())->count();
+                @endphp
+
+                <a href="{{ route('orders.index') }}" class="nav-link d-flex justify-content-between">
+                    <span><i data-feather="shopping-bag"></i>Órdenes</span><span class="badge text-white bg-teal" data-toggle="tooltip" data-placement="right" title="Nuevas esta semana">{{ $new_orders_kpi }}</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -111,8 +115,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('reviews.index') }}" class="nav-link">
-                    <i data-feather="edit-3"></i> <span>Reseñas</span>
+                @php
+                    $new_reviews_kpi = Nowyouwerkn\WeCommerce\Models\Review::where('is_approved', false)->count();
+                @endphp
+
+                <a href="{{ route('reviews.index') }}" class="nav-link d-flex justify-content-between">
+                    <span><i data-feather="edit-3"></i>Reseñas</span> <span class="badge text-white bg-teal" data-toggle="tooltip" data-placement="right" title="Por aprobar">{{ $new_reviews_kpi }}</span>
                 </a>
             </li>
 
@@ -127,7 +135,7 @@
 
             <li class="nav-label mg-t-25">Canales de Venta</li>
             <li class="nav-item">
-                <a href="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#modalSaleChannels" style="margin-top:5px; padding:5px 10px;"><i data-feather="plus"></i> Agregar nuevo Canal</a>
+                <a href="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#modalSaleChannels" style="margin-top:5px; padding:5px 10px;"><i data-feather="plus"></i> Agregar nuevo canal</a>
             </li>
 
             <li class="nav-label mg-t-100">Configuración</li>

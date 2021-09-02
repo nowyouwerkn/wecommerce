@@ -59,7 +59,7 @@
                                 <th>Precio</th>
                                 <th>Precio Descuento</th>
                                 <!--<th>Existencias</th>-->
-                                <th>Caracteristicas</th>
+                                <th>Características</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
@@ -70,7 +70,18 @@
                                 <td style="width: 150px; position: relative;">
                                     <img style="width: 100%;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
                                     <div class="text-center margin-top-10">
-                                        <small><p>+ {{ $product->images->count() }} Imágen(es)</p></small>    
+
+                                        <small>
+                                            <p>
+                                            + {{ $product->images->count() }}
+
+                                            @if($product->images->count() >= 1)
+                                            Imágenes
+                                            @else
+                                            Imagen
+                                            @endif
+                                            </p>
+                                        </small>    
                                     </div>
                                 </td>
                                 <td style="width: 250px;">

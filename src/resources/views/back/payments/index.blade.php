@@ -57,7 +57,7 @@
                 </ul>
 
                 <li>Paypal</li>
-                <li>MercadoPago <span class="badge badge-info">PROXIMAMENTE</span></li>
+                <li>MercadoPago <span class="badge badge-info">PRÓXIMAMENTE</span></li>
             </ul>
         </div>
         
@@ -151,7 +151,7 @@
                         @endif
                         <img src="{{ asset('assets/img/brands/oxxopay.png') }}" width="120" style="margin: 10px 0px;">
 
-                        <p class="mt-2">Comisión: 3.9% + IVA Por transacción exitosa. Tienda OXXO Cobrará una comisión adicional de $13.00 pesos en cajas.</p>
+                        <p class="mt-2">Comisión: 3.9% + IVA Por transacción exitosa. Tienda OXXO cobrará una comisión adicional de $13.00 pesos en cajas.</p>
 
                         
                         <a href="" data-toggle="modal" data-target="#modalCreateOxxoConekta" class="btn btn-outline-secondary btn-sm">Configurar OxxoPay de Conekta</a>

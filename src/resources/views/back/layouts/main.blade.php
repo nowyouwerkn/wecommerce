@@ -133,7 +133,7 @@
                     <div class="media align-items-center mb-5">
                         <img src="{{ asset('assets/img/brands/amazon.jpg') }}" class="wd-100 rounded mg-r-20" alt="">
                         <div class="media-body">
-                            <span class="badge badge-warning">PROXIMAMENTE</span>
+                            <span class="badge badge-warning">PRÓXIMAMENTE</span>
                             <h5 class="mg-b-15 tx-inverse">Amazon</h5>
                             Uno de las empresas más grandes de venta por internet. Conecta tu catálogo por medio de la API para aprovechar sus beneficios.
                         </div>
@@ -142,7 +142,7 @@
                     <div class="media align-items-center mb-5">
                         <img src="{{ asset('assets/img/brands/mercadolibre.png') }}" class="wd-100 rounded mg-r-20" alt="">
                         <div class="media-body">
-                            <span class="badge badge-warning">PROXIMAMENTE</span>
+                            <span class="badge badge-warning">PRÓXIMAMENTE</span>
                             <h5 class="mg-b-15 tx-inverse">MercadoLibre</h5>
                             El portal latinoamericano de ventas. Conecta tu catálogo por medio de la API para aprovechar sus beneficios.
                         </div>

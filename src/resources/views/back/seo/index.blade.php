@@ -31,7 +31,7 @@
                 </div>
 
                 <h3>Search Engine Optimization (SEO)</h3>
-                <p>Esta información te permite aparece más efectivamente en los buscadores en Internet.</p>
+                <p>Esta información te permite aparecer más efectivamente en los buscadores en Internet.</p>
                 <!--<p>Al usar estas plantillas, aceptas que has leído y aceptado el descargo de responsabilidad.</p>-->
 
                 <button type="submit" class="btn btn-primary btn-lg">Guardar Cambios <i class="far fa-save"></i></button>
@@ -47,7 +47,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="page_title">Titulo general del Sitio</label>
+                                <label for="page_title">Título general del Sitio</label>
                                 <input type="text" class="form-control" id="page_title" name="page_title" value="{{ $seo->page_title ?? '' }}"/>
                             </div>
                         </div>

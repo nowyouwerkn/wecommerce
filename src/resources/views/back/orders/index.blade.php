@@ -6,10 +6,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                 <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Ordenes</li>
+                <li class="breadcrumb-item active" aria-current="page">Órdenes</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Ordenes</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Órdenes</h4>
         </div>
         <div class="d-none d-md-block">
             <a href="{{ route('export.orders') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">

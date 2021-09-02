@@ -216,7 +216,7 @@
 
                     <div class="dropdown-menu">
                         @if($order->status == 'Cancelado' || $order->status == 'Expirado')
-                            <p class="mb-0 mt-2 pl-3"><i class="fas fa-times"></i></span> Órden Cancelada</p>
+                            <p class="mb-0 mt-2 pl-3"><i class="fas fa-times"></i></span> Orden Cancelada</p>
                         @else
                             <h6 class="dropdown-header tx-uppercase tx-12 tx-bold tx-inverse">Cambiar Estatus</h6>
                             <a class="

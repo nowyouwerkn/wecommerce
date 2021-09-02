@@ -132,13 +132,13 @@
 							<div class="row mt-5">
 								
 								<div class="col">
-									<h5>Titulo</h5>
+									<h5>Título</h5>
 									<p>{{ $banner->title }}</p>
 
-                                    <h5>Subtitle</h5>
+                                    <h5>Subtítulo</h5>
 									<p>{{ $banner->subtitle}}</p>
 
-                                    <h5>Texto de boton</h5>
+                                    <h5>Texto de botón</h5>
 									<p>{{ $banner->text_button}}</p>
 
                                     <h5>Color</h5>

@@ -47,7 +47,7 @@
                             <th>Descripción</th>
                             <th>Tipo</th>
                             <th>Cantidad</th>
-                            <th>Envio Gratis</th>
+                            <th>Envío Gratis</th>
                             <th>Expira</th>
                             <th>Creado</th>
                             <th>Acciones</th>

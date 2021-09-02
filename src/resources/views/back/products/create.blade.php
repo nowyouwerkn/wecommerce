@@ -274,7 +274,7 @@
                 <div class="card mg-t-10 mb-4">
                     <!-- Header -->
                     <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                        <h5 class="mg-b-5">Características de Envío</h5>
+                        <h5 class="mg-b-5">Características de envío</h5>
                         <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
                     </div>
 

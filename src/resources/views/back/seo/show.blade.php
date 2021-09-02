@@ -14,7 +14,7 @@
             <div class="card p-3">
                 <!-- Data -->
                 <h3>Datos generales</h3>
-                <p>Titulo</p>
+                <p>Título</p>
                 <p>Descripción</p>
                 <p>Keywords</p>
                 <p>Canonical URL</p>

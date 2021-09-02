@@ -6,7 +6,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-style1 mg-b-10">
             <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('orders.index') }}">Ordenes</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('orders.index') }}">Órdenes</a></li>
             <li class="breadcrumb-item active" aria-current="page">Orden # {{ $order->id }}</li>
             </ol>
         </nav>
@@ -509,7 +509,7 @@
                                     <div class="col-md-12">
                                         <h5 class="mb-2 mt-1">Dirección de Envío </h5>
                                         <ul class="list-unstyled">
-                                            <li><strong>Calle + Num:</strong> {{ $order->street }} {{ $order->street_num }}</li>
+                                            <li><strong>Calle + Núm:</strong> {{ $order->street }} {{ $order->street_num }}</li>
                                             <li><strong>Colonia:</strong> {{ $order->suburb }}</li>
 
                                             <li><strong>Código Postal:</strong> {{ $order->postal_code }}</li>
@@ -644,7 +644,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Comment</label>
+                                <label>Comentario</label>
                                 <textarea class="form-control" name="note" rows="5"></textarea>
                             </div>
                         </div>

@@ -33,7 +33,7 @@
             </div>
 
             <h3>Pasarelas de Envío</h3>
-            <p>Genera guías y calcula automáticamente los envios usando pasarelas de pago.</p>
+            <p>Genera guías y calcula automáticamente los envíos usando pasarelas de pago.</p>
 
             <p>Tu tienda puede vincularse con: </p>
 
