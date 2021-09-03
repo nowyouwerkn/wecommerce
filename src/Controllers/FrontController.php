@@ -669,7 +669,7 @@ class FrontController extends Controller
                 try {
                     $charge = Charge::create(array(
                         "amount" => $request->final_total * 100,
-                        "currency" => "usd",
+                        "currency" => "MXN",
                         "source" => $request->input('stripeToken'), 
                         "description" => "Purchase Successful",
                     ));

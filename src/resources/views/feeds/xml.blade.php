@@ -35,29 +35,33 @@
 			@endforeach
 
 			<size>
-				@if(count($product->variants) == 0)
-					0
-					@foreach($product->variants as $size)
-						{{ $size->size }}@if($product->variants->count() >= 2), @endif
-					@endforeach
+				@if($product->has_variants == true)
+					@if(count($product->variants) == 0)
+						0
+						@foreach($product->variants as $size)
+							{{ $size->size }}@if($product->variants->count() >= 2), @endif
+						@endforeach
+					@endif
+				@else
+				unique
 				@endif
 			</size>
 
 			<age_group>adult</age_group>
-
 			<gender>{{ $product->gender ?? 'male'}}</gender>
+			
 			{{--
 			<brand>{{ $product->brand ?? 'Brand'}}</brand>
 			--}}
 
 			<g:condition>New</g:condition>
 			
-			@if(count($product->variants) == 0)
+			@if($product->stock == 0)
 			<g:availability>out of stock</g:availability>
 			@else
 			<g:availability>in stock</g:availability>
 			@endif
-
+			
 			@php
                 $size_total = 0;
 
