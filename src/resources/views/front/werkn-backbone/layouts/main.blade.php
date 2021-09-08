@@ -167,6 +167,16 @@
         @foreach($integrations as $integration)
             <!-- {{ $integration->name }} -->
             {!! $integration->code !!}
+
+            @if($integration->name = 'Facebook Pixel')
+                @stack('pixel-events')
+            @endif
         @endforeach
+
+        <script type="text/javascript">
+            $('.contact_action').on('click', function(){
+                fbq('track', 'Contact');
+            });
+        </script>
 	</body>
 </html>

@@ -154,6 +154,15 @@
     </main>
 @endsection
 
-@section('scripts-js')
+@section('scripts')
 
 @endsection
+
+@push('pixel-events')
+<script type="text/javascript">
+    fbq('track', 'Purchase', {
+        currency: 'MXN',
+        value: {{ $purchase_value ?? '0.00' }}
+    });
+</script>
+@endpush

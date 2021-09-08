@@ -238,7 +238,7 @@ class FrontController extends Controller
         }
         
         //Facebook Event
-        if ($this->store_config->facebook_pixel != NULL) {
+        if ($this->store_config->has_pixel() != NULL) {
             $event = new FacebookEvents;
             $event->initiateCheckout();
         }
@@ -325,7 +325,7 @@ class FrontController extends Controller
         }
         
         //Facebook Event
-        if ($this->store_config->facebook_pixel != NULL) {
+        if ($this->store_config->has_pixel() != NULL) {
             $event = new FacebookEvents;
             $event->initiateCheckout();
         }
@@ -413,7 +413,7 @@ class FrontController extends Controller
         }
         
         //Facebook Event
-        if ($this->store_config->facebook_pixel != NULL) {
+        if ($this->store_config->has_pixel() != NULL) {
             $event = new FacebookEvents;
             $event->initiateCheckout();
         }
@@ -956,7 +956,7 @@ class FrontController extends Controller
         $this->notification->send($type, $by ,$data);
 
         //Facebook Event
-        if ($this->store_config->facebook_pixel != NULL) {
+        if ($this->store_config->has_pixel() != NULL) {
             $value = $purchase_value;
             $customer_name = $request->name;
             $customer_lastname = $request->last_name;
@@ -977,7 +977,7 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
-        return redirect()->route('purchase.complete');
+        return redirect()->route('purchase.complete')->with('purchase_value', $purchase_value);
 
         //return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
         
@@ -1136,7 +1136,7 @@ class FrontController extends Controller
             $this->notification->send($type, $by ,$data);
 
             //Facebook Event
-            if ($this->store_config->facebook_pixel != NULL) {
+            if ($this->store_config->has_pixel() != NULL) {
                 $value = $purchase_value;
                 $customer_name = $order->user->name;
                 $customer_lastname = $order->user->last_name;

@@ -24,14 +24,16 @@ class WishlistController extends Controller
 
     public function add($id)
     {
-
         $product = Product::getProductById($id);
+
         Wishlist::create([
             'user_id' => Auth::user()->id,
             'product_id' => $product->id,
         ]);
 
-        return redirect()->back()->with('success', "Product added into your Wishlist Successfully!");
+        Session::flash('product_added_whislist', 'Producto guardado en el wishlist.');
+
+        return redirect()->back();
     }
 
     public function destroy($id)
@@ -43,6 +45,8 @@ class WishlistController extends Controller
             'product_id' => $product->id,
         ])->delete();
 
-        return redirect()->back()->with('success', 'Product removed from your Wishlist Successfully!');
+        Session::flash('product_removed_whislist', 'Producto quitado del wishlist.');
+
+        return redirect()->back();
     }
 }

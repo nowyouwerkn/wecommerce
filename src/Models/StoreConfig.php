@@ -25,4 +25,9 @@ class StoreConfig extends Model
     {
         return $this->hasOne(Currency::class, 'id', 'currency_id')->first();
     }
+
+    public function has_pixel()
+    {
+        return $this->where('facebook_pixel', '!=' ,NULL)->value('facebook_pixel');
+    }
 }

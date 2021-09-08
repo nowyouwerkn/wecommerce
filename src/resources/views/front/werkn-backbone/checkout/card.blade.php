@@ -297,6 +297,9 @@
         $('#card_spinner').fadeIn(500);
         $('#two-check').show(); 
         $('#btnBuy').show(); 
+
+        fbq('track', 'AddPaymentInfo', {value: {{ $total }},currency: 'MXN',content_ids: [@foreach($products as $product) '{{ $product["item"]["sku"] }}', @endforeach],content_type: 'product'});
+
         $('#confirmation_step').removeClass('hidden-step');  
         $('#two_step_finish').hide();
         /* --- Smoth Scroll --- */        

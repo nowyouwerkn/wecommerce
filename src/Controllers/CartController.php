@@ -42,15 +42,15 @@ class CartController extends Controller
         $request->session()->put('cart', $cart);
 
         //Facebook Event
-        if($product->has_discount == true)
-            $value = $product->discount_price;
-        else{
-            $value = $product->price;
-        }
-        $product_name = $product->name;
-        $product_sku = $product->sku;
+        if ($this->store_config->has_pixel() != NULL) {
+            if($product->has_discount == true)
+                $value = $product->discount_price;
+            else{
+                $value = $product->price;
+            }
+            $product_name = $product->name;
+            $product_sku = $product->sku;
 
-        if ($this->store_config->facebook_pixel != NULL) {
             $event = new FacebookEvents;
             $event->addToCart($value, $product_name, $product_sku);
         }
@@ -71,9 +71,7 @@ class CartController extends Controller
 
         // Revisar Si hay existencias para agregar
         
-
         // Proceso regular
-
         if ($product->has_discount == false) {
             $price = $product->price;
         }else{
@@ -82,15 +80,15 @@ class CartController extends Controller
         $cart->addMore($id, $price, $variant);
 
         //Facebook Event
-        if($product->has_discount == true)
-            $value = $product->discount_price;
-        else{
-            $value = $product->price;
-        }
-        $product_name = $product->name;
-        $product_sku = $product->sku;
+        if ($this->store_config->has_pixel() != NULL) {
+            if($product->has_discount == true)
+                $value = $product->discount_price;
+            else{
+                $value = $product->price;
+            }
+            $product_name = $product->name;
+            $product_sku = $product->sku;
 
-        if ($this->store_config->facebook_pixel != NULL) {
             $event = new FacebookEvents;
             $event->addToCart($value, $product_name, $product_sku);
         }

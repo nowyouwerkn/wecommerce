@@ -5,8 +5,8 @@
                 <div class="col-sm-6">
                     <div class="header-top-link">
                         <ul>
-                            <li><a href="mailto:contacto@mail.com">contacto@mail.com</a></li>
-                            <li><a href="tel:123456789">Tel. +52 1 477 555 55 55</a></li>
+                            <li><a class="contact_action" href="mailto:contacto@mail.com">contacto@mail.com</a></li>
+                            <li><a class="contact_action" href="tel:123456789">Tel. +52 1 477 555 55 55</a></li>
                         </ul>
                     </div>
                 </div>

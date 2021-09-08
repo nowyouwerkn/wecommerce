@@ -42,6 +42,9 @@
       </ul>
     </li>
     <li><a href="#uso">Uso</a></li>
+    <ul>
+      <li><a href="#facebookevents">Configurando Eventos de Facebook</a></li>
+    </ul>
     <li><a href="#personalizar">Personalizar</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contirbuir</a></li>
@@ -202,6 +205,22 @@ Estructura:
     * detail.blade.php
     * index.blade.php :house:
 
+
+### Eventos de Facebook
+La plataforma esta preparada para recibir eventos de Facebook integrando el código de pixel desde `Integraciones del Sistema` en la sección de `Preferencias Generales` de la configuración, asi como la conexión con la API de Conversiones de Facebook.
+
+Los eventos que el sistema monitorea son:
+* PageView
+* ViewContent
+* Search
+* Purchase
+* InitiateCheckout
+* Contact
+* AddToWishlist
+* AddToCart
+* AddPaymentInfo
+
+Para activar el evento <strong>Contact</strong> agrega la clase `contact_action` a los links que ejecuten una acción de contacto. (mailto, tel, chat, etc.)
 
 ## Personalizar
 

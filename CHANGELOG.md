@@ -2,6 +2,14 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+
+## 1.0.8 - 2021-09-08
+
+### Agregado
+- Nuevas funcionalidades de eventos de pixel de Facebook en diferentes vistas.
+- Funcionalidad de seguimiento de eventos de Facebook con la API de Conversiones. (Requiere Token e Identificador de Pixel proporcionados por Facebook).
+
+
 ## 1.0.7 - 2021-09-02
 
 ### Agregado

@@ -122,3 +122,9 @@
         <div class="alert alert-danger add-error" style="display: none;" role="alert">Hay un error en la información de tus formulario. Revisa los campos.</div>
     </div>
 </div>
+
+@push('pixel-events')
+<script type="text/javascript">
+    fbq('track', 'InitiateCheckout'); 
+</script>
+@endpush

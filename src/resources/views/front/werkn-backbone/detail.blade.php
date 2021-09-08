@@ -480,3 +480,39 @@
         });
     </script>
 @endpush
+
+@push('pixel-events')
+<script type="text/javascript">
+    fbq('track', 'ViewContent', {
+        @if($product->has_discount == true)
+            value: {{ $product->discount_price }},
+        @else
+            value: {{ $product->price }},
+        @endif
+        currency: 'MXN',
+        content_ids: '{{ $product->sku }}',
+        content_name: '{{ $product->name }}',
+        content_type: 'product',
+    });
+
+    @if(Session::has('product_added'))
+        fbq('track', 'AddToCart', {
+            value: {{ $product->price }},
+            currency: 'MXN',
+            content_ids: '{{ $product->sku }}',
+            content_name: '{{ $product->name }}',
+            content_type: 'product',
+        });
+    @endif
+
+    @if(Session::has('product_added_whislist'))
+        fbq('track', 'AddToWishlist' {
+            value: {{ $product->price }},
+            currency: 'MXN',
+            content_ids: '{{ $product->sku }}',
+            content_name: '{{ $product->name }}',
+            content_type: 'product',
+        });
+    @endif
+</script>
+@endpush
