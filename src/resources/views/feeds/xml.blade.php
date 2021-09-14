@@ -47,19 +47,21 @@
 				@endif
 			</size>
 
-			<age_group>adult</age_group>
-			<gender>{{ $product->gender ?? 'male'}}</gender>
+			<age_group>{{ $product->age_group ?? 'all ages'}}</age_group>
+			<gender>{{ $product->gender ?? 'unisex'}}</gender>
 			
-			{{--
-			<brand>{{ $product->brand ?? 'Brand'}}</brand>
-			--}}
+			@if($product->brand != NULL)
+				<g:brand>{{ $product->brand }}</g:brand>
+			@endif
 
-			<g:condition>New</g:condition>
+			<g:condition>{{ $product->condition ?? 'New' }}</g:condition>
 			
 			@if($product->stock == 0)
-			<g:availability>out of stock</g:availability>
+				<g:availability>out of stock</g:availability>
+				<visibility>hidden</visibility>
 			@else
-			<g:availability>in stock</g:availability>
+				<g:availability>in stock</g:availability>
+				<visibility>published</visibility>
 			@endif
 			
 			@php
@@ -77,23 +79,18 @@
 			<g:price>{{ number_format($product->price, 2) }} @if($config->currency_id == 2)MXN @else USD @endif</g:price>
 			<g:sale_price>{{ number_format($product->discount_price, 2) }} @if($config->currency_id == 2)MXN @else USD @endif</g:sale_price>
 
-			<g:sale_price>{{ number_format($product->discount_price, 2) }} @if($config->currency_id == 2)MXN @else USD @endif</g:sale_price>
 			<g:sale_price_effective_date>{{ Carbon\Carbon::parse($product->discount_start)->format('Y-m-d') }}T08:00-06:00/{{ Carbon\Carbon::parse($product->discount_end)->format('Y-m-d') }}T08:00-06:00</g:sale_price_effective_date>
 
 			<g:product_type>Apparel &amp; Accessories &gt; Shoes</g:product_type>
 			
-			{{-- 
-			@if($product->gender->name == 'male')
+			@if($product->gender == 'male')
 			<g:fb_product_category>clothing &amp; accessories &gt; shoes &amp; footwear &gt; shoes</g:fb_product_category>
 			@else
 			<g:fb_product_category>clothing &amp; accessories &gt; shoes &amp; footwear &gt; women's shoes</g:fb_product_category>
 			@endif
-			--}}
 
 			<g:google_product_category>Apparel &amp; Accessories &gt; Shoes</g:google_product_category>
-			<g:custom_label_0>Made with Passion</g:custom_label_0>
-
-			<visibility>published</visibility>
+			<g:custom_label_0>{{ $product->custom_label ?? 'Made with Passion' }}</g:custom_label_0>
 		</item>
 		@endforeach
 	</channel>

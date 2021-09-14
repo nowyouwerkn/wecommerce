@@ -183,12 +183,16 @@ class FrontController extends Controller
         $next_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
         $last_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
 
+
+        $store_config = $this->store_config;
+
         if (empty($product)) {
             return redirect()->back();
         }else{
             return view('front.theme.' . $this->theme->get_name() . '.detail')
             ->with('product', $product)
             ->with('products_selected', $products_selected)
+            ->with('store_config', $store_config)
             ->with('next_product', $next_product)
             ->with('last_product', $last_product);
         }

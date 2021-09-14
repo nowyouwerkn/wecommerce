@@ -2,6 +2,14 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.1 - 2021-09-14
+
+### Agregado
+- Nuevas opciones de configuración para catálogo facilitando la conexión para venta en Facebook e Instagram.
+
+### Reparado
+- Algunos eventos de la API de Conversiones de Facebook eran identificados como "duplicados", se resolvió en esta versión.
+
 
 ## 1.0.8 - 2021-09-08
 

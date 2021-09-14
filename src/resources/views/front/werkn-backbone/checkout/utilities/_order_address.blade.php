@@ -124,7 +124,9 @@
 </div>
 
 @push('pixel-events')
-<script type="text/javascript">
-    fbq('track', 'InitiateCheckout'); 
-</script>
+    @if($store_config->has_pixel() == NULL)
+    <script type="text/javascript">
+            fbq('track', 'InitiateCheckout');
+    </script>
+    @endif
 @endpush

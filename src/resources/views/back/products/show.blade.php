@@ -146,17 +146,24 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="color">Color</label>
+                            <label for="color">Color<span class="text-danger">*</span></label>
                             <input type="text" name="color" class="form-control" placeholder="Ej. Negro" value="{{ $product->color }}">
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="pattern">Patron</label>
                         <input type="text" name="pattern"class="form-control" placeholder="Ej. Liso, Lunares" value="{{ $product->pattern }}">
                     </div>
+
+                    <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="brand">Marca <span class="text-success tx-12">Recomendado</span></label>
+                                <input type="text" name="brand" class="form-control" placeholder="" value="{{ $product->brand }}">
+                            </div>
+                        </div>
 
                     <div class="col-md-6">
                         <div class="custom-control custom-checkbox">
@@ -328,6 +335,11 @@
                               <input type="checkbox" class="custom-control-input" name="has_discount" id="customCheck1" value="1" {{ ($product->has_discount == '1') ? 'checked' : '' }}>
                               <label class="custom-control-label" for="customCheck1">Activar descuento</label><br>
                             </div>
+
+                            <div class="form-group mt-3">
+                                <label for="discount_end">hasta:</label>
+                                <input type="date" id="discount_end" name="discount_end" value="{{ $product->discount_end }}" class="form-control">
+                            </div>
                         </div>
                     </div>
                     
@@ -489,6 +501,15 @@
                 <!-- Form -->
                 <div class="card-body row">
                     <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="tsearch_tagsags">Género <span class="text-success tx-12">Recomendado</span></label>
+                            <select class="custom-select tx-13" name="gender">
+                                <option value="unisex" {{ ($product->gender == 'unisex') ? 'selected' : '' }}>Unisex</option>
+                                <option value="male" {{ ($product->gender == 'male') ? 'selected' : '' }}>Hombres</option>
+                                <option value="female" {{ ($product->gender == 'female') ? 'selected' : '' }}>Mujeres</option>
+                            </select>
+                        </div>
+
                         <div class="form-group mb-1">
                             @if($categories->count() != 0)
                                 <label for="category_id">Colección <span class="text-danger">*</span></label>
@@ -530,11 +551,37 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-group mb-1">
+                            <div class="form-group mb-3 mt-2">
                                 <label for="tsearch_tagsags">Etiquetas <span class="text-success">Recomendado</span></label>
                                 <input type="text" name="search_tags" class="form-control" placeholder="Algodón, Fresco, Verano" value="{{ $product->search_tags }}">
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="condition">Condición <br> <span class="text-info tx-12">(Opcional)</span></label>
+                                    <select class="custom-select tx-13" name="condition">
+                                        <option value="new" {{ ($product->condition == 'new') ? 'selected' : '' }}>Nuevo</option>
+                                        <option value="used" {{ ($product->condition == 'used') ? 'selected' : '' }}>Usado</option>
+                                        <option value="refurbished" {{ ($product->condition == 'refurbished') ? 'selected' : '' }}>Renovado</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group mb-2">
+                                    <label for="tsearch_tagsags">Rango de Edad <span class="text-success tx-12">Recomendado</span></label>
+                                    <select class="custom-select tx-13" name="age_group">
+                                        <option value="all ages" {{ ($product->age_group == 'all ages') ? 'selected' : '' }}>Todas las edades</option>
+                                        <option value="adult" {{ ($product->age_group == 'adult') ? 'selected' : '' }}>Adultos</option>
+                                        <option value="teen" {{ ($product->age_group == 'teen') ? 'selected' : '' }}>Adolescentes</option>
+                                        <option value="kids" {{ ($product->age_group == 'kids') ? 'selected' : '' }}>Niños/as</option>
+                                        <option value="toddler" {{ ($product->age_group == 'toddler') ? 'selected' : '' }}>Bebes</option>
+                                        <option value="infant" {{ ($product->age_group == 'infant') ? 'selected' : '' }}>Infantes</option>
+                                        <option value="newborn" {{ ($product->age_group == 'newborn') ? 'selected' : '' }}>Recien Nacidos</option>
+                                    </select>
+                                </div>
+                            </div>
                     </div>
                 </div>
             </div>

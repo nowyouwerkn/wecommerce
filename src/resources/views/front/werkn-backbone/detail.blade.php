@@ -494,7 +494,10 @@
         content_name: '{{ $product->name }}',
         content_type: 'product',
     });
+</script>
 
+@if($store_config->has_pixel() == NULL)
+<script type="text/javascript">
     @if(Session::has('product_added'))
         fbq('track', 'AddToCart', {
             value: {{ $product->price }},
@@ -504,6 +507,7 @@
             content_type: 'product',
         });
     @endif
+
 
     @if(Session::has('product_added_whislist'))
         fbq('track', 'AddToWishlist' {
@@ -515,4 +519,5 @@
         });
     @endif
 </script>
+@endif
 @endpush

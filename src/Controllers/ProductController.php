@@ -89,6 +89,9 @@ class ProductController extends Controller
         $product->production_cost = $request->production_cost;
 
         $product->has_discount = $request->has_discount;
+        $product->discount_start = $request->discount_start;
+        $product->discount_end = $request->discount_end;
+
         $product->has_tax = $request->has_tax;
 
         $product->sku = $request->sku;
@@ -111,6 +114,18 @@ class ProductController extends Controller
         
         $product->status = $request->status;
         $product->search_tags = $request->search_tags;
+
+        $product->age_group = $request->age_group;
+        $product->brand = $request->brand;
+        $product->gender = $request->gender;
+        $product->availability = $request->availability;
+        $product->visibility = $request->visibility;
+        $product->condition = $request->condition;
+        $product->product_type = $request->product_type;
+        $product->fb_product_category = $request->fb_product_category;
+        $product->google_product_category = $request->google_product_category;
+
+
         $product->available_date_start = $request->available_date_start;
 
         if ($request->hasFile('model_image')) {
@@ -303,6 +318,9 @@ class ProductController extends Controller
         $product->production_cost = $request->production_cost;
 
         $product->has_discount = $request->has_discount;
+        $product->discount_start = $request->discount_start;
+        $product->discount_end = $request->discount_end;
+
         $product->has_tax = $request->has_tax;
 
         $product->sku = $request->sku;
@@ -319,6 +337,17 @@ class ProductController extends Controller
         
         $product->status = $request->status;
         $product->search_tags = $request->search_tags;
+
+        $product->age_group = $request->age_group;
+        $product->brand = $request->brand;
+        $product->gender = $request->gender;
+        $product->availability = $request->availability;
+        $product->visibility = $request->visibility;
+        $product->condition = $request->condition;
+        $product->product_type = $request->product_type;
+        $product->fb_product_category = $request->fb_product_category;
+        $product->google_product_category = $request->google_product_category;
+
         $product->available_date_start = $request->available_date_start;
 
         if ($request->hasFile('model_image')) {

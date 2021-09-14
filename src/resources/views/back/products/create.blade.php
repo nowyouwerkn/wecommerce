@@ -99,21 +99,28 @@
     
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="materials">Materiales</label>
+                                <label for="materials">Materiales <span class="text-info tx-12">(Opcional)</span></label>
                                 <textarea name="materials" cols="10" rows="3" class="form-control">{{ old('materiales') }}</textarea>
                             </div>
                         </div>
     
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label for="color">Color</label>
+                                <label for="color">Color <span class="text-danger">*</span></label>
                                 <input type="text" name="color" class="form-control" placeholder="Ej. Negro" value="{{ old('color') }}">
                             </div>
                         </div>
     
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="pattern">Patrón</label>
                             <input type="text" name="pattern"class="form-control" placeholder="Ej. Liso, Lunares" value="{{ old('pattern') }}">
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="brand">Marca <span class="text-success tx-12">Recomendado</span></label>
+                                <input type="text" name="brand" class="form-control" placeholder="" value="{{ old('brand') }}">
+                            </div>
                         </div>
     
                         <div class="col-md-6">
@@ -144,7 +151,7 @@
                     <div class="card-body row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="model_image">Imagen de Modelo <span class="text-success">Recomendado</span></label>
+                                <label for="model_image">Imagen de Modelo <span class="text-success tx-12">Recomendado</span></label>
                                 <input type="file" name="model_image" class="form-control">
                             </div>
                         </div>
@@ -187,15 +194,18 @@
                                   <input type="checkbox" class="custom-control-input" name="has_discount" id="customCheck1" value="1">
                                   <label class="custom-control-label" for="customCheck1">Activar descuento</label><br>
                                 </div>
+
+                                <div class="form-group mt-3">
+                                    <label for="discount_end">hasta:</label>
+                                    <input type="date" id="discount_end" name="discount_end" value="{{ old('discount_end') }}" class="form-control">
+                                </div>
                             </div> 
                         </div>
-                        
                     </div>
 
                     <div class="card-footer">
                         <div class="row">
-                            
-                            <div class="col-md-6">
+                            <div class="col-md-6 mt-2">
                                 <label for="production_cost">Costo de Producción</label>
                                 <div class="input-group mg-b-10">
                                   <div class="input-group-prepend">
@@ -351,6 +361,15 @@
                     <!-- Form -->
                     <div class="card-body row">
                         <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label for="tsearch_tagsags">Género <span class="text-success tx-12">Recomendado</span></label>
+                                <select class="custom-select tx-13" name="gender">
+                                    <option value="unisex" selected="">Unisex</option>
+                                    <option value="male">Hombres</option>
+                                    <option value="female">Mujeres</option>
+                                </select>
+                            </div>
+
                             <div class="form-group mb-1">
                                 <!--
                                 <label for="category_id">Colección <span class="text-danger">*</span></label>
@@ -389,9 +408,35 @@
                     <div class="card-footer">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group mb-1">
-                                    <label for="tsearch_tagsags">Etiquetas <span class="text-success">Recomendado</span></label>
+                                <div class="form-group mb-3 mt-2">
+                                    <label for="tsearch_tagsags">Etiquetas <span class="text-info tx-12">(Opcional)</span></label>
                                     <input type="text" name="search_tags" class="form-control" placeholder="Algodón, Fresco, Verano" value="{{ old('search_tags') }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="condition">Condición <br> <span class="text-info tx-12">(Opcional)</span></label>
+                                    <select class="custom-select tx-13" name="condition">
+                                        <option value="new" selected="">Nuevo</option>
+                                        <option value="used">Usado</option>
+                                        <option value="refurbished">Renovado</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group mb-2">
+                                    <label for="tsearch_tagsags">Rango de Edad <span class="text-success tx-12">Recomendado</span></label>
+                                    <select class="custom-select tx-13" name="age_group">
+                                        <option value="all ages" selected="">Todas las edades</option>
+                                        <option value="adult">Adultos</option>
+                                        <option value="teen">Adolescentes</option>
+                                        <option value="kids">Niños/as</option>
+                                        <option value="toddler">Bebes</option>
+                                        <option value="infant">Infantes</option>
+                                        <option value="newborn">Recien Nacidos</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
