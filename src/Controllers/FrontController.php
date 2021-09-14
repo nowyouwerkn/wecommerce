@@ -276,6 +276,8 @@ class FrontController extends Controller
         $tax = ($cart->totalPrice) * ($tax_rate);
         */
 
+        $store_config = $this->store_config;
+
         if (!empty($payment_method)) {
             if(Auth::check()){
                 $user = Auth::user();
@@ -291,7 +293,8 @@ class FrontController extends Controller
                 ->with('tax', $tax)
                 ->with('shipping', $shipping)
                 ->with('store_tax', $store_tax)
-                ->with('products', $cart->items);
+                ->with('products', $cart->items)
+                ->with('store_config', $store_config);
             }else{
                 // COMPRA DE INVITADO
                 $count = 0;
@@ -312,7 +315,8 @@ class FrontController extends Controller
                 ->with('tax', $tax)
                 ->with('shipping', $shipping)
                 ->with('products', $cart->items)
-                ->with('cart_count', $count);
+                ->with('cart_count', $count)
+                ->with('store_config', $store_config);
             }
         }else{
             //Session message
@@ -364,6 +368,8 @@ class FrontController extends Controller
         $tax = ($cart->totalPrice) * ($tax_rate);
         */
 
+        $store_config = $this->store_config;
+
         if (!empty($payment_method)) {
             if(Auth::check()){
                 $user = Auth::user();
@@ -379,7 +385,8 @@ class FrontController extends Controller
                 ->with('tax', $tax)
                 ->with('shipping', $shipping)
                 ->with('store_tax', $store_tax)
-                ->with('products', $cart->items);
+                ->with('products', $cart->items)
+                ->with('store_config', $store_config);
             }else{
                 // COMPRA DE INVITADO
                 $count = 0;
@@ -400,7 +407,8 @@ class FrontController extends Controller
                 ->with('tax', $tax)
                 ->with('shipping', $shipping)
                 ->with('products', $cart->items)
-                ->with('cart_count', $count);
+                ->with('cart_count', $count)
+                ->with('store_config', $store_config);
             }
         }else{
             //Session message
@@ -451,6 +459,8 @@ class FrontController extends Controller
         $tax = ($cart->totalPrice) * ($tax_rate);
         */
 
+        $store_config = $this->store_config;
+
         if (!empty($payment_method)) {
             if(Auth::check()){
                 $user = Auth::user();
@@ -466,7 +476,8 @@ class FrontController extends Controller
                 ->with('tax', $tax)
                 ->with('shipping', $shipping)
                 ->with('store_tax', $store_tax)
-                ->with('products', $cart->items);
+                ->with('products', $cart->items)
+                ->with('store_config', $store_config);
             }else{
                 // COMPRA DE INVITADO
                 $count = 0;
@@ -487,7 +498,8 @@ class FrontController extends Controller
                 ->with('tax', $tax)
                 ->with('shipping', $shipping)
                 ->with('products', $cart->items)
-                ->with('cart_count', $count);
+                ->with('cart_count', $count)
+                ->with('store_config', $store_config);
             }
         }else{
             //Session message
@@ -1524,7 +1536,9 @@ class FrontController extends Controller
 
     public function purchaseComplete()
     {   
-        return view('front.theme.' . $this->theme->get_name() . '.purchase_complete');
+        $store_config = $this->store_config;
+
+        return view('front.theme.' . $this->theme->get_name() . '.purchase_complete')->with('store_config', $store_config);
     }
 
     public function reduceStock()
