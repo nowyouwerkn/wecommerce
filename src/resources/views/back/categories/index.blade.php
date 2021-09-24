@@ -33,10 +33,12 @@
             height: 20px;
             width: 20px;
             text-align: center;
-            line-height: 18px;
+            line-height: 19px;
             font-size: .8em;
             border-radius: 15px;
         }
+
+
 
         .list-group-item{
             padding: .75rem 1.5rem;

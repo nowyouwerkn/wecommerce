@@ -1,6 +1,53 @@
 <div class="card card-order mb-5">
     <div class="card-body">
-        <h3 class="card-order-title">Orden #00{{ $order->id }}</h3>
+        <div class="d-flex justify-content-between">
+            <h3 class="card-order-title">Orden #00{{ $order->id }}</h3>
+
+            <div class="card-order-status">
+                <div class="progress">
+                        @if($order->status == 'Pagado')
+                        <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;" data-toggle="tooltip" data-placement="top" title="Progreso">
+                        @endif
+
+                        @if($order->status == 'Empaquetado')
+                        <div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;" data-toggle="tooltip" data-placement="top" title="Progreso">
+                        @endif
+
+                        @if($order->status == 'Enviado')
+                        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;" data-toggle="tooltip" data-placement="top" title="Progreso">
+
+                            <span class="tracking-type">
+                                <h5>Número de Rastreo</h5>
+                                <p class="mb-0">
+                                    @if($order->trackings->count())
+                                        @foreach($order->trackings as $tracking)
+                                            {{ $tracking->tracking_number }}
+                                        @endforeach
+                                    @else
+                                    <div class="text-center my-5">
+                                        <p class="mb-0">¡Todavía no se asigna una guía para esta orden!</p>
+                                    </div>
+                                    @endif
+                                </p>
+                            </span>
+                        @endif
+
+                        @if($order->status == 'Entregado')
+                        <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;" data-toggle="tooltip" data-placement="top" title="Progreso">
+                        @endif
+
+                        <span class="progress-type"><i class="box-icon-order"></i></span>
+                    </div>
+                </div>
+
+                <div class="progress-meter">
+                    <div class="meter meter-left" style="width: 25%;"><span class="meter-text">Pagado</span></div>
+                    <div class="meter meter-left" style="width: 25%;"><span class="meter-text">Empaquetado</span></div>
+                    <div class="meter meter-right" style="width: 25%;"><span class="meter-text">Enviado</span></div>
+                    <div class="meter meter-right" style="width: 25%;"><span class="meter-text">Entregado</span></div>
+                </div>
+            </div>
+        </div>
 
         <h6 class="title-order-separator">Resumen de tu Orden</h6>
 

@@ -417,6 +417,23 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Documento importado correctamente.');
     }
 
+    public function stockUpdate(Request $request, $id)
+    {
+        // Guardar datos en la base de datos
+        $product = Product::find($id);
+        
+        $product->stock = $request->stock_variant;
+        //$stock->sku = $request->sku_variant;
+
+        $product->save();
+
+        // Mensaje de session
+        Session::flash('success', 'Se actualizó exitosamente tu stock.');
+
+        // Enviar a vista
+        return redirect()->back();
+    }
+
     /*
     public function storeDynamic(Request $request)
     {

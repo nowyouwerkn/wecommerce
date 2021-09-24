@@ -7,3 +7,119 @@
 
 /* Your CSS Styles Here
 -----------------------------------*/
+
+.progress{
+    overflow: initial;
+    margin-top: 20px;
+}
+
+.progress-bar{
+    position: relative;
+    overflow: initial;
+}
+
+.progress-meter {
+    min-height: 15px;
+    border-bottom: 2px solid rgb(160, 160, 160);
+    margin-bottom: 50px;
+    margin-top: 10px;
+}
+
+.progress-meter > .meter {
+    position: relative;
+    float: left;
+    min-height: 15px;
+    border-width: 0px;
+    border-style: solid;
+    border-color: rgb(160, 160, 160);
+}
+
+.progress-meter > .meter-left {
+    border-left-width: 2px;
+}
+
+.progress-meter > .meter-right {
+    float: right;
+    border-right-width: 2px;
+}
+
+.progress-meter > .meter > .meter-text {
+    position: absolute;
+    display: inline-block;
+    bottom: -20px;
+    width: 100%;
+    font-weight: 700;
+    font-size: 0.85em;
+    color: rgb(160, 160, 160);
+    text-align: left;
+}
+
+.progress-meter > .meter.meter-right > .meter-text {
+    text-align: right;
+}
+
+.progress-type{
+    position: absolute;
+    top: -15px;
+    right: -20px;
+    z-index: 2;
+}
+
+
+.card-order-status{
+    width: 70%;
+}
+
+.box-icon-order{
+    background: url(../img/icons/box.svg) center center;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 40px;
+    display: block;
+    background-size: contain;
+}
+
+.tracking-type{
+    position: absolute;
+    height: auto;
+    border: 2px solid #e6646e;
+    background: #e6646e;
+    color: #000;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    top: -80px;
+    right: -72px;
+}
+
+.tracking-type:after{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-top: 0px solid #e6646e;
+    border-right: 2px solid #e6646e;
+    border-bottom: 2px solid #e6646e;
+    border-left: 0px solid #e6646e;
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    content: '';
+    transform: rotate(45deg);
+    margin-top: -10px;
+    background: #e6646e;
+}
+
+.tracking-type h5{
+    position: relative;
+    z-index: 1;
+    margin-bottom: 5px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .8em;
+    text-transform: uppercase;
+}
+
+.tracking-type p{
+    position: relative;
+    z-index: 1;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.2em;
+}

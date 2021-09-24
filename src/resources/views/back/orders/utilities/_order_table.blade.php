@@ -115,6 +115,11 @@
         background-color: #dc3545;
         border-color: #dc3545;
     }
+
+    .type-td{
+        overflow-x: scroll;
+        white-space: nowrap;
+    }
 </style>
 
 <table class="table">
@@ -127,13 +132,13 @@
             <th>Fecha de Compra</th>
             <th>Cantidad Pagada</th>
             <th>Estatus</th>
-            <th>Acciones</th>
+            <th class="text-center">-</th>
         </tr>
     </thead>
     <tbody>
         @foreach($orders as $order)
         <tr>
-            <td>
+            <td class="type-td" style="width:80px;">
                 <a href="{{ route('orders.show', $order->id) }}">
                     <i class="fas fa-shopping-bag"></i>
                     @if(strlen($order->id) == 1)
@@ -148,7 +153,7 @@
                 </a>
             </td>
           
-            <td>{{ $order->payment_id }}</td>
+            <td class="type-td" style="width:280px;">{{ $order->payment_id }}</td>
             <td class="text-muted" >
                 <span data-toggle="tooltip" data-placement="bottom" title="ID de Pago: {{ $order->payment_id }}">
                 	@if($order->payment_method == 'Paypal')
@@ -366,8 +371,8 @@
                 @endif
                 --}}
             </td>
-            <td>
-                <a href="" data-toggle="tooltip" data-placement="top" title="Imprimir lista de empaque"><i class="fas fa-print"></i></a>
+            <td class="type-td" style="width:45px; text-align: center;">
+                <a href=""><i class="fas fa-print"></i></a>
             </td>
         </tr>
         @endforeach

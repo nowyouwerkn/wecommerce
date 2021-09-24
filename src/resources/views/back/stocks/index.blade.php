@@ -9,7 +9,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Inventario</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Inventario</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Gestión de Inventario</h4>
         </div>
         <!--
         <div class="d-none d-md-block">
@@ -56,6 +56,23 @@
             display: none;
         }
 
+        .error-update{
+            background-color: #ff7675;
+            width: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 100%;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            z-index: 2;
+            color: #fff;
+            opacity: .9;
+            padding: 27px 0px;
+            display: none;
+        }
+
         .child-row{
             position: relative;
             overflow: hidden;
@@ -94,10 +111,16 @@
                         <tbody>
 
                             @foreach($products as $product)
-                            <tr class="parent" id="row{{ $product->id }}" title="Click to expand/collapse" style="cursor: pointer;">
-                                <td>
+                            <tr class="parent" id="row{{ $product->id }}" title="Click to expand/collapse" style="cursor: pointer; position: relative;">
+                                <td style="width:50px;">
+                                    @if($product->has_variants == true)
                                     <span class="circle-icon bg-success text-white"><i class="fas fa-plus-circle"></i></span>
                                     <span style="font-weight: bold; font-size:1.2em;">{{ $product->variants->count() }}</span>
+                                    @endif
+
+                                    <span id="success-update-p{{ $product->id }}" class="success-update"><i class="fas fa-check mr-2"></i> Actualización exitosa </span>
+
+                                    <span id="error-update-p{{ $product->id }}" class="error-update"><i class="fas fa-times mr-2"></i> Problema de datos. Inicia sesión nuevamente o refresca la pantalla. </span>
                                 </td>
                                 <td class="tx-color-03 tx-normal image-table td-tight">
                                     <img style="width: 100%; height: 100px;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
@@ -105,7 +128,7 @@
                                         <small><p>+ {{ $product->images->count() }} Imágen(es)</p></small>    
                                     </div>
                                 </td>
-                                <td>
+                                <td style="width:160px;">
                                     {{ $product->sku }}
                                 </td>
                                 <td>
@@ -121,33 +144,79 @@
                                     @endif
                                 </td>
 
+                                @if($product->has_variants == true)
                                 <td>
-                                    @if($product->has_variants == true)
-                                        @php
-                                            $total_qty = 0;
+                                    @php
+                                        $total_qty = 0;
 
-                                            foreach ($product->variants_stock as $v_stock) {
-                                                $total_qty += $v_stock->stock;
-                                            };
+                                        foreach ($product->variants_stock as $v_stock) {
+                                            $total_qty += $v_stock->stock;
+                                        };
 
-                                            $total_qty;
-                                        @endphp
-                                        {{ $total_qty }}
-                                    @else
-                                        {{ $product->stock }}
-                                    @endif
-
-                                    
-                                    <!--<nav class="nav nav-icon-only justify-content-end">
-                                        <a href="" class="nav-link d-none d-sm-block">
-                                            <i class="far fa-edit"></i>
-                                        </a>
-                                        <a href="" class="nav-link d-none d-sm-block">
-                                            <i class="far fa-trash-alt"></i>
-                                        </a>
-                                    </nav>-->
+                                        $total_qty;
+                                    @endphp
+                                    {{ $total_qty }}
                                 </td>
                                 <td></td>
+                                @else
+                                <td>
+                                    <input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $product->stock }}" id="productStockVariant{{ $product->id }}" style="width:80px;">
+                                </td>
+                                <td>
+                                    <button id="productUpdateForm{{ $product->id }}" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
+                                        <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
+                                    </button>
+
+                                    {{-- 
+                                    <button type="button" id="deleteVariant_{{ $product->id }}" class="btn btn-sm pd-x-15 btn-outline-danger btn-uppercase mg-l-5">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                    --}}
+
+                                    @push('scripts')
+                                    <form method="POST" id="deleteVariantForm_{{ $product->id }}" action="{{ route('stock.destroy', $product->id) }}" style="display: inline-block;">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+                                    </form>
+
+                                    <script type="text/javascript">
+                                        $('#productUpdateForm{{ $product->id }}').on('click', function(){
+                                            event.preventDefault();
+
+                                            $.ajax({
+                                                method: 'POST',
+                                                url: "{{ route('product.stock.update', $product->id) }}",
+                                                data:{
+                                                    stock_variant: $('#productStockVariant{{ $product->id }}').val(),
+                                                    _method: "PUT",
+                                                    _token: "{{ Session::token() }}", 
+                                                },
+                                                success: function(msg){
+                                                    console.log(msg['mensaje']);
+
+                                                    $('#success-update-p{{ $product->id }}').fadeIn();
+
+                                                    setTimeout(function () {
+                                                        $('#success-update-p{{ $product->id }}').fadeOut();
+                                                    }, 500);
+                                                },
+                                                error: function(msg){
+                                                    $('#error-update-p{{ $product->id }}').fadeIn();
+
+                                                    console.log(msg);        
+                                                }
+                                            });
+                                        });
+
+                                        $('#deleteVariant_{{ $product->id }}').on('click', function(){
+                                            event.preventDefault();
+                                            $('#deleteVariantForm_{{ $product->id }}').submit();
+                                        });
+                                    </script>
+                                    @endpush
+                                </td>
+                                @endif
+
                             </tr>
                                 @foreach($product->variants_stock as $variant)
                                 <tr class="bg-light child-row child-row{{ $product->id }}" style="display: none;">
@@ -155,9 +224,12 @@
                                         {{ csrf_field() }}
                                         {{ method_field('PUT') }}
 
-                                        <td class="tx-color-03 tx-normal image-table">
+                                        <td style="width:50px;" class="tx-color-03 tx-normal image-table">
                                             <span id="success-update{{ $variant->id }}" class="success-update"><i class="fas fa-check mr-2"></i> Actualización exitosa </span>
+
+                                            <span id="error-update{{ $variant->id }}" class="error-update"><i class="fas fa-times mr-2"></i> Problema de datos. Inicia sesión nuevamente o refresca la pantalla. </span>
                                         </td>
+
                                         <td>
                                             
                                         </td>
@@ -221,7 +293,9 @@
                                                             }, 500);
                                                         },
                                                         error: function(msg){
-                                                            console.log(msg);         
+                                                            $('#error-update{{ $variant->id }}').fadeIn();
+
+                                                            console.log(msg);        
                                                         }
                                                     });
                                                 });
@@ -260,7 +334,7 @@
             .css("cursor", "pointer")  
             .attr("title", "Da click para expandir/cerrar las variantes")  
             .click(function () {  
-                $(this).siblings('.child-' + this.id).toggle();  
+                $(this).siblings('.child-' + this.id).toggle("fast");  
             });  
 
         //$('tr[@class^=child-]').hide().children('td');  

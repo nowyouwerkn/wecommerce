@@ -12,6 +12,10 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="header-top-right">
+                        <div>
+                            <a class="contact_action" href="{{ route('utilities.tracking.index') }}">Seguimiento de Orden</a>
+                        </div>
+
                         <div class="lang">
                             <select name="select">
                                 <option value="">English</option>

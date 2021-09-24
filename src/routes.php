@@ -47,12 +47,25 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
         'as' => 'change.color',
     ]);
 
+    Route::get('/mensajes-actualizaciones', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@messages',
+        'as' => 'update.messages',
+    ]);
+
     Route::resource('banners', 'Nowyouwerkn\WeCommerce\Controllers\BannerController');
 
     Route::post('/banners/status/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\BannerController@status',
         'as' => 'banners.status',
     ]);
+
+    Route::resource('popups', Nowyouwerkn\WeCommerce\Controllers\PopupController::class);
+
+    Route::post('/banners/status/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\BannerController@status',
+        'as' => 'banners.status',
+    ]);
+
 
     //Configuration
     Route::get('/configuration', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@configuration')->name('configuration'); //
@@ -90,6 +103,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     Route::post('/products/create-dynamic', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeDynamic',
         'as' => 'products.store.dynamic',
+    ]);
+
+    Route::put('/products/update-stock/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@stockUpdate',
+        'as' => 'product.stock.update',
     ]);
 
     Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
@@ -382,6 +400,17 @@ Route::get('legals/{type}', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@
 Route::get('/compra-exitosa', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@purchaseComplete',
     'as' => 'purchase.complete',
+]);
+
+// Seguimiento de Compra
+Route::get('/order-tracking', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@orderTracking',
+    'as' => 'utilities.tracking.index',
+]);
+
+Route::post('/order-tracking', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@orderTrackingStatus',
+    'as' => 'utilities.tracking.status',
 ]);
 
 Route::get('reducir-stock', [

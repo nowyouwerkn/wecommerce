@@ -18,10 +18,10 @@
                     <!--<img src="https://via.placeholder.com/500" class="rounded-circle" alt="">-->
                 </a>
                 <div class="aside-alert-link">
-                    <!--<a href="" class="new" data-toggle="tooltip" title="Dos mensajes sin leer">
+                    <a href="{{ route('update.messages') }}" class="new" data-toggle="tooltip" title="Dos mensajes sin leer">
                         <i data-feather="message-square"></i>
                     </a>
-                    -->
+
                     <!--
                     <a href="{{ route('notifications.index') }}" class="new" data-toggle="tooltip" title="Tienes 4 notificaciones nuevas">
                         <i data-feather="bell"></i>
@@ -73,11 +73,14 @@
             <li class="nav-item active">
                 <a href="{{ route('dashboard') }}" class="nav-link"><i data-feather="pie-chart"></i> <span>Inicio</span></a>
             </li>
-            <li class="nav-item">
-                <a href="{{ route('banners.index') }}" class="nav-link">
-                    <i data-feather="image"></i> <span>Banners</span>
-                </a>
+            <li class="nav-item with-sub">
+                <a href="" class="nav-link"><i data-feather="image"></i> <span> Marketing</span></a>
+                <ul>
+                  <li><a href="{{ route('banners.index') }}">Banners</a></li>
+                  <li><a href="{{ route('popups.index') }}">Pop-ups</a></li>
+                </ul>
             </li>
+
             <li class="nav-item with-sub show">
                 <a href="" class="nav-link"><i data-feather="tag"></i> <span>Productos</span></a>
                 <ul>

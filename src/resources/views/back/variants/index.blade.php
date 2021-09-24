@@ -33,8 +33,15 @@
         height: 20px;
         width: 20px;
         text-align: center;
-        line-height: 16px;
+        line-height: 19px;
         font-size: .8em;
+        border-radius: 15px;
+    }
+
+
+
+    .list-group-item{
+        padding: .75rem 1.5rem;
     }
 </style>
 @endpush
@@ -54,10 +61,8 @@
         <div class="card mb-4">
             <div class="action-btns">
                 <ul class="list-inline">
-                    <!--
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal_{{ $variant->id }}" class="btn btn-rounded btn-icon btn-dark waves-effect waves-light"><i class="fa fa-wrench"></i></a></li>
                     <li class="list-inline-item"><a  data-toggle="tooltip" title="" data-original-title="Detalle" href="{{ route('variants.show', $variant->id) }}" class="btn btn-rounded btn-icon btn-dark waves-effect waves-light"><i class="fa fa-eye"></i></a></li>
-                    -->
 
                     @if($variant->products->count() === 0)
                     <li class="list-inline-item">

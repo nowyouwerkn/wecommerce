@@ -1211,7 +1211,6 @@ class FrontController extends Controller
             return $order;
         });
 
-        
         $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
 
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')
@@ -1557,5 +1556,29 @@ class FrontController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function orderTracking()
+    {
+        return view('front.theme.' . $this->theme->get_name() . '.order_tracking');
+    }
+
+    public function orderTrackingStatus(Request $request)
+    {
+        $order_id = Str::of($request->order_id)->ltrim('0');
+
+        $user = User::where('email', $request->email)->firstOrFail();
+        $order = Order::where('id', $order_id)->where('user_id', $user->id)->first();
+        
+        if($order == NULL){
+            Session::flash('error', 'No hay ninguna orden con ese número asociado con ese cliente.');
+
+            return view('front.theme.' . $this->theme->get_name() . '.order_tracking');
+        }else{
+            $order->cart = unserialize($order->cart);
+            
+            return view('front.theme.' . $this->theme->get_name() . '.order_tracking')->with('order', $order);
+        }
+        
     }
 }

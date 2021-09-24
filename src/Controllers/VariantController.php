@@ -13,6 +13,7 @@ use Str;
 /* Notificaciones */
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
+use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Variant;
 use Illuminate\Http\Request;
 
@@ -44,7 +45,11 @@ class VariantController extends Controller
 
     public function show($id)
     {
-        //
+        $variant = Variant::findOrFail($id);
+
+        $products = $variant->products;
+
+        return view('wecommerce::back.variants.show')->with('variant', $variant)->with('products', $products);
     }
 
     public function edit($id)

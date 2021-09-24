@@ -2,6 +2,20 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.2 - 2021-09-22
+
+### Agregado
+- Módulo Pop-Up, una extensión opcional que permite mostrar pop-ups informativos a los usuarios.
+- Se agrega la leyenda "Estos son los terminos y condiciones que aceptaste al completar tu compra" a las plantillas de correo.
+- Ahora se puede ver el detalle de variantes que muestra un listado con los productos relacionados.
+- Ahora se puede Imprimir una lista de empaque en tamaño carta para las ordenes realizadas.
+- Funcionalidad de seguimiento de orden por medio del numero de orden y el correo de compra desde el Front sin necesidad de hacer login.
+
+### Reparado
+- Los pagos procesados por Stripe y Openpay ahora regresan el mensaje de error al checkout cuando se encontraba una excepción.
+- Cuando la sesión caduca, el programa manda un mensaje de error en las peticiones asíncronas de AJAX
+
+
 ## 1.1 - 2021-09-14
 
 ### Agregado
