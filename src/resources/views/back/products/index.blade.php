@@ -51,7 +51,7 @@
             <div class="card mg-b-10">
 
                 <div class="table-responsive">
-                    @include('wecommerce::back.orders.utilities._order_table')
+                    @include('wecommerce::back.products.utilities._product_table')
                 </div>
                 
                 <div class="d-flex justify-content-center">
