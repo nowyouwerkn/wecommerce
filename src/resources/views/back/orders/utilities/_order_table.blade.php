@@ -120,6 +120,32 @@
         overflow-x: scroll;
         white-space: nowrap;
     }
+
+    .tooltip-custom{
+        position: relative;
+    }
+
+    .tooltip-custom:after{
+        content: 'Imprimir lista de empaque';
+        position: absolute;
+        width: 165px;
+        padding: 5px 15px;
+        display: block;
+        background-color: #7987a1;
+        top: -30px;
+        left: -75px;
+        text-align: center;
+        border-radius: 10px;
+        word-wrap: normal;
+        color: #fff;
+        font-size: .8em;
+        opacity: 0;
+        box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, .4);
+    }
+
+    .tooltip-custom:hover:after{
+        opacity: 1;
+    }
 </style>
 
 <table class="table">
@@ -358,21 +384,17 @@
                         });
                     </script>
                 @endpush
-
-                {{-- 
-                @if($order->is_completed == true)
-                <div class="badge badge-table badge-success"><i class="fas fa-check mr-1"></i> Pagado</div>
-                @else
-                    @if($order->status == NULL)
-                    <div class="badge badge-table badge-warning"><i class="fas fa-exclamation mr-1"></i> Pendiente</div>
-                    @else
-                    <div class="badge badge-table badge-danger"><i class="fas fa-times mr-1"></i> Expirado/Cancelado</div>
-                    @endif
-                @endif
-                --}}
             </td>
-            <td class="type-td" style="width:45px; text-align: center;">
-                <a href=""><i class="fas fa-print"></i></a>
+            <td>
+                @if ($order->status == 'Empaquetado' || $order->status == 'Enviado' || $order->status == 'Entregado')    
+                <a data-toggle="tooltip" data-placement="top" title="Imprimir lista de empaque" href="{{ route('order.packing.list', $order->id) }}">
+                    <i class="fas fa-print"></i>
+                </a>
+                @else
+                <div style="opacity:.4;">
+                    <i class="fas fa-print"></i>
+                </div>
+                @endif
             </td>
         </tr>
         @endforeach

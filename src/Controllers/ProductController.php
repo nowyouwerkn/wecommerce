@@ -327,6 +327,8 @@ class ProductController extends Controller
         $product->barcode = $request->barcode;
         $product->stock = $request->stock;
 
+        $product->has_variants = $request->has_variants;
+
         $product->size_chart_file = $request->size_chart_file;
         $product->height = $request->height;
         $product->width = $request->width;

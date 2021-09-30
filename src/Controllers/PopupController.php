@@ -42,23 +42,26 @@ class PopupController extends Controller
     {
         //Validar
         $this -> validate($request, array(
-            'title' => 'unique:popups|required|max:255',
+            'title' => 'required|max:255',
             'subtitle' => 'nullable',
-            'text_button' => 'required',
-            'link' => 'nullable',
-            'image' => 'required',
+            'image' => 'sometimes',
         ));
 
         // Guardar datos en la base de datos
-        $popup = new popup;
+        $popup = new Popup;
 
+        $popup->style_type = $request->style_type;
         $popup->title = $request->title;
         $popup->subtitle = $request->subtitle;
         $popup->text_button = $request->text_button;
         $popup->link = $request->link;
-        $popup->has_button = true;
+        $popup->text = $request->text;
+        $popup->has_button = $request->has_button;
         $popup->is_active = true;
         $popup->hex = $request->hex;
+
+        $popup->show_on_exit = $request->show_on_exit;
+        $popup->show_on_enter = $request->show_on_enter;
 
         $img2 = 'popup';
 
@@ -100,16 +103,20 @@ class PopupController extends Controller
         // Guardar datos en la base de datos
         $popup = Popup::find($id);
 
+        $popup->style_type = $request->style_type;
         $popup->title = $request->title;
         $popup->subtitle = $request->subtitle;
         $popup->text_button = $request->text_button;
         $popup->link = $request->link;
-        //$popup->image = $request->image;
-        $popup->has_button = true;
+        $popup->text = $request->text;
+        $popup->has_button = $request->has_button;
         $popup->is_active = true;
         $popup->hex = $request->hex;
 
-        $img2 = 'model';
+        $popup->show_on_exit = $request->show_on_exit;
+        $popup->show_on_enter = $request->show_on_enter;
+
+        $img2 = 'popup';
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -128,7 +135,6 @@ class PopupController extends Controller
 
         // Enviar a vista
         return redirect()->route('popups.show', $popup->id);
-
     }
 
     public function status(Request $request)

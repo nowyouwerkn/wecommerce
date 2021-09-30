@@ -433,7 +433,12 @@
                         @endif
 
                         <hr class="dont-print">
-                        <a href="javascript:void(0)" data-toggle="modal" data-target="#resendMail" class="btn btn-outline-info dont-print"><i class="fas fa-envelope"></i> Reenviar confirmación de orden</a>
+                        <div class="d-flex justify-content-between">
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#resendMail" class="btn btn-outline-info dont-print"><i class="fas fa-envelope"></i> Reenviar confirmación de orden</a>
+
+                            <a href="{{ route('order.packing.list', $order->id) }}" class="btn btn-outline-dark"><i class="fas fa-print"></i> Imprimir Lista de Empaque</a>
+                        </div>
+                        
                     </div>
                 </div>
 
@@ -577,11 +582,13 @@
         </div>
     </span>
 
+    <!--
     <div class="row">
         <div class="col-md-4 mt-3">
             <button id="print" class="btn btn-default btn-primary btn-block btn-lg mt-4" type="button"> <span><i class="fa fa-print"></i> Imprimir Orden</span></button>
         </div> 
-    </div>
+    </div> 
+-->
 
 <div class="modal fade" id="trackingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

@@ -7,7 +7,6 @@
 
 /* Your CSS Styles Here
 -----------------------------------*/
-
 .progress{
     overflow: initial;
     margin-top: 20px;
@@ -111,8 +110,7 @@
 .tracking-type h5{
     position: relative;
     z-index: 1;
-    margin-bottom: 5px;
-    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 5px; 
     font-size: .8em;
     text-transform: uppercase;
 }
@@ -120,6 +118,5 @@
 .tracking-type p{
     position: relative;
     z-index: 1;
-    font-family: 'Montserrat', sans-serif;
     font-size: 1.2em;
 }

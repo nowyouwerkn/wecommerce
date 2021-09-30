@@ -4,6 +4,9 @@
             <h3 class="card-order-title">Orden #00{{ $order->id }}</h3>
 
             <div class="card-order-status">
+                @if($order->status == 'Cancelado')
+                <span class="badge badge-danger">Orden Cancelada o Expirada</span>
+                @else
                 <div class="progress">
                         @if($order->status == 'Pagado')
                         <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;" data-toggle="tooltip" data-placement="top" title="Progreso">
@@ -46,6 +49,7 @@
                     <div class="meter meter-right" style="width: 25%;"><span class="meter-text">Enviado</span></div>
                     <div class="meter meter-right" style="width: 25%;"><span class="meter-text">Entregado</span></div>
                 </div>
+                @endif
             </div>
         </div>
 

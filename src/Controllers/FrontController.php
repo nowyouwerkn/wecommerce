@@ -668,16 +668,9 @@ class FrontController extends Controller
                                 ),
                             )
                         );
-                    } 
-                    catch(\Excepton $e) {
-                        return redirect()->route('checkout')->with('error', $e->getMessage() );
-                    }
-                    catch(\Conekta\ParameterValidationError $error){
-                        echo $error->getMessage();
+                    }catch(\Conekta\ParameterValidationError $error){
                         return redirect()->back()->with('error', $error->getMessage() );
-
-                    } catch (\Conekta\Handler $error){
-                        echo $error->getMessage();
+                    }catch (\Conekta\Handler $error){
                         return redirect()->back()->with('error', $error->getMessage() );
                     }
                 }
@@ -692,8 +685,24 @@ class FrontController extends Controller
                         "source" => $request->input('stripeToken'), 
                         "description" => "Purchase Successful",
                     ));
-                } catch(\Excepton $e) {
-                        return redirect()->route('checkout')->with('error', $e->getMessage() );
+                } catch(\Stripe\Exception\CardException $e) {
+                    // Error de validaciçon de tarjeta
+                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                }catch (\Stripe\Exception\RateLimitException $e) {
+                    // Too many requests made to the API too quickly
+                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                } catch (\Stripe\Exception\InvalidRequestException $e) {
+                    // Invalid parameters were supplied to Stripe's API
+                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                } catch (\Stripe\Exception\AuthenticationException $e) {
+                    // Authentication with Stripe's API failed
+                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                } catch (\Stripe\Exception\ApiConnectionException $e) {
+                    // Network communication with Stripe failed
+                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                } catch (\Stripe\Exception\ApiErrorException $e) {
+                    // Display a very generic error to the user
+                    return redirect()->route('checkout')->with('error', $e->getError()->message);
                 }
 
                 break;
@@ -722,8 +731,18 @@ class FrontController extends Controller
 
                     $charge = $openpay->charges->create($chargeRequest);
 
-                } catch(\Exception $e) {
-                    return redirect()->route('checkout')->with('error', $e->getMessage() );
+                }catch (OpenpayApiTransactionError $e) {
+                    return redirect()->route('checkout')->with('error', $e->getMessage());
+                }catch (OpenpayApiRequestError $e) {
+                    return redirect()->route('checkout')->with('error', $e->getMessage());
+                }catch (OpenpayApiConnectionError $e) {
+                    return redirect()->route('checkout')->with('error', $e->getMessage());
+                }catch (OpenpayApiAuthError $e) {
+                    return redirect()->route('checkout')->with('error', $e->getMessage());
+                }catch (OpenpayApiError $e) {
+                    return redirect()->route('checkout')->with('error', $e->getMessage());
+                }catch(Exception $e) {
+                    return redirect()->route('checkout')->with('error', 'Hubo un error. Revisa tu información e intenta de nuevo o ponte en contacto con nosotros.');
                 }
 
                 break;

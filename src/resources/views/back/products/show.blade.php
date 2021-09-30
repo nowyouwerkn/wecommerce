@@ -417,6 +417,20 @@
                             <input type="text" name="barcode" class="form-control" value="{{ $product->barcode }}">
                         </div>
                     </div>
+
+                    <div class="col-md-12 mb-4">
+                        @if($product->has_variants == true)
+                        <div class="custom-control custom-checkbox" >
+                            <input type="checkbox" class="custom-control-input" id="hasVariants" name="has_variants" checked="" value="1">
+                            <label class="custom-control-label" for="hasVariants">Este producto tiene variantes</label>
+                        </div>
+                        @else
+                        <div class="custom-control custom-checkbox" >
+                            <input type="checkbox" class="custom-control-input" id="hasVariants" name="has_variants" value="1">
+                            <label class="custom-control-label" for="hasVariants">Este producto tiene variantes</label>
+                        </div>
+                        @endif
+                    </div>
                 </div>
             </div>
 

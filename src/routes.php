@@ -61,9 +61,9 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
 
     Route::resource('popups', Nowyouwerkn\WeCommerce\Controllers\PopupController::class);
 
-    Route::post('/banners/status/{id}', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\BannerController@status',
-        'as' => 'banners.status',
+    Route::post('/popups/status/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\PopupController@status',
+        'as' => 'popups.status',
     ]);
 
 
@@ -144,6 +144,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
 
     Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
     Route::get('exportar-ordenes', 'Nowyouwerkn\WeCommerce\Controllers\OrderController@export')->name('export.orders');
+
+    Route::get('/orders/{id}/packing-list', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@packingList',
+        'as' => 'order.packing.list',
+    ]);
 
     Route::put('/orders/{id}/cambiar-estado', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@changeStatus',

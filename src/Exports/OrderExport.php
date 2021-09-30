@@ -3,15 +3,16 @@
 namespace Nowyouwerkn\WeCommerce\Exports;
 
 use Nowyouwerkn\WeCommerce\Models\Order;
-use Maatwebsite\Excel\Concerns\FromCollection;
 
-class OrderExport implements FromCollection
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
+
+class OrderExport implements FromView
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+    public function view(): View
     {
-        return Order::all();
+        return view('wecommerce::back.exports.orders', [
+            'orders' => Order::all(),
+        ]);
     }
 }

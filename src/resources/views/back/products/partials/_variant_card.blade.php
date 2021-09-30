@@ -32,7 +32,7 @@
 	</style>
 @endpush
 
-<div class="card mg-t-10 mb-4">
+<div class="card mg-t-10 mb-4" id="variantCard">
     <!-- Header -->
     <div class="card-header pd-t-20 pd-b-0 bd-b-0">
         <h5 class="mg-b-5">Variantes</h5>
@@ -45,13 +45,6 @@
         	<a href="javascript:void(0)" id="openVariants"class="btn btn-sm pd-x-15 btn-white btn-uppercase">
                 Agregar Variantes
            	</a>
-
-           	<!--
-            <div class="custom-control custom-checkbox" >
-                <input type="checkbox" class="custom-control-input" id="variants">
-                <label class="custom-control-label" for="variants">Este producto tiene variantes</label>
-            </div>
-        	-->
         </div>
     </div>
 

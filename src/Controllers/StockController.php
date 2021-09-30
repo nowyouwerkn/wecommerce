@@ -54,7 +54,7 @@ class StockController extends Controller
         Session::flash('success', 'Se guardó exitosamente tu stock.');
 
         // Enviar a vista
-        return redirect()->back();
+        return redirect(url()->previous().'#variantCard');
     }
 
     public function storeDynamic(Request $request)

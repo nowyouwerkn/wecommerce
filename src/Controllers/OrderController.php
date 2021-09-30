@@ -72,6 +72,20 @@ class OrderController extends Controller
         ->with('shipping_method', $shipping_method);
     }
 
+    public function packingList($id) 
+    {
+        $order = Order::find($id);
+        $order->cart = unserialize($order->cart);
+
+        $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
+        $shipping_method = '0';
+
+        return view('wecommerce::back.orders.packing_list')
+        ->with('order', $order)
+        ->with('payment_method', $payment_method)
+        ->with('shipping_method', $shipping_method);
+    }
+
     public function changeStatus($id, Request $request)
     {
         $order = Order::find($id);

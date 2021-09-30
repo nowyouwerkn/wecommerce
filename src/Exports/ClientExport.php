@@ -3,15 +3,15 @@
 namespace Nowyouwerkn\WeCommerce\Exports;
 
 use Nowyouwerkn\WeCommerce\Models\User;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class ClientExport implements FromCollection
+class ClientExport implements FromView
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+    public function view(): View
     {
-        return User::role('customer')->get();
+        return view('wecommerce::back.exports.clients', [
+            'clients' => User::role('customer')->get()
+        ]);
     }
 }

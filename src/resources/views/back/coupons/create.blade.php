@@ -2,6 +2,12 @@
 
 @push('stylesheets')
 <link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
+
+<style type="text/css">
+    .hidden{
+        display: none;
+    }
+</style>
 @endpush
 
 @section('title')
@@ -17,7 +23,7 @@
         </div>
         <div class="d-none d-md-block">
             <a href="{{ route('coupons.index') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Regresar
+                <i class="fas fa-undo mr-1"></i> Regresar al listado
             </a>
         </div>
     </div>
@@ -46,15 +52,16 @@
                     <div class="col-md-6">
                         <div class="form-group mt-2">
                             <label>Tipo <span class="text-danger">*</span></label>
-                            <select class="form-control" name="type" required="">
+                            <select class="form-control" name="type" id="typeCheck" required="">
+                                <option value="NULL" selected="" disabled="">Selecciona una opción</option>
                                 <option value="percentage_amount">Porcentaje</option>
                                 <option value="fixed_amount">Monto Fijo</option>
-                                <option value="free_shipping">Envío Gratis</option>
+                                <option value="free_shipping" data-name="free_shipping">Envío Gratis</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group mt-2">
+                        <div class="form-group mt-2" id="qtyForm" style="display:none;">
                             <label>Valor del descuento <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="qty" name="qty" required="" />
                         </div>
@@ -87,6 +94,29 @@
                             <small>Este cupón solo podrá ser usado una vez por usuario.</small>
                         </div>
                     </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mt-2">
+                            <label>Limite por Código</label>
+                            <input type="text" class="form-control" name="usage_limit_per_code" value="1" />
+                            <small>Limita la cantidad de veces que este cupón puede usarse en todas las compras.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mt-2">
+                            <label>Limitar uso por usuario</label>
+                            <input type="text" class="form-control" name="usage_limit_per_user" value="1" required="" />
+                            <small>Limita la cantidad de veces que este cupón puede ser usado por usuario.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mt-2">
                             <div class="custom-control custom-checkbox">
@@ -123,21 +153,6 @@
             </div>
 
             <div class="card card-body mb-4">
-                <h3>Límites de Uso</h3>
-                <div class="form-group mt-2">
-                    <label>Limite por Código</label>
-                    <input type="text" class="form-control" name="usage_limit_per_code" value="1" />
-                    <small>Limita la cantidad de veces que este cupón puede usarse en todas las compras.</small>
-                </div>
-
-                <div class="form-group mt-2">
-                    <label>Limitar uso por usuario</label>
-                    <input type="text" class="form-control" name="usage_limit_per_user" value="1" required="" />
-                    <small>Limita la cantidad de veces que este cupón puede ser usado por usuario.</small>
-                </div>
-            </div>
-
-            <div class="card card-body mb-4">
                 <h3>Período de duración</h3>
 
                 <div class="row">
@@ -158,8 +173,8 @@
         </div>
 
         <div class="col-md-4">
-            <button type="submit" class="btn btn-success btn-block">Guardar cupón</button>
-            <a href="{{ route('coupons.index') }}" class="btn btn-outline-secondary btn-block">Descartar</a>
+            <button type="submit" class="btn btn-sm btn-block pd-x-15 btn-success btn-uppercase"><i class="far fa-save"></i> Guardar cupón</button>
+            <!--<a href="{{ route('coupons.index') }}" class="btn btn-outline-secondary btn-block">Descartar</a>-->
         </div>
     </div>
 </form>
@@ -173,6 +188,20 @@
         $('.select2').select2({
             placeholder: "Selecciona una opción..."
         });
+    });
+
+    $('#typeCheck').on('change', function(){
+        event.preventDefault();
+
+        var value = $('#typeCheck option:selected').attr('data-name');
+        
+        $('#qtyForm').show();
+        $('#qtyForm .form-control').attr('required', true);
+
+        if(value == 'free_shipping'){
+            $('#qtyForm').hide();
+            $('#qtyForm .form-control').attr('required', false);
+        }
     });
 </script>
 @endpush

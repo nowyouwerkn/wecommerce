@@ -65,10 +65,12 @@
     <form method="POST" id="save-form" action="{{ route('products.store') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
 
+        {{-- 
         <div class="save-bar bg-success text-white d-flex align-items-center justify-content-between">
             <p class="mb-0">El sistema guarda como borrador ocasionalmente. Para hacerlo manual da click en el botón.</p>
             <button id="save-form" type="submit" class="btn-save-big btn btn-outline-light btn-sm text-white">Guardar cambios</button>
         </div>
+        --}}
         
         <div class="row">
             <!-- Firts Column -->

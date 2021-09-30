@@ -13,7 +13,7 @@
         </div>
         <div class="d-none d-md-block">
             <a href="{{ route('export.orders') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
-                Exportar
+                <i class="fas fa-file-export"></i> Exportar
             </a>
         </div>
     </div>

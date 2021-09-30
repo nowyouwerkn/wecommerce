@@ -20,6 +20,7 @@ class CreatePopupsTable extends Migration
 
             $table->string('title')->required();
             $table->string('subtitle')->nullable();
+            $table->text('text')->nullable();
 
             $table->string('text_button')->nullable();
             $table->boolean('has_button')->default(false);
