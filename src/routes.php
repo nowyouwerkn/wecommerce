@@ -200,8 +200,14 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
         'as' => 'notifications.mark.read',
     ]);
 
-    Route::resource('payments', Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController::class);  //
+    Route::resource('payments', Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController::class);
     Route::resource('shipments', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodController::class);
+    Route::resource('shipments-rules', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodRuleController::class);
+
+    Route::get('/shipments-rule/change-status/{id}',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodRuleController@changeStatus',
+        'as' => 'shipments-rules.status',
+    ]);
 
     //Country
     Route::resource('countries', Nowyouwerkn\WeCommerce\Controllers\CountryController::class); 

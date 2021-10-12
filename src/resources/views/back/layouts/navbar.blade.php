@@ -18,7 +18,7 @@
                     <!--<img src="https://via.placeholder.com/500" class="rounded-circle" alt="">-->
                 </a>
                 <div class="aside-alert-link">
-                    <a href="{{ route('update.messages') }}" class="new" data-toggle="tooltip" title="Dos mensajes sin leer">
+                    <a href="{{ route('update.messages') }}" class="new" data-toggle="tooltip" title="Nuevas actualizaciones en tu plataforma de WeCommerce">
                         <i data-feather="message-square"></i>
                     </a>
 

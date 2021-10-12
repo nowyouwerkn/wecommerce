@@ -119,9 +119,56 @@
                                     @else
                                     ${{ number_format($shipping,2) }}
                                     @endif
+
+                                    
                                 </li>
 
-                                <li class="cart-total-amount"><span>Total</span> <span class="amount">${{ number_format($totalPrice,2) }}</span></li>
+                                @php
+                                    $rule = Nowyouwerkn\WeCommerce\Models\ShipmentMethodRule::where('is_active', true)->first();
+                                @endphp
+
+                                @if (!empty($rule)) {
+                                <div class="alert alert-info d-block">
+                                    <span style="margin-right: 2px"><strong>{{ $rule->type }}</strong></span>
+                                    <span style="margin-right: 2px">cuando <strong>{{ $rule->condition }}</strong> sea</span>
+                                    <span style="margin-right: 2px">
+                                    <strong>
+                                    @switch($rule->comparison_operator)
+                                        @case('==')
+                                            igual a
+                                            @break
+
+                                        @case('!=')
+                                            no igual a
+                                            @break
+
+                                        @case('<')
+                                            menor que
+                                            @break
+
+                                        @case('<=')
+                                            menor que o igual a
+                                            @break
+
+                                        @case('>')
+                                            mayor que
+                                            @break
+
+                                        @case('>=')
+                                            mayor que o igual a
+                                            @break
+
+                                        @default
+                                            Error. Elimina esta regla.
+                                    @endswitch
+                                    </strong>
+                                    </span>
+
+                                    <span style="margin-right: 2px"><strong>{{ number_format($rule->value) }}</strong></span> 
+                                </div>
+                                @endif
+                                
+                                <li class="cart-total-amount"><span>Total</span> <span class="amount">${{ number_format($total,2) }}</span></li>
                             </ul>
                             
                             @php

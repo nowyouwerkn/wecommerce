@@ -331,7 +331,7 @@
                     <p class="alert alert-warning">Esta orden proviene de una importación de otro sistema. Es posible que la información mostrada esté incompleta.</p>
                     @endif
                     <div class="card-body">  
-                        <h4>Resúmen de Orden</h4>
+                        <h4>Resumen de Orden</h4>
                         <hr>
                         <div class="row align-items-center">
                             <div class="col">

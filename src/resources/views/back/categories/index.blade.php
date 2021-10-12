@@ -235,7 +235,7 @@
             {{ csrf_field() }}
                 <div class="modal-body pd-25">
                     <div class="form-group mt-2">
-                        <label>Nombre de Categoría</label>
+                        <label>Nombre de Categoría o Sub-categoría</label>
                         <input type="text" class="form-control" id="name" name="name" />
                     </div>
 
@@ -245,7 +245,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Vincular con otra categoría</label>
+                        <label>Vincular con otra categoría <span class="text-info">(Opcional)</span></label>
                         <select class="form-control" id="parent_id" name="parent_id">
                             <option value="0" selected="">Selecciona una opción..</option>
                             @foreach($categories as $cat)
@@ -264,6 +264,6 @@
                 </div>
             </form>
         </div>
-    </div><!-- modal-dialog -->
-</div><!-- modal -->
+    </div>
+</div>
 @endsection

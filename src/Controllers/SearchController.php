@@ -23,9 +23,9 @@ class SearchController extends Controller
     {   
         $search_query = $request->input('query');
 
-        $products = Product::where('name', 'LIKE', "%{$search_query}%")
-        ->where('status', 'Publicado')
+        $products = Product::where('status', 'Publicado')
         ->where('category_id', '!=', NULL)
+        ->where('name', 'LIKE', "%{$search_query}%")
         ->orWhere('description', 'LIKE', "%{$search_query}%")
         ->orWhere('search_tags', 'LIKE', "%{$search_query}%")
         ->orWhereHas('category', function ($query) use ($search_query) {

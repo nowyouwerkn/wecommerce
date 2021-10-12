@@ -52,6 +52,7 @@ use Nowyouwerkn\WeCommerce\Models\LegalText;
 use Nowyouwerkn\WeCommerce\Models\StoreTax;
 use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
+use Nowyouwerkn\WeCommerce\Models\ShipmentMethodRule;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
@@ -220,19 +221,159 @@ class FrontController extends Controller
             $tax_rate = ($store_tax->tax_rate)/100;
         }
 
+        // Reglas de Envios
         if (empty($store_shipping)) {
             $shipping = '0';
         }else{
-            $shipping = $store_shipping->cost;
+            if ($store_shipping->cost == '0') {
+                $shipping = $store_shipping->cost;
+            }else{
+                // Reglas especiales
+                $shipping_rules = ShipmentMethodRule::where('is_active', true)->first();
+
+                if (!empty($shipping_rules)) {
+                    switch ($shipping_rules->type) {
+                        case 'Envío Gratis':
+                            $count = 0;
+                            foreach ($cart->items as $product) {
+                                $qty = $product['qty'];
+                                $count += $qty;
+                            };
+                            $count;
+
+                            $operator = $shipping_rules->comparison_operator;
+                            $value = $shipping_rules->value;
+                            $shipping = $store_shipping->cost;
+
+                            switch ($shipping_rules->condition) {
+                                case 'Cantidad Comprada':
+                                    switch ($operator) {
+                                        case '==':
+                                            if ($cart->totalPrice == $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '!=':
+                                            //dd('la cuenta NO ES IGUAL');
+                                            if ($cart->totalPrice != $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<':
+                                            //dd('la cuenta es MENOR QUE');
+                                            if ($cart->totalPrice < $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<=':
+                                            //dd('la cuenta es MENOR QUE O IGUAL');
+                                            if ($cart->totalPrice <= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '>':
+                                            //dd('la cuenta es MAYOR QUE');
+                                            if ($cart->totalPrice > $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+                                        
+                                        case '>=':
+                                            //dd('la cuenta es MAYOR QUE O IGUAL');
+                                            if ($cart->totalPrice >= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        default:
+                                            $shipping = $store_shipping->cost;
+                                            break;
+                                    }
+                                    break;
+                                
+                                case 'Productos en carrito':
+                                    switch ($operator) {
+                                        case '==':
+                                            if ($count == $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '!=':
+                                            //dd('la cuenta NO ES IGUAL');
+                                            if ($count != $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<':
+                                            //dd('la cuenta es MENOR QUE');
+                                            if ($count < $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<=':
+                                            //dd('la cuenta es MENOR QUE O IGUAL');
+                                            if ($count <= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '>':
+                                            //dd('la cuenta es MAYOR QUE');
+                                            if ($count > $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+                                        
+                                        case '>=':
+                                            //dd('la cuenta es MAYOR QUE O IGUAL');
+                                            if ($count >= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        default:
+                                            $shipping = $store_shipping->cost;
+                                            break;
+                                    }
+                                    break;
+
+                                default:
+                                    $shipping = $store_shipping->cost;
+                                    break;
+                            }
+                            //
+                            break;
+                        
+                        default:
+                            $shipping = $store_shipping->cost;
+                            break;
+                    }
+                }else{
+                    $shipping = $store_shipping->cost;
+                }
+            }
+
         }
 
         //$subtotal = ($cart->totalPrice) / ($tax_rate + 1);
         $subtotal = ($cart->totalPrice);
         //$tax = ($cart->totalPrice) * ($tax_rate);
         $tax = 0;
-        $totalPrice = ($cart->totalPrice + $shipping);
+        $total = ($cart->totalPrice + $shipping);
 
-        return view('front.theme.' . $this->theme->get_name() . '.cart')->with('products', $cart->items)->with('totalPrice', $totalPrice)->with('tax', $tax)->with('shipping', $shipping)->with('subtotal', $subtotal);
+        return view('front.theme.' . $this->theme->get_name() . '.cart')
+        ->with('products', $cart->items)
+        ->with('total', $total)
+        ->with('tax', $tax)
+        ->with('shipping', $shipping)
+        ->with('subtotal', $subtotal);
     }
 
     public function checkout()
@@ -249,7 +390,7 @@ class FrontController extends Controller
 
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
-        $total = $cart->totalPrice;
+        //$total = $cart->totalPrice;
         
         $payment_method = PaymentMethod::where('supplier', '!=', 'Paypal')->where('is_active', true)->where('type', 'card')->first();
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
@@ -261,16 +402,151 @@ class FrontController extends Controller
             $tax_rate = ($store_tax->tax_rate)/100;
         }
 
+
+        // Reglas de Envios
         if (empty($store_shipping)) {
             $shipping = '0';
         }else{
-            $shipping = $store_shipping->cost;
+            if ($store_shipping->cost == '0') {
+                $shipping = $store_shipping->cost;
+            }else{
+                // Reglas especiales
+                $shipping_rules = ShipmentMethodRule::where('is_active', true)->first();
+
+                if (!empty($shipping_rules)) {
+                    switch ($shipping_rules->type) {
+                        case 'Envío Gratis':
+                            $count = 0;
+                            foreach ($cart->items as $product) {
+                                $qty = $product['qty'];
+                                $count += $qty;
+                            };
+                            $count;
+
+                            $operator = $shipping_rules->comparison_operator;
+                            $value = $shipping_rules->value;
+                            $shipping = $store_shipping->cost;
+
+                            switch ($shipping_rules->condition) {
+                                case 'Cantidad Comprada':
+                                    switch ($operator) {
+                                        case '==':
+                                            if ($cart->totalPrice == $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '!=':
+                                            //dd('la cuenta NO ES IGUAL');
+                                            if ($cart->totalPrice != $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<':
+                                            //dd('la cuenta es MENOR QUE');
+                                            if ($cart->totalPrice < $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<=':
+                                            //dd('la cuenta es MENOR QUE O IGUAL');
+                                            if ($cart->totalPrice <= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '>':
+                                            //dd('la cuenta es MAYOR QUE');
+                                            if ($cart->totalPrice > $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+                                        
+                                        case '>=':
+                                            //dd('la cuenta es MAYOR QUE O IGUAL');
+                                            if ($cart->totalPrice >= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        default:
+                                            $shipping = $store_shipping->cost;
+                                            break;
+                                    }
+                                    break;
+                                
+                                case 'Productos en carrito':
+                                    switch ($operator) {
+                                        case '==':
+                                            if ($count == $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '!=':
+                                            //dd('la cuenta NO ES IGUAL');
+                                            if ($count != $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<':
+                                            //dd('la cuenta es MENOR QUE');
+                                            if ($count < $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<=':
+                                            //dd('la cuenta es MENOR QUE O IGUAL');
+                                            if ($count <= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '>':
+                                            //dd('la cuenta es MAYOR QUE');
+                                            if ($count > $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+                                        
+                                        case '>=':
+                                            //dd('la cuenta es MAYOR QUE O IGUAL');
+                                            if ($count >= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        default:
+                                            $shipping = $store_shipping->cost;
+                                            break;
+                                    }
+                                    break;
+
+                                default:
+                                    $shipping = $store_shipping->cost;
+                                    break;
+                            }
+                            //
+                            break;
+                        
+                        default:
+                            $shipping = $store_shipping->cost;
+                            break;
+                    }
+                }else{
+                    $shipping = $store_shipping->cost;
+                }
+            }
         }
         
         $subtotal = ($cart->totalPrice);
         //$tax = ($cart->totalPrice) * ($tax_rate);
         $tax = 0;
-        $totalPrice = ($cart->totalPrice + $shipping);
+        $total = ($cart->totalPrice + $shipping);
         /*
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
         $tax = ($cart->totalPrice) * ($tax_rate);
@@ -353,16 +629,150 @@ class FrontController extends Controller
             $tax_rate = ($store_tax->tax_rate)/100;
         }
 
+        // Reglas de Envios
         if (empty($store_shipping)) {
             $shipping = '0';
         }else{
-            $shipping = $store_shipping->cost;
+            if ($store_shipping->cost == '0') {
+                $shipping = $store_shipping->cost;
+            }else{
+                // Reglas especiales
+                $shipping_rules = ShipmentMethodRule::where('is_active', true)->first();
+
+                if (!empty($shipping_rules)) {
+                    switch ($shipping_rules->type) {
+                        case 'Envío Gratis':
+                            $count = 0;
+                            foreach ($cart->items as $product) {
+                                $qty = $product['qty'];
+                                $count += $qty;
+                            };
+                            $count;
+
+                            $operator = $shipping_rules->comparison_operator;
+                            $value = $shipping_rules->value;
+                            $shipping = $store_shipping->cost;
+
+                            switch ($shipping_rules->condition) {
+                                case 'Cantidad Comprada':
+                                    switch ($operator) {
+                                        case '==':
+                                            if ($cart->totalPrice == $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '!=':
+                                            //dd('la cuenta NO ES IGUAL');
+                                            if ($cart->totalPrice != $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<':
+                                            //dd('la cuenta es MENOR QUE');
+                                            if ($cart->totalPrice < $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<=':
+                                            //dd('la cuenta es MENOR QUE O IGUAL');
+                                            if ($cart->totalPrice <= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '>':
+                                            //dd('la cuenta es MAYOR QUE');
+                                            if ($cart->totalPrice > $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+                                        
+                                        case '>=':
+                                            //dd('la cuenta es MAYOR QUE O IGUAL');
+                                            if ($cart->totalPrice >= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        default:
+                                            $shipping = $store_shipping->cost;
+                                            break;
+                                    }
+                                    break;
+                                
+                                case 'Productos en carrito':
+                                    switch ($operator) {
+                                        case '==':
+                                            if ($count == $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '!=':
+                                            //dd('la cuenta NO ES IGUAL');
+                                            if ($count != $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<':
+                                            //dd('la cuenta es MENOR QUE');
+                                            if ($count < $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<=':
+                                            //dd('la cuenta es MENOR QUE O IGUAL');
+                                            if ($count <= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '>':
+                                            //dd('la cuenta es MAYOR QUE');
+                                            if ($count > $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+                                        
+                                        case '>=':
+                                            //dd('la cuenta es MAYOR QUE O IGUAL');
+                                            if ($count >= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        default:
+                                            $shipping = $store_shipping->cost;
+                                            break;
+                                    }
+                                    break;
+
+                                default:
+                                    $shipping = $store_shipping->cost;
+                                    break;
+                            }
+                            //
+                            break;
+                        
+                        default:
+                            $shipping = $store_shipping->cost;
+                            break;
+                    }
+                }else{
+                    $shipping = $store_shipping->cost;
+                }
+            }
         }
         
         $subtotal = ($cart->totalPrice);
         //$tax = ($cart->totalPrice) * ($tax_rate);
         $tax = 0;
-        $totalPrice = ($cart->totalPrice + $shipping);
+        $total = ($cart->totalPrice + $shipping);
         /*
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
         $tax = ($cart->totalPrice) * ($tax_rate);
@@ -444,16 +854,150 @@ class FrontController extends Controller
             $tax_rate = ($store_tax->tax_rate)/100;
         }
 
+        // Reglas de Envios
         if (empty($store_shipping)) {
             $shipping = '0';
         }else{
-            $shipping = $store_shipping->cost;
+            if ($store_shipping->cost == '0') {
+                $shipping = $store_shipping->cost;
+            }else{
+                // Reglas especiales
+                $shipping_rules = ShipmentMethodRule::where('is_active', true)->first();
+
+                if (!empty($shipping_rules)) {
+                    switch ($shipping_rules->type) {
+                        case 'Envío Gratis':
+                            $count = 0;
+                            foreach ($cart->items as $product) {
+                                $qty = $product['qty'];
+                                $count += $qty;
+                            };
+                            $count;
+
+                            $operator = $shipping_rules->comparison_operator;
+                            $value = $shipping_rules->value;
+                            $shipping = $store_shipping->cost;
+
+                            switch ($shipping_rules->condition) {
+                                case 'Cantidad Comprada':
+                                    switch ($operator) {
+                                        case '==':
+                                            if ($cart->totalPrice == $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '!=':
+                                            //dd('la cuenta NO ES IGUAL');
+                                            if ($cart->totalPrice != $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<':
+                                            //dd('la cuenta es MENOR QUE');
+                                            if ($cart->totalPrice < $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<=':
+                                            //dd('la cuenta es MENOR QUE O IGUAL');
+                                            if ($cart->totalPrice <= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '>':
+                                            //dd('la cuenta es MAYOR QUE');
+                                            if ($cart->totalPrice > $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+                                        
+                                        case '>=':
+                                            //dd('la cuenta es MAYOR QUE O IGUAL');
+                                            if ($cart->totalPrice >= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        default:
+                                            $shipping = $store_shipping->cost;
+                                            break;
+                                    }
+                                    break;
+                                
+                                case 'Productos en carrito':
+                                    switch ($operator) {
+                                        case '==':
+                                            if ($count == $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '!=':
+                                            //dd('la cuenta NO ES IGUAL');
+                                            if ($count != $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<':
+                                            //dd('la cuenta es MENOR QUE');
+                                            if ($count < $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<=':
+                                            //dd('la cuenta es MENOR QUE O IGUAL');
+                                            if ($count <= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '>':
+                                            //dd('la cuenta es MAYOR QUE');
+                                            if ($count > $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+                                        
+                                        case '>=':
+                                            //dd('la cuenta es MAYOR QUE O IGUAL');
+                                            if ($count >= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        default:
+                                            $shipping = $store_shipping->cost;
+                                            break;
+                                    }
+                                    break;
+
+                                default:
+                                    $shipping = $store_shipping->cost;
+                                    break;
+                            }
+                            //
+                            break;
+                        
+                        default:
+                            $shipping = $store_shipping->cost;
+                            break;
+                    }
+                }else{
+                    $shipping = $store_shipping->cost;
+                }
+            }
         }
         
         $subtotal = ($cart->totalPrice);
         //$tax = ($cart->totalPrice) * ($tax_rate);
         $tax = 0;
-        $totalPrice = ($cart->totalPrice + $shipping);
+        $total = ($cart->totalPrice + $shipping);
         /*
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
         $tax = ($cart->totalPrice) * ($tax_rate);
@@ -1461,71 +2005,81 @@ class FrontController extends Controller
             }
             */
 
-            if ($coupon->exclude_discounted_items == true) {
-                $oldCart = Session::get('cart');
-                $cart = new Cart($oldCart);
+            // Revisión de caducidad
+            $end_date = Carbon::parse($coupon->end_date);
+            $today = Carbon::today();
 
-                $subtotal = 0;
+            if ($today <= $end_date ) {
+                if ($coupon->exclude_discounted_items == true) {
+                    $oldCart = Session::get('cart');
+                    $cart = new Cart($oldCart);
 
-                // Encontrar los productos sin descuentos en el carrito
-                foreach ($cart->items as $product) {
-                    if ($product['item']['has_discount'] == false) {
-                        $subtotal += $product['item']['price'];
-                    } 
+                    $subtotal = 0;
+
+                    // Encontrar los productos sin descuentos en el carrito
+                    foreach ($cart->items as $product) {
+                        if ($product['item']['has_discount'] == false) {
+                            $subtotal += $product['item']['price'];
+                        } 
+                    }
+
+                    $subtotal;
+
+                    if ($subtotal == 0) {
+                        // No se puede dar descuento a productos que ya tienen descuento
+                        return response()->json(['mensaje' => 'Este cupón no aplica para productos con descuento. Intenta con uno diferente.', 'type' => 'exception'], 200);
+                    }
                 }
 
-                $subtotal;
+                /* Recuperar el tipo de cupon */
+                $coupon_type = $coupon->type;
 
-                if ($subtotal == 0) {
-                    // No se puede dar descuento a productos que ya tienen descuento
-                    return response()->json(['mensaje' => 'Este cupón no aplica para productos con descuento. Intenta con uno diferente.', 'type' => 'exception'], 200);
+                switch($coupon_type){
+                    case 'percentage_amount':
+                        // Este cupon resta un porcentaje del subtotal en el checkout
+                        $qty = $coupon->qty / 100;
+                        $discount = $subtotal * $qty;
+
+                        break;
+                    
+                    case 'fixed_amount':
+                        // Este cupon le resta un valor fijo al subtotal en el checkout
+                        $qty = $coupon->qty;
+                        $discount = $subtotal - $qty;
+
+                        break;
+
+                    case 'free_shipping':
+
+                        break;
+
+                    default:
+                        /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO */   
+                        return response()->json(['mensaje' => 'Este tipo de cupón no existe, revisa con administración.', 'type' => 'exception'], 200);
+                        break;
                 }
-            }
 
-            /* Recuperar el tipo de cupon */
-            $coupon_type = $coupon->type;
+                if ($coupon->is_free_shipping == true) {
+                    $free_shipping = $shipping * 0;
+                }else{
+                    $free_shipping = $shipping;
+                }
 
-            switch($coupon_type){
-                case 'percentage_amount':
-                    // Este cupon resta un porcentaje del subtotal en el checkout
-                    $qty = $coupon->qty / 100;
-                    $discount = $subtotal * $qty;
+                // Guardar el uso del cupon por el usuario
+                /*
+                $used = new UserCoupon;
+                $used->user_id = Auth::user()->id;
+                $used->coupon_id = $coupon->id;
+                $used->save();
+                */
 
-                    break;
-                
-                case 'fixed_amount':
-                    // Este cupon le resta un valor fijo al subtotal en el checkout
-                    $qty = $coupon->qty;
-                    $discount = $subtotal - $qty;
-
-                    break;
-
-                case 'free_shipping':
-
-                    break;
-
-                default:
-                    /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO */   
-                    return response()->json(['mensaje' => 'Este tipo de cupón no existe, revisa con administración.', 'type' => 'exception'], 200);
-                    break;
-            }
-
-            if ($coupon->is_free_shipping == true) {
-                $free_shipping = $shipping * 0;
+                // Regresar Respuesta a la Vista
+                return response()->json(['mensaje' => 'Aplicado el descuento correctamente a los productos participantes. ¡Disfruta!', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
             }else{
-                $free_shipping = $shipping;
+                return response()->json(['mensaje' => 'Este cupón caducó y ya no puede ser usado.'], 400);
             }
 
-            // Guardar el uso del cupon por el usuario
-            /*
-            $used = new UserCoupon;
-            $used->user_id = Auth::user()->id;
-            $used->coupon_id = $coupon->id;
-            $used->save();
-            */
-
-            // Regresar Respuesta a la Vista
-            return response()->json(['mensaje' => 'Aplicado el descuento correctamente a los productos participantes. ¡Disfruta!', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
+            
         }
     }
 

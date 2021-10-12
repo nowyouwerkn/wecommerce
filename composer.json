@@ -9,7 +9,7 @@
         "checkout"
     ],
     "type": "library",
-    "version": "1.0.3",
+    "version": "1.2",
     "authors": [
         {
             "name": "Jorge Peña Lama",
@@ -22,12 +22,6 @@
             "email": "itzell@werkn.mx",
             "homepage" : "https://werkn.mx",
             "role": "Designer"
-        },
-        {
-            "name": "Moisés Arrona",
-            "email": "tech@werkn.mx",
-            "homepage" : "https://werkn.mx",
-            "role": "Developer"
         }
     ],
     "homepage": "https://github.com/nowyouwerkn/wecommerce",

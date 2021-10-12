@@ -2,6 +2,14 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.2.1 - 2021-10-12
+
+### Agregado
+- Nueva funcionalidad de "Reglas especiales de envios" en la sección de envios. Esto permite colocar promociones para la compra final del cliente que correspondan al costo del envio. Funciona en conjuto con cupones si se requiere.
+
+### Reparado
+- Algunas observaciones de ortografía
+
 ## 1.2 - 2021-09-22
 
 ### Agregado

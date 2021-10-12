@@ -44,9 +44,9 @@
                 <li>DHL <span class="badge badge-info">PROXIMAMENTE</span></li>
                 <li>Gearcom <span class="badge badge-info">PROXIMAMENTE</span></li>
             </ul>
-        </div>
-        
+        </div>    
     </div>
+
     <div class="col-md-8">
         <div class="card mb-4 payment-methods">
             <div class="card-body">
@@ -54,7 +54,7 @@
                 <p class="mb-0">Guarda tu configuración de envíos en tu plataforma. El valor predeterminado es $0.00</p>
             </div>
             
-            <div class="card-header">
+            <div class="card-header" style="border-bottom: none;">
                 <div class="d-flex align-items-center justify-content-between">
                     <h4 class="mb-0">
                         <i class="fas fa-shipping-fast"></i>
@@ -88,9 +88,107 @@
                                 <button class="btn btn-sm pd-x-15 btn-white btn-uppercase ml-1" type="submit"><i class="fas fa-save"></i> Guardar</button>
                             </div>
                         </form>
-
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="text-uppercase mb-0">Reglas Especiales de Envíos</h6>
+
+                    <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateRule" class="btn btn-outline-primary btn-sm">Crear nueva Regla</a>
+                </div>
+
+                @if($shipment_rules->count() == 0)
+                <div class="text-center">
+                    <p class="mb-0"><em>Sin reglas especiales en la tienda.</em></p>
+                </div>
+                @else
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Regla</th>
+                                <th>Permite cupones</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($shipment_rules as $rule)
+                            <tr>
+                                <td>
+                                <span style="margin-right: 2px"><strong>{{ $rule->type }}</strong></span>
+                                <span style="margin-right: 2px">cuando <strong>{{ $rule->condition }}</strong> sea</span>
+                                <span style="margin-right: 2px">
+                                <strong>
+                                @switch($rule->comparison_operator)
+                                    @case('==')
+                                        igual a
+                                        @break
+
+                                    @case('!=')
+                                        no igual a
+                                        @break
+
+                                    @case('<')
+                                        menor que
+                                        @break
+
+                                    @case('<=')
+                                        menor que o igual a
+                                        @break
+
+                                    @case('>')
+                                        mayor que
+                                        @break
+
+                                    @case('>=')
+                                        mayor que o igual a
+                                        @break
+
+                                    @default
+                                        Error. Elimina esta regla.
+                                @endswitch
+                                </strong>
+                                </span>
+
+                                <span style="margin-right: 2px"><strong>{{ number_format($rule->value) }}</strong></span>
+                                </td>
+
+                                <td>
+                                    @if($rule->allow_coupons == true)
+                                    <span class="badge badge-success">Si</span>
+                                    @else
+                                    <span class="badge badge-info">No</span>
+                                    @endif 
+                                </td>
+                                <td>
+                                    @if($rule->is_active == true)
+                                    <span class="badge badge-success">Activado</span>
+                                    @else
+                                    <span class="badge badge-danger">Desactivado</span>
+                                    @endif 
+                                </td>
+                            
+                                <td class="d-flex">
+                                    <a href="{{ route('shipments-rules.status', $rule->id) }}" class=" btn btn-info btn-sm mr-2 px-2" data-toggle="tooltip" data-original-title="Cambiar Estado"><i class="fas fa-sync"></i></a>
+                                    <form method="POST" action="{{ route('shipments-rules.destroy', $rule->id) }}" style="display: inline-block;">
+                                        <button type="submit" class="btn btn-sm btn-light" data-toggle="tooltip" data-original-title="Borrar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @endif
             </div>
         </div>
 
@@ -109,7 +207,7 @@
                         <img src="{{ asset('assets/img/brands/ups.png') }}" width="120" style="margin: 10px 0px;">
 
             
-                        <a href="" data-toggle="modal" data-target="#modalCreateUPS" class="btn btn-outline-secondary btn-sm">Configurar UPS</a>
+                        <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateUPS" class="btn btn-outline-secondary btn-sm">Configurar UPS</a>
                         <a href="https://www.ups.com/mx/es/Home.page" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
                     </div>
                 </div>
@@ -159,4 +257,68 @@
         </div>
     </div><!-- modal-dialog -->
 </div><!-- modal -->
+
+<div id="modalCreateRule" class="modal fade">
+    <div class="modal-dialog modal-lg modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear nueva Regla</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ route('shipments-rules.store') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+
+                <div class="modal-body pd-25">
+                    <div class="d-flex">
+                        <div class="form-group mr-1">
+                            <label>Tipo</label>
+                            <input type="text" class="form-control" name="type" value="Envío Gratis" readonly="" />
+                        </div>
+
+                        <div class="form-group mr-1">
+                            <label>Condición</label>
+                            <select class="custom-select" name="condition">
+                                <option value="Cantidad Comprada" selected="">Cantidad Comprada</option>
+                                <option value="Productos en carrito">Productos en carrito</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mr-1">
+                            <label>Operador</label>
+                            <select class="custom-select" name="comparison_operator">
+                                <option value="==" selected="">Igual</option>
+                                <option value="!=">No Igual</option>
+                                <option value="<">Menor que</option>
+                                <option value="<=">Menor que o igual</option>
+                                <option value=">">Mayor que</option>
+                                <option value=">=">Mayor que o igual</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Valor</label>
+                            <input type="text" class="form-control" name="value" required="" />
+                            <small>Sin signos especiales ni comas.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="custom-control custom-checkbox mb-3">
+                        <input type="checkbox" class="custom-control-input" checked="checked" name="allow_coupons" value="1">
+                        <label class="custom-control-label" for="allow_coupons"> Permitir uso de cupones</label>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <p class="mb-0">Al guardar esta regla de envio se activará automáticamente. Si tienes otra regla creada se desactivará.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
