@@ -24,7 +24,7 @@ class CreateShipmentMethodRuleTable extends Migration
 
             $table->string('value')->nullable();
 
-            $table->boolean('allow_coupons')->default(true);
+            $table->boolean('allow_coupons')->nullable();
             $table->boolean('is_active')->default(true);
 
             $table->timestamps();
