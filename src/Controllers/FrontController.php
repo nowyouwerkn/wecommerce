@@ -1896,7 +1896,6 @@ class FrontController extends Controller
 
         $user->name = $request->input('name');
         $user->password = bcrypt($request->input('password'));
-
         $user->save();
 
         // Mensaje de aviso server-side
@@ -1911,49 +1910,131 @@ class FrontController extends Controller
     */
 
     public function applyCuopon(Request $request){
-        // Recuperar codigo del cupon enviado por AJAX
-        $cuopon_code = $request->get('cuopon_code');
 
-        // Recuperar el resto de los datos enviados por AJAX
-        $subtotal = $request->get('subtotal');
-        $shipping = $request->get('shipping');
+        $shipping_rules = ShipmentMethodRule::where('is_active', true)->where('allow_coupons', true)->first();
 
-        // Obteniendo datos desde el Request enviado por Ajax a esta ruta
-        $coupon = Coupon::where('code', $cuopon_code)->first();
+        if (!empty($shipping_rules)) {
+            // Recuperar codigo del cupon enviado por AJAX
+            $cuopon_code = $request->get('cuopon_code');
 
-        if (empty($coupon)) {
-            // Regresar Respuesta a la Vista
-            return response()->json(['mensaje' => 'Ese cupón no existe o ya no está disponible. Intenta con otro o contacta con nosotros.'], 400);
-        }else{
+            // Recuperar el resto de los datos enviados por AJAX
+            $subtotal = $request->get('subtotal');
+            $shipping = $request->get('shipping');
 
-            /* Definir Usuario usando el sistema 
-            $user = Auth::user();
-            /* Contar cuopones usados que compartan el codigo 
-            $count_coupons = UserCoupon::where('coupon_id', $coupon->id)->count();
-            /* Contar los cupones con el codigo que el usuario haya usado anteriormente 
-            $count_user_coupons = UserCoupon::where('user_id', $user->id)->where('coupon_id', $coupon->id)->count();
+            // Obteniendo datos desde el Request enviado por Ajax a esta ruta
+            $coupon = Coupon::where('code', $cuopon_code)->first();
 
-            /* Revisar si el coupon no ha sobrepasado su limite de uso 
-            if ($count_user_coupons < $coupon->usage_limit_per_code) {
-                /* Si no se ha alcanzado el limite de uso de cuopon ejecutar el codigo 
-                if ($count_user_coupons < $coupon->usage_limit_per_user) {
-                    // Verificar que el cupon es solo de FREE SHIPPING
-                    if ($coupon->qty == 0) {
-                        if ($coupon->free_shipping == true) {
+            if (empty($coupon)) {
+                // Regresar Respuesta a la Vista
+                return response()->json(['mensaje' => 'Ese cupón no existe o ya no está disponible. Intenta con otro o contacta con nosotros.', 'type' => 'exception'], 200);
+            }else{
+
+                /* Definir Usuario usando el sistema 
+                $user = Auth::user();
+                /* Contar cuopones usados que compartan el codigo 
+                $count_coupons = UserCoupon::where('coupon_id', $coupon->id)->count();
+                /* Contar los cupones con el codigo que el usuario haya usado anteriormente 
+                $count_user_coupons = UserCoupon::where('user_id', $user->id)->where('coupon_id', $coupon->id)->count();
+
+                /* Revisar si el coupon no ha sobrepasado su limite de uso 
+                if ($count_user_coupons < $coupon->usage_limit_per_code) {
+                    /* Si no se ha alcanzado el limite de uso de cuopon ejecutar el codigo 
+                    if ($count_user_coupons < $coupon->usage_limit_per_user) {
+                        // Verificar que el cupon es solo de FREE SHIPPING
+                        if ($coupon->qty == 0) {
+                            if ($coupon->free_shipping == true) {
+                                $free_shipping = $shipping * 0;
+                                $discount = 0;
+
+                                // Guardar el uso del cupon por el usuario 
+                                $used = new UserCoupon;
+                                $used->user_id = Auth::user()->id;
+                                $used->coupon_id = $coupon->id;
+                                $used->save();
+
+                                return response()->json(['mensaje' => 'Aplicado el descuento correctamente... disfruta', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
+                            }
+                        }
+
+                        /* Recuperar el tipo de cupon 
+                        $coupon_type = $coupon->type;
+
+                        switch($coupon_type){
+                            case 'percentage_amount':
+                                // Este cupon resta un porcentaje del subtotal en el checkout
+                                $qty = $coupon->qty / 100;
+                                $discount = $subtotal * $qty;
+
+                                break;
+                            
+                            case 'fixed_amount':
+                                // Este cupon le resta un valor fijo al subtotal en el checkout
+                                $qty = $coupon->qty;
+                                $discount = $subtotal - $qty;
+
+                                break;
+
+                            case 'free_shipping':
+
+                                break;
+
+                            default:
+                                /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO 
+                                return response()->json(['mensaje' => 'Este tipo de cupón no existe, revisa con administración.', 'type' => 'exception'], 200);
+                                break;
+                        }
+
+                        if ($coupon->is_free_shipping == true) {
                             $free_shipping = $shipping * 0;
-                            $discount = 0;
+                        }else{
+                            $free_shipping = $shipping;
+                        }
 
-                            // Guardar el uso del cupon por el usuario 
-                            $used = new UserCoupon;
-                            $used->user_id = Auth::user()->id;
-                            $used->coupon_id = $coupon->id;
-                            $used->save();
+                        // Guardar el uso del cupon por el usuario 
+                        $used = new UserCoupon;
+                        $used->user_id = Auth::user()->id;
+                        $used->coupon_id = $coupon->id;
+                        $used->save();
+                        // Regresar Respuesta a la Vista
+                        return response()->json(['mensaje' => 'Aplicado el descuento correctamente... disfruta', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
 
-                            return response()->json(['mensaje' => 'Aplicado el descuento correctamente... disfruta', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
+                    /* EJECUTAR EXCEPCIÓN SI EL USUARIO YA ALCANZÓ EL LIMITE   
+                    }else{
+                        return response()->json(['mensaje' => "Alcanzaste el limite de uso para este cupón. Intenta con otro.", 'type' => 'exception'], 200);
+                    }
+                /* EJECUTAR EXCEPCIÓN SI EL CUPÓN YA ALCANZÓ EL LIMITE         
+                }else{
+                    return response()->json(['mensaje' => "Ya no quedan existencias de este cupón. Intenta con otro.", 'type' => 'exception'], 200);
+                }
+                */
+
+                // Revisión de caducidad
+                $end_date = Carbon::parse($coupon->end_date);
+                $today = Carbon::today();
+
+                if ($today <= $end_date ) {
+                    if ($coupon->exclude_discounted_items == true) {
+                        $oldCart = Session::get('cart');
+                        $cart = new Cart($oldCart);
+
+                        $subtotal = 0;
+
+                        // Encontrar los productos sin descuentos en el carrito
+                        foreach ($cart->items as $product) {
+                            if ($product['item']['has_discount'] == false) {
+                                $subtotal += $product['item']['price'];
+                            } 
+                        }
+
+                        $subtotal;
+
+                        if ($subtotal == 0) {
+                            // No se puede dar descuento a productos que ya tienen descuento
+                            return response()->json(['mensaje' => 'Este cupón no aplica para productos con descuento. Intenta con uno diferente.', 'type' => 'exception'], 200);
                         }
                     }
 
-                    /* Recuperar el tipo de cupon 
+                    /* Recuperar el tipo de cupon */
                     $coupon_type = $coupon->type;
 
                     switch($coupon_type){
@@ -1976,7 +2057,7 @@ class FrontController extends Controller
                             break;
 
                         default:
-                            /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO 
+                            /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO */   
                             return response()->json(['mensaje' => 'Este tipo de cupón no existe, revisa con administración.', 'type' => 'exception'], 200);
                             break;
                     }
@@ -1987,100 +2068,28 @@ class FrontController extends Controller
                         $free_shipping = $shipping;
                     }
 
-                    // Guardar el uso del cupon por el usuario 
+                    // Guardar el uso del cupon por el usuario
+                    /*
                     $used = new UserCoupon;
                     $used->user_id = Auth::user()->id;
                     $used->coupon_id = $coupon->id;
                     $used->save();
+                    */
+
                     // Regresar Respuesta a la Vista
-                    return response()->json(['mensaje' => 'Aplicado el descuento correctamente... disfruta', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
-
-                /* EJECUTAR EXCEPCIÓN SI EL USUARIO YA ALCANZÓ EL LIMITE   
+                    return response()->json(['mensaje' => 'Aplicado el descuento correctamente a los productos participantes. ¡Disfruta!', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
                 }else{
-                    return response()->json(['mensaje' => "Alcanzaste el limite de uso para este cupón. Intenta con otro.", 'type' => 'exception'], 200);
+                    return response()->json(['mensaje' => 'Este cupón caducó y no puede ser usado.', 'type' => 'exception'], 200);
                 }
-            /* EJECUTAR EXCEPCIÓN SI EL CUPÓN YA ALCANZÓ EL LIMITE         
-            }else{
-                return response()->json(['mensaje' => "Ya no quedan existencias de este cupón. Intenta con otro.", 'type' => 'exception'], 200);
+
+                
             }
-            */
+        }else{
+            $rule = ShipmentMethodRule::where('is_active', true)->first();
 
-            // Revisión de caducidad
-            $end_date = Carbon::parse($coupon->end_date);
-            $today = Carbon::today();
-
-            if ($today <= $end_date ) {
-                if ($coupon->exclude_discounted_items == true) {
-                    $oldCart = Session::get('cart');
-                    $cart = new Cart($oldCart);
-
-                    $subtotal = 0;
-
-                    // Encontrar los productos sin descuentos en el carrito
-                    foreach ($cart->items as $product) {
-                        if ($product['item']['has_discount'] == false) {
-                            $subtotal += $product['item']['price'];
-                        } 
-                    }
-
-                    $subtotal;
-
-                    if ($subtotal == 0) {
-                        // No se puede dar descuento a productos que ya tienen descuento
-                        return response()->json(['mensaje' => 'Este cupón no aplica para productos con descuento. Intenta con uno diferente.', 'type' => 'exception'], 200);
-                    }
-                }
-
-                /* Recuperar el tipo de cupon */
-                $coupon_type = $coupon->type;
-
-                switch($coupon_type){
-                    case 'percentage_amount':
-                        // Este cupon resta un porcentaje del subtotal en el checkout
-                        $qty = $coupon->qty / 100;
-                        $discount = $subtotal * $qty;
-
-                        break;
-                    
-                    case 'fixed_amount':
-                        // Este cupon le resta un valor fijo al subtotal en el checkout
-                        $qty = $coupon->qty;
-                        $discount = $subtotal - $qty;
-
-                        break;
-
-                    case 'free_shipping':
-
-                        break;
-
-                    default:
-                        /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO */   
-                        return response()->json(['mensaje' => 'Este tipo de cupón no existe, revisa con administración.', 'type' => 'exception'], 200);
-                        break;
-                }
-
-                if ($coupon->is_free_shipping == true) {
-                    $free_shipping = $shipping * 0;
-                }else{
-                    $free_shipping = $shipping;
-                }
-
-                // Guardar el uso del cupon por el usuario
-                /*
-                $used = new UserCoupon;
-                $used->user_id = Auth::user()->id;
-                $used->coupon_id = $coupon->id;
-                $used->save();
-                */
-
-                // Regresar Respuesta a la Vista
-                return response()->json(['mensaje' => 'Aplicado el descuento correctamente a los productos participantes. ¡Disfruta!', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
-            }else{
-                return response()->json(['mensaje' => 'Este cupón caducó y ya no puede ser usado.'], 400);
-            }
-
-            
+            return response()->json(['mensaje' => 'La promoción actual de "' . $rule->type . ' cuando ' . $rule->condition . ' ' . $rule->comparison_operator . ' ' .  number_format($rule->value) . '" en la tienda no admite el uso de cupones.', 'type' => 'exception'], 200);
         }
+
     }
 
     public function fetchStates(Request $request)

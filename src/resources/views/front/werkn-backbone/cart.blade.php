@@ -119,8 +119,6 @@
                                     @else
                                     ${{ number_format($shipping,2) }}
                                     @endif
-
-                                    
                                 </li>
 
                                 @php
@@ -167,7 +165,7 @@
                                     <span style="margin-right: 2px"><strong>{{ number_format($rule->value) }}</strong></span> 
                                 </div>
                                 @endif
-                                
+
                                 <li class="cart-total-amount"><span>Total</span> <span class="amount">${{ number_format($total,2) }}</span></li>
                             </ul>
                             
