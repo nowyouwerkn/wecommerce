@@ -402,7 +402,6 @@ class FrontController extends Controller
             $tax_rate = ($store_tax->tax_rate)/100;
         }
 
-
         // Reglas de Envios
         if (empty($store_shipping)) {
             $shipping = '0';
@@ -616,7 +615,7 @@ class FrontController extends Controller
 
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
-        $total = $cart->totalPrice;
+        //$total = $cart->totalPrice;
         
         $payment_method = PaymentMethod::where('is_active', true)->where('type', 'cash')->first();
         
@@ -1928,7 +1927,6 @@ class FrontController extends Controller
                 // Regresar Respuesta a la Vista
                 return response()->json(['mensaje' => 'Ese cupón no existe o ya no está disponible. Intenta con otro o contacta con nosotros.', 'type' => 'exception'], 200);
             }else{
-
                 /* Definir Usuario usando el sistema 
                 $user = Auth::user();
                 /* Contar cuopones usados que compartan el codigo 

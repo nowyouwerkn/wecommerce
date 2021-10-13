@@ -125,7 +125,7 @@
                                     $rule = Nowyouwerkn\WeCommerce\Models\ShipmentMethodRule::where('is_active', true)->first();
                                 @endphp
 
-                                @if (!empty($rule)) {
+                                @if (!empty($rule))
                                 <div class="alert alert-info d-block">
                                     <span style="margin-right: 2px"><strong>{{ $rule->type }}</strong></span>
                                     <span style="margin-right: 2px">cuando <strong>{{ $rule->condition }}</strong> sea</span>
