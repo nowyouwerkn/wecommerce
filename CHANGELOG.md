@@ -2,6 +2,24 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.3 - 2021-10-21
+
+### Agregado
+- Cambio mayor a estructura de Checkout.
+- Reducción de archivos de checkout simplificando la estructura.
+- Las opciones de métodos de pago en la vista de carrito y el menú desplegable de carrito se simplifican a un solo botón, dejando la selección de los metodos de pago en la sección de checkout.
+- Revisión de eventos de Facebook en la pantalla de "Compra Exitosa"
+
+### Reparado
+- Se validan más a profundidad los cupones al usarse en conjunto con las reglas de envios especiales.
+- Se repararon los validadores de existencia en el módulo de Carrito. Ahora no es posible agregar más productos a tu carrito de lo que hay disponible.
+
+## 1.2.2 - 2021-10-19
+
+### Agregado
+- Nueva tarjeta de estadísticas de venta por semanas en la vista principal del Dashboard.
+- Nueva tarjeta de conteo de inventario en la vista principal del Dashboard.
+
 ## 1.2.1 - 2021-10-12
 
 ### Agregado

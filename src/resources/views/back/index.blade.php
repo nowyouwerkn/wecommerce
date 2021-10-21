@@ -94,43 +94,65 @@
 <hr>
 @endif
 
-<div class="row row-xs">
-    <div class="col-md-3 mb-2">
-        <div class="card card-body h-100">
+<div class="row row-xs mb-3">
+    <div class="col-md-3">
+        <div class="card card-body mb-3">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ventas Totales</h6>
             <div class="d-flex d-lg-block d-xl-flex align-items-end">
                 <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">${{ number_format($ven_total, 2) }} MXN</h3>
                 <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success"><i class="icon ion-md-arrow-up"></i></span></p>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body mb-3">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Clientes Nuevos</h6>
             <div class="d-flex d-lg-block d-xl-flex align-items-end">
                 <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">{{ $new_clients }} </h3>
                 <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-info">esta semana.</span></span></p>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body mb-3">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Orden Promedio</h6>
             <div class="d-flex d-lg-block d-xl-flex align-items-end">
                 <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">${{ number_format($avg_order, 2) }} MXN</h3>
                 <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success">0 <i class="icon ion-md-arrow-up"></i></span></p>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-3">
         <div class="card card-body">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Órdenes</h6>
             <div class="d-flex d-lg-block d-xl-flex align-items-end">
                 <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">{{ $new_orders->count() }}</h3>
                 <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-info">esta semana.</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="card h-100">
+            <div class="card-header pd-y-20 d-md-flex align-items-center justify-content-between">
+              <h6 class="mg-b-0">Resumen de Ventas</h6>
+              <ul class="list-inline d-flex mg-t-20 mg-sm-t-10 mg-md-t-0 mg-b-0">
+                    <li class="list-inline-item d-flex align-items-center">
+                      <span class="d-block wd-10 ht-10 bg-df-1 rounded mg-r-5"></span>
+                      <span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Semana en curso</span>
+                    </li>
+                    <li class="list-inline-item d-flex align-items-center mg-l-5">
+                      <span class="d-block wd-10 ht-10 bg-df-2 rounded mg-r-5"></span>
+                      <span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Semana Anterior</span>
+                    </li>
+                  </ul>
+            </div>
+            <div class="card-body">
+                
+                @if($new_orders->count() == 0)
+                <p>Esta semana no ha habido pedidos</p>
+                @else 
+                <div class="chart-container chart">
+                    <canvas id="salesChart" style="height:310px;"></canvas>
+                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -144,8 +166,7 @@
             </div>
         </div>
     </div>
-    -->
-    <!--
+
     <div class="col-md-4">
         <div class="card card-body">
             <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ventas Atribuidas a Marketing</h6>
@@ -155,8 +176,7 @@
             </div>
         </div>
     </div>
-    -->
-    <!--
+
     <div class="col-md-8">
         <div class="card mg-b-10">
             <div class="card-header pd-t-20 d-sm-flex align-items-start justify-content-between bd-b-0 pd-b-0">
@@ -200,4 +220,98 @@
     </div>
     -->
 </div>
+
+<div class="row row-xs">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mg-b-0">Inventario Total</h6>
+            </div>
+
+            <div class="card-body tx-center">
+                <h4 class="tx-normal tx-rubik tx-40 tx-spacing--1 mg-b-0">{{ number_format($total_stock) }}</h4>
+                <p class="tx-12 tx-uppercase tx-semibold tx-spacing-1 tx-color-02">Productos</p>
+                <p class="tx-12 tx-color-03 mg-b-0">Esta es la cantidad de existencias totales de tus productos publicados (Se contabiliza el stock total de acuerdo a variantes o individuales)</p>
+            </div>
+
+            <div class="card-footer bd-t-0 pd-t-0">
+                <a href="{{ route('stocks.index') }}" class="btn btn-sm btn-block btn-outline-primary btn-uppercase tx-spacing-1">Ir a Inventario</a>
+            </div>
+      </div>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('lib/chart.js/Chart.bundle.min.js') }}"></script>
+
+<script>
+    var ctxData1 = [{{ $lun . ',' . $mar . ',' . $mie . ',' . $jue . ',' . $vie . ',' . $sab . ',' . $dom }}];
+    var ctxData2 = [{{ $pre_lun . ',' . $pre_mar . ',' . $pre_mie . ',' . $pre_jue . ',' . $pre_vie . ',' . $pre_sab . ',' . $pre_dom }}];
+    var ctxColor1 = '#0168fa';
+    var ctxColor2 = '#69b2f8';
+
+    // Line chart
+      var ctx4 = document.getElementById('salesChart');
+      new Chart(ctx4, {
+        type: 'line',
+        data: {
+            labels: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
+            datasets: [
+                {
+                    data: ctxData1,
+                    borderColor: ctxColor1,
+                    borderWidth: 1,
+                    fill: false
+                },{
+                    data: ctxData2,
+                    borderColor: ctxColor2,
+                    borderWidth: 1,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+          maintainAspectRatio: false,
+          legend: {
+            display: false,
+              labels: {
+                display: false
+              }
+          },
+          scales: {
+            yAxes: [{
+              gridLines: {
+                color: '#e5e9f2'
+              },
+              ticks: {
+                beginAtZero:true,
+                fontSize: 10,
+                @if($max == 0)
+                stepSize: 5,
+                @else
+                stepSize: {{ $max/10 }},
+                @endif
+                min: 0,
+                @if($max == 0)
+                    max: 10,
+                @else
+                    max: {{ $max * 1.1 }},
+                @endif
+                padding: 20
+              }
+            }],
+            xAxes: [{
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                beginAtZero:true,
+                fontSize: 11
+              }
+            }]
+          }
+        }
+      });
+</script>
+@endpush

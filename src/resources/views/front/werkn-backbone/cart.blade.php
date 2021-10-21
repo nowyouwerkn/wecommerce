@@ -77,7 +77,7 @@
                                         <div class="btn-group">
                                             <a href="{{ route( 'cart.substract', [ 'id' => $product['item']['id'], 'variant' => $product['variant'] ] ) }}" class="btn btn-qty btn-outline-secondary">-</a>
                                             <p class="btn btn-qty btn-link mb-0">{{ $product['qty'] }}</p>
-                                            <a href="{{ route( 'cart.add-more', [ 'id' => $product['item']['id'], 'variant' => $product['variant'] ] ) }}" class="btn btn-qty btn-outline-secondary">+</a>
+                                            <a href="{{ route( 'cart.add-more', [ 'id' => $product['item']['id'], 'variant' => $product['variant'], 'qty' => $product['qty'] ] ) }}" class="btn btn-qty btn-outline-secondary">+</a>
                                         </div>
                                     </td>
                                     <td class="product-subtotal"><span>$ {{ number_format($product['price'], 2) }} </span></td>
@@ -169,24 +169,7 @@
                                 <li class="cart-total-amount"><span>Total</span> <span class="amount">${{ number_format($total,2) }}</span></li>
                             </ul>
                             
-                            @php
-                                $card_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', '!=','Paypal')->where('type', 'card')->where('is_active', true)->first();
-                                $cash_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
-                                $paypal_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
-                            @endphp
-                                            
-                            @if(!empty($paypal_payment))
-                            <a class="btn" href="{{ route('checkout.paypal') }}">Pagar con Paypal</a>
-                            @endif
-
-                            @if(!empty($card_payment))
-                            <a class="btn mt-2" href="{{ route('checkout') }}">Pagar con Tarjeta</a>
-                            @endif
-
-                            @if(!empty($cash_payment))
-                            <a class="btn mt-2" href="{{ route('checkout.cash') }}">Pagar en Efectivo</a>
-                            @endif
-                            
+                            <a class="btn mt-2" href="{{ route('checkout') }}">Continuar tu compra</a>
                         </form>
                     </div>
                 </div>

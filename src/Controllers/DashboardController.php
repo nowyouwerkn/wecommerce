@@ -31,7 +31,6 @@ class DashboardController extends Controller
         $config = StoreConfig::take(1)->first();
         
         if(empty($config)){
-            
             return redirect()->route('config.step1');
         }
 
@@ -41,8 +40,17 @@ class DashboardController extends Controller
         $category = Category::first();
 
         $orders = Order::all();
-        $new_orders = Order::where('created_at', '>=', Carbon::now()->subWeek())->get();
 
+        $total_products = Product::where('status', 'Publicado')->get();
+        $total_stock = 0;
+
+        foreach ($total_products as $t_total) {
+            $total_stock += $t_total->stock;
+        };
+
+        $total_stock;
+
+        $new_orders = Order::where('status', '!=', 'Cancelado')->where('created_at', '>=', Carbon::now()->subWeek())->get();
         $new_clients = User::role('customer')->where('created_at', '>=', Carbon::now()->subWeek())->count();
 
         // Conteo Ventas KPI's
@@ -97,6 +105,182 @@ class DashboardController extends Controller
             $avg_order = ($ven_total)/($orders->count());
         }
 
+        /* Ventas por Semana */
+        $lunes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek())
+        ->get();
+
+        $martes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(1)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->addDays(1))
+        ->get();
+
+        $miercoles = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(2)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->addDays(2))
+        ->get();
+
+        $jueves = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(3)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->addDays(3))
+        ->get();
+
+        $viernes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(4)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->addDays(4))
+        ->get();
+
+        $sabado = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(5)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->addDays(5))
+        ->get();
+
+        $domingo = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->endOfWeek()->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->endOfWeek())
+        ->get();
+
+        $lun = 0;
+        $mar = 0;
+        $mie = 0;
+        $jue = 0;
+        $vie = 0;
+        $sab = 0;
+        $dom = 0;
+
+        foreach ($lunes as $v_1) {
+            $v_1->cart = unserialize($v_1->cart);
+
+            $lun += $v_1->cart->totalPrice;
+        };
+
+        foreach ($martes as $v_2) {
+            $v_2->cart = unserialize($v_2->cart);
+
+            $mar += $v_2->cart->totalPrice;
+        };
+
+        foreach ($miercoles as $v_3) {
+            $v_3->cart = unserialize($v_3->cart);
+
+            $mie += $v_3->cart->totalPrice;
+        };
+
+        foreach ($jueves as $v_4) {
+            $v_4->cart = unserialize($v_4->cart);
+
+            $jue += $v_4->cart->totalPrice;
+        };
+
+        foreach ($viernes as $v_5) {
+            $v_5->cart = unserialize($v_5->cart);
+
+            $vie += $v_5->cart->totalPrice;
+        };
+
+        foreach ($sabado as $v_6) {
+            $v_6->cart = unserialize($v_6->cart);
+
+            $sab += $v_6->cart->totalPrice;
+        };
+
+        foreach ($domingo as $v_0) {
+            $v_0->cart = unserialize($v_0->cart);
+
+            $dom += $v_0->cart->totalPrice;
+        };
+
+        $lun;
+        $mar;
+        $mie;
+        $jue;
+        $vie;
+        $sab;
+        $dom;
+
+        /* Ventas Semana Anterior */
+        $pre_lunes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(7)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(7))
+        ->get();
+
+        $pre_martes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(6)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(6))
+        ->get();
+
+        $pre_miercoles = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(5)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(5))
+        ->get();
+
+        $pre_jueves = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(4)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(4))
+        ->get();
+
+        $pre_viernes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(3)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(3))
+        ->get();
+
+        $pre_sabado = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(2)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(2))
+        ->get();
+
+        $pre_domingo = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(1)->endOfDay())
+        ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(1))
+        ->get();
+
+        $pre_lun = 0;
+        $pre_mar = 0;
+        $pre_mie = 0;
+        $pre_jue = 0;
+        $pre_vie = 0;
+        $pre_sab = 0;
+        $pre_dom = 0;
+
+        foreach ($pre_lunes as $vv_1) {
+            $vv_1->cart = unserialize($vv_1->cart);
+
+            $pre_lun += $vv_1->cart->totalPrice;
+        };
+
+        foreach ($pre_martes as $vv_2) {
+            $vv_2->cart = unserialize($vv_2->cart);
+
+            $pre_mar += $vv_2->cart->totalPrice;
+        };
+
+        foreach ($pre_miercoles as $vv_3) {
+            $vv_3->cart = unserialize($vv_3->cart);
+
+            $pre_mie += $vv_3->cart->totalPrice;
+        };
+
+        foreach ($pre_jueves as $vv_4) {
+            $vv_4->cart = unserialize($vv_4->cart);
+
+            $pre_jue += $vv_4->cart->totalPrice;
+        };
+
+        foreach ($pre_viernes as $vv_5) {
+            $vv_5->cart = unserialize($vv_5->cart);
+
+            $pre_vie += $vv_5->cart->totalPrice;
+        };
+
+        foreach ($pre_sabado as $vv_6) {
+            $vv_6->cart = unserialize($vv_6->cart);
+
+            $pre_sab += $vv_6->cart->totalPrice;
+        };
+
+        foreach ($pre_domingo as $vv_0) {
+            $vv_0->cart = unserialize($vv_0->cart);
+
+            $pre_dom += $vv_0->cart->totalPrice;
+        };
+
+        $pre_lun;
+        $pre_mar;
+        $pre_mie;
+        $pre_jue;
+        $pre_vie;
+        $pre_sab;
+        $pre_dom;
+
+        $max = max([$lun,$mar,$mie,$jue,$vie,$sab,$dom]);
+
         return view('wecommerce::back.index')
         ->with('product', $product)
         ->with('payment', $payment)
@@ -106,7 +290,23 @@ class DashboardController extends Controller
         ->with('new_clients', $new_clients)
         ->with('new_orders', $new_orders)
         ->with('orders', $orders)
-        ->with('avg_order', $avg_order);
+        ->with('avg_order', $avg_order)
+        ->with('lun', $lun)
+        ->with('mar', $mar)
+        ->with('mie', $mie)
+        ->with('jue', $jue)
+        ->with('vie', $vie)
+        ->with('sab', $sab)
+        ->with('dom', $dom)
+        ->with('pre_lun', $pre_lun)
+        ->with('pre_mar', $pre_mar)
+        ->with('pre_mie', $pre_mie)
+        ->with('pre_jue', $pre_jue)
+        ->with('pre_vie', $pre_vie)
+        ->with('pre_sab', $pre_sab)
+        ->with('pre_dom', $pre_dom)
+        ->with('max', $max)
+        ->with('total_stock', $total_stock);
     }
 
     public function configuration () 

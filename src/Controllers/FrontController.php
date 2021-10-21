@@ -375,7 +375,6 @@ class FrontController extends Controller
         ->with('shipping', $shipping)
         ->with('subtotal', $subtotal);
     }
-
     public function checkout()
     {
         if (!Session::has('cart')) {
@@ -390,14 +389,17 @@ class FrontController extends Controller
 
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
-        //$total = $cart->totalPrice;
         
-        $payment_method = PaymentMethod::where('supplier', '!=', 'Paypal')->where('is_active', true)->where('type', 'card')->first();
+        $payment_methods = PaymentMethod::where('is_active', true)->get();
+        $card_payment = PaymentMethod::where('supplier', '!=','Paypal')->where('type', 'card')->where('is_active', true)->first();
+        $cash_payment = PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
+        $paypal_payment = PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
+
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $store_shipping = ShipmentMethod::where('is_active', true)->first();
 
         if (empty($store_tax)) {
-            $tax_rate = .16;
+            $tax_rate = 0;
         }else{
             $tax_rate = ($store_tax->tax_rate)/100;
         }
@@ -542,14 +544,205 @@ class FrontController extends Controller
             }
         }
         
-        $subtotal = ($cart->totalPrice);
-        //$tax = ($cart->totalPrice) * ($tax_rate);
-        $tax = 0;
-        $total = ($cart->totalPrice + $shipping);
-        /*
-        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
         $tax = ($cart->totalPrice) * ($tax_rate);
-        */
+        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
+        $total = ($subtotal + $shipping);
+
+        $store_config = $this->store_config;
+        $legals = LegalText::all();
+
+        if (!empty($payment_methods)) {
+            return view('front.theme.' . $this->theme->get_name() . '.checkout.index')
+            ->with('total', $total)
+            ->with('payment_methods', $payment_methods)
+            ->with('card_payment', $card_payment)
+            ->with('cash_payment', $cash_payment)
+            ->with('paypal_payment', $paypal_payment)
+            ->with('subtotal', $subtotal)
+            ->with('tax', $tax)
+            ->with('shipping', $shipping)
+            ->with('store_tax', $store_tax)
+            ->with('products', $cart->items)
+            ->with('store_config', $store_config)
+            ->with('legals', $legals);
+        }else{
+            //Session message
+            Session::flash('info', 'No se han configurado métodos de pago en esta tienda. Contacta con un administrador de sistema.');
+
+            return redirect()->route('index');
+        }
+    }
+
+    public function checkoutOld()
+    {
+        if (!Session::has('cart')) {
+            return view('front.theme.' . $this->theme->get_name() . '.cart');
+        }
+        
+        //Facebook Event
+        if ($this->store_config->has_pixel() != NULL) {
+            $event = new FacebookEvents;
+            $event->initiateCheckout();
+        }
+
+        $oldCart = Session::get('cart');
+        $cart = new Cart($oldCart);
+        //$total = $cart->totalPrice;
+        
+        $payment_method = PaymentMethod::where('supplier', '!=', 'Paypal')->where('is_active', true)->where('type', 'card')->first();
+
+        $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
+        $store_shipping = ShipmentMethod::where('is_active', true)->first();
+
+        if (empty($store_tax)) {
+            $tax_rate = 0;
+        }else{
+            $tax_rate = ($store_tax->tax_rate)/100;
+        }
+
+        // Reglas de Envios
+        if (empty($store_shipping)) {
+            $shipping = '0';
+        }else{
+            if ($store_shipping->cost == '0') {
+                $shipping = $store_shipping->cost;
+            }else{
+                // Reglas especiales
+                $shipping_rules = ShipmentMethodRule::where('is_active', true)->first();
+
+                if (!empty($shipping_rules)) {
+                    switch ($shipping_rules->type) {
+                        case 'Envío Gratis':
+                            $count = 0;
+                            foreach ($cart->items as $product) {
+                                $qty = $product['qty'];
+                                $count += $qty;
+                            };
+                            $count;
+
+                            $operator = $shipping_rules->comparison_operator;
+                            $value = $shipping_rules->value;
+                            $shipping = $store_shipping->cost;
+
+                            switch ($shipping_rules->condition) {
+                                case 'Cantidad Comprada':
+                                    switch ($operator) {
+                                        case '==':
+                                            if ($cart->totalPrice == $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '!=':
+                                            //dd('la cuenta NO ES IGUAL');
+                                            if ($cart->totalPrice != $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<':
+                                            //dd('la cuenta es MENOR QUE');
+                                            if ($cart->totalPrice < $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<=':
+                                            //dd('la cuenta es MENOR QUE O IGUAL');
+                                            if ($cart->totalPrice <= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '>':
+                                            //dd('la cuenta es MAYOR QUE');
+                                            if ($cart->totalPrice > $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+                                        
+                                        case '>=':
+                                            //dd('la cuenta es MAYOR QUE O IGUAL');
+                                            if ($cart->totalPrice >= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        default:
+                                            $shipping = $store_shipping->cost;
+                                            break;
+                                    }
+                                    break;
+                                
+                                case 'Productos en carrito':
+                                    switch ($operator) {
+                                        case '==':
+                                            if ($count == $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '!=':
+                                            //dd('la cuenta NO ES IGUAL');
+                                            if ($count != $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<':
+                                            //dd('la cuenta es MENOR QUE');
+                                            if ($count < $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '<=':
+                                            //dd('la cuenta es MENOR QUE O IGUAL');
+                                            if ($count <= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        case '>':
+                                            //dd('la cuenta es MAYOR QUE');
+                                            if ($count > $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+                                        
+                                        case '>=':
+                                            //dd('la cuenta es MAYOR QUE O IGUAL');
+                                            if ($count >= $value) {
+                                                $shipping = '0';
+                                            }
+                                            break;
+
+                                        default:
+                                            $shipping = $store_shipping->cost;
+                                            break;
+                                    }
+                                    break;
+
+                                default:
+                                    $shipping = $store_shipping->cost;
+                                    break;
+                            }
+                            //
+                            break;
+                        
+                        default:
+                            $shipping = $store_shipping->cost;
+                            break;
+                    }
+                }else{
+                    $shipping = $store_shipping->cost;
+                }
+            }
+        }
+        
+        $tax = ($cart->totalPrice) * ($tax_rate);
+        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
+        $total = ($subtotal + $shipping);
 
         $store_config = $this->store_config;
 
@@ -1074,11 +1267,40 @@ class FrontController extends Controller
                 $payment_method = PaymentMethod::where('is_active', true)->where('supplier', 'Paypal')->first();
 
                 break;
+
+            case 'Pago con Tarjeta':
+                $payment_method = PaymentMethod::where('supplier', '!=', 'Paypal')->where('is_active', true)->where('type', 'card')->first();
+                break;
+
             default:
                 $payment_method = PaymentMethod::where('supplier', '!=', 'Paypal')->where('is_active', true)->where('type', 'card')->first();
                 break;
         }
 
+        //Validar
+        $this -> validate($request, array(
+            'name' => 'required|max:255',
+            'last_name' => 'required',
+            'phone' => 'required',
+            'street' => 'required',
+            'street_num' => 'required',
+            'suburb' => 'required',
+            'postal_code' => 'required',
+            'country' => 'required',
+            'state' => 'required',
+            'city' => 'required',
+            'references' => 'required'
+        ));
+
+        if ($request->method == 'Pago con Tarjeta') {
+            $this -> validate($request, array(
+                'card_number' => 'required|max:255',
+                'card-name' => 'required',
+                'card-month' => 'required|max:2',
+                'card-year' => 'required|max:4',
+                'card-cvc' => 'required|max:4',
+            ));
+        }
 
         if ($payment_method->supplier == 'Conekta') {
             require_once(base_path() . '/vendor/conekta/conekta-php/lib/Conekta/Conekta.php');
@@ -1387,7 +1609,6 @@ class FrontController extends Controller
                 break;
         }
 
-
         if (!Auth::check()) {
             $user = User::create([
                 'name' => $client_name,
@@ -1406,7 +1627,6 @@ class FrontController extends Controller
         $order->cart = serialize($cart);
         $order->street = $request->input('street');
         $order->street_num = $request->input('street_num');
-        //$order->between_streets = $request->input('between_streets');
         $order->country = $request->input('country');
         $order->state = $request->input('state');
         $order->postal_code = $request->input('postal_code');
@@ -1445,7 +1665,6 @@ class FrontController extends Controller
 
         // Actualizar existencias del producto
         foreach ($cart->items as $product) {
-
             if ($product['item']['has_variants'] == true) {
                 $variant = Variant::where('value', $product['variant'])->first();
                 $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
@@ -1458,7 +1677,6 @@ class FrontController extends Controller
                 $product_stock->stock = $product_stock->stock - $product['qty'];
                 $product_stock->save();
             }
-            
         }
 
         // GUARDAR LA DIRECCIÓN
@@ -1471,7 +1689,6 @@ class FrontController extends Controller
             $address->user_id = $user->id;
             $address->street = $request->street;
             $address->street_num = $request->street_num;
-            //$address->between_streets = $request->between_streets;
             $address->postal_code = $request->postal_code;
             $address->city = $request->city;
             $address->country = $request->country;
@@ -1555,10 +1772,7 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
-        return redirect()->route('purchase.complete')->with('purchase_value', $purchase_value);
-
-        //return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')->with('order', $order)->with('purchase_value', $purchase_value);
-        
+        return redirect()->route('purchase.complete')->with('purchase_value', $purchase_value);        
     }
 
     public function getOpenPayInstance(){
@@ -1912,7 +2126,7 @@ class FrontController extends Controller
 
         $shipping_rules = ShipmentMethodRule::where('is_active', true)->where('allow_coupons', true)->first();
 
-        if (!empty($shipping_rules)) {
+        if (!empty($shipping_rules) || $shipping_rules == NULL) {
             // Recuperar codigo del cupon enviado por AJAX
             $cuopon_code = $request->get('cuopon_code');
 
@@ -2079,12 +2293,10 @@ class FrontController extends Controller
                 }else{
                     return response()->json(['mensaje' => 'Este cupón caducó y no puede ser usado.', 'type' => 'exception'], 200);
                 }
-
-                
             }
         }else{
             $rule = ShipmentMethodRule::where('is_active', true)->first();
-
+           
             return response()->json(['mensaje' => 'La promoción actual de "' . $rule->type . ' cuando ' . $rule->condition . ' ' . $rule->comparison_operator . ' ' .  number_format($rule->value) . '" en la tienda no admite el uso de cupones.', 'type' => 'exception'], 200);
         }
 

@@ -113,10 +113,6 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
     Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
     Route::resource('variants', Nowyouwerkn\WeCommerce\Controllers\VariantController::class); //
     Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
-    /*
-    Route::post('variants/storeStock', 'Nowyouwerkn\WeCommerce\Controllers\VariantTypeController@storeStock')->name('variants.storeStock');
-    Route::post('variants/updateStock', 'Nowyouwerkn\WeCommerce\Controllers\VariantTypeController@updateStock')->name('variants.updateStock');
-    */
 
     Route::post('/variants/stock/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@store',
@@ -268,7 +264,7 @@ Route::get('/substract/{id}/{variant}',[
 	'as' => 'cart.substract',
 ]);
 
-Route::get('/add/{id}/{variant}',[
+Route::get('/add/{id}/{variant}/{qty}',[
 	'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@addMore',
 	'as' => 'cart.add-more',
 ]);
@@ -348,22 +344,10 @@ Route::get('/busqueda-general', [
 Route::get('cart', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@cart')->name('cart');
 
 Route::get('/checkout', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkout')->name('checkout');
-Route::get('/checkout-cash', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutCash')->name('checkout.cash');
-Route::get('/checkout-paypal', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutPaypal')->name('checkout.paypal');
 
 Route::post('/checkout',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckout',
     'as' => 'checkout.store',
-]);
-
-Route::post('/checkout-cash',[
-    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutCash',
-    'as' => 'checkout.cash.store',
-]);
-
-Route::post('/checkout-paypal',[
-    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutPaypal',
-    'as' => 'checkout.paypal.store',
 ]);
 
 Route::get('/paypal/status',[
@@ -376,9 +360,6 @@ Route::post('/apply-cuopon', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@applyCuopon',
     'as' => 'apply.cuopon',
 ]);
-
-Route::get('blog', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@blog')->name('blog');
-Route::get('contact', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@contact')->name('contact');
 
 //Profile
 Route::group(['prefix' => 'profile', 'middleware' => 'auth'], function(){

@@ -127,10 +127,6 @@
 
                                             $products = $cart->items;
                                             $totalPrice = $cart->totalPrice;
-
-                                            $card_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', '!=','Paypal')->where('type', 'card')->where('is_active', true)->first();
-                                            $cash_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
-                                            $paypal_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
                                         @endphp
                                             
                                             @foreach($products as $product)
@@ -170,17 +166,8 @@
                                             <li>
                                                 <div class="checkout-link">
                                                     <a href="{{ route('cart') }}">Ver tu carrito</a>
-                                                    @if(!empty($paypal_payment))
-                                                    <a class="black-color" href="{{ route('checkout.paypal') }}">Pagar con Paypal</a>
-                                                    @endif
 
-                                                    @if(!empty($card_payment))
-                                                    <a class="black-color" href="{{ route('checkout') }}">Pagar con Tarjeta</a>
-                                                    @endif
-
-                                                    @if(!empty($cash_payment))
-                                                    <a class="black-color" href="{{ route('checkout.cash') }}">Pagar en Efectivo</a>
-                                                    @endif
+                                                    <a class="black-color" href="{{ route('checkout') }}">Completar tu compra</a>
                                                 </div>
                                             </li>
 

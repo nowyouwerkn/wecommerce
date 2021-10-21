@@ -37,6 +37,7 @@ class CartController extends Controller
         }else{
             $price = $product->discount_price;
         }
+
         $cart->add($product, $product->id, $variant, $price);
 
         $request->session()->put('cart', $cart);
@@ -62,50 +63,58 @@ class CartController extends Controller
         //return response()->json(['mensaje' => 'Producto agregado al carrito.'],200);
     }
 
-    public function addMore($id, $variant)
+    public function addMore($id, $variant, $qty)
     {
         $product = Product::find($id);
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
 
         $cart = new Cart($oldCart);
 
-        // Revisar Si hay existencias para agregar
+        // Validador de Existencias
+        $current_stock = $product->stock;
+        $qty_on_cart = $qty;
         
-        // Proceso regular
-        if ($product->has_discount == false) {
-            $price = $product->price;
-        }else{
-            $price = $product->discount_price;
-        }
-        $cart->addMore($id, $price, $variant);
-
-        //Facebook Event
-        if ($this->store_config->has_pixel() != NULL) {
-            if($product->has_discount == true)
-                $value = $product->discount_price;
-            else{
-                $value = $product->price;
+        if ($qty_on_cart < $current_stock) {
+            // Proceso regular
+            if ($product->has_discount == false) {
+                $price = $product->price;
+            }else{
+                $price = $product->discount_price;
             }
-            $product_name = $product->name;
-            $product_sku = $product->sku;
+            $cart->addMore($id, $price, $variant);
 
-            $event = new FacebookEvents;
-            $event->addToCart($value, $product_name, $product_sku);
+            //Facebook Event
+            if ($this->store_config->has_pixel() != NULL) {
+                if($product->has_discount == true)
+                    $value = $product->discount_price;
+                else{
+                    $value = $product->price;
+                }
+                $product_name = $product->name;
+                $product_sku = $product->sku;
+
+                $event = new FacebookEvents;
+                $event->addToCart($value, $product_name, $product_sku);
+            }
+            
+            Session::put('cart', $cart);
+
+            $item_merged = ($id . ',' . $variant);
+            $qty = number_format($cart->items[$item_merged]['qty']);
+            $price = '$ ' . number_format($cart->items[$item_merged]['price']);
+            $totalQty = number_format($cart->totalQty);
+            $totalPrice = '$ ' . number_format($cart->totalPrice);
+
+            return redirect()->back();
+            //return response()->json(['mensaje' => 'Sumado 1 producto al carrito.', 'qty' => $qty, 'price' => $price , 'totalQty' => $totalQty, 'totalPrice' => $totalPrice], 200);
+        }else{
+            Session::flash('error', 'No hay más existencias de este producto para agregar a tu carrito.');
+
+            return redirect()->back();
+            //return response()->json(['mensaje' => 'Sumado 1 producto al carrito.', 'qty' => $qty, 'price' => $price , 'totalQty' => $totalQty, 'totalPrice' => $totalPrice], 200);
         }
+
         
-        Session::put('cart', $cart);
-
-        //alert()->success('Se agregó 1 a la cantidad.', '¡Listo!')->persistent('Ok, gracias');
-        //return redirect()->back();
-
-        $item_merged = ($id . ',' . $variant);
-        $qty = number_format($cart->items[$item_merged]['qty']);
-        $price = '$ ' . number_format($cart->items[$item_merged]['price']);
-        $totalQty = number_format($cart->totalQty);
-        $totalPrice = '$ ' . number_format($cart->totalPrice);
-
-        return redirect()->back();
-        //return response()->json(['mensaje' => 'Sumado 1 producto al carrito.', 'qty' => $qty, 'price' => $price , 'totalQty' => $totalQty, 'totalPrice' => $totalPrice], 200);
     }
 
     public function substractOne($id, $variant)

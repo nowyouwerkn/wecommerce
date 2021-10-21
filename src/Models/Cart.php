@@ -2,6 +2,7 @@
 
 namespace Nowyouwerkn\WeCommerce\Models;
 
+use Session;
 use Nowyouwerkn\WeCommerce\Models\Product;
 
 class Cart
@@ -20,25 +21,35 @@ class Cart
     }
 
     public function add($item, $id, $variant, $price) 
-    {           
+    {         
         $storedItem = ['qty' => 0, 'price' => $price, 'variant' => $variant, 'item' => $item];
 
         $item_merged = ($id . ',' . $variant);
 
         if ($this->items) {
-            if (array_key_exists($item_merged, $this->items)) {
+            if (array_key_exists($item_merged, $this->items)) {                
                 $storedItem = $this->items[$item_merged];
             }
         }
         
-        $storedItem['qty']++;
-        $storedItem['price'] = $price * $storedItem['qty'];
-        $storedItem['variant'] = $variant;    
+        // Validador de Existencias
+        $product = Product::find($id);
 
-        $this->items[$item_merged] = $storedItem;
+        $current_stock = $product->stock;
+        $qty_on_cart = $storedItem['qty'];  
 
-        $this->totalQty++;
-        $this->totalPrice += $price;
+        if ($qty_on_cart < $current_stock) {
+            $storedItem['qty']++;
+            $storedItem['price'] = $price * $storedItem['qty'];
+            $storedItem['variant'] = $variant;    
+
+            $this->items[$item_merged] = $storedItem;
+
+            $this->totalQty++;
+            $this->totalPrice += $price;
+        }
+
+        Session::flash('error', 'No hay más existencias de este producto para agregar a tu carrito.');
     }
 
     public function addMore($id, $price, $variant)
