@@ -279,12 +279,7 @@
             if($('input[name=method]').val() === 'Pago con Tarjeta') {
                 OpenPay.setId('{{ $card_payment->merchant_id }}');
                 OpenPay.setApiKey('{{ $card_payment->public_key }}');
-
-                if ({{ $card_payment->sandbox_mode == 1 }}) {
-                    OpenPay.setSandboxMode('true');
-                }else{
-                    OpenPay.setSandboxMode('true');
-                }
+                OpenPay.setSandboxMode('{{ env("OPENPAY_PRODUCTION_MODE", false) }}');
                 
                 var deviceSessionId = OpenPay.deviceData.setup('checkout-form', "device_hidden");
                 //console.log(deviceSessionId);
