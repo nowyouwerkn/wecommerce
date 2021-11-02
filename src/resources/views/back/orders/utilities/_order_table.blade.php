@@ -180,8 +180,8 @@
             </td>
           
             <td class="type-td" style="width:280px;">{{ $order->payment_id }}</td>
-            <td class="text-muted" >
-                <span data-toggle="tooltip" data-placement="bottom" title="ID de Pago: {{ $order->payment_id }}">
+            <td class="text-muted">
+                <span style="display:block; width:100px;" data-toggle="tooltip" data-placement="bottom" title="ID de Pago: {{ $order->payment_id }}">
                 	@if($order->payment_method == 'Paypal')
                 		<i class="fab fa-paypal"></i>
                 	@else

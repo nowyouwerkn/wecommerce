@@ -7,3 +7,339 @@
 
 /* Your CSS Styles Here
 -----------------------------------*/
+
+/* WERKN ADMIN BAR */
+.werkn-admin-bar{
+    direction: ltr;
+    color: #c3c4c7;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 2.46153846;
+    height: 32px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-width: 600px;
+    z-index: 99999;
+    background: #1d2327;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.werkn-admin-bar ul{
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin-bottom: 0px;
+}
+
+.werkn-admin-bar ul li{
+    padding: 5px 15px;
+}
+
+.sticky-menu{
+    top: 30px !important;
+}
+
+/* NAV */
+nav{
+  position: relative;
+  z-index: 10;
+}
+/* Estilos Hover de tarjetas */
+.has-menu-card {
+    position: relative;
+}
+
+.has-menu-card ion-icon {
+    font-size: 0.7em;
+    opacity: 0.5;
+}
+
+.has-menu-card .menu-card {
+    position: absolute;
+    width: calc(50vw - 120px);
+    left: 0;
+    top: 100%;
+    transform: scale(1, 0);
+    transform-origin: 0 0;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    opacity: 0;
+    margin-top: 10px;
+    margin-left: 15px;
+}
+
+.has-menu-card:hover .menu-card {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.menu-card .card-categories {
+    border: 1px solid rgb(245, 245, 245);
+    box-shadow: rgb(137 139 142 / 15%) 0px 30px 70px 0px;
+}
+
+.menu-card .card-categories-title {
+    position: absolute;
+    z-index: 2;
+    color: #fff;
+    bottom: 20px;
+    left: 10px;
+}
+
+.menu-card .card-categories-title span {
+    font-size: 4em;
+}
+
+/* BANNER */
+.banner-main{
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-content{
+  position: relative;
+  z-index: 2;
+
+  padding: 200px 0px;
+}
+
+.banner-img{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+}
+
+.banner-img img{
+  width: 100%;
+}
+
+/* PRODUCT CARD */
+.price-discounted{
+    opacity: .7;
+    font-size: 15px !important;
+    position: relative;
+    margin-top: -10px;
+    left: 0px;
+    border-bottom: 2px solid red;
+    display: inline-block !important;
+    line-height: 0px;
+    padding: 0px 11px;
+}
+
+/* PRODUCT DETAIL */
+.shop-size-list ul li .active{
+    background: #ff6000;
+    border-color: #ff6000;
+    color: #fff;
+}
+
+.price-discounted{
+    opacity: .7;
+    font-size: 15px !important;
+    position: relative;
+    margin-top: -10px;
+    left: 0px;
+    border-bottom: 2px solid red;
+    display: inline-block;
+    line-height: 0px;
+    padding: 0px 11px;
+}
+
+.no-stock-variant{
+    opacity: .5;
+    width: 40px;
+    height: 34px;
+    line-height: 28px;
+    text-align: center;
+    border: 3px solid #ebebeb;
+    font-size: 14px;
+    color: #544842;
+    font-family: 'Jost', sans-serif;
+    position: relative;
+}
+
+.no-stock-variant .line{
+    height: 2px;
+    width: 120%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%) rotate(45deg);
+    background: rgba(0,0,0,.3);
+}
+
+/* ORDER CARD */
+.progress{
+    overflow: initial;
+    margin-top: 20px;
+}
+
+.progress-bar{
+    position: relative;
+    overflow: initial;
+}
+
+.progress-meter {
+    min-height: 15px;
+    border-bottom: 2px solid rgb(160, 160, 160);
+    margin-bottom: 50px;
+    margin-top: 10px;
+}
+
+.progress-meter > .meter {
+    position: relative;
+    float: left;
+    min-height: 15px;
+    border-width: 0px;
+    border-style: solid;
+    border-color: rgb(160, 160, 160);
+}
+
+.progress-meter > .meter-left {
+    border-left-width: 2px;
+}
+
+.progress-meter > .meter-right {
+    float: right;
+    border-right-width: 2px;
+}
+
+.progress-meter > .meter > .meter-text {
+    position: absolute;
+    display: inline-block;
+    bottom: -20px;
+    width: 100%;
+    font-weight: 700;
+    font-size: 0.85em;
+    color: rgb(160, 160, 160);
+    text-align: left;
+}
+
+.progress-meter > .meter.meter-right > .meter-text {
+    text-align: right;
+}
+
+.progress-type{
+    position: absolute;
+    top: -15px;
+    right: -20px;
+    z-index: 2;
+}
+
+
+.card-order-status{
+    width: 70%;
+}
+
+.box-icon-order{
+    background: url(../img/icons/box.svg) center center;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 40px;
+    display: block;
+    background-size: contain;
+}
+
+.tracking-type{
+    position: absolute;
+    height: auto;
+    border: 2px solid #e6646e;
+    background: #e6646e;
+    color: #000;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    top: -80px;
+    right: -72px;
+}
+
+.tracking-type:after{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-top: 0px solid #e6646e;
+    border-right: 2px solid #e6646e;
+    border-bottom: 2px solid #e6646e;
+    border-left: 0px solid #e6646e;
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    content: '';
+    transform: rotate(45deg);
+    margin-top: -10px;
+    background: #e6646e;
+}
+
+.tracking-type h5{
+    position: relative;
+    z-index: 1;
+    margin-bottom: 5px; 
+    font-size: .8em;
+    text-transform: uppercase;
+}
+
+.tracking-type p{
+    position: relative;
+    z-index: 1;
+    font-size: 1.2em;
+}
+
+/* POP-UP */
+.wk-popup-modal .modal-body{
+
+}
+
+.wk-popup-modal .modal-dialog{
+  margin-top: 6em;
+}
+
+.wk-popup-modal .btn-close{
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  z-index: 2;
+  width: 45px;
+  height: 45px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 100%;
+  line-height: 45px;
+}
+
+.wk-popup-modal .modal-body{
+  padding: 0px;
+  position: relative;
+  display: flex;
+}
+
+.wk-modal-image{
+  width: 40%;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  min-height: 350px;
+}
+
+.wk-modal-image img{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 150%;
+  transform: translate(-50%,-50%);
+}
+
+.wk-info-wrap{
+  width: 60%;
+  padding: 30px 40px;
+}

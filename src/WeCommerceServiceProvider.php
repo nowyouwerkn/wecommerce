@@ -109,8 +109,12 @@ class WeCommerceServiceProvider extends ServiceProvider
 
         // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
         $this->publishes([
-            __DIR__.'/resources/views/front' => resource_path('views/front/theme/'),
-        ], 'theme_views');
+            __DIR__.'/resources/views/front/werkn-backbone' => resource_path('views/front/theme/'),
+        ], 'werkn-theme');
+
+        $this->publishes([
+            __DIR__.'/resources/views/front/werkn-backbone-bootstrap' => resource_path('views/front/theme/'),
+        ], 'werkn-bootstrap');
 
         // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
         $this->publishes([

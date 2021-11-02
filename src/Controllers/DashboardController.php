@@ -280,6 +280,13 @@ class DashboardController extends Controller
         $pre_dom;
 
         $max = max([$lun,$mar,$mie,$jue,$vie,$sab,$dom]);
+        $pre_max = max([$pre_lun,$pre_mar,$pre_mie,$pre_jue,$pre_vie,$pre_sab,$pre_dom]);
+
+        if ($max > $pre_max) {
+            $max = $max;
+        }else{
+            $max = $pre_max;
+        }
 
         return view('wecommerce::back.index')
         ->with('product', $product)

@@ -106,13 +106,16 @@ Para que funcione correctamente el sistema es OBLIGATORIO publicar los archivos 
 
 Etiquetas de elementos publicables:
 
-* --tag=theme
+* --tag=werkn-theme (Tema principal)
+* --tag=werkn-bootstrap
 * --tag=error-views
 * --tag=translations
 * --tag=public
 * --tag=config
 * --tag=migrations
 * --tag=seeders
+
+Recomendamos correr la publicación automáticamente pero puedes seleccionar que es lo que necesitas. Principalmente los temas.
 
 <strong>IMPORTANTE: </strong> El sistema utiliza Fortify para Autenticar usuarios asi que es importante publicar tambien los recursos de fortify con el siguiente comando:
 

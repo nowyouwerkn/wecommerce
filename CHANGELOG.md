@@ -2,6 +2,17 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.3.1 - 2021-10-27
+
+### Agregado
+- Se optimizaron todas las peticiones al usuario en los controladores FrontController y los respectivos en el panel de administración. Esto mejoró el rendimiento del sitio por varios segundos.
+- Nueva plantilla basada completamente en Bootstrap para usar como base de proyecto.
+- Nuevos estilos para plantilla bootstrap
+
+### Eliminado
+- Estructura de Checkout anterior a la actualización 1.3
+- Archivos de estilos y funcionalidad de checkout anterior a la versión 1.3
+
 ## 1.3 - 2021-10-21
 
 ### Agregado

@@ -87,12 +87,11 @@ class FrontController extends Controller
     
     public function index ()
     {
-        $products = Product::where('in_index', true)->where('status', 'Publicado')->get()->take(6);
-        $products_favorites = Product::where('in_index', true)->where('is_favorite', true)->where('status', 'Publicado')->get()->take(6);
-        
-        $main_categories = Category::where('parent_id', '0')->orWhere('parent_id', NULL)->get()->take(4);
-
         $banners = Banner::where('is_active', true)->get();
+        $main_categories = Category::where('parent_id', '0')->orWhere('parent_id', NULL)->get(['name', 'slug', 'image'])->take(4);
+
+        $products = Product::where('in_index', true)->where('status', 'Publicado')->with('category')->get()->take(6);
+        $products_favorites = Product::where('in_index', true)->where('is_favorite', true)->where('status', 'Publicado')->with('category')->get()->take(6);
 
         return view('front.theme.' . $this->theme->get_name() . '.index')
         ->with('products', $products)
@@ -107,14 +106,13 @@ class FrontController extends Controller
     */
     public function dynamicFilter(Request $request)
     {
-        $total_products = Product::all()->count();
+        $total_products = Product::get(['id'])->count();
 
         $input = $request->all();
 
         $selected_category = $request->category;
         $selected_variant = $request->variant;
         
-        //$query = DB::table('products');
         $query = Product::select('*')->where('in_index', true)->where('status', 'Publicado');
 
         if (isset($selected_category)) {
@@ -129,14 +127,22 @@ class FrontController extends Controller
             });
         }
 
-        $products = $query->paginate(30)->withQueryString();
+        $products = $query->with('category')->paginate(30)->withQueryString();
+
+        /* Opciones para Filtro */
+        $popular_products = Product::with('category')->where('is_favorite', true)->where('status', 'Publicado')->get();
+        $categories = Category::with('productsIndex')->where('parent_id', 0)->orWhere('parent_id', NULL)->get();
+        $variants = Variant::orderBy('value', 'asc')->get(['value']);
 
         if($products->count() > 0){
             return view('front.theme.' . $this->theme->get_name() . '.catalog_filter')
             ->with('products', $products)
             ->with('total_products', $total_products)
             ->with('selected_category', $selected_category)
-            ->with('selected_variant', $selected_variant);
+            ->with('selected_variant', $selected_variant)
+            ->with('popular_products', $popular_products)
+            ->with('categories', $categories)
+            ->with('variants', $variants);
         }else{
             $products = collect([]);
 
@@ -144,46 +150,63 @@ class FrontController extends Controller
             ->with('products', $products)
             ->with('total_products', $total_products)
             ->with('selected_category', $selected_category)
-            ->with('selected_variant', $selected_variant);
+            ->with('selected_variant', $selected_variant)
+            ->with('popular_products', $popular_products)
+            ->with('categories', $categories)
+            ->with('variants', $variants);
         }   
     }
 
     public function catalogAll()
     {
-        $products = Product::orderBy('created_at', 'desc')->where('status', 'Publicado')->paginate(15);
+        $products = Product::with('category')->orderBy('created_at', 'desc')->where('status', 'Publicado')->paginate(15);
+
+        /* Opciones para Filtro */
+        $popular_products = Product::with('category')->where('is_favorite', true)->where('status', 'Publicado')->get();
+        $categories = Category::with('productsIndex')->where('parent_id', 0)->orWhere('parent_id', NULL)->get();
+        $variants = Variant::orderBy('value', 'asc')->get(['value']);
 
         return view('front.theme.' . $this->theme->get_name() . '.catalog')
-        ->with('products', $products);
+        ->with('products', $products)
+        ->with('popular_products', $popular_products)
+        ->with('categories', $categories)
+        ->with('variants', $variants);
     }
 
     public function catalog($category_slug)
     {
-        $catalog = Category::where('slug', $category_slug)->first();
-        $products_category = Product::where('category_id', $catalog->id)->where('status', 'Publicado')->get();
-        
-        $products_subcategory = Product::where('status', 'Publicado')->whereHas('subCategory', function($q) use ($catalog){
+        $catalog = Category::where('slug', $category_slug)->firstOrFail();
+
+        $products_category = Product::with('category')->where('category_id', $catalog->id)->where('status', 'Publicado')->get();
+        $products_subcategory = Product::with('category')->where('status', 'Publicado')->whereHas('subCategory', function($q) use ($catalog){
             $q->where('category_id', $catalog->id);
         })->get();
 
         $products_merge = $products_category->merge($products_subcategory);
-
         $products = $products_merge->paginate(15);
+
+        /* Opciones para Filtro */
+        $popular_products = Product::with('category')->where('is_favorite', true)->where('status', 'Publicado')->get();
+        $categories = Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
+        $variants = Variant::orderBy('value', 'asc')->get(['value']);
 
         return view('front.theme.' . $this->theme->get_name() . '.catalog')
         ->with('catalog', $catalog)
-        ->with('products', $products);
+        ->with('products', $products)
+        ->with('popular_products', $popular_products)
+        ->with('categories', $categories)
+        ->with('variants', $variants);
     }
 
     public function detail ($category_slug, $slug)
     {
         $catalog = Category::where('slug', $category_slug)->first();
-        $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->firstOrFail();
+        $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->with('category')->firstOrFail();
 
-        $products_selected = Product::where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->inRandomOrder()->take(6)->get();
+        $products_selected = Product::with('category')->where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->inRandomOrder()->take(6)->get();
 
-        $next_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
-        $last_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->first();
-
+        $next_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
+        $last_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
 
         $store_config = $this->store_config;
 
@@ -359,7 +382,6 @@ class FrontController extends Controller
                     $shipping = $store_shipping->cost;
                 }
             }
-
         }
 
         //$subtotal = ($cart->totalPrice) / ($tax_rate + 1);

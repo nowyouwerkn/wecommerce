@@ -7,9 +7,9 @@
     <nav class="nav">
         <div class="dropdown dropdown-notification ml-3">
             @php
-                $notifications = Nowyouwerkn\WeCommerce\Models\Notification::where('read_at', NULL)->orderBy('created_at', 'desc')->take(5)->get();
+                $notifications = Nowyouwerkn\WeCommerce\Models\Notification::with('user')->where('read_at', NULL)->orderBy('created_at', 'desc')->take(5)->get();
 
-                $notifications_all = Nowyouwerkn\WeCommerce\Models\Notification::where('read_at', NULL)->orderBy('created_at', 'desc')->count();
+                $notifications_all = Nowyouwerkn\WeCommerce\Models\Notification::with('user')->where('read_at', NULL)->orderBy('created_at', 'desc')->count();
             @endphp
           <a href="javascript:void(0)" class="dropdown-link new-indicator" data-toggle="dropdown">
             <i data-feather="bell"></i>
@@ -53,6 +53,6 @@
 
         <a href="{{ route('configuration') }}" class="nav-link ml-4"><i data-feather="settings"></i></a>
 
-        <a href="https://github.com/nowyouwerkn/wecommerce/blob/main/CHANGELOG.md" target="_blank" class="badge badge-info ml-3" style="line-height: 14px;">v. 1.3</a>
+        <a href="https://github.com/nowyouwerkn/wecommerce/blob/main/CHANGELOG.md" target="_blank" class="badge badge-info ml-3" style="line-height: 14px;">v. 1.3.1</a>
     </nav>
 </div>
