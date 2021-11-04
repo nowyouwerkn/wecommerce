@@ -36,7 +36,7 @@ class ClientController extends Controller
     {
         $today = Carbon::now();
 
-        $clients = User::role('customer')->get();
+        $clients = User::role('customer')->orderBy('name')->get();
         $new_clients = User::where('created_at', '>=', Carbon::now()->subWeek())->count();
 
         $clients_today = User::where('created_at', '>=', $today->endOfDay())
