@@ -100,18 +100,44 @@ class ShipmentMethodRuleController extends Controller
 
     public function changeStatus($id)
     {
-        // Desactivar cualquier otro método activo
-        $deactivate = ShipmentMethodRule::where('is_active', true)->get();
-
-        foreach ($deactivate as $dt) {
-            $dt->is_active = false;
-            $dt->save();
-        }
-
+        // Encontrar el valor de la regla que se quiere cambiar
         $rule = ShipmentMethodRule::find($id);
 
+
+        // si la regla esta activa
+        if ($rule->is_active == true) {
+                   // Desactivar cualquier otro método activo
+        $deactivate = ShipmentMethodRule::where('is_active', false)->get();
+        $rule->is_active = false;
+            if ($deactivate != null) {
+                foreach ($deactivate as $dt) {
+                $dt->is_active = true;
+                $dt->save();
+                }
+            }
+
+        }
+        elseif ($rule->is_active == false){
+                   // Desactivar cualquier otro método activo
+        $deactivate = ShipmentMethodRule::where('is_active', true)->get();
         $rule->is_active = true;
+
+            if ($deactivate != null) {
+                foreach ($deactivate as $dt) {
+                $dt->is_active = false;
+                $dt->save();
+                }
+            }
+      
+
+        }
+
         $rule->save();
+
+
+        
+
+     
 
         //Session message
         Session::flash('success', 'El elemento fue actualizado exitosamente.');
