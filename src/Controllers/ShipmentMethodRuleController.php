@@ -111,8 +111,7 @@ class ShipmentMethodRuleController extends Controller
         $rule->is_active = false;
             if ($deactivate != null) {
                 foreach ($deactivate as $dt) {
-                $dt->is_active = true;
-                $dt->save();
+              
                 }
             }
 
