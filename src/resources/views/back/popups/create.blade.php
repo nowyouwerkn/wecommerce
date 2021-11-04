@@ -104,7 +104,7 @@
                     <div class="row">
                     	<div class="col-md-6">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="show_on_enter" name="show_on_enter" value="1">
+                                <input type="checkbox" checked="true" class="custom-control-input" id="show_on_enter" name="show_on_enter" value="1">
                                 <label class="custom-control-label" for="show_on_enter">Mostrar al cargar la página</label>
                             </div>
                         </div>
