@@ -2287,6 +2287,8 @@ class FrontController extends Controller
                             break;
 
                         case 'free_shipping':
+                            $qty = 0;
+                            $discount = 0;
 
                             break;
 
