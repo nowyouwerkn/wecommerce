@@ -205,8 +205,16 @@ class FrontController extends Controller
 
         $products_selected = Product::with('category')->where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->inRandomOrder()->take(6)->get();
 
-        $next_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
-        $last_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
+
+        $next_product = Product::where('id', '>' , $product->id)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
+        if ($next_product == null) {
+             $next_product = Product::where('id', '<' , $product->id)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
+        }
+
+        $last_product = Product::where('id', '<' , $product->id)->orderBy('id','desc')->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
+        if ($last_product == null) {
+              $last_product = Product::where('id', '>' , $product->id)->orderBy('id','desc')->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
+        }
 
         $store_config = $this->store_config;
 
