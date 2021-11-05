@@ -48,7 +48,7 @@
 				<tr>
 					<td>
 						<h1 style="margin-bottom:0px; text-transform: uppercase;">VAMOS EN CAMINO</h1>
-						<p style="margin-top: 10px; line-height: 1.8;">Tu pedido ha sido enviado. Si quieres saber el estado de tu pedido puedes entrar a tu cuenta en la tienda o contactar con nuestros agentes digitales.</p>
+						<p style="margin-top: 10px; line-height: 1.8;">Tu pedido ha sido enviado. Si quieres saber el estado de tu pedido puedes entrar a tu cuenta en la tienda o contactar con nuestros agentes digitales. Da seguimiento directo aquí: <a style="font-size: 2rem;" href="{{ route('utilities.tracking.index') }}">&#x2192;</a></p>
 					</td>
 				</tr>
 			</tbody>

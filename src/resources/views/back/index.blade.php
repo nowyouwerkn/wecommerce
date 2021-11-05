@@ -323,7 +323,7 @@
                 </div>
                   <div class="col-10"><hr></div>
                 <div class="col-6">
-                         <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">btn-expirado</p>
+                         <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Expirado</p>
                 </div>
                 <div class="col-6">
                     <strong class="btn-expirado">{{$total_expirado}}</strong> 
