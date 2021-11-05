@@ -70,7 +70,8 @@
                         @endif
                         <div class="card-body">
                             <h6 class="card-title">{{ $theme->name }}</h6>
-                            <p class="card-text">{{ $theme->description }}</p>                            
+                            <p class="card-text">{{ $theme->description }}</p> 
+                            <a href="{{ route('themes.status', $theme->id) }}" class=" btn btn-info btn-sm mr-2 px-2" data-toggle="tooltip" data-original-title="Cambiar Estado"><i class="fas fa-sync"></i></a>                         
                         </div>
                     </div>
                 </div>

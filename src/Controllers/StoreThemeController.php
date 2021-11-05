@@ -76,12 +76,34 @@ class StoreThemeController extends Controller
         //
     }
 
+    public function changeStatus($id)
+    {
+        $deactivate = StoreTheme::where('is_active', true)->get();
+        $config = StoreTheme::find($id);
+        
+        foreach ($deactivate as $dt) {
+            $dt->is_active = false;
+            $dt->save();
+        }
+
+         $config->is_active = true;
+
+         $config->save();
+        //Session message
+        Session::flash('success', 'El elemento fue actualizado exitosamente.');
+
+        return redirect()->back();
+    }
+
     public function update(Request $request, $id)
     {
         //Validation
         $this -> validate($request, array(
 
         ));
+
+   
+
 
         $config = StoreTheme::find($id);
 
