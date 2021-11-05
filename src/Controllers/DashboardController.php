@@ -50,7 +50,7 @@ class DashboardController extends Controller
 
         $total_stock;
 
-        $new_orders = Order::where('status', '!=', 'Cancelado')->where('created_at', '>=', Carbon::now()->subWeek())->get();
+        $new_orders = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '>=', Carbon::now()->subWeek())->get();
         $new_clients = User::role('customer')->where('created_at', '>=', Carbon::now()->subWeek())->count();
 
         // Conteo Ventas KPI's
@@ -67,15 +67,15 @@ class DashboardController extends Controller
         $week_end = Carbon::now()->endOfWeek(Carbon::SUNDAY);
         
         $ventas_total = Order::where('created_at', '<=', $year_end)
-        ->where('created_at', '>=', $year_start)
+        ->where('created_at', '>=', $year_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')
         ->get();
 
         $ventas_mes = Order::where('created_at', '<=', $month_end)
-        ->where('created_at', '>=', $month_start)
+        ->where('created_at', '>=', $month_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')
         ->get();
 
         $ventas_semana = Order::where('created_at', '<=', $week_end)
-        ->where('created_at', '>=', $week_start)
+        ->where('created_at', '>=', $week_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')
         ->get();
 
         $ven_total = 0;
@@ -106,31 +106,31 @@ class DashboardController extends Controller
         }
 
         /* Ventas por Semana */
-        $lunes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->endOfDay())
+        $lunes = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek())
         ->get();
 
-        $martes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(1)->endOfDay())
+        $martes = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(1)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->addDays(1))
         ->get();
 
-        $miercoles = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(2)->endOfDay())
+        $miercoles = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(2)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->addDays(2))
         ->get();
 
-        $jueves = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(3)->endOfDay())
+        $jueves = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(3)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->addDays(3))
         ->get();
 
-        $viernes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(4)->endOfDay())
+        $viernes = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(4)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->addDays(4))
         ->get();
 
-        $sabado = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(5)->endOfDay())
+        $sabado = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->addDays(5)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->addDays(5))
         ->get();
 
-        $domingo = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->endOfWeek()->endOfDay())
+        $domingo = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->endOfWeek()->endOfDay())
         ->where('created_at', '>=', Carbon::now()->endOfWeek())
         ->get();
 
@@ -193,31 +193,31 @@ class DashboardController extends Controller
         $dom;
 
         /* Ventas Semana Anterior */
-        $pre_lunes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(7)->endOfDay())
+        $pre_lunes = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(7)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(7))
         ->get();
 
-        $pre_martes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(6)->endOfDay())
+        $pre_martes = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(6)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(6))
         ->get();
 
-        $pre_miercoles = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(5)->endOfDay())
+        $pre_miercoles = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(5)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(5))
         ->get();
 
-        $pre_jueves = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(4)->endOfDay())
+        $pre_jueves = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(4)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(4))
         ->get();
 
-        $pre_viernes = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(3)->endOfDay())
+        $pre_viernes = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(3)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(3))
         ->get();
 
-        $pre_sabado = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(2)->endOfDay())
+        $pre_sabado = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(2)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(2))
         ->get();
 
-        $pre_domingo = Order::where('status', '!=', 'Cancelado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(1)->endOfDay())
+        $pre_domingo = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '<=', Carbon::now()->startOfWeek()->subDays(1)->endOfDay())
         ->where('created_at', '>=', Carbon::now()->startOfWeek()->subDays(1))
         ->get();
 
@@ -288,6 +288,33 @@ class DashboardController extends Controller
             $max = $pre_max;
         }
 
+        // Ordenes por su estado actual
+
+         $ord_entregado = Order::where('created_at', '<=', $year_end)
+        ->where('created_at', '>=', $year_start)->where('status', '=', 'Entregado')
+        ->get();
+        $total_entregado = $ord_entregado->count();
+
+         $ord_enviado = Order::where('created_at', '<=', $year_end)
+        ->where('created_at', '>=', $year_start)->where('status', '=', 'Enviado')
+        ->get();
+        $total_enviado = $ord_enviado->count();
+
+         $ord_pagado = Order::where('created_at', '<=', $year_end)
+        ->where('created_at', '>=', $year_start)->where('status', '=', 'Pagado')
+        ->get();
+        $total_pagado = $ord_pagado->count();
+
+         $ord_expirado = Order::where('created_at', '<=', $year_end)
+        ->where('created_at', '>=', $year_start)->where('status', '=', 'Expirado')
+        ->get();
+        $total_expirado = $ord_expirado->count();
+
+         $ord_cancelado = Order::where('created_at', '<=', $year_end)
+        ->where('created_at', '>=', $year_start)->where('status', '=', 'Cancelado')
+        ->get();
+        $total_cancelado = $ord_cancelado->count();
+
         return view('wecommerce::back.index')
         ->with('product', $product)
         ->with('payment', $payment)
@@ -313,7 +340,12 @@ class DashboardController extends Controller
         ->with('pre_sab', $pre_sab)
         ->with('pre_dom', $pre_dom)
         ->with('max', $max)
-        ->with('total_stock', $total_stock);
+        ->with('total_stock', $total_stock)
+        ->with('total_entregado', $total_entregado)
+        ->with('total_enviado', $total_enviado)
+        ->with('total_pagado', $total_pagado)
+        ->with('total_expirado', $total_expirado)
+        ->with('total_cancelado', $total_cancelado);
     }
 
     public function configuration () 

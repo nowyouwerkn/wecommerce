@@ -1,5 +1,56 @@
 @extends('wecommerce::back.layouts.main')
 
+<style type="text/css">
+  .btn-pagado {
+        color: #fff;
+        background-color: #10b759;
+        border-color: #10b759;
+        padding: 10px;
+    }
+
+    .btn-empaquetado {
+        color: #1c273c;
+        background-color: #ffc107;
+        border-color: #ffc107;
+        padding: 10px;
+    }
+
+    .btn-pendiente {
+        color: #fff;
+        background-color: #3b4863;
+        border-color: #3b4863;
+        padding: 10px;
+    }
+
+    .btn-enviado {
+        color: #fff;
+        background-color: #00b8d4;
+        border-color: #00b8d4;
+        padding: 10px;
+    }
+
+    .btn-entregado {
+        color: #fff;
+        background-color: #7987a1;
+        border-color: #7987a1;
+        padding: 10px;
+    }
+
+    .btn-cancelado {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+        padding: 10px;
+    }
+
+    .btn-expirado {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+        padding: 10px;
+    }
+</style>
+
 @section('title')
     <div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">
         <div>
@@ -236,6 +287,64 @@
 
             <div class="card-footer bd-t-0 pd-t-0">
                 <a href="{{ route('stocks.index') }}" class="btn btn-sm btn-block btn-outline-primary btn-uppercase tx-spacing-1">Ir a Inventario</a>
+            </div>
+      </div>
+    </div>
+</div>
+<br>
+<div class="row row-xs">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mg-b-0">Status de ordenes</h6>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6">
+                   <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Entregado</p>
+                </div>
+                <div class="col-6">
+                   <strong class="btn-entregado">{{$total_entregado}}</strong> 
+                </div>
+                <div class="col-10"><hr></div>
+                  <div class="col-6">
+                   <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Enviado</p>
+                </div>
+                <div class="col-6">
+                   <strong class="btn-enviado">{{$total_enviado}}</strong> 
+                </div>
+                  <div class="col-10"><hr></div>
+                  <div class="col-6">
+                   <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Pagado</p>
+                </div>
+                <div class="col-6">
+                   <strong class="btn-pagado">{{$total_pagado}}</strong>
+                </div>
+                  <div class="col-10"><hr></div>
+                <div class="col-6">
+                         <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">btn-expirado</p>
+                </div>
+                <div class="col-6">
+                    <strong class="btn-expirado">{{$total_expirado}}</strong> 
+                </div>
+                <div class="col-10"><hr></div>
+                <div class="col-6">
+                         <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Cancelado</p>
+                </div>
+                <div class="col-6">
+                        <strong class="btn-cancelado">{{$total_cancelado}}</strong> 
+                </div>
+              </div>
+               
+                
+          
+                
+                
+            </div>
+
+            <div class="card-footer bd-t-0 pd-t-0">
+                <a href="{{ route('orders.index') }}" class="btn btn-sm btn-block btn-outline-primary btn-uppercase tx-spacing-1">Ir a ordenes</a>
             </div>
       </div>
     </div>
