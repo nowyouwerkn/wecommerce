@@ -67,16 +67,16 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                 <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Banners</li>
+                <li class="breadcrumb-item active" aria-current="page">Popups</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Banners</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Popups</h4>
         </div>
     </div>
 @endsection
 
 @section('content')
-<form method="POST" action="{{ route('banners.update', $banner->id) }}" enctype="multipart/form-data">
+<form method="POST" action="{{ route('popups.update', $popup->id) }}" enctype="multipart/form-data">
     {{ csrf_field() }}
     {{ method_field('PUT') }}
     <div class="row">
@@ -89,47 +89,75 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="title">Titulo</label>
-                            <input type="text" class="form-control" id="title" name="title" value="{{ $banner->title }}" required="" />
+                            <input type="text" class="form-control" id="title" name="title" value="{{ $popup->title }}" required="" />
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="subtitle">Subtítulo</label>
-                            <input type="text" class="form-control" id="subtitle" name="subtitle" value="{{ $banner->subtitle }}" required="" />
+                            <input type="text" class="form-control" id="subtitle" name="subtitle" value="{{ $popup->subtitle }}" required="" />
                         </div>
+
+                         <div class="form-group col-md-12">
+                            <label>Texto <span class="text-info">(Opcional)</span></label>
+                            <textarea class="form-control" id="body_text" name="text"></textarea>
+                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-6">
-                            <label for="text_button">Texto en el boton</label>
-                            <input type="text" class="form-control" id="text_button" name="text_button" value="{{ $banner->text_button }}" required="" />
+                        <div class="col-md-6">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" checked="true" class="custom-control-input" id="show_on_enter" name="show_on_enter" value="1">
+                                <label class="custom-control-label" for="show_on_enter">Mostrar al cargar la página</label>
+                            </div>
                         </div>
 
-                        <div class="form-group col-md-6">
-                            <label for="link">URL del boton</label>
-                            <input type="url" class="form-control" id="link" name="link" value="{{ $banner->link }}" required="" />
+                        <div class="col-md-6">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="show_on_exit" name="show_on_exit" value="1">
+                                <label class="custom-control-label" for="show_on_exit">Mostrar al salir de la página</label>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="row">
+                    <hr>
+                        <div class="row">
                         <!--
                         <div class="form-group col-md-6">
                             <label for="hex">Color</label>
-                            <input type="color" class="form-control" id="hex" name="hex" value="{{ old('hex') }}" required="" />
+                            <input type="color" class="form-control" id="hex" name="hex" value="{{ old('hex') ?? 'red' }}" required="" />
                         </div>
                         -->
 
-                        <div class="form-group col-md-12">
-                            <label for="image">Imagen de banner</label>
+                    <div class="form-group col-md-12">
+                            <label for="image">Imagen de popup</label>
                             <input type="text" class="form-control" placeholder="Browse.." readonly="" />
                             <input type="file" id="image" name="image" onchange="loadFile(event)" />
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <div class="custom-control custom-checkbox mb-3">
+                                <input type="checkbox" checked="true" class="custom-control-input" id="has_button" name="has_button" value="1">
+                                <label class="custom-control-label" for="has_button">Mostrar Botón</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="text_button">Texto en el botón <span class="text-info">(Opcional)</span></label>
+                            <input type="text" class="form-control" id="text_button" name="text_button" value="{{ old('text_button') }}" />
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="link">URL del botón <span class="text-info">(Opcional)</span></label>
+                            <input type="url" class="form-control" id="link" name="link" value="{{ old('link') }}" />
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="text-right mt-4 mb-5">
-                <a href="{{ route('banners.index') }}" class="btn btn-default btn-lg">Cancelar</a>
-                <button type="submit" class="btn btn-primary btn-lg">Guardar Nuevo Banner</button>
+                <a href="{{ route('popups.index') }}" class="btn btn-default btn-lg">Cancelar</a>
+                <button type="submit" class="btn btn-primary btn-lg">Actualizar Popup</button>
             </div>
         </div>
 
@@ -140,13 +168,13 @@
                     <h4>Vista Previa</h4>
                     <hr>
                     <div class="d-flex">
-                        <div class="card-banner d-flex justify-content-center align-items-center" id="hex_" style="background: {{ $banner->hex }}">
+                        <div class="card-banner d-flex justify-content-center align-items-center" id="hex_" style="background: {{ $popup->hex }}">
                             <div class="card-banner-content">
-                                <h5 id="title_">{{ $banner->title }}</h5>
-                                <p id="subtitle_">{{ $banner->subtitle}}</p>
-                                <a href="#" class="btn btn-light rounded" id="text_button_">{{ $banner->text_button }}</a>
+                                <h5 id="title_">{{ $popup->title }}</h5>
+                                <p id="subtitle_">{{ $popup->subtitle}}</p>
+                                <a href="#" class="btn btn-light rounded" id="text_button_">{{ $popup->text_button }}</a>
                             </div>
-                            <img src="{{ asset('img/banners/' . $banner->image ) }}" id="output" class="card-banner-image" width="100">
+                            <img src="{{ asset('img/popups/' . $popup->image ) }}" id="output" class="card-banner-image" width="100">
                         </div>
                     </div>
                 </div>
