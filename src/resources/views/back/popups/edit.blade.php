@@ -137,7 +137,11 @@
                     <div class="row mt-3">
                         <div class="col-md-12">
                             <div class="custom-control custom-checkbox mb-3">
+                                @if ($popup->has_button == '1')
                                 <input type="checkbox" checked="true" class="custom-control-input" id="has_button" name="has_button" value="1">
+                                @else
+                                <input type="checkbox" class="custom-control-input" id="has_button" name="has_button" value="1">
+                                @endif
                                 <label class="custom-control-label" for="has_button">Mostrar Botón</label>
                             </div>
                         </div>
@@ -172,7 +176,9 @@
                             <div class="card-banner-content">
                                 <h5 id="title_">{{ $popup->title }}</h5>
                                 <p id="subtitle_">{{ $popup->subtitle}}</p>
+                                 @if ($popup->has_button == '1')
                                 <a href="#" class="btn btn-light rounded" id="text_button_">{{ $popup->text_button }}</a>
+                                @endif
                             </div>
                             <img src="{{ asset('img/popups/' . $popup->image ) }}" id="output" class="card-banner-image" width="100">
                         </div>
