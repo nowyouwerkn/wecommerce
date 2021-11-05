@@ -101,24 +101,29 @@ class StoreThemeController extends Controller
         $this -> validate($request, array(
 
         ));
-
-   
-
-
         $config = StoreTheme::find($id);
+             
+        $config->name = $request->name;
+        $config->description = $request->description;
+        $config->version = $request->version;
 
-        $config->google_analytics = $request->google_analytics;
-        $config->facebook_pixel = $request->facebook_pixel;
-        $config->rfc_name = $request->rfc_name;
-        $config->phone = $request->phone;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = Str::slug( $request->name , '-') . '.' . $image->getClientOriginalExtension();
+            $location = public_path('assets/img/themes/' . $filename);
+
+            Image::make($image)->resize(400,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $category->image = $filename;
+        }
  
         $config->save();
 
 
         //Session message
-        Session::flash('success', 'Excelente, tu nueva apariencia de tienda esta activa.');
+        Session::flash('success', 'Excelente, se ha actualizado tu apariencia.');
 
-        return redirect()->route('dashboard');
+        return redirect()->back();
     }
 
     public function destroy($id)
