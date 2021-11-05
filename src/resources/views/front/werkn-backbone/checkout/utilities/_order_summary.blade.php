@@ -179,11 +179,11 @@
 
                     //var subtotal = parseFloat($('#subtotalInput').val());
 
-                    var shipping = msg['free_shipping'];
-                    $('#shippingRate').text(parseFloat(shipping).toFixed(2));
+                       var shipping = msg['free_shipping'];
+                    $('#shippingRate').text(shipping.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 
                     var total_count = subtotal - parseFloat(discount) + parseFloat(shipping);
-                    var total = parseFloat(total_count).toFixed(2);
+                     var total = total_count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     $('#totalPayment').text(total);
 
                     /* Calculate Tax */
