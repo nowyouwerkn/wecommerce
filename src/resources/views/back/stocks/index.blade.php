@@ -105,6 +105,7 @@
                                 <th>Producto</th>
                                 <th>Precio</th>
                                 <th>Disponible</th>
+                                <th>Total de valor</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -162,6 +163,9 @@
                                 <td>
                                     <input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $product->stock }}" id="productStockVariant{{ $product->id }}" style="width:80px;">
                                 </td>
+                                    <td>
+                                      {{$product->stock * $product->price}}
+                                    </td>
                                 <td>
                                     <button id="productUpdateForm{{ $product->id }}" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
                                         <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
@@ -253,6 +257,9 @@
 
                                         <td>
                                             <input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $variant->stock }}" id="stockVariant{{ $variant->id }}" style="width:80px;">
+                                        </td>
+                                        <td>
+                                            {{$variant->stock * $variant->price}}
                                         </td>
                                         <td>
                                             <button id="updateForm{{ $variant->id }}" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
