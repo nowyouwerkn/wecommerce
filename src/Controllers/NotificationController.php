@@ -36,7 +36,7 @@ class NotificationController extends Controller
 
     public function all()
     {
-        $notifications = Notification::paginate(50);
+        $notifications = Notification::orderBy('created_at', 'desc')->paginate(50);
 
         return view('wecommerce::back.notifications.all', compact('notifications'));
     }

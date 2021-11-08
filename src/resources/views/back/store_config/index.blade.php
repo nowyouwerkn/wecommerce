@@ -153,9 +153,9 @@
                 <h6 class="text-uppercase">Token de Acceso</h6>
 
                 <div class="d-flex">
-                    <input type="text" class="form-control" style="width: 30%; margin-right: 15px;" name="facebook_pixel" placeholder="Identificador de pixel " value="{{ $config->facebook_pixel }}">
+                    <input type="text" maxlength="40" class="form-control" style="width: 30%; margin-right: 15px;" name="facebook_pixel" placeholder="Identificador de pixel " value="{{ $config->facebook_pixel }}">
 
-                    <input type="text" class="form-control" style="width: 70%;" name="facebook_access_token" placeholder="Token de Acceso" value="{{ $config->facebook_access_token }}">
+                    <input type="text" maxlength="220" class="form-control" style="width: 70%;" name="facebook_access_token" placeholder="Token de Acceso" value="{{ $config->facebook_access_token }}">
 
                     <button class="btn btn-success btn-icon ml-3" type="submit"><i class="fas fa-save"></i></button>
                 </div>

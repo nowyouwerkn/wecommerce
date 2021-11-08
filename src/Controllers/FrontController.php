@@ -205,8 +205,16 @@ class FrontController extends Controller
 
         $products_selected = Product::with('category')->where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->inRandomOrder()->take(6)->get();
 
-        $next_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
-        $last_product = Product::inRandomOrder()->where('slug', '!=' , $product->slug)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
+
+        $next_product = Product::where('id', '>' , $product->id)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
+        if ($next_product == null) {
+             $next_product = Product::where('id', '<' , $product->id)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
+        }
+
+        $last_product = Product::where('id', '<' , $product->id)->orderBy('id','desc')->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
+        if ($last_product == null) {
+              $last_product = Product::where('id', '>' , $product->id)->orderBy('id','desc')->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
+        }
 
         $store_config = $this->store_config;
 
@@ -416,7 +424,6 @@ class FrontController extends Controller
         $card_payment = PaymentMethod::where('supplier', '!=','Paypal')->where('type', 'card')->where('is_active', true)->first();
         $cash_payment = PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
         $paypal_payment = PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
-
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $store_shipping = ShipmentMethod::where('is_active', true)->first();
 
@@ -569,7 +576,7 @@ class FrontController extends Controller
         $tax = ($cart->totalPrice) * ($tax_rate);
         $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
         $total = ($subtotal + $shipping);
-
+      
         $store_config = $this->store_config;
         $legals = LegalText::all();
 

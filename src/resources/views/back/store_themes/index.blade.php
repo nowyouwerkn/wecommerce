@@ -69,8 +69,13 @@
                             <img src="{{ asset('assets/img/themes/' . $theme->image) }}" class="card-img-top" alt="{{  $theme->name }}">
                         @endif
                         <div class="card-body">
-                            <h6 class="card-title">{{ $theme->name }}</h6>
-                            <p class="card-text">{{ $theme->description }}</p>                            
+                            <h6 class="card-title">{{ $theme->name }} <strong>{{ $theme->version}}</strong></h6>
+                            <p class="card-text">{{ $theme->description }}</p> 
+                            <div class="d-flex justify-content-around">
+                                <a href="{{ route('themes.status', $theme->id) }}" class=" btn btn-info btn-sm mr-2 px-2" data-toggle="tooltip" data-original-title="Cambiar Estado"><i class="fas fa-sync"></i></a>   
+                                <a href="javascript:void(0)" data-toggle="modal" data-target="#modalEdit{{$theme->id}}" class="btn btn-success btn-sm mr-2 px-2">Edit</a>        
+                            </div>
+                                       
                         </div>
                     </div>
                 </div>
@@ -130,4 +135,53 @@
         </div>
     </div><!-- modal-dialog -->
 </div><!-- modal -->
+ @foreach($themes as $theme)
+<div id="modalEdit{{$theme->id}}" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear nuevo Elemento</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+             <form method="POST" action="{{ route('themes.update', $theme->id) }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+            {{ method_field('PUT') }}
+                <div class="modal-body pd-25">
+                    <div class="row">
+                        <div class="form-group col-md-6 mt-2">
+                            <label>Nombre <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="name" value="{{$theme->name}}">
+                        </div>
+
+                        <div class="form-group col-md-6 mt-2">
+                            <label>Versión <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" placeholder="" name="version" value="{{$theme->version}}">
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label>Imágen <span class="text-info">(Opcional)</span></label>
+                        <input type="file" class="form-control" id="image" name="image" />
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label>Descripción <span class="text-info">(Opcional)</span></label>
+                        <textarea class="form-control" name="description">{{ $theme->description }} </textarea>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <p class="mb-0">Al guardar la información de esta apariencia se activará automáticamente. Si tienes otra apariencia activa en tu plataforma se desactivará.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar y Activar</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+@endforeach
 @endsection

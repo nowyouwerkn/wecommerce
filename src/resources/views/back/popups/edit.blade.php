@@ -57,6 +57,7 @@
     .card-banner .btn{
         color: #fff;
     }
+
 </style>
 @endsection
 
@@ -66,19 +67,20 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                 <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Pop-ups</li>
+                <li class="breadcrumb-item active" aria-current="page">Popups</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Pop-ups</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Popups</h4>
         </div>
     </div>
 @endsection
 
 @section('content')
-<form method="POST" action="{{ route('popups.store') }}" enctype="multipart/form-data">
+<form method="POST" action="{{ route('popups.update', $popup->id) }}" enctype="multipart/form-data">
     {{ csrf_field() }}
+    {{ method_field('PUT') }}
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
                     <h4>Información General</h4>
@@ -86,23 +88,23 @@
                     
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="title">Título <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" required="" />
+                            <label for="title">Titulo</label>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ $popup->title }}" required="" />
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="subtitle">Subtítulo <span class="text-info">(Opcional)</span></label>
-                            <input type="text" class="form-control" id="subtitle" name="subtitle" value="{{ old('subtitle') }}" />
+                            <label for="subtitle">Subtítulo</label>
+                            <input type="text" class="form-control" id="subtitle" name="subtitle" value="{{ $popup->subtitle }}" required="" />
                         </div>
 
-                        <div class="form-group col-md-12">
-                        	<label>Texto <span class="text-info">(Opcional)</span></label>
-                        	<textarea class="form-control" id="body_text" name="text"></textarea>
-                        </div>
+                         <div class="form-group col-md-12">
+                            <label>Texto <span class="text-info">(Opcional)</span></label>
+                            <textarea class="form-control" id="body_text" name="text"></textarea>
+                         </div>
                     </div>
 
                     <div class="row">
-                    	<div class="col-md-6">
+                        <div class="col-md-6">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" checked="true" class="custom-control-input" id="show_on_enter" name="show_on_enter" value="1">
                                 <label class="custom-control-label" for="show_on_enter">Mostrar al cargar la página</label>
@@ -116,31 +118,33 @@
                             </div>
                         </div>
                     </div>
-
-     
                     <hr>
-
-                    <div class="row">
-                    	<!--
+                        <div class="row">
+                        <!--
                         <div class="form-group col-md-6">
                             <label for="hex">Color</label>
                             <input type="color" class="form-control" id="hex" name="hex" value="{{ old('hex') ?? 'red' }}" required="" />
                         </div>
-						-->
+                        -->
 
-                        <div class="form-group col-md-12">
-                            <label for="image">Imagen del popup <span class="text-success">Recomendado</span></label>
-                            <input type="file" id="image" class="form-control"  name="image" />
+                    <div class="form-group col-md-12">
+                            <label for="image">Imagen de popup</label>
+                            <input type="text" class="form-control" placeholder="Browse.." readonly="" />
+                            <input type="file" id="image" name="image" onchange="loadFile(event)" />
                         </div>
                     </div>
 
                     <div class="row mt-3">
-                    	<div class="col-md-12">
-                    		<div class="custom-control custom-checkbox mb-3">
+                        <div class="col-md-12">
+                            <div class="custom-control custom-checkbox mb-3">
+                                @if ($popup->has_button == '1')
+                                <input type="checkbox" checked="true" class="custom-control-input" id="has_button" name="has_button" value="1">
+                                @else
                                 <input type="checkbox" class="custom-control-input" id="has_button" name="has_button" value="1">
+                                @endif
                                 <label class="custom-control-label" for="has_button">Mostrar Botón</label>
                             </div>
-                    	</div>
+                        </div>
 
                         <div class="form-group col-md-6">
                             <label for="text_button">Texto en el botón <span class="text-info">(Opcional)</span></label>
@@ -152,31 +156,31 @@
                             <input type="url" class="form-control" id="link" name="link" value="{{ old('link') }}" />
                         </div>
                     </div>
-
-
                 </div>
             </div>
 
             <div class="text-right mt-4 mb-5">
                 <a href="{{ route('popups.index') }}" class="btn btn-default btn-lg">Cancelar</a>
-                <button type="submit" class="btn btn-primary btn-lg">Guardar Nuevo Banner</button>
+                <button type="submit" class="btn btn-primary btn-lg">Actualizar Popup</button>
             </div>
         </div>
 
         <!-- Preview -->
-        <div class="col-md-5">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
                     <h4>Vista Previa</h4>
                     <hr>
                     <div class="d-flex">
-                        <div class="card-banner d-flex justify-content-center align-items-center" id="hex_">
+                        <div class="card-banner d-flex justify-content-center align-items-center" id="hex_" style="background: {{ $popup->hex }}">
                             <div class="card-banner-content">
-                                <h5 id="title_">Título</h5>
-                                <p id="subtitle_">Subtítulo</p>
-                                <a href="#" class="btn btn-light rounded" id="text_button_">Texto del botón</a>
+                                <h5 id="title_">{{ $popup->title }}</h5>
+                                <p id="subtitle_">{{ $popup->subtitle}}</p>
+                                 @if ($popup->has_button == '1')
+                                <a href="#" class="btn btn-light rounded" id="text_button_">{{ $popup->text_button }}</a>
+                                @endif
                             </div>
-                            <img class="card-banner-image" id="output"/>
+                            <img src="{{ asset('img/popups/' . $popup->image ) }}" id="output" class="card-banner-image" width="100">
                         </div>
                     </div>
                 </div>
@@ -201,6 +205,12 @@
     $("#text_button").bind("keyup keydown change", function(){
         $("#text_button_").html($("#text_button").val());
     });
+
+    /*
+    $("#hex").bind("keyup keydown change", function(){
+        $("#hex_").css('background', $("#hex").val());
+    });
+    */
 
     var loadFile = function(event) {
         var reader = new FileReader();

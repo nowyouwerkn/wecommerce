@@ -222,7 +222,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function(){
         'as' => 'general.config',
     ]);
 
-    Route::resource('themes', Nowyouwerkn\WeCommerce\Controllers\StoreThemeController::class); 
+    Route::resource('themes', Nowyouwerkn\WeCommerce\Controllers\StoreThemeController::class);
+    Route::get('/themes/{id}/cambiar-estado', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StoreThemeController@changeStatus',
+        'as' => 'themes.status',
+    ]);  
 
     Route::post('store-logo',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\IntegrationController@storeLogo',

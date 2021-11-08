@@ -63,9 +63,10 @@
                                     $variant = $product['variant'];
                                 @endphp
                                 <tr>
-                                    <td class="product-thumbnail"><a href="{{ route('catalog.all') }}"><img src="{{ asset('img/products/' . $item_img ) }}" alt=""></a></td>
+                                    <td class="product-thumbnail"><a href="{{ route('detail', [$product['item']['category']['slug'], $product['item']['slug']]) }}">
+                                        <img src="{{ asset('img/products/' . $item_img ) }}" alt=""></a></td>
                                     <td class="product-name">
-                                        <h4><a href="{{ route('catalog.all') }}">{{ $product['item']['name'] }}</a></h4>
+                                        <h4><a href="{{ route('detail', [$product['item']['category']['slug'], $product['item']['slug']]) }}">{{ $product['item']['name'] }}</a></h4>
                                         <p class="mb-2">Talla: {{ $variant }}</p>
                                     </td>
                                     @if($product['item']['has_discount'] == true)
@@ -82,7 +83,7 @@
                                     </td>
                                     <td class="product-subtotal"><span>$ {{ number_format($product['price'], 2) }} </span></td>
 
-                                    <td class="product-delete"><a href="{{ route( 'cart.delete', ['id' => $product['item']['id'], 'variant' => $variant ] ) }}"><i class="far fa-trash-alt"></i></a></td>
+                                    <td class="product-delete"><a href="{{ route( 'cart.delete', ['id' => $product['item']['id'], 'variant' => $variant ] ) }}"><i class="far fa-trash-alt">borrar</i></a></td>
                                 </tr>
                             @endforeach
                             </tbody>
