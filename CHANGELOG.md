@@ -2,6 +2,13 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.4 - 2021-11-09
+
+### Agregado
+- Ahora es posible agregar MercadoPago como nueva opción de pago en el checkout.
+- Modificaciones generales en varios modulos del sistema.
+- Nuevo indicador de estado de ordenes en la vista general.
+
 ## 1.3.1 - 2021-10-27
 
 ### Agregado

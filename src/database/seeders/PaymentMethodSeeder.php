@@ -43,5 +43,10 @@ class PaymentMethodSeeder extends Seeder
             'type' => 'card',
             'supplier' => 'OpenPay'
         ]);
+
+        PaymentMethod::create([
+            'type' => 'card',
+            'supplier' => 'MercadoPago'
+        ]);
     }
 }

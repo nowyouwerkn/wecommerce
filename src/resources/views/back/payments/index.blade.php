@@ -57,24 +57,43 @@
                 </ul>
 
                 <li>Paypal</li>
-                <li>MercadoPago <span class="badge badge-info">PRÓXIMAMENTE</span></li>
+                <li>MercadoPago</li>
             </ul>
         </div>
         
     </div>
     <div class="col-md-8">
-        <div class="card card-body mb-4 payment-methods">
-            @if($paypal_method->is_active == false)
-            <span class="badge badge-danger">Desactivado</span>
-            @else
-            <span class="badge badge-success">Activado</span>
-            @endif
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card card-body payment-methods h-100">
+                    @if($paypal_method->is_active == false)
+                    <span class="badge badge-danger">Desactivado</span>
+                    @else
+                    <span class="badge badge-success">Activado</span>
+                    @endif
 
-            <img src="{{ asset('assets/img/brands/paypal.png') }}" width="120" style="margin: 10px 0px;">
-            <h4>Express Checkout</h4>
-            <p class="mb-4">Un botón que les permite a los clientes utilizar PayPal directamente desde tu pantalla de pago.</p>
-            <a href="" data-toggle="modal" data-target="#modalCreatePaypal" class="btn btn-outline-primary btn-sm">Configurar Paypal Checkout</a>
+                    <img src="{{ asset('assets/img/brands/paypal.png') }}" width="120" style="margin: 10px 0px;">
+                    <h4>Express Checkout</h4>
+                    <p class="mb-4">Un botón que les permite a los clientes utilizar PayPal directamente desde tu pantalla de pago.</p>
+                    <a href="" data-toggle="modal" data-target="#modalCreatePaypal" class="btn btn-outline-primary btn-sm">Configurar Paypal Checkout</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-body payment-methods h-100">
+                    @if($mercadopago_method->is_active == false)
+                    <span class="badge badge-danger">Desactivado</span>
+                    @else
+                    <span class="badge badge-success">Activado</span>
+                    @endif
+
+                    <img src="{{ asset('assets/img/brands/mercado-pago.png') }}" width="120" style="margin: 10px 0px;">
+                    <h4>MercadoPago SDK</h4>
+                    <p class="mb-4">Un botón que les permite a los clientes pagar por medio de MercadoPago.</p>
+                    <a href="" data-toggle="modal" data-target="#modalCreateMercadoPago" class="btn btn-outline-primary btn-sm">Configurar MercadoPago</a>
+                </div>
+            </div>
         </div>
+        
 
         <div class="card card-body mb-4">
             <h4>Tarjetas de Crédito y Débito</h4>
@@ -107,7 +126,6 @@
                         <span class="badge badge-success">Activado</span>
                         @endif
                         <img src="{{ asset('assets/img/brands/stripe.png') }}" width="80" style="margin-bottom: 10px;">
-
                         <p>Comisión: 3,6 % + 3 MXN por cargo con tarjeta efectuado con éxito</p>
 
                         
@@ -124,10 +142,8 @@
                         <span class="badge badge-success">Activado</span>
                         @endif
                         <img src="{{ asset('assets/img/brands/openpay.png') }}" width="110" style="margin-bottom: 20px;">
-
                         <p>Comisión: 2.9% + $2.5 MXN por cargo con tarjeta efectuado con éxito</p>
 
-                        
                         <a href="" data-toggle="modal" data-target="#modalCreateOpenPay" class="btn btn-outline-secondary btn-sm">Configurar OpenPay</a>
                         <a href="https://www.openpay.mx" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
                     </div>
@@ -153,7 +169,6 @@
 
                         <p class="mt-2">Comisión: 3.9% + IVA Por transacción exitosa. Tienda OXXO cobrará una comisión adicional de $13.00 pesos en cajas.</p>
 
-                        
                         <a href="" data-toggle="modal" data-target="#modalCreateOxxoConekta" class="btn btn-outline-secondary btn-sm">Configurar OxxoPay de Conekta</a>
                         <a href="http://www.conekta.com" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
                     </div>
@@ -194,10 +209,54 @@
                     <div class="alert alert-success">
                         <p class="mb-0">Este método de pago puede funcionar en conjunto con otros métodos de pago con tarjeta. </p>
                     </div>
-
                 </div>
+
                 <div class="modal-footer">
-                    
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<div id="modalCreateMercadoPago" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Conectar con MercadoPago</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form method="POST" action="{{ route('payments.store') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+                <input type="hidden" name="type" value="card">
+                <input type="hidden" name="supplier" value="MercadoPago">
+
+                <div class="modal-body pd-25">
+                    <img src="{{ asset('assets/img/brands/mercado-pago.png') }}" width="250" style="margin: 10px 0px;">
+
+                    <div class="form-group mt-2">
+                        <label>Llave Privada</label>
+                        <input type="text" class="form-control" name="private_key" />
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label>Llave Pública</label>
+                        <input type="text" class="form-control" name="public_key" />
+                    </div>
+
+                    <div class="alert alert-success">
+                        <p class="mb-0">Este método de pago puede funcionar en conjunto con otros métodos de pago con tarjeta.</p>
+                    </div>
+                    <div class="alert alert-info mt-3">
+                        <p class="mb-0">Las integraciones con Paypal y pagos en Efectivo estarán desactivadas para mercado pago.</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar Información</button>
                 </div>
@@ -216,6 +275,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
              <form method="POST" action="{{ route('payments.store') }}" enctype="multipart/form-data">
             {{ csrf_field() }}
                 <input type="hidden" name="type" value="cash">
@@ -237,10 +297,9 @@
                     <div class="alert alert-warning">
                         <p class="mb-0">Al guardar la información de este método de pago se activará automáticamente. Si tienes otro método de pagó se desactivará.</p>
                     </div>
-
                 </div>
+
                 <div class="modal-footer">
-                    
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar Información</button>
                 </div>
@@ -259,6 +318,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
              <form method="POST" action="{{ route('payments.store') }}" enctype="multipart/form-data">
             {{ csrf_field() }}
                 <input type="hidden" name="type" value="card">
@@ -280,10 +340,9 @@
                     <div class="alert alert-warning">
                         <p class="mb-0">Al guardar la información de este método de pago se activará automáticamente. Si tienes otro método de pagó se desactivará.</p>
                     </div>
-
                 </div>
+
                 <div class="modal-footer">
-                    
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar Información</button>
                 </div>
@@ -324,8 +383,8 @@
                         <p class="mb-0">Al guardar la información de este método de pago se activará automáticamente. Si tienes otro método de pagó se desactivará.</p>
                     </div>
                 </div>
+
                 <div class="modal-footer">
-                    
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar Información</button>
                 </div>
@@ -370,8 +429,8 @@
                         <p class="mb-0">Al guardar la información de este método de pago se activará automáticamente. Si tienes otro método de pagó se desactivará.</p>
                     </div>
                 </div>
+
                 <div class="modal-footer">
-                    
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar Información</button>
                 </div>

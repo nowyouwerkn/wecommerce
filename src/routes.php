@@ -359,6 +359,16 @@ Route::get('/paypal/status',[
     'as' => 'paypal.status',
 ]);
 
+Route::post('/mercadopago/procesar-pago',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@mercadoPagoCheckout',
+    'as' => 'mercadopago.checkout',
+]);
+
+Route::get('/mercadopago/status',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@mercadoPagoStatus',
+    'as' => 'mercadopago.status',
+]);
+
 /* Cuopon Validation on Checkout */
 Route::post('/apply-cuopon', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@applyCuopon',
@@ -396,6 +406,16 @@ Route::get('legals/{type}', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@
 Route::get('/compra-exitosa', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@purchaseComplete',
     'as' => 'purchase.complete',
+]);
+
+Route::get('/compra-fallida', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@purchaseFailed',
+    'as' => 'purchase.failed',
+]);
+
+Route::get('/compra-pendiente', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@purchasePending',
+    'as' => 'purchase.pending',
 ]);
 
 // Seguimiento de Compra

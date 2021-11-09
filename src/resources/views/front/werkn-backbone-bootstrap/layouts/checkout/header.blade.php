@@ -37,7 +37,6 @@
 		            	<h5>Compra Segura</h5>
 		            	<p>Sitio Seguro con Encriptación de 256-Bits</p>
 		            </div>
-		            
 				</div>
 	        </div>
 		</div>

@@ -13,11 +13,11 @@
 
         @stack('seo')
 
-		<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('themes/werkn-backbone/img/apple-touch-icon.png') }}">
-		<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('themes/werkn-backbone/img/favicon-32x32.png') }}">
-		<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('themes/werkn-backbone/img/favicon-16x16.png') }}">
-		<link rel="manifest" href="{{ asset('themes/werkn-backbone/img/site.webmanifest') }}">
-		<link rel="mask-icon" href="{{ asset('themes/werkn-backbone/img/safari-pinned-tab.svg') }}" color="#ff5400">
+		<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('themes/werkn-backbone-bootstrap/img/apple-touch-icon.png') }}">
+		<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('themes/werkn-backbone-bootstrap/img/favicon-32x32.png') }}">
+		<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('themes/werkn-backbone-bootstrap/img/favicon-16x16.png') }}">
+		<link rel="manifest" href="{{ asset('themes/werkn-backbone-bootstrap/img/site.webmanifest') }}">
+		<link rel="mask-icon" href="{{ asset('themes/werkn-backbone-bootstrap/img/safari-pinned-tab.svg') }}" color="#ff5400">
 		<meta name="msapplication-TileColor" content="#ff0000">
 		<meta name="theme-color" content="#000000">
 
@@ -31,10 +31,10 @@
     </head>
     <body>
         @if(Auth::check())
-            @include('front.theme.werkn-backbone.layouts.partials._werkn_bar')
+            @include('front.theme.werkn-backbone-bootstrap.layouts.partials._werkn_bar')
         @endif
 
-    	@include('front.theme.werkn-backbone.layouts.checkout.header')
+    	@include('front.theme.werkn-backbone-bootstrap.layouts.checkout.header')
 
     	<main>
     		<div class="loader-standby loader-hidden">
@@ -47,7 +47,8 @@
 			<div class="container">
 				<div class="row">
 					<div class="col">
-						@include('front.theme.werkn-backbone.layouts.partials._messages')
+						@include('front.theme.werkn-backbone-bootstrap.layouts.partials._messages')
+						@include('front.theme.werkn-backbone-bootstrap.layouts.partials._messages_errors')
 					</div>
 				</div>
 			</div>
@@ -55,11 +56,14 @@
     		@yield('content')
     	</main>
 
-    	@include('front.theme.werkn-backbone.layouts.checkout.footer')
+    	@include('front.theme.werkn-backbone-bootstrap.layouts.checkout.footer')
 	
 		<!-- Bootstrap --> 
-		<script src="{{ asset('themes/werkn-backbone/js/vendor/jquery-3.5.0.min.js') }}"></script>       
+		<script src="{{ asset('themes/werkn-backbone-bootstrap/js/vendor/jquery-3.5.0.min.js') }}"></script>       
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+		<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+		<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
         <script type="text/javascript">
         	var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
@@ -71,7 +75,7 @@
 
     	@stack('scripts')
 
-        @include('front.theme.werkn-backbone.layouts.partials._modal_popup')
+        @include('front.theme.werkn-backbone-bootstrap.layouts.partials._modal_popup')
 
         @php
             $integrations = Nowyouwerkn\WeCommerce\Models\Integration::all();
@@ -91,6 +95,7 @@
 	            fbq('track', 'InitiateCheckout');
 	    </script>
 	    @endif
+
 
         <script type="text/javascript">
             $('.contact_action').on('click', function(){

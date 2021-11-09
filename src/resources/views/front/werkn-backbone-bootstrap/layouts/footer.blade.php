@@ -3,6 +3,7 @@
     $card_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', '!=','Paypal')->where('type', 'card')->where('is_active', true)->first();
     $cash_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
     $paypal_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
+    $mercado_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', 'MercadoPago')->where('is_active', true)->first();
 
     $categories = Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get(['name', 'slug']);
 @endphp
@@ -134,6 +135,13 @@
             <div class="col mt-4">
                 <img src="{{ asset('assets/img/brands/paypal.png') }}" style="height: 35px; width: auto !important;">
                 <p class="mb-0 mt-3">Aceptamos pagos por medio de Paypal</p>
+            </div>
+            @endif
+
+            @if(!empty($mercado_payment))
+            <div class="col mt-4">
+                <img src="{{ asset('assets/img/brands/mercado-pago.png') }}" style="height: 30px; margin-bottom: 5px; width: auto !important;">
+                <p>Aceptamos pagos por medio de MercadoPago</p>
             </div>
             @endif
 

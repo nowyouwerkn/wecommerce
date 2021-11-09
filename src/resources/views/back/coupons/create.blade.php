@@ -63,7 +63,7 @@
                     <div class="col-md-6">
                         <div class="form-group mt-2" id="qtyForm" style="display:none;">
                             <label>Valor del descuento <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="qty" name="qty" required="" />
+                            <input type="text" class="form-control" id="qty" value="0" name="qty" required="" />
                         </div>
                     </div>
                 </div>

@@ -86,10 +86,11 @@
         border-color: #ffc107;
     }
 
-    .btn-pendiente {
+    .btn-pendiente,
+    .btn-pago-pendiente {
         color: #fff;
-        background-color: #3b4863;
-        border-color: #3b4863;
+        background-color: #fa983a;
+        border-color: #fa983a;
     }
 
     .btn-enviado {
@@ -114,6 +115,12 @@
         color: #fff;
         background-color: #dc3545;
         border-color: #dc3545;
+    }
+
+    .btn-sin-completar {
+        color: #fff;
+        background-color: #0a3d62;
+        border-color: #0a3d62;
     }
 
     .type-td{
@@ -208,7 +215,7 @@
                     
                         <div class="order-info">
                             @switch($order->status)
-                                @case('Pendiente')
+                                @case('Pago Pendiente')
                                     <i class="fas fa-exclamation mr-1"></i> 
                                     @break
 
@@ -236,6 +243,10 @@
                                     <i class="fas fa-times mr-1"></i> 
                                     @break
 
+                                @case('Sin Completar')
+                                    <i class="fas fa-user-clock"></i>
+                                    @break
+
                                 @default
                                     <i class="fas fa-check mr-1"></i> 
 
@@ -246,8 +257,8 @@
                     </button>
 
                     <div class="dropdown-menu">
-                        @if($order->status == 'Cancelado' || $order->status == 'Expirado')
-                            <p class="mb-0 mt-2 pl-3"><i class="fas fa-times"></i></span> Orden Cancelada</p>
+                        @if($order->status == 'Cancelado' || $order->status == 'Expirado' || $order->status == 'Sin Completar')
+                            <p class="mb-0 mt-2 pl-3"><i class="fas fa-times"></i></span> Orden {{ $order->status }}</p>
                         @else
                             <h6 class="dropdown-header tx-uppercase tx-12 tx-bold tx-inverse">Cambiar Estatus</h6>
                             <a class="

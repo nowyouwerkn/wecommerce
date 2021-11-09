@@ -190,7 +190,7 @@
                       <span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Semana en curso</span>
                     </li>
                     <li class="list-inline-item d-flex align-items-center mg-l-5">
-                      <span class="d-block wd-10 ht-10 bg-df-2 rounded mg-r-5"></span>
+                      <span class="d-block wd-10 ht-10 bg-gray-600 rounded mg-r-5"></span>
                       <span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Semana Anterior</span>
                     </li>
                   </ul>
@@ -358,7 +358,7 @@
     var ctxData1 = [{{ $lun . ',' . $mar . ',' . $mie . ',' . $jue . ',' . $vie . ',' . $sab . ',' . $dom }}];
     var ctxData2 = [{{ $pre_lun . ',' . $pre_mar . ',' . $pre_mie . ',' . $pre_jue . ',' . $pre_vie . ',' . $pre_sab . ',' . $pre_dom }}];
     var ctxColor1 = '#0168fa';
-    var ctxColor2 = '#69b2f8';
+    var ctxColor2 = '#7987a1';
 
     // Line chart
       var ctx4 = document.getElementById('salesChart');

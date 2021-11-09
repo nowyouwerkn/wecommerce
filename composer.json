@@ -45,6 +45,7 @@
         "stevebauman/location": "^6.1",
         "stripe/stripe-php": "^7.77",
         "intervention/image": "^2.6",
+        "mercadopago/dx-php": "dev-master",
         "maatwebsite/excel": "^3.1"
     },
     "require-dev": {

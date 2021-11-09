@@ -1,4 +1,4 @@
-@extends('front.theme.werkn-backbone.layouts.checkout.main')
+@extends('front.theme.werkn-backbone-bootstrap.layouts.checkout.main')
 
 @push('seo')
 
@@ -9,6 +9,7 @@
 @endpush
 
 @section('content')
+
 <!-- Checkout -->
 <section class="mt-5 mb-5 container we-co--checkout-container">
     <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" data-parsley-validate="">
@@ -37,26 +38,26 @@
                         <p class="we-co--guest-notice mb-0"><ion-icon name="warning"></ion-icon> ¿Ya tienes cuenta? <a href="{{ route('login') }}">Inicia Sesión aquí</a></p>
                         @endguest
                     </div>
-                    @include('front.theme.werkn-backbone.checkout.utilities._order_contact')
+                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_contact')
 
                     {{-- 
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Método de Envío</h4>
                     </div>
-                    @include('front.theme.werkn-backbone.checkout.utilities._order_shipping')
+                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
                     --}}
 
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Información de Envío</h4>
                     </div>
-                    @include('front.theme.werkn-backbone.checkout.utilities._order_address')
+                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')
 
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>
 
                         <p class="mb-0"><ion-icon name="lock-closed"></ion-icon> Sitio seguro con encriptación de 256-bits</p>
                     </div>
-                    @include('front.theme.werkn-backbone.checkout.utilities._order_payment')
+                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_payment')
                 </div>
             </div>
 
@@ -67,7 +68,7 @@
                         <h4>Resúmen de Pedido</h4>
                     </div>
 
-                    @include('front.theme.werkn-backbone.checkout.utilities._order_summary')
+                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_summary')
                 </div>
             </div>
         </div>
@@ -107,7 +108,17 @@
 
                     break;
 
-                    case "efectivo":
+                case "mercadopago":
+                    console.log('Pago con MercadoPago');
+                    $('#cardInfo').fadeOut();
+                    $('#cardInfo').find('input').prop('disabled', true);
+                    $('input[name=method]').val('Pago con MercadoPago');
+                    
+                    $('#paymentMethod').text('MercadoPago');
+
+                    break;
+
+                case "efectivo":
                     console.log('Pago con Oxxo');
                     $('#cardInfo').fadeOut();
                     $('#cardInfo').find('input').prop('disabled', true);
@@ -368,10 +379,33 @@
             $('.loader-standby').removeClass('loader-hidden');
             //console.log(response.id);
 
-            $form.get(0).submit();
+            setTimeout(function() { 
+                $form.get(0).submit();
+            }, 2000);
         }
     });
 </script>  
+@endif
+
+@if(!empty($mercado_payment))
+<script type="text/javascript">
+    $form.submit(function(event){
+        if($('input[name=method]').val() === 'Pago con MercadoPago') {
+            $('#checkout-form').append($('<input type="hidden" name="mp_preference" />').val('{{ $preference->sandbox_init_point }}'));
+            $('#checkout-form').append($('<input type="hidden" name="mp_preference_id" />').val('{{ $preference->id }}'));
+
+            // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
+            $form.find('button').prop('disabled', true);
+            $('.loader-standby h2').text('Redireccionándote a MercadoPago...');
+            $('.loader-standby').removeClass('loader-hidden');
+            //console.log(response.id);
+
+            setTimeout(function() { 
+                $form.get(0).submit();
+            }, 2000);
+        }
+    });
+</script> 
 @endif
 
 @if(!empty($cash_payment))
@@ -380,8 +414,6 @@
     <script type="text/javascript">
         $form.submit(function(event){
 
-            
-
             if($('input[name=method]').val() === 'Pago con Oxxo') {
                 // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
                 $form.find('button').prop('disabled', true);
@@ -389,7 +421,9 @@
                 $('.loader-standby').removeClass('loader-hidden');
                 //console.log(response.id);
 
-                $form.get(0).submit();
+                setTimeout(function() { 
+                    $form.get(0).submit();
+                }, 2000);
             }
         });
     </script>  
@@ -400,6 +434,4 @@
     @endif
 @endif
 
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 @endpush

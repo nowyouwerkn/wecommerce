@@ -83,6 +83,10 @@
       letter-spacing: -1px;
     }
 
+    a{
+      color: #f16321;
+    }
+
     .btn-link{
         padding: 0px 4px !important;
     }
@@ -92,11 +96,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="image-wrap">
-                        @if(request('collection_status') == 'pending')
-                            <h2>En espera de tu pago</h2>
-                        @else
-                            <h2>Gracias por tu compra</h2>
-                        @endif
+                        <h2>Gracias por tu compra</h2>
                         <img src="{{ asset('img/modal-image.jpg') }}">    
                     </div>
                 </div>
@@ -104,20 +104,11 @@
                     <div class="special-text">
                         <h4>Siguientes pasos...</h4>
 
-                        @if(request('collection_status') == 'pending')
-                            <p class="alert alert-info text-left" style="display: inline-block;"><ion-icon name="alert-circle-outline" class="mr-1"></ion-icon> <strong>Estamos en espera de la confirmación de pago</strong>. Solicitaste la compra en efectivo. Ve a tu tienda favorita con la referencia que creó <strong>MercadoPago</strong> para ti y se actualizará tu órden de forma automática.</p>
-                        @endif
-
                         @guest
-                            <p class="alert alert-warning text-left" style="display: inline-block;"><ion-icon name="alert-circle-outline" class="mr-1"></ion-icon> Compraste esto como invitado pero se creó una cuenta para ti para que puedas dar seguimiento a tu órden. Puedes acceder usando tu correo con el que hiciste tu compra y la contraseña: "<strong>wkshop</strong>"</p>
+                        <p class="alert alert-warning text-left" style="display: inline-block;"><ion-icon name="alert-circle-outline" class="mr-1"></ion-icon> Compraste esto como invitado pero se creó una cuenta para ti para que puedas dar seguimiento a tu órden. Puedes acceder usando tu correo con el que hiciste tu compra y la contraseña: "<strong>wkshop</strong>"</p>
                         @endguest
 
-                        @if(request('collection_status') == 'pending')
-                            <p>Te enviaremos un correo electrónico con los detalles de tu orden cuando se confirme tu compra. Esa información tambien puedes verificarla directamente en nuestro sitio dirigiendote a tus <a href="{{ route('shopping') }}">ordenes</a> en tu <a href="{{ route('profile') }}">perfil.</a></p>
-                        @else
-                            <p>Te enviamos un correo electrónico con los detalles de tu orden. Esa información tambien puedes verificarla directamente en nuestro sitio dirigiendote a tus <a href="{{ route('shopping') }}">ordenes</a> en tu <a href="{{ route('profile') }}">perfil.</a></p>
-                        @endif
-
+                        <p>Te enviamos un correo electrónico con los detalles de tu orden. Esa información tambien puedes verificarla directamente en nuestro sitio dirigiendote a tus <a href="{{ route('shopping') }}">ordenes</a> en tu <a href="{{ route('profile') }}">perfil.</a></p>
                         <hr>
                         @php
                             $legals = Nowyouwerkn\WeCommerce\Models\LegalText::all();
@@ -159,6 +150,7 @@
                 </div>
             </div>
         </div>
+
     </main>
 @endsection
 
@@ -167,12 +159,5 @@
 @endsection
 
 @push('pixel-events')
-    @if($store_config->has_pixel() == NULL)
-        <script type="text/javascript">
-            fbq('track', 'Purchase', {
-                currency: 'MXN',
-                value: {{ $purchase_value ?? '0.00' }}
-            });
-        </script>
-    @endif
+
 @endpush

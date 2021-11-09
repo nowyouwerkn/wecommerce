@@ -57,7 +57,10 @@ class CouponController extends Controller
         $coupon->usage_limit_per_code = $request->usage_limit_per_code;
         $coupon->exclude_discounted_items = $request->exclude_discounted_items;
         $coupon->individual_use = $request->individual_use;
-        $coupon->is_free_shipping = $request->is_free_shipping;
+
+        if ($request->type == 'free_shipping') {
+            $coupon->is_free_shipping = true;
+        }
 
         $coupon->start_date = $request->start_date;
         $coupon->end_date = $request->end_date;

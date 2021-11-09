@@ -26,14 +26,9 @@
 </div>
 @endif
 
-@if (count($errors) > 0)
+@if(request('preference_id') != NULL && request('payment_id') == NULL)
 <div class="alert alert-danger fade show alert-dismissable alert-fixed">
     <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-    <strong>¡Error!</strong>
-    <ul>
-    @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-    @endforeach
-    </ul>
+    <strong>¡Error!</strong> ¡Lo sentimos! El pago a través de MercadoPago no se pudo realizar. Inténtalo nuevamente o usa otro método de pago. Contacta con nosotros si tienes alguna pregunta.
 </div>
 @endif

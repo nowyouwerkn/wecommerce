@@ -21,6 +21,7 @@ class PaymentMethodController extends Controller
         $stripe_method = PaymentMethod::where('type', 'card')->where('supplier', 'Stripe')->first();
         $openpay_method = PaymentMethod::where('type', 'card')->where('supplier', 'OpenPay')->first();
         $paypal_method = PaymentMethod::where('type', 'card')->where('supplier', 'Paypal')->first();
+        $mercadopago_method = PaymentMethod::where('type', 'card')->where('supplier', 'MercadoPago')->first();
 
         return view('wecommerce::back.payments.index')
         ->with('payments', $payments)
@@ -28,7 +29,8 @@ class PaymentMethodController extends Controller
         ->with('oxxo_pay', $oxxo_pay)
         ->with('stripe_method', $stripe_method)
         ->with('openpay_method', $openpay_method)
-        ->with('paypal_method', $paypal_method);
+        ->with('paypal_method', $paypal_method)
+        ->with('mercadopago_method', $mercadopago_method);
     }
 
     public function create()
@@ -45,16 +47,22 @@ class PaymentMethodController extends Controller
 
         // Desactivar cualquier otro método activo
         if ($request->type == 'card') {
-            $deactivate = PaymentMethod::where('supplier', '!=', 'Paypal')->where('type', 'card')->where('is_active', true)->get();
+            if ($request->supplier == 'MercadoPago') {
+                
+            }else{
+                $deactivate = PaymentMethod::where('supplier', '!=', 'Paypal')->where('type', 'card')->where('is_active', true)->get();
+            }
         }
 
-        if ($request->type == 'cash') {
+        if ($request->type == 'cash') { 
             $deactivate = PaymentMethod::where('type', 'cash')->where('is_active', true)->get();
         }
-        
-        foreach ($deactivate as $dt) {
-            $dt->is_active = false;
-            $dt->save();
+
+        if (!empty($deactivate)) {
+            foreach ($deactivate as $dt) {
+                $dt->is_active = false;
+                $dt->save();
+            }
         }
 
         $payment = PaymentMethod::where('type', $request->type)->where('supplier', $request->supplier)->first();

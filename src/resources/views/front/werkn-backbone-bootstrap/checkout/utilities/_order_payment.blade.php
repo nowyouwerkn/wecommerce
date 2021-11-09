@@ -71,6 +71,21 @@
         </div>
         @endif
 
+        @if(!empty($mercado_payment))
+        <div class="card mb-2">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="paymentRadio" id="paymentRadio_mercadopago" data-option="mercadopago">
+                    <label class="form-check-label" for="paymentRadio_mercadopago">
+                        MercadoPago
+                    </label>
+                </div>
+
+                <img src="{{ asset('assets/img/brands/mercado-pago.png') }}" style="height: 25px; width: auto !important;">
+            </div>
+        </div>
+        @endif
+
         @if(!empty($cash_payment))
         <div class="card mb-2">
             <div class="card-header d-flex align-items-center justify-content-between">

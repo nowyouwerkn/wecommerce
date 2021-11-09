@@ -16,7 +16,7 @@
 	<div class="we-co--reasurrence-links d-flex align-items-center justify-content-between">
         @if(!empty($card_payment))
         <div class="col mt-4">
-            <img src="{{ asset('img/icons/card-info.png') }}" style="height: 35px; width: auto !important;">
+            <img src="{{ asset('img/icons/card-info.png') }}" style="height: 33px; margin-bottom: 5px; width: auto !important;">
             <p>Aceptamos Todas las Tarjetas de Crédito</p>
         </div>
         @endif
@@ -28,9 +28,16 @@
         </div>
         @endif
 
+        @if(!empty($mercado_payment))
+        <div class="col mt-4">
+            <img src="{{ asset('assets/img/brands/mercado-pago.png') }}" style="height: 30px; margin-bottom: 5px; width: auto !important;">
+            <p>Aceptamos pagos por medio de MercadoPago</p>
+        </div>
+        @endif
+
         @if(!empty($cash_payment))
         <div class="col mt-4">
-            <img src="{{ asset('assets/img/brands/oxxopay.png') }}" style="padding-top: 10px; height: 35px; width: auto !important;">
+            <img src="{{ asset('assets/img/brands/oxxopay.png') }}" style="padding-top: 10px; margin-bottom: 5px; height: 35px; width: auto !important;">
             <p>Aceptamos pagos en efectivo en Oxxo</p>
         </div>
         @endif
