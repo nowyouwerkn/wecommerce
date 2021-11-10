@@ -359,16 +359,6 @@ Route::get('/paypal/status',[
     'as' => 'paypal.status',
 ]);
 
-Route::post('/mercadopago/procesar-pago',[
-    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@mercadoPagoCheckout',
-    'as' => 'mercadopago.checkout',
-]);
-
-Route::get('/mercadopago/status',[
-    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@mercadoPagoStatus',
-    'as' => 'mercadopago.status',
-]);
-
 /* Cuopon Validation on Checkout */
 Route::post('/apply-cuopon', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@applyCuopon',

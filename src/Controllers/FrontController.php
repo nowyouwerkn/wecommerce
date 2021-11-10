@@ -735,7 +735,7 @@ class FrontController extends Controller
         }
 
         if ($payment_method->supplier == 'MercadoPago') {
-            MercadoPago\SDK::setAccessToken("TEST-1375239882315873-102722-b360a9dd74104b3f2f1678c210272657-1003831838");
+            MercadoPago\SDK::setAccessToken($payment_method->private_key);
         }
         
         $oldCart = Session::get('cart');
