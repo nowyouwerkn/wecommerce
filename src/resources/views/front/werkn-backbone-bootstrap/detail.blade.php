@@ -144,10 +144,8 @@
                                             <li>
                                                 @if($variant->pivot->stock <= 0)
                                                 <div class="no-stock-variant"><span class="line"></span>{{ $variant->value }}</div>
-                                                 <p class="style-name">Stock variant: {{ variant->pivot->stock }}</p>
                                                 @else
                                                 <a id="variant{{ $variant->id }}" data-value="{{ $variant->value }}" class="" href="javascript:void(0)">{{ $variant->value }}</a>
-                                                 <p class="style-name">Stock variant: {{ variant->pivot->stock }}</p>
                                                 @endif
                                             </li>
                                         @endforeach

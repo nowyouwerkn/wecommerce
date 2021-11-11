@@ -132,6 +132,9 @@
     @endforeach
 </small></p>
 
+<input type="hidden" id="mp_preference" name="mp_preference" value="{{ $preference->init_point }}" />
+<input type="hidden" id="mp_preference_id" name="mp_preference_id" value="{{ $preference->id }}" />
+
 @push('scripts')
 <script type="text/javascript">
     /* Información de Cupón */
@@ -172,6 +175,12 @@
                     $('.cp-success').fadeIn();
                     $('.cp-success').text(msg['mensaje']);
 
+                    // Definiendo Referencia de MercadoPago
+                    var mp_preference = msg['mp_preference'];
+                    var mp_preference_id = msg['mp_preference_id'];
+                    $('#mp_preference').val(mp_preference);
+                    $('#mp_preference_id').val(mp_preference_id);
+
                     /* Calculate Discount */
                     var discount = msg['discount'];
                     $('#discountValue').text(parseFloat(discount).toFixed(2));
@@ -183,7 +192,7 @@
                     $('#shippingRate').text(shipping.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 
                     var total_count = subtotal - parseFloat(discount) + parseFloat(shipping);
-                     var total = total_count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    var total = total_count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     $('#totalPayment').text(total);
 
                     /* Calculate Tax */

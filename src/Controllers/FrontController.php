@@ -1770,16 +1770,62 @@ class FrontController extends Controller
                         $free_shipping = $shipping;
                     }
 
-                    // Guardar el uso del cupon por el usuario
-                    /*
-                    $used = new UserCoupon;
-                    $used->user_id = Auth::user()->id;
-                    $used->coupon_id = $coupon->id;
-                    $used->save();
-                    */
+                    /* Renovar Preferencia de Pago de Mercado Pago */
+                    $mercado_payment = PaymentMethod::where('supplier', 'MercadoPago')->where('is_active', true)->first();
+
+                    if (empty($mercado_payment)) {
+                        $mp_preference = NULL;
+                        $mp_preference_id =  NULL;
+                    }else{
+                        MercadoPago\SDK::setAccessToken($mercado_payment->private_key);
+
+                        // Create a Item to Pay
+                        $item = new MercadoPago\Item();
+                        $item->title = 'Tu compra en linea';
+                        $item->quantity = 1;
+                        $item->unit_price = $subtotal - $discount + $free_shipping;
+
+                        // Create Payer
+                        if (!empty(Auth::user())) {
+                            $payer = new MercadoPago\Payer();
+                            $payer->name = Auth::user()->name; 
+                            $payer->email = Auth::user()->email;  
+                        }
+
+                        // Create Preference
+                        $preference = new MercadoPago\Preference();
+                        $preference->items = array($item);
+                        if (!empty(Auth::user())) {
+                            $preference->payer = $payer;  
+                        }
+
+                        $preference->back_urls = array(
+                            "success" => route('purchase.complete'),
+                            "failure" => route('checkout'),
+                            "pending" => route('purchase.pending')
+                        );
+
+                        $preference->payment_methods = array(
+                            "excluded_payment_methods" => array(
+                            array("id" => "paypal"),
+                            array("id" => "oxxo")
+                          ),
+                          "excluded_payment_types" => array(
+                            array("id" => "ticket", "id" => "atm")
+                          ),
+                        );
+
+                        $preference->auto_return = "approved";
+                        $preference->binary_mode = true;
+
+                        $preference->save();
+
+                        $mp_preference = $preference->init_point;
+                        $mp_preference_id = $preference->id; 
+                    }
 
                     // Regresar Respuesta a la Vista
-                    return response()->json(['mensaje' => 'Aplicado el descuento correctamente a los productos participantes. ¡Disfruta!', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
+                    return response()->json(['mensaje' => 'Aplicado el descuento correctamente a los productos participantes. ¡Disfruta!', 'discount' => $discount, 'free_shipping' => $free_shipping, 'mp_preference_id' => $mp_preference_id, 'mp_preference' => $mp_preference], 200);
                 }else{
                     return response()->json(['mensaje' => 'Este cupón caducó y no puede ser usado.', 'type' => 'exception'], 200);
                 }

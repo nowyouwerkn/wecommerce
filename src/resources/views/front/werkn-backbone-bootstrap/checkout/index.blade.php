@@ -391,8 +391,8 @@
 <script type="text/javascript">
     $form.submit(function(event){
         if($('input[name=method]').val() === 'Pago con MercadoPago') {
-            $('#checkout-form').append($('<input type="hidden" name="mp_preference" />').val('{{ $preference->sandbox_init_point }}'));
-            $('#checkout-form').append($('<input type="hidden" name="mp_preference_id" />').val('{{ $preference->id }}'));
+            //$('#checkout-form').append($('<input type="hidden" name="mp_preference" />').val('{{ $preference->sandbox_init_point }}'));
+            //$('#checkout-form').append($('<input type="hidden" name="mp_preference_id" />').val('{{ $preference->id }}'));
 
             // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
             $form.find('button').prop('disabled', true);
