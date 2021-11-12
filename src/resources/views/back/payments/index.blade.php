@@ -23,6 +23,24 @@
         right: 15px;
         display: flex;
     }
+
+    .sandbox{
+        top:40px !important;
+    }
+
+    .btn-danger {
+        margin-top: 10px;
+    }
+    #sandbox-keys-stripe{
+        display: none;
+    }
+
+    .change-sandbox {
+        color: white !important;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 </style>
 @endsection
 
@@ -71,11 +89,19 @@
                     @else
                     <span class="badge badge-success">Activado</span>
                     @endif
+                    @if($paypal_method->sandbox_mode == false)
+                    <span class="badge badge-danger sandbox">Modo sandbox: Desactivado</span>
+                    @else
+                    <span class="badge badge-success sandbox">Modo sandbox: Activado</span>
+                    @endif
 
                     <img src="{{ asset('assets/img/brands/paypal.png') }}" width="120" style="margin: 10px 0px;">
                     <h4>Express Checkout</h4>
                     <p class="mb-4">Un botón que les permite a los clientes utilizar PayPal directamente desde tu pantalla de pago.</p>
                     <a href="" data-toggle="modal" data-target="#modalCreatePaypal" class="btn btn-outline-primary btn-sm">Configurar Paypal Checkout</a>
+                     @if($paypal_method->is_active == true)
+                        <a href="{{ route('payments.status', $paypal_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                    @endif
                 </div>
             </div>
             <div class="col-md-6">
@@ -85,11 +111,19 @@
                     @else
                     <span class="badge badge-success">Activado</span>
                     @endif
+                    @if($mercadopago_method->sandbox_mode == false)
+                    <span class="badge badge-danger sandbox">Modo sandbox: Desactivado</span>
+                    @else
+                    <span class="badge badge-success sandbox">Modo sandbox: Activado</span>
+                    @endif
 
                     <img src="{{ asset('assets/img/brands/mercado-pago.png') }}" width="120" style="margin: 10px 0px;">
                     <h4>MercadoPago SDK</h4>
                     <p class="mb-4">Un botón que les permite a los clientes pagar por medio de MercadoPago.</p>
                     <a href="" data-toggle="modal" data-target="#modalCreateMercadoPago" class="btn btn-outline-primary btn-sm">Configurar MercadoPago</a>
+                     @if($mercadopago_method->is_active == true)
+                         <a href="{{ route('payments.status', $mercadopago_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                    @endif
                 </div>
             </div>
         </div>
@@ -107,6 +141,11 @@
                         @else
                         <span class="badge badge-success">Activado</span>
                         @endif
+                        @if($conekta_method->sandbox_mode == false)
+                        <span class="badge badge-danger sandbox">Modo sandbox: Desactivado</span>
+                        @else
+                        <span class="badge badge-success sandbox">Modo sandbox: Activado</span>
+                        @endif
                         <img src="{{ asset('assets/img/brands/conekta.png') }}" width="120" style="margin: 10px 0px;">
 
                         <p>Comisión: 2.9% + 2.50 MXN + IVA Por transacción exitosa</p>
@@ -114,6 +153,9 @@
                         
                         <a href="" data-toggle="modal" data-target="#modalCreateConekta" class="btn btn-outline-secondary btn-sm">Configurar Conekta</a>
                         <a href="http://www.conekta.com" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
+                         @if($conekta_method->is_active == true)
+                             <a href="{{ route('payments.status', $conekta_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                        @endif
                     </div>
                     
                 </div>
@@ -125,12 +167,20 @@
                         @else
                         <span class="badge badge-success">Activado</span>
                         @endif
+                        @if($stripe_method->sandbox_mode == false)
+                        <span class="badge badge-danger sandbox">Modo sandbox: Desactivado</span>
+                        @else
+                        <span class="badge badge-success sandbox">Modo sandbox: Activado</span>
+                        @endif
                         <img src="{{ asset('assets/img/brands/stripe.png') }}" width="80" style="margin-bottom: 10px;">
                         <p>Comisión: 3,6 % + 3 MXN por cargo con tarjeta efectuado con éxito</p>
 
                         
                         <a href="" data-toggle="modal" data-target="#modalCreateStripe" class="btn btn-outline-secondary btn-sm">Configurar Stripe</a>
                         <a href="http://www.stripe.com" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
+                        @if($stripe_method->is_active == true)
+                         <a href="{{ route('payments.status', $stripe_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                        @endif
                     </div>
                 </div>
 
@@ -143,9 +193,16 @@
                         @endif
                         <img src="{{ asset('assets/img/brands/openpay.png') }}" width="110" style="margin-bottom: 20px;">
                         <p>Comisión: 2.9% + $2.5 MXN por cargo con tarjeta efectuado con éxito</p>
-
+                        @if($openpay_method->sandbox_mode == false)
+                        <span class="badge badge-danger sandbox">Modo sandbox: Desactivado</span>
+                        @else
+                        <span class="badge badge-success sandbox">Modo sandbox: Activado</span>
+                        @endif
                         <a href="" data-toggle="modal" data-target="#modalCreateOpenPay" class="btn btn-outline-secondary btn-sm">Configurar OpenPay</a>
                         <a href="https://www.openpay.mx" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
+                        @if($paypal_method->is_active == true)
+                            <a href="{{ route('payments.status', $openpay_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                        @endif
                     </div>
                 </div>
             </div>
@@ -165,12 +222,20 @@
                         @else
                         <span class="badge badge-success">Activado</span>
                         @endif
+                        @if($oxxo_pay->sandbox_mode == false)
+                        <span class="badge badge-danger sandbox">Modo sandbox: Desactivado</span>
+                        @else
+                        <span class="badge badge-success sandbox">Modo sandbox: Activado</span>
+                        @endif
                         <img src="{{ asset('assets/img/brands/oxxopay.png') }}" width="120" style="margin: 10px 0px;">
 
                         <p class="mt-2">Comisión: 3.9% + IVA Por transacción exitosa. Tienda OXXO cobrará una comisión adicional de $13.00 pesos en cajas.</p>
 
                         <a href="" data-toggle="modal" data-target="#modalCreateOxxoConekta" class="btn btn-outline-secondary btn-sm">Configurar OxxoPay de Conekta</a>
                         <a href="http://www.conekta.com" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
+                        @if($paypal_method->is_active == true)
+                            <a href="{{ route('payments.status', $oxxo_pay->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                        @endif
                     </div>
                 </div>
             </div>
@@ -192,10 +257,9 @@
             {{ csrf_field() }}
                 <input type="hidden" name="type" value="card">
                 <input type="hidden" name="supplier" value="Paypal">
-
+                <input type="hidden" name="sandbox_mode" value="0">
                 <div class="modal-body pd-25">
                     <img src="{{ asset('assets/img/brands/paypal.png') }}" width="250" style="margin: 10px 0px;">
-
                     <div class="form-group mt-2">
                         <label>Correo de Acceso</label>
                         <input type="text" class="form-control" name="email_access" />
@@ -365,20 +429,35 @@
             {{ csrf_field() }}
                 <input type="hidden" name="type" value="card">
                 <input type="hidden" name="supplier" value="Stripe">
-
+                <input id="sandbox_mode_stripe" type="hidden" name="sandbox_mode" value="0">
                 <div class="modal-body pd-25">
                     <img src="{{ asset('assets/img/brands/stripe.png') }}" width="250" style="margin: 10px 0px;">
+                    <div id="live-keys-stripe">
+                        <h4>Estas en modo produccion</h4>
+                        <a class="btn btn-danger change-sandbox" onclick="sandboxstripe()">Cambiar a sandbox</a>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Produccion)</label>
+                            <input type="text" class="form-control" name="private_key" />
+                        </div>
 
-                    <div class="form-group mt-2">
-                        <label>Llave Privada</label>
-                        <input type="text" class="form-control" name="private_key" />
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Produccion)</label>
+                            <input type="text" class="form-control" name="public_key" />
+                        </div>
                     </div>
+                    <div id="sandbox-keys-stripe">
+                        <h4>Estas en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxstripe()">Cambiar a proudccion</a>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_private_key" />
+                        </div>
 
-                    <div class="form-group mt-2">
-                        <label>Llave Pública</label>
-                        <input type="text" class="form-control" name="public_key" />
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_public_key" />
+                        </div>
                     </div>
-
                     <div class="alert alert-warning">
                         <p class="mb-0">Al guardar la información de este método de pago se activará automáticamente. Si tienes otro método de pagó se desactivará.</p>
                     </div>
@@ -439,3 +518,24 @@
     </div><!-- modal-dialog -->
 </div><!-- modal -->
 @endsection
+@push('scripts')
+<script type="text/javascript">
+
+      function sandboxstripe() {
+      var x = document.getElementById("live-keys-stripe");
+      var y = document.getElementById("sandbox-keys-stripe");
+      var z = document.getElementById("sandbox_mode_stripe");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        y.style.display = "none";
+        z.value = 0;
+      } else {
+        x.style.display = "none";
+        y.style.display = "block";
+        z.value = 1;
+      }
+    }  
+
+</script>
+
+@endpush

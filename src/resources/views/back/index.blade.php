@@ -49,6 +49,13 @@
         border-color: #dc3545;
         padding: 10px;
     }
+
+    .btn-sin-completar {
+      color: #fff;
+      background-color: #0a3d62;
+      border-color: #0a3d62;
+      padding: 10px;
+    }
 </style>
 
 @section('title')
@@ -327,6 +334,13 @@
                 </div>
                 <div class="col-6">
                     <strong class="btn-expirado">{{$total_expirado}}</strong> 
+                </div>
+                <div class="col-10"><hr></div>
+                <div class="col-6">
+                         <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Sin completar</p>
+                </div>
+                <div class="col-6">
+                        <strong class="btn-sin-completar">{{$total_sincompletar}}</strong> 
                 </div>
                 <div class="col-10"><hr></div>
                 <div class="col-6">

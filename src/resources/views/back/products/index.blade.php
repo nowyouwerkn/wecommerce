@@ -37,7 +37,16 @@
 @endsection
 
 @section('content')
-
+    <div class="col-12">
+             <form role="search" action="{{ route('products.query') }}">
+                <div class="input-group border-0">
+                    <input type="search" name="query" class="form-control" placeholder="Busca tu producto">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <ion-icon style="font-size: 1.5rem;" name="search-outline"></ion-icon>
+                    </button>
+                </div>
+            </form>
+    </div>
 @if($products->count() == 0)
     <div class="card card-body text-center" style="padding:80px 0px 100px 0px;">
         <img src="{{ asset('assets/img/group_1.svg') }}" class="wd-20p ml-auto mr-auto mb-5">

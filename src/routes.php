@@ -82,6 +82,14 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
 
     //Catalog
     Route::resource('products', Nowyouwerkn\WeCommerce\Controllers\ProductController::class); //
+    Route::get('productsquery', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@search',
+        'as' => 'products.query',
+    ]);
+     Route::post('products/filter', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@filter',
+        'as' => 'products.filter',
+    ]);
     Route::get('exportar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@export')->name('export.products');
     Route::post('importar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@import')->name('import.products');
 
@@ -113,6 +121,16 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
     Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
     Route::resource('variants', Nowyouwerkn\WeCommerce\Controllers\VariantController::class); //
     Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
+
+    Route::get('stocks/query', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@search',
+        'as' => 'stocks.query',
+    ]);
+
+    Route::post('stocks/filter', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@filter',
+        'as' => 'stocks.filter',
+    ]);
 
     Route::post('/variants/stock/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@store',
@@ -197,6 +215,10 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
     ]);
 
     Route::resource('payments', Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController::class);
+    Route::get('/payments/change-status/{id}',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController@changeStatus',
+        'as' => 'payments.status',
+    ]);
     Route::resource('shipments', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodController::class);
     Route::resource('shipments-rules', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodRuleController::class);
 

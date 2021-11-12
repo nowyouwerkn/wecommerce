@@ -81,7 +81,16 @@
 @endsection
 
 @section('content')
-
+    <div class="col-12">
+             <form role="search" action="{{ route('stocks.query') }}">
+                <div class="input-group border-0">
+                    <input type="search" name="query" class="form-control" placeholder="Busca tu producto">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <ion-icon style="font-size: 1.5rem;" name="search-outline"></ion-icon>
+                    </button>
+                </div>
+            </form>
+    </div>
 @if($products->count() == 0)
     <div class="card card-body text-center" style="padding:80px 0px 100px 0px;">
         <img src="{{ asset('assets/img/group_1.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
@@ -90,6 +99,11 @@
         <a href="{{ route('products.create') }}" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Nuevo Producto</a>
     </div>
 @else
+
+<div class="row">
+
+    
+</div>
     <!-- Table -->
     <div class="row">
         <div class="col-lg-12 col-xl-12 mg-t-10">
@@ -101,10 +115,74 @@
                             <tr>
                                 <th>Variantes</th>
                                 <th>Imagen</th>
-                                <th>SKU</th>
-                                <th>Producto</th>
-                                <th>Precio</th>
-                                <th>Disponible</th>
+                                <th>       
+                                    <div class="d-flex">
+                                        SKU / UPC 
+                                    <form action="{{route('stocks.filter')}}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="filter" value="sku">
+                                        <input type="hidden" name="order" value="asc">
+                                        <button type="submit">&#8613;</button>
+                                    </form>
+                                    <form action="{{route('stocks.filter')}}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="filter" value="sku">
+                                        <input type="hidden" name="order" value="desc">
+                                        <button type="submit">&#8615;</button>
+                                    </form>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="d-flex">
+                                           Producto 
+                                    <form action="{{route('stocks.filter')}}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="filter" value="name">
+                                        <input type="hidden" name="order" value="asc">
+                                        <button type="submit">&#8613;</button>
+                                    </form>
+                                    <form action="{{route('stocks.filter')}}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="filter" value="name">
+                                        <input type="hidden" name="order" value="desc">
+                                        <button type="submit">&#8615;</button>
+                                    </form>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="d-flex">
+                                           Precio 
+                                    <form action="{{route('stocks.filter')}}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="filter" value="price">
+                                        <input type="hidden" name="order" value="asc">
+                                        <button type="submit">&#8613;</button>
+                                    </form>
+                                    <form action="{{route('stocks.filter')}}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="filter" value="price">
+                                        <input type="hidden" name="order" value="desc">
+                                        <button type="submit">&#8615;</button>
+                                    </form>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="d-flex">
+                                           Disponibilidad
+                                    <form action="{{route('stocks.filter')}}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="filter" value="stock">
+                                        <input type="hidden" name="order" value="asc">
+                                        <button type="submit">&#8613;</button>
+                                    </form>
+                                    <form action="{{route('stocks.filter')}}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="filter" value="stock">
+                                        <input type="hidden" name="order" value="desc">
+                                        <button type="submit">&#8615;</button>
+                                    </form>
+                                    </div>
+                                </th>
                                 <th>Total de valor</th>
                                 <th>Acciones</th>
                             </tr>

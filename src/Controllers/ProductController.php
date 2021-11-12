@@ -436,6 +436,29 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
+        public function search(Request $request)
+    {
+        $search_query = $request->input('query');
+         $products = Product::where('name', 'LIKE', "%{$search_query}%")
+        ->where('category_id', '!=', NULL)
+        ->orWhere('description', 'LIKE', "%{$search_query}%")
+        ->orWhere('search_tags', 'LIKE', "%{$search_query}%")
+        ->orWhereHas('category', function ($query) use ($search_query) {
+            $query->where(strtolower('name'), 'LIKE', '%' . strtolower($search_query) . '%');
+        })->paginate(10);
+
+        return view('wecommerce::back.products.index')->with('products', $products);
+    }
+
+      public function filter(Request $request)
+    {
+        $filter = $request->filter;
+        $order = $request->order;
+        $products = Product::orderBy($filter, $order)->paginate(15);
+        return view('wecommerce::back.products.index')->with('products', $products);
+
+    }
+
     /*
     public function storeDynamic(Request $request)
     {

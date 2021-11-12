@@ -73,7 +73,9 @@ class PaymentMethodController extends Controller
                 'supplier' => $request->supplier,
                 'public_key' => $request->public_key,
                 'private_key' => $request->private_key,
-                'sandbox_mode' => true,
+                'sandbox_mode' => $request->sandbox_mode,
+                'sandbox_public_key' => $request->sandbox_public_key,
+                'sandbox_private_key' => $request->sandbox_private_key,
                 'email_access' => $request->email_access,
                 'password_access' => $request->password_access,
                 'is_active' => true,
@@ -84,7 +86,9 @@ class PaymentMethodController extends Controller
                 'supplier' => $request->supplier,
                 'public_key' => $request->public_key,
                 'private_key' => $request->private_key,
-                'sandbox_mode' => true,
+                'sandbox_mode' => $request->$sandbox_mode,
+                'sandbox_public_key' => $request->sandbox_public_key,
+                'sandbox_private_key' => $request->sandbox_private_key,
                 'email_access' => $request->email_access,
                 'password_access' => $request->password_access,
                 'is_active' => true,
@@ -121,6 +125,8 @@ class PaymentMethodController extends Controller
             'public_key' => $request->public_key,
             'private_key' => $request->private_key,
             'sandbox_mode' => $request->sandbox_mode,
+            'sandbox_public_key' => $request->sandbox_public_key,
+            'sandbox_private_key' => $request->sandbox_private_key,
             'email_access' => $request->email_access,
             'password_access' => $request->password_access,
         ]);
@@ -129,6 +135,21 @@ class PaymentMethodController extends Controller
         Session::flash('success', 'El elemento fue registrado exitosamente.');
 
         return redirect()->route('payments.index');
+    }
+
+      public function changeStatus($id)
+    {
+
+        $payment = PaymentMethod::find($id);
+
+            $payment->update([
+            'is_active' => 0,
+        ]);
+
+        Session::flash('success', 'El elemento fue actualizado exitosamente.');
+
+        return redirect()->back();
+
     }
 
     public function destroy(PaymentMethod $paymentMethod)
