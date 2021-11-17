@@ -30,4 +30,9 @@ class StoreConfig extends Model
     {
         return $this->where('facebook_pixel', '!=' ,NULL)->value('facebook_pixel');
     }
+
+    public function get_currency_code()
+    {
+     return $this->where('currency_id', '!=', NULL)->value('currency_id');   
+    }
 }

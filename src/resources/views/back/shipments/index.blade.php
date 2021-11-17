@@ -76,7 +76,7 @@
                                     <input type="text" class="form-control" name="cost" placeholder="0.00" value="{{ $manual_method->cost ?? '' }}">
                                     <div class="input-group-append">
                                         <span class="input-group-text">
-                                            @if($config->get_country_name() == 'México')
+                                           @if($config->currency_id=='2')
                                             MXN
                                             @else
                                             USD

@@ -48,8 +48,10 @@ class Cart
             $this->totalQty++;
             $this->totalPrice += $price;
         }
-
-        Session::flash('error', 'No hay más existencias de este producto para agregar a tu carrito.');
+        else{
+            Session::flash('error', 'No hay más existencias de este producto para agregar a tu carrito.');
+        }
+        
     }
 
     public function addMore($id, $price, $variant)

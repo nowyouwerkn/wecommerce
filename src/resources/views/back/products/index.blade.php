@@ -33,6 +33,12 @@
             margin-right: 5px;
             border-radius: 100%;
         }
+
+        .filter-btn{
+            border: solid 1px;
+            background-color: transparent;
+            color: lightgrey ;
+        }
     </style>
 @endsection
 

@@ -9,7 +9,7 @@
 @endpush
 
 @section('content')
-
+@include('front.theme.werkn-backbone-bootstrap.layouts.partials._cookies_modal')
 <section class="banner-main" style="background:#f9f8f5;">
     @if(empty($banners))
     <h2 class="text-center p-5">No se ha configurado un banner</h2>

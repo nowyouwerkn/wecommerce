@@ -415,6 +415,8 @@ class FrontController extends Controller
 
     public function checkout()
     {
+
+       
         if (!Session::has('cart')) {
             return view('front.theme.' . $this->theme->get_name() . '.cart');
         }
@@ -663,6 +665,14 @@ class FrontController extends Controller
 
     public function postCheckout(Request $request)
     {
+        $currency_value = $this->store_config->get_currency_code();
+        if($currency_value == '1'){
+            $currency_value = 'USD';
+        }
+        if($currency_value == '2'){
+            $currency_value = 'MXN';
+        }
+        dd($currency_value);  
         if (!Auth::check()) {
             //Validar
             $this -> validate($request, array(
@@ -783,7 +793,7 @@ class FrontController extends Controller
                                     "receiver" => $client_name,
                                 ),
 
-                                "currency" => "MXN",
+                                "currency" => $currency_value,
                                 "description" => "Pago de Orden",
 
                                 "customer_info" => array(
@@ -839,7 +849,7 @@ class FrontController extends Controller
                                     "receiver" => $client_name,
                                 ), 
 
-                                "currency" => "MXN",
+                                "currency" => $currency_value,
                                 "description" => "Pago de Orden",
 
                                 "customer_info" => array(
@@ -871,7 +881,7 @@ class FrontController extends Controller
                 try {
                     $charge = Charge::create(array(
                         "amount" => $request->final_total * 100,
-                        "currency" => "MXN",
+                        "currency" => $currency_value,
                         "source" => $request->input('stripeToken'), 
                         "description" => "Purchase Successful",
                     ));
@@ -913,7 +923,7 @@ class FrontController extends Controller
                         'method' => 'card',
                         'source_id' => $request->input('openPayToken'),
                         'amount' => $request->final_total,
-                        'currency' => 'MXN',
+                        'currency' => $currency_value,
                         'description' => 'Orden en Tienda en Línea',
                         'device_session_id' => $request->device_hidden,
                         'customer' => $customer
@@ -946,7 +956,7 @@ class FrontController extends Controller
 
                     $amount = new Amount();
                     $amount->setTotal($request->final_total);
-                    $amount->setCurrency('MXN');
+                    $amount->setCurrency($currency_value);
 
                     $transaction = new Transaction();
                     $transaction->setAmount($amount);

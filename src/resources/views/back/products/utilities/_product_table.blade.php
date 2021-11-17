@@ -9,13 +9,13 @@
                     {{ csrf_field() }}
                     <input type="hidden" name="filter" value="name">
                     <input type="hidden" name="order" value="asc">
-                    <button type="submit">&#8613;</button>
+                    <button class="filter-btn" type="submit">&#8613;</button>
                 </form>
                 <form action="{{route('products.filter')}}" method="POST">
                     {{ csrf_field() }}
                     <input type="hidden" name="filter" value="name">
                     <input type="hidden" name="order" value="desc">
-                    <button type="submit">&#8615;</button>
+                    <button class="filter-btn" type="submit">&#8615;</button>
                 </form>
                 </div>
              </th>
@@ -26,13 +26,13 @@
                     {{ csrf_field() }}
                     <input type="hidden" name="filter" value="sku">
                     <input type="hidden" name="order" value="asc">
-                    <button type="submit">&#8613;</button>
+                    <button class="filter-btn" type="submit">&#8613;</button>
                 </form>
                 <form action="{{route('products.filter')}}" method="POST">
                     {{ csrf_field() }}
                     <input type="hidden" name="filter" value="sku">
                     <input type="hidden" name="order" value="desc">
-                    <button type="submit">&#8615;</button>
+                    <button class="filter-btn" type="submit">&#8615;</button>
                 </form>
                 </div>
             </th>
@@ -43,13 +43,13 @@
                     {{ csrf_field() }}
                     <input type="hidden" name="filter" value="price">
                     <input type="hidden" name="order" value="asc">
-                    <button type="submit">&#8613;</button>
+                    <button class="filter-btn" type="submit">&#8613;</button>
                 </form>
                 <form action="{{route('products.filter')}}" method="POST">
                     {{ csrf_field() }}
                     <input type="hidden" name="filter" value="price">
                     <input type="hidden" name="order" value="desc">
-                    <button type="submit">&#8615;</button>
+                    <button class="filter-btn" type="submit">&#8615;</button>
                 </form>
                 </div>
             </th>
@@ -60,13 +60,13 @@
                     {{ csrf_field() }}
                     <input type="hidden" name="filter" value="discount_price">
                     <input type="hidden" name="order" value="asc">
-                    <button type="submit">&#8613;</button>
+                    <button class="filter-btn" type="submit">&#8613;</button>
                 </form>
                 <form action="{{route('products.filter')}}" method="POST">
                     {{ csrf_field() }}
                     <input type="hidden" name="filter" value="discount_price">
                     <input type="hidden" name="order" value="desc">
-                    <button type="submit">&#8615;</button>
+                    <button class="filter-btn" type="submit">&#8615;</button>
                 </form>
                 </div>
             </th>
@@ -78,13 +78,13 @@
                     {{ csrf_field() }}
                     <input type="hidden" name="filter" value="status">
                     <input type="hidden" name="order" value="desc">
-                    <button type="submit">&#8613;</button>
+                    <button class="filter-btn" type="submit">&#8613;</button>
                 </form>
                 <form action="{{route('products.filter')}}" method="POST">
                     {{ csrf_field() }}
                     <input type="hidden" name="filter" value="status">
                     <input type="hidden" name="order" value="asc">
-                    <button type="submit">&#8615;</button>
+                    <button class="filter-btn" type="submit">&#8615;</button>
                 </form>
                 </div>
             </th>
