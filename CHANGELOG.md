@@ -10,6 +10,9 @@ Todos los cambios notables para `wecommerce` serán documentados en este archivo
 - Ahora es posible desactivar metodos de pago individualmente.
 - Modificaciones generales en varios modulos del sistema.
 - Modificaciones en el modulo de pop-ups.
+- Modificaciones para reglas especiales de envio y su validacion en el checkout.
+- Seccion de preguntas frecuentes agregada.
+- Ahora se pueden crear nuevos textos legales y editar los titulos.
 
 ## 1.4 - 2021-11-09
 
