@@ -19,13 +19,13 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                 <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Textos Legales</li>
+                <li class="breadcrumb-item active" aria-current="page">Preguntas frecuentes</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Textos Legales</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Preguntas frecuentes</h4>
         </div>
         <div class="d-none d-md-block">
-             <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateLegalText"  class="btn btn-sm btn-primary btn-uppercase"><i class="fas fa-plus"></i> Agregar Pregunta frecuente</a>
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateFAQ"  class="btn btn-sm btn-primary btn-uppercase"><i class="fas fa-plus"></i> Agregar Pregunta frecuente</a>
         </div>
     </div>
 @endsection
@@ -39,41 +39,38 @@
                 <h4 class="mb-0 ml-2">Regresar</h4>
             </div>
 
-            <h3>Páginas legales</h3>
-            <p>Puedes crear tus propias páginas legales.</p>
-            <p>Tus políticas guardadas se vincularán en el pie de página de tu pantalla de pago y los menús de tu tienda.</p>
+            <h3>Preguntas frecuentes</h3>
+            <p>Puedes crear tus propias preguntas frecuentes.</p>
+            <p>Tus preguntas seran guardadas y seran vinculadas a su propia pagina dentro de tu sitio</p>
             <!--<p>Al usar estas plantillas, aceptas que has leído y aceptado el descargo de responsabilidad.</p>-->
         </div>
         
     </div>
     <div class="col-md-8">
-        @if($legals->count() == 0)
+        @if($faq->count() == 0)
         <div class="card card-body text-center" style="padding:50px 0px 50px 0px;">
             <img src="{{ asset('assets/img/group.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
             <h4>¡No hay textos legales guardadas en la base de datos!</h4>
             <a href="" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto mt-4">Reparar</a>
         </div>
         @else
-            @foreach($legals as $legal)
-            <form method="POST" action="{{ route('legals.update', $legal->id) }}" enctype="multipart/form-data">
+            @foreach($faq as $faqs)
+            <form method="POST" action="{{ route('faq.update', $faqs->id) }}" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}
                 <div class="card mb-4">
                     <div class="card-body">
                         <h4 class="mb-3">
-                        <input type="text" name="title" value="{{ $legal->title }}" required="" />
+                        <input type="text" name="title" value="{{ $faqs->question }}" required="" />
                         </h4>
 
-                    
-                            <input type="hidden" name="type" value="{{ $legal->type }}">
-                            <!--<textarea name="description" id="" class="form-control" cols="30" rows="10">{!! $legal->description ?? '' !!}</textarea>-->
 
 
-                        <div id="editor-container-{{ $legal->id }}" class="ht-350 mb-4">
-                            {!! $legal->description ?? '' !!}
+                        <div id="editor-container-{{ $faqs->id }}" class="ht-350 mb-4">
+                            {!! $faqs->answer ?? '' !!}
                         </div>
                         
-                        <textarea id="justHtml_{{ $legal->id }}" name="description" required="" style="display:none;">{!! $legal->description ?? '' !!}</textarea>
+                        <textarea id="justHtml_{{ $faqs->id }}" name="description" required="" style="display:none;">{!! $faqs->answer ?? '' !!}</textarea>
 
                         <button type="submit" class="btn btn-outline-success"><i class="far fa-save"></i> Guardar información</a>
                     </div>
@@ -84,30 +81,30 @@
     </div>
 </div>
 
-<div id="modalCreateLegalText" class="modal fade">
+<div id="modalCreateFAQ" class="modal fade">
     <div class="modal-dialog modal-dialog-vertical-center" role="document">
         <div class="modal-content bd-0 tx-14">
             <div class="modal-header">
-                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Añadir texto legal</h6>
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Añadir Texto Legal</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
-            <form method="POST" action="{{ route('legals.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('faq.store') }}" enctype="multipart/form-data">
             {{ csrf_field() }}
-                   <div class="modal-body pd-25">
+                <div class="modal-body pd-25">
                         <div class="form-group mt-2">
-                            <label>Titulo</label>
-                            <input type="text" class="form-control" name="title" />
+                            <label>Pregunta</label>
+                            <input type="text" class="form-control" name="question" />
 
                         <div class="form-group mt-2">
-                            <label>Descripcion</label>
+                            <label>Respuesta</label>
                              <div id="editor-container-create" class="ht-350 mb-4">
                             
                         </div>
                         
-                        <textarea id="justHtml_create" name="description" required="" style="display:none;"></textarea>
+                        <textarea id="justHtml_create" name="answer" required="" style="display:none;"></textarea>
                         </div>
                     </div>
                 </div>
@@ -125,10 +122,10 @@
 @push('scripts')
 <script src="{{ asset('lib/quill/quill.min.js') }}"></script>
 
-@foreach($legals as $legal)
+@foreach($faq as $faqs)
 <script type="text/javascript">
     
-    var options_{{ $legal->id }} = {
+    var options_{{ $faqs->id }} = {
         modules: {
             toolbar: [
                 [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -141,33 +138,14 @@
         theme: 'snow'
     };
 
-    var editor_{{ $legal->id }} = new Quill('#editor-container-{{ $legal->id }}', options_{{ $legal->id }});
-    var justHtmlContent_{{ $legal->id }} = document.getElementById('justHtml_{{ $legal->id }}');
+    var editor_{{ $faqs->id }} = new Quill('#editor-container-{{ $faqs->id }}', options_{{ $faqs->id }});
+    var justHtmlContent_{{ $faqs->id }} = document.getElementById('justHtml_{{ $faqs->id }}');
 
-    editor_{{ $legal->id }}.on('text-change', function() {
-      var justHtml_{{ $legal->id }} = editor_{{ $legal->id }}.root.innerHTML;
-      justHtmlContent_{{ $legal->id }}.innerHTML = justHtml_{{ $legal->id }};
+    editor_{{ $faqs->id }}.on('text-change', function() {
+      var justHtml_{{ $faqs->id }} = editor_{{ $faqs->id }}.root.innerHTML;
+      justHtmlContent_{{ $faqs->id }}.innerHTML = justHtml_{{ $faqs->id }};
     });
-
-
-    /*
-    $(function(){
-        'use strict'
-
-        var quill = new Quill('#editor-container-{{ $legal->id }}', {
-          modules: {
-            toolbar: [
-                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                ['bold', 'italic'],
-                ['link'],
-                [{ list: 'ordered' }, { list: 'bullet' }]
-            ]
-          },
-          placeholder: 'Comienza a escribir aqui...',
-          theme: 'snow'
-        });
-    });
-    */
+   
 </script>
 @endforeach
 <script type="text/javascript">

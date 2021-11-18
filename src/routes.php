@@ -190,6 +190,7 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
     //Administration
     Route::resource('seo', Nowyouwerkn\WeCommerce\Controllers\SEOController::class); //
     Route::resource('legals', Nowyouwerkn\WeCommerce\Controllers\LegalTextController::class);
+    Route::resource('faq', Nowyouwerkn\WeCommerce\Controllers\FAQController::class);
     Route::resource('taxes', Nowyouwerkn\WeCommerce\Controllers\StoreTaxController::class)->except(['create']); //
 
     Route::get('/taxes/create/{country_id}',[

@@ -299,7 +299,7 @@
 
                         <div class="form-group">
                             <label>Valor</label>
-                            <input type="text" class="form-control" name="value" required="" />
+                            <input type="number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"class="form-control" name="value" required="" />
                             <small>Sin signos especiales ni comas.</small>
                         </div>
                     </div>

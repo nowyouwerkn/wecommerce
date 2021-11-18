@@ -20,12 +20,15 @@ class CreatePaymentMethodsTable extends Migration
             $table->string('supplier');
 
             $table->string('merchant_id')->nullable();
+            $table->string('sandbox_merchant_id')->nullable();
             
             $table->string('public_key')->nullable();
             $table->string('private_key')->nullable();
 
             $table->string('email_access')->nullable();
             $table->string('password_access')->nullable();
+            $table->string('sandbox_email_access')->nullable();
+            $table->string('sandbox_password_access')->nullable();
 
             $table->boolean('sandbox_mode')->default(false)->nullable();
             $table->string('sandbox_public_key')->nullable();

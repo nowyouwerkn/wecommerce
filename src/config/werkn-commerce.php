@@ -21,8 +21,8 @@ return [
     'STRIPE_PUBLIC_KEY' => env('STRIPE_PUBLIC_KEY', 'pk_test_51J2JE1BahV2wbB1NXiWU2jVcgXFQlYgM9rTnou1uwpeJTbvcPn4isDtnJqhHFdXMynHzTAQXUFwjA9rXay6r2gGJ00LWMNiSdP'),
 
     // Paypal Keys
-    'PAYPAL_CLIENT_ID' => env('PAYPAL_CLIENT_ID', '11'),
-    'PAYPAL_SECRET' => env('PAYPAL_SECRET', '11'),
+    'PAYPAL_CLIENT_ID' => env('PAYPAL_CLIENT_ID', 'AfPdJEQ8eIbRWMEZ3xBfIPYEmbok2VeUmnrW7_npMNN7dCd7Esq2n3KvtJS27USmLIlRxn0gesSRqEAG'),
+    'PAYPAL_SECRET' => env('PAYPAL_SECRET', 'EBTtovFE5x8BiWzd1bVIVpE_msj_m_9rzov9EUOSZFMRbrBDvmFDCJHN8gA2RDVXYpGo2f_CBvQF598B'),
     'PAYPAL_SETTINGS' => [
         /** 
          * Modalidad de pago

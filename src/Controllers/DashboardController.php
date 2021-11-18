@@ -67,16 +67,13 @@ class DashboardController extends Controller
         $week_end = Carbon::now()->endOfWeek(Carbon::SUNDAY);
         
         $ventas_total = Order::where('created_at', '<=', $year_end)
-        ->where('created_at', '>=', $year_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')
-        ->get();
+        ->where('created_at', '>=', $year_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('status', '!=', 'Sin Completar')->get();
 
         $ventas_mes = Order::where('created_at', '<=', $month_end)
-        ->where('created_at', '>=', $month_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')
-        ->get();
+        ->where('created_at', '>=', $month_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('status', '!=', 'Sin Completar')->get();
 
         $ventas_semana = Order::where('created_at', '<=', $week_end)
-        ->where('created_at', '>=', $week_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')
-        ->get();
+        ->where('created_at', '>=', $week_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('status', '!=', 'Sin Completar')->get();
 
         $ven_total = 0;
         $ven_mes = 0;

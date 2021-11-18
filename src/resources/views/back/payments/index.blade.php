@@ -34,6 +34,21 @@
     #sandbox-keys-stripe{
         display: none;
     }
+    #sandbox-keys-conekta{
+        display: none;
+    }
+    #sandbox-keys-openpay{
+        display: none;
+    }
+    #sandbox-keys-oxxopay{
+        display: none;
+    }
+    #sandbox-keys-mercadopago{
+        display: none;
+    }
+    #sandbox-keys-paypal{
+        display: none;
+    }
 
     .change-sandbox {
         color: white !important;
@@ -233,7 +248,7 @@
 
                         <a href="" data-toggle="modal" data-target="#modalCreateOxxoConekta" class="btn btn-outline-secondary btn-sm">Configurar OxxoPay de Conekta</a>
                         <a href="http://www.conekta.com" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
-                        @if($paypal_method->is_active == true)
+                        @if($oxxo_pay->is_active == true)
                             <a href="{{ route('payments.status', $oxxo_pay->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
                         @endif
                     </div>
@@ -257,19 +272,35 @@
             {{ csrf_field() }}
                 <input type="hidden" name="type" value="card">
                 <input type="hidden" name="supplier" value="Paypal">
-                <input type="hidden" name="sandbox_mode" value="0">
+                <input id="sandbox_mode_paypal" type="hidden" name="sandbox_mode" value="0">
                 <div class="modal-body pd-25">
                     <img src="{{ asset('assets/img/brands/paypal.png') }}" width="250" style="margin: 10px 0px;">
-                    <div class="form-group mt-2">
-                        <label>Correo de Acceso</label>
-                        <input type="text" class="form-control" name="email_access" />
-                    </div>
+                    <div id="live-keys-paypal">
+                        <h4>Estas en modo produccion</h4>
+                        <a class="btn btn-danger change-sandbox" onclick="sandboxpaypal()">Cambiar a sandbox</a>
+                        <div class="form-group mt-2">
+                            <label>Correo de Acceso(Produccion)</label>
+                            <input type="text" class="form-control" name="email_access" value="{{ $paypal_method->email_access }}" />
+                        </div>
 
-                    <div class="form-group mt-2">
-                        <label>Contraseña</label>
-                        <input type="text" class="form-control" name="password_access" />
+                        <div class="form-group mt-2">
+                            <label>Contraseña (Produccion)</label>
+                            <input type="text" class="form-control" name="password_access" value="{{ $paypal_method->password_access }}"/>
+                        </div>
                     </div>
+                    <div id="sandbox-keys-paypal">
+                        <h4>Estas en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxpaypal()">Cambiar a proudccion</a>
+                        <div class="form-group mt-2">
+                            <label>Correo de Acceso (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_email_access" value="{{ $paypal_method->sandbox_email_access }}" />
+                        </div>
 
+                        <div class="form-group mt-2">
+                            <label>Contraseña (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_password_access" value="{{ $paypal_method->sandbox_password_access }}"/>
+                        </div>
+                    </div>
                     <div class="alert alert-success">
                         <p class="mb-0">Este método de pago puede funcionar en conjunto con otros métodos de pago con tarjeta. </p>
                     </div>
@@ -298,18 +329,35 @@
             {{ csrf_field() }}
                 <input type="hidden" name="type" value="card">
                 <input type="hidden" name="supplier" value="MercadoPago">
-
+                <input id="sandbox_mode_mercadopago" type="hidden" name="sandbox_mode" value="0">
                 <div class="modal-body pd-25">
                     <img src="{{ asset('assets/img/brands/mercado-pago.png') }}" width="250" style="margin: 10px 0px;">
 
-                    <div class="form-group mt-2">
-                        <label>Llave Privada</label>
-                        <input type="text" class="form-control" name="private_key" />
-                    </div>
+                    <div id="live-keys-mercadopago">
+                        <h4>Estas en modo produccion</h4>
+                        <a class="btn btn-danger change-sandbox" onclick="sandboxmercadopago()">Cambiar a sandbox</a>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Produccion)</label>
+                            <input type="text" class="form-control" name="private_key" value="{{ $mercadopago_method->private_key }}" />
+                        </div>
 
-                    <div class="form-group mt-2">
-                        <label>Llave Pública</label>
-                        <input type="text" class="form-control" name="public_key" />
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Produccion)</label>
+                            <input type="text" class="form-control" name="public_key" value="{{ $mercadopago_method->public_key }}"/>
+                        </div>
+                    </div>
+                    <div id="sandbox-keys-mercadopago">
+                        <h4>Estas en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxmercadopago()">Cambiar a proudccion</a>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_private_key" value="{{ $mercadopago_method->sandbox_private_key }}" />
+                        </div>
+
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_public_key" value="{{ $mercadopago_method->sandbox_public_key }}"/>
+                        </div>
                     </div>
 
                     <div class="alert alert-success">
@@ -344,18 +392,38 @@
             {{ csrf_field() }}
                 <input type="hidden" name="type" value="cash">
                 <input type="hidden" name="supplier" value="Conekta">
+                 <input id="sandbox_mode_oxxopay" type="hidden" name="sandbox_mode" value="0">
 
                 <div class="modal-body pd-25">
                     <img src="{{ asset('assets/img/brands/oxxopay.png') }}" width="250" style="margin: 10px 0px;">
 
-                    <div class="form-group mt-2">
-                        <label>Llave Privada</label>
-                        <input type="text" class="form-control" name="private_key" />
-                    </div>
+                    <div id="live-keys-oxxopay">
+                        <h4>Estas en modo produccion</h4>
+                        <a class="btn btn-danger change-sandbox" onclick="sandboxoxxopay()">Cambiar a sandbox</a>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Produccion)</label>
+                            <input type="text" class="form-control" name="private_key" value="{{ $oxxo_pay->private_key }}" />
+                        </div>
 
-                    <div class="form-group mt-2">
-                        <label>Llave Pública</label>
-                        <input type="text" class="form-control" name="public_key" />
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Produccion)</label>
+                            <input type="text" class="form-control" name="public_key" value="{{ $oxxo_pay->public_key }}"/>
+                        </div>
+                    </div>
+                    <div id="sandbox-keys-oxxopay">
+                        <h4>Estas en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxoxxopay()">Cambiar a proudccion</a>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_private_key" 
+                             value="{{ $oxxo_pay->sandbox_private_key }}"/>
+                        </div>
+
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_public_key" 
+                             value="{{ $oxxo_pay->sandbox_private_key }}"/>
+                        </div>
                     </div>
 
                     <div class="alert alert-warning">
@@ -387,18 +455,37 @@
             {{ csrf_field() }}
                 <input type="hidden" name="type" value="card">
                 <input type="hidden" name="supplier" value="Conekta">
-
+                <input id="sandbox_mode_conekta" type="hidden" name="sandbox_mode" value="0">
                 <div class="modal-body pd-25">
                     <img src="{{ asset('assets/img/brands/conekta.png') }}" width="250" style="margin: 10px 0px;">
 
-                    <div class="form-group mt-2">
-                        <label>Llave Privada</label>
-                        <input type="text" class="form-control" name="private_key" />
-                    </div>
+                       <div id="live-keys-conekta">
+                        <h4>Estas en modo produccion</h4>
+                        <a class="btn btn-danger change-sandbox" onclick="sandboxconekta()">Cambiar a sandbox</a>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Produccion)</label>
+                            <input type="text" class="form-control" name="private_key" value="{{$conekta_method->private_key}}" />
+                        </div>
 
-                    <div class="form-group mt-2">
-                        <label>Llave Pública</label>
-                        <input type="text" class="form-control" name="public_key" />
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Produccion)</label>
+                            <input type="text" class="form-control" name="public_key" value="{{$conekta_method->public_key}}" />
+                        </div>
+                    </div>
+                    <div id="sandbox-keys-conekta">
+                        <h4>Estas en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxconekta()">Cambiar a proudccion</a>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_private_key" 
+                             value="{{$conekta_method->sandbox_private_key}}" />
+                        </div>
+
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_public_key" 
+                             value="{{$conekta_method->sandbox_private_key}}" />
+                        </div>
                     </div>
 
                     <div class="alert alert-warning">
@@ -437,12 +524,12 @@
                         <a class="btn btn-danger change-sandbox" onclick="sandboxstripe()">Cambiar a sandbox</a>
                         <div class="form-group mt-2">
                             <label>Llave Privada (Produccion)</label>
-                            <input type="text" class="form-control" name="private_key" />
+                            <input type="text" class="form-control" name="private_key" value="{{ $stripe_method->private_key }}" />
                         </div>
 
                         <div class="form-group mt-2">
                             <label>Llave Pública (Produccion)</label>
-                            <input type="text" class="form-control" name="public_key" />
+                            <input type="text" class="form-control" name="public_key" value="{{ $stripe_method->public_key }}"/>
                         </div>
                     </div>
                     <div id="sandbox-keys-stripe">
@@ -450,12 +537,14 @@
                         <a class="btn btn-success change-sandbox" onclick="sandboxstripe()">Cambiar a proudccion</a>
                         <div class="form-group mt-2">
                             <label>Llave Privada (Sandbox)</label>
-                            <input type="text" class="form-control" name="sandbox_private_key" />
+                            <input type="text" class="form-control" name="sandbox_private_key" 
+                            value="{{ $stripe_method->sandbox_private_key }}"/>
                         </div>
 
                         <div class="form-group mt-2">
                             <label>Llave Pública (Sandbox)</label>
-                            <input type="text" class="form-control" name="sandbox_public_key" />
+                            <input type="text" class="form-control" name="sandbox_public_key" 
+                             value="{{ $stripe_method->sandbox_public_key }}"/>
                         </div>
                     </div>
                     <div class="alert alert-warning">
@@ -485,29 +574,52 @@
             {{ csrf_field() }}
                 <input type="hidden" name="type" value="card">
                 <input type="hidden" name="supplier" value="OpenPay">
-
+                <input id="sandbox_mode_openpay" type="hidden" name="sandbox_mode" value="0">
                 <div class="modal-body pd-25">
                     <img src="{{ asset('assets/img/brands/openpay.png') }}" width="250" style="margin: 10px 0px;">
 
-                    <div class="form-group mt-2">
-                        <label>Clave de Comerciante (Merchant ID)</label>
-                        <input type="text" class="form-control" name="merchant_id" />
-                    </div>
+                    <div id="live-keys-openpay">
+                        <h4>Estas en modo produccion</h4>
+                        <a class="btn btn-danger change-sandbox" onclick="sandboxopenpay()">Cambiar a sandbox</a>
+                        <div class="form-group mt-2">
+                            <label>Clave de Comerciante (Merchant ID)  (Produccion)</label>
+                            <input type="text" class="form-control" name="merchant_id" value="{{ $openpay_method->merchant_id}}" />
+                        </div>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Produccion)</label>
+                            <input type="text" class="form-control" name="private_key" value="{{ $openpay_method->private_key}}" />
+                        </div>
 
-                    <div class="form-group mt-2">
-                        <label>Llave Privada</label>
-                        <input type="text" class="form-control" name="private_key" />
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Produccion)</label>
+                            <input type="text" class="form-control" name="public_key" value="{{ $openpay_method->public_key}}" />
+                        </div>
                     </div>
+                    <div id="sandbox-keys-openpay">
+                        <h4>Estas en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxopenpay()">Cambiar a proudccion</a>
+                        <div class="form-group mt-2">
+                            <label>Clave de Comerciante (Merchant ID)  (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_merchant_id" 
+                             value="{{ $openpay_method->sandbox_merchant_id}}"/>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_private_key" 
+                             value="{{ $openpay_method->sandbox_private_key}}"/>
+                        </div>
 
-                    <div class="form-group mt-2">
-                        <label>Llave Pública</label>
-                        <input type="text" class="form-control" name="public_key" />
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_public_key" 
+                            value="{{ $openpay_method->sandbox_public_key}}"/>
+                        </div>
                     </div>
-
                     <div class="alert alert-warning">
                         <p class="mb-0">Al guardar la información de este método de pago se activará automáticamente. Si tienes otro método de pagó se desactivará.</p>
                     </div>
                 </div>
+
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
@@ -534,7 +646,78 @@
         y.style.display = "block";
         z.value = 1;
       }
-    }  
+    }
+    function sandboxconekta() {
+      var x = document.getElementById("live-keys-conekta");
+      var y = document.getElementById("sandbox-keys-conekta");
+      var z = document.getElementById("sandbox_mode_conekta");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        y.style.display = "none";
+        z.value = 0;
+      } else {
+        x.style.display = "none";
+        y.style.display = "block";
+        z.value = 1;
+      }
+    }   
+    function sandboxopenpay() {
+      var x = document.getElementById("live-keys-openpay");
+      var y = document.getElementById("sandbox-keys-openpay");
+      var z = document.getElementById("sandbox_mode_openpay");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        y.style.display = "none";
+        z.value = 0;
+      } else {
+        x.style.display = "none";
+        y.style.display = "block";
+        z.value = 1;
+      }
+    }
+
+    function sandboxoxxopay() {
+      var x = document.getElementById("live-keys-oxxopay");
+      var y = document.getElementById("sandbox-keys-oxxopay");
+      var z = document.getElementById("sandbox_mode_oxxopay");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        y.style.display = "none";
+        z.value = 0;
+      } else {
+        x.style.display = "none";
+        y.style.display = "block";
+        z.value = 1;
+      }
+    }    
+        function sandboxmercadopago() {
+      var x = document.getElementById("live-keys-mercadopago");
+      var y = document.getElementById("sandbox-keys-mercadopago");
+      var z = document.getElementById("sandbox_mode_mercadopago");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        y.style.display = "none";
+        z.value = 0;
+      } else {
+        x.style.display = "none";
+        y.style.display = "block";
+        z.value = 1;
+      }
+    }
+    function sandboxpaypal() {
+      var x = document.getElementById("live-keys-paypal");
+      var y = document.getElementById("sandbox-keys-paypal");
+      var z = document.getElementById("sandbox_mode_paypal");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        y.style.display = "none";
+        z.value = 0;
+      } else {
+        x.style.display = "none";
+        y.style.display = "block";
+        z.value = 1;
+      }
+    }     
 
 </script>
 

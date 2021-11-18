@@ -416,7 +416,6 @@ class FrontController extends Controller
     public function checkout()
     {
 
-       
         if (!Session::has('cart')) {
             return view('front.theme.' . $this->theme->get_name() . '.cart');
         }
@@ -595,7 +594,12 @@ class FrontController extends Controller
         if (empty($mercado_payment)) {
             $preference = NULL;
         }else{
-            MercadoPago\SDK::setAccessToken($mercado_payment->private_key);
+               if ($mercado_payment->sandbox_mode == '1') {
+                $private_key_mercadopago = $mercado_payment->sandbox_private_key;
+            }elseif ($mercado_payment->sandbox_mode == '0') {
+                $private_key_mercadopago = $mercado_payment->private_key;
+            }
+            MercadoPago\SDK::setAccessToken($private_key_mercadopago);
 
             // Create a Item to Pay
             $item = new MercadoPago\Item();
@@ -665,6 +669,7 @@ class FrontController extends Controller
 
     public function postCheckout(Request $request)
     {
+        
         $currency_value = $this->store_config->get_currency_code();
         if($currency_value == '1'){
             $currency_value = 'USD';
@@ -672,7 +677,7 @@ class FrontController extends Controller
         if($currency_value == '2'){
             $currency_value = 'MXN';
         }
-        dd($currency_value);  
+
         if (!Auth::check()) {
             //Validar
             $this -> validate($request, array(
@@ -734,18 +739,39 @@ class FrontController extends Controller
         }
 
         if ($payment_method->supplier == 'Conekta') {
+
             require_once(base_path() . '/vendor/conekta/conekta-php/lib/Conekta/Conekta.php');
-            \Conekta\Conekta::setApiKey($payment_method->private_key);
+            if ($payment_method->sandbox_mode == '1') {
+                $private_key_conekta = $payment_method->sandbox_private_key;
+            }elseif ($payment_method->sandbox_mode == '0') {
+                $private_key_conekta = $payment_method->private_key;
+            }
+            \Conekta\Conekta::setApiKey($private_key_conekta);
             \Conekta\Conekta::setApiVersion("2.0.0");
             \Conekta\Conekta::setLocale('es');
+
         }
 
         if ($payment_method->supplier == 'Stripe') {
-            Stripe::setApiKey($payment_method->private_key);
+
+            if ($payment_method->sandbox_mode == '1') {
+                $private_key_stripe = $payment_method->sandbox_private_key;
+            }elseif ($payment_method->sandbox_mode == '0') {
+                $private_key_stripe = $payment_method->private_key;
+            }
+            Stripe::setApiKey($private_key_stripe);
+
         }
 
         if ($payment_method->supplier == 'MercadoPago') {
-            MercadoPago\SDK::setAccessToken($payment_method->private_key);
+
+            if ($payment_method->sandbox_mode == '1') {
+                $private_key_mercadopago = $payment_method->sandbox_private_key;
+            }elseif ($payment_method->sandbox_mode == '0') {
+                $private_key_mercadopago = $payment_method->private_key;
+            }
+            MercadoPago\SDK::setAccessToken($private_key_mercadopago);
+
         }
         
         $oldCart = Session::get('cart');
@@ -1276,8 +1302,17 @@ class FrontController extends Controller
         $openpay_config = PaymentMethod::where('is_active', true)->where('supplier', 'OpenPay')->first();
 
         $openpayId = $openpay_config->merchant_id;
-        $openpayApiKey = $openpay_config->private_key;
-        $openpayProductionMode = env('OPENPAY_PRODUCTION_MODE', true);
+
+           if ($openpay_config->sandbox_mode == '1') {
+                $private_key_openpay = $openpay_config->sandbox_private_key;
+                $productionmode = false;
+            }elseif ($openpay_config->sandbox_mode == '0') {
+                $private_key_openpay = $openpay_config->private_key;
+                 $productionmode = true;
+            }
+
+        $openpayApiKey = $private_key_openpay;
+        $openpayProductionMode = env('OPENPAY_PRODUCTION_MODE', $productionmode);
 
         try {
             $openpay = Openpay::getInstance($openpayId, $openpayApiKey, 'MX');
@@ -1316,10 +1351,19 @@ class FrontController extends Controller
         $paypal_config = PaymentMethod::where('is_active', true)->where('supplier', 'Paypal')->first();
         $config = Config::get('werkn-commerce');
 
+        if ($paypal_config->sandbox_mode == '1') {
+            $paypal_email_access = $paypal_config->sandbox_email_access;
+            $paypal_password_access = $paypal_config->sandbox_password_access ;
+        }elseif ($paypal_config->sandbox_mode == '0') {
+            $paypal_email_access = $paypal_config->email_access;
+            $paypal_password_access = $paypal_config->password_access ;
+        }
+       
+
         $api_context = new ApiContext(
             new OAuthTokenCredential(
-                $paypal_config->email_access,
-                $paypal_config->password_access
+                $paypal_email_access,
+                $paypal_password_access
             )
         );
 
@@ -1760,6 +1804,8 @@ class FrontController extends Controller
                             $qty = $coupon->qty;
                             $discount = $subtotal - $qty;
 
+                              
+
                             break;
 
                         case 'free_shipping':
@@ -1774,6 +1820,15 @@ class FrontController extends Controller
                             break;
                     }
 
+                    // Si cantidad menor al minimo requerido mandar response de error.
+                    if ($shipping_rules->condition == 'Cantidad Comprada' && $shipping_rules->comparison_operator == '>') {
+
+                          if ($discount <= $shipping_rules->value) {
+                        return response()->json(['mensaje' => 'Este cupon no puede ser aplicado debido a que el cupon reduce ', 'type' => 'exception'], 200);
+                        }
+                    }
+                    
+
                     if ($coupon->is_free_shipping == true) {
                         $free_shipping = $shipping * 0;
                     }else{
@@ -1787,7 +1842,12 @@ class FrontController extends Controller
                         $mp_preference = NULL;
                         $mp_preference_id =  NULL;
                     }else{
-                        MercadoPago\SDK::setAccessToken($mercado_payment->private_key);
+                           if ($mercado_payment->sandbox_mode == '1') {
+                                $private_key_mercadopago = $mercado_payment->sandbox_private_key;
+                            }elseif ($mercado_payment->sandbox_mode == '0') {
+                                $private_key_mercadopago = $mercado_payment->private_key;
+                            }
+                        MercadoPago\SDK::setAccessToken($private_key_mercadopago);
 
                         // Create a Item to Pay
                         $item = new MercadoPago\Item();
