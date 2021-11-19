@@ -304,7 +304,7 @@
                         </div>
                     </div>
                     
-                    <div class="custom-control custom-checkbox mb-3" style="opacity:.3;">
+                    <div class="custom-control custom-checkbox mb-3" >
                         <input type="checkbox" class="custom-control-input" id="allow_coupons" name="allow_coupons" value="1">
                         <label class="custom-control-label" for="allow_coupons"> Permitir uso de cupones</label>
                     </div>
