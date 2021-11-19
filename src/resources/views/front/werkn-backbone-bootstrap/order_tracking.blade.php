@@ -15,16 +15,16 @@
 
 	<form action="{{ route('utilities.tracking.status') }}" class="row" method="POST">
 		{{ csrf_field() }}
-		<div class="col">
+		<div class="col-6 mt-4">
 			<label>Numero de Orden</label>
 			<input type="text" name="order_id" class="form-control" required="">
 		</div>
 
-		<div class="col">
+		<div class="col-6 mt-4">
 			<label>Correo de Compra</label>
 			<input type="email" name="email" class="form-control" required="">
 		</div>
-		<div class="col">
+		<div class="col-12 mt-5">
 			<button type="submit" class="btn btn-primary">Buscar Orden</button>
 		</div>		
 	</form>

@@ -13,6 +13,7 @@ Todos los cambios notables para `wecommerce` serán documentados en este archivo
 - Modificaciones para reglas especiales de envio y su validacion en el checkout.
 - Seccion de preguntas frecuentes agregada.
 - Ahora se pueden crear nuevos textos legales y editar los titulos.
+- Ajustes del template werkn-backbone-bootstrap
 
 ## 1.4 - 2021-11-09
 

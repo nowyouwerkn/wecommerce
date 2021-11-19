@@ -30,7 +30,7 @@
 
     	@include('front.theme.werkn-backbone-bootstrap.layouts.header')
 
-    	<main>
+        <main class="mb-5">
             @include('front.theme.werkn-backbone-bootstrap.layouts.partials._messages')
             @include('front.theme.werkn-backbone-bootstrap.layouts.partials._messages_errors')
     		@yield('content')

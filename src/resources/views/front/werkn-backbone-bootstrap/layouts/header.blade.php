@@ -17,7 +17,7 @@
 
             <div class="col-md-6 text-end">
                 <ul class="list-inline mb-0">
-                    <li class="list-inline-item"><a href="{{ route('utilities.tracking.index') }}"><ion-icon name="compass-outline"></ion-icon> Seguimiento de Orden</a></li>
+           
 
                     <li class="list-inline-item">
                         <select class="form-select form-select-sm" disabled>
@@ -37,51 +37,24 @@
         </div>
     </div>
 </header>
-
-<nav class="pt-3 pb-3">
+<nav class="pt-3 pb-3 mb-5">
     <div class="container">
         <div class="row justify-content-between align-items-center">
             <div class="col-5">
                 <ul class="list-inline mb-0">
-                    <li class="list-inline-item"><a href="{{ route('index') }}">Inicio</a></li>
-
-                    @foreach($categories as $category)
-                        @if($category->children->count() == 0)
-                            <li class="list-inline-item mr-4">
-                                <a href="{{ route('catalog', $category->slug) }}">{{ $category->name }}</a>
-                            </li>
-                        @else
-                            <li class="list-inline-item has-menu-card mr-4" style="display: inline-flex;">
-                                <a href="javascript:void(0)">
-                                    {{ $category->name }} <ion-icon name="caret-down-outline"></ion-icon>
-                                </a>
-
-                                <div class="menu-card card-categories d-flex">
-                                    <div class="row col-md-12 p-0">
-                                        <div class="col-md-4 p-0">
-                                            @if($category->image == NULL)
-                                                <img class="img-fluid" src="{{ asset('themes/werkn-backbone-bootstrap/img/front/categories/no-category.jpg') }}" alt="{{ $category->name }}">
-                                            @else
-                                               <img class="img-fluid" src="{{ asset('img/categories/' . $category->image) }}" alt="Sin imágen">
-                                            @endif
-                                        </div>
-                                        <div class="col-md-6 p-4 bg-light">
-                                            <ul class="list-inline pl-4">
-                                                <li class="mt-3">
-                                                    <a href="{{ route('catalog', $category->slug) }}">Ver todo</a>
-                                                </li>
-                                                @foreach($category->children as $sub)
-                                                    <li class="mt-3">
-                                                        <a href="{{ route('catalog', $sub->slug) }}">{{ $sub->name }}</a>
-                                                    </li>
-                                                @endforeach  
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        @endif
-                    @endforeach
+                    <li class="list-inline-item btn"><a href="{{ route('index') }}">Inicio</a></li>
+                     <div class="dropdown list-inline-item">
+                      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownCatalog" data-bs-toggle="dropdown" aria-expanded="false">
+                        Catalogo
+                      </button>
+                        <ul class="dropdown-menu justify-content-between list-group-flush" aria-labelledby="dropdownCatalog">
+                            <li class="list-group-item"><a href="{{ route('catalog.all') }}">Ver todos</a></li>
+                           @foreach($categories as $category)
+                           <li class="list-group-item"> <a  href="{{ route('catalog', $category->slug) }}">{{ $category->name }}</a></li>
+                             @endforeach
+                        </ul>
+                    </div>
+               
                 </ul>
             </div>
             <div class="col-2">
@@ -100,21 +73,21 @@
             <div class="col-5 text-end">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item"><a href="#" data-toggle="modal" data-target="#search-modal"><ion-icon name="search"></ion-icon></a></li>
+                     <li class="list-inline-item"><a href="{{ route('utilities.tracking.index') }}"><ion-icon name="compass-outline"></ion-icon> </a></li>
                     <li class="list-inline-item"><a href="{{ route('login') }}"><ion-icon name="person"></ion-icon></a></li>
                     <li class="list-inline-item"><a href="{{ route('wishlist') }}"><ion-icon name="heart"></ion-icon></a></li>
 
                     @if(request()->is('checkout'))
 
                     @else
-                    <li class="list-inline-item has-menu-card" style="display: inline-flex;">
-                        <a href="javascript:void(0)">
-                            <ion-icon name="bag"></ion-icon>
-                            <span>{{ Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
-                        </a>
+                   <div class="dropdown" style="display: inline-flex;">
+                      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <ion-icon name="bag"></ion-icon>
+                        <span>{{ Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
+                      </a>
 
-                        <div class="menu-card mini-cart d-flex">
-                            <div>
-                                @if(Session::has('cart'))
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="min-width: 20rem; padding: 10px;">
+                        @if(Session::has('cart'))
                                     @php
                                         $oldCart = Session::get('cart');
                                         $cart = new Nowyouwerkn\WeCommerce\Models\Cart($oldCart);
@@ -129,43 +102,37 @@
                                         $variant = $product['variant'];
                                     @endphp
 
-                                    <li class="d-flex align-items-start">
-                                        <div class="cart-img">
-                                            <a href="#"><img src="{{ asset('img/products/' . $item_img ) }}" alt="{{ $product['item']['name'] }}"></a>
-                                        </div>
-                                        <div class="cart-content">
-                                            <h4 class="mb-0"><a href="#">{{ $product['item']['name'] }}</a></h4>
-                                            <p class="mb-2">Talla: {{ $variant }}</p>
-                                            <div class="cart-price">
-                                                @if($product['item']['has_discount'] == true)
+                        <li>
+                                <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                                    <div class="card-body d-flex flex-column align-items-start">
+                                      <strong class="d-inline-block mb-2 text-primary">{{ $product['item']['category']['name'] }}</strong>
+                                      <h3 class="mb-0">
+                                        <a class="text-dark" href="#">{{ $product['item']['name'] }}</a>
+                                      </h3>
+                                      <p class="card-text mb-auto">{{ $product['item']['description'] }}</p>
+                                      <p class="card-text mb-auto">{{ $variant}}</p>
+                                        @if($product['item']['has_discount'] == true)
                                                 <span class="new">${{ number_format($product['item']['discount_price'],2) }}</span>
                                                 <span><del>${{ number_format($product['item']['price'],2) }}</del></span>
                                                 @else 
                                                 <span class="new">${{ number_format($product['item']['price'],2) }}</span>
                                                 @endif
-                                            </div>
-                                        </div>
-                                        <div class="del-icon">
-                                            <a href="{{ route( 'cart.delete', ['id' => $product['item']['id'], 'variant' => $variant ] ) }}"><i class="far fa-trash-alt"></i></a>
-                                        </div>
-                                    </li>
-                                    @endforeach
-                                    <li>
-                                        <div class="total-price">
-                                            <span class="f-left">Subtotal:</span>
-                                            <span class="f-right">${{ number_format($totalPrice, 2) }}</span>
-                                        </div>
-                                    </li>
-                                    
-                                    <li>
-                                        <div class="checkout-link">
-                                            <a href="{{ route('cart') }}">Ver tu carrito</a>
+                                    </div>
+                                    <img class="card-img-right flex-auto d-none d-md-block" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="{{ asset('img/products/' . $item_img ) }}" data-holder-rendered="true">
+                                  </div>
+                                    <div class="mx-2 d-flex mb-2">
+                                        <span class="f-left">Subtotal:</span>
+                                        <span class="f-right">${{ number_format($totalPrice, 2) }}</span> 
+                                    </div>
+                             
+                           
+                                        <div class="d-flex">
 
-                                            <a class="black-color" href="{{ route('checkout') }}">Completar tu compra</a>
-                                        </div>
-                                    </li>
+                                            <a class="btn btn-primary mx-2 mb-2" href="{{ route('cart') }}">Ver tu carrito</a>
 
-                                    <li>
+                                            <a class="btn btn-secondary mx-2 mb-2" href="{{ route('checkout') }}">Completar tu compra</a>
+                                        </div>
+                                        </li>@endforeach
                                         @guest
                                         <p class="alert alert-warning" style="display: inline-block;">
                                             <ion-icon name="alert-circle-outline" class="mr-1"></ion-icon> Estas comprando como <strong>invitado.</strong> Compra más rápido creando una cuenta <a href="{{ route('register') }}">Regístrate</a>
@@ -178,9 +145,9 @@
                                         <ion-icon name="sad-outline"></ion-icon>
                                     </p>
                                 @endif
-                            </div>
-                        </div>
-                    </li>
+                      </ul>
+                    </div>
+
                     @endif
                 </ul>       
             </div>
