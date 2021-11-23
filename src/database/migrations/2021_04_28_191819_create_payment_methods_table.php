@@ -33,6 +33,8 @@ class CreatePaymentMethodsTable extends Migration
             $table->boolean('sandbox_mode')->default(false)->nullable();
             $table->string('sandbox_public_key')->nullable();
             $table->string('sandbox_private_key')->nullable();
+            $table->string('mercadopago_oxxo')->nullable();
+            $table->string('mercadopago_paypal')->nullable();
 
             $table->boolean('is_active')->nullable();
 

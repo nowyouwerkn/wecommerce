@@ -359,6 +359,17 @@
                             <input type="text" class="form-control" name="sandbox_public_key" value="{{ $mercadopago_method->sandbox_public_key }}"/>
                         </div>
                     </div>
+                         <div class="form-group mt-2">
+                                <input type="hidden" id="oxxo_oxxo" name="mercadopago_oxxo" value="oxxo" >
+                                <input type="checkbox" id="oxxo_none" name="mercadopago_oxxo" value="none" {{ ($mercadopago_method->mercadopago_oxxo == 'none') ? 'checked' : '' }}>
+                                <label for="oxxo_none">Pago con oxxo</label>
+                        </div>
+
+                        <div class="form-group mt-2">
+                                <input type="hidden" id="paypal_paypal" name="mercadopago_paypal" value="paypal">
+                                <input type="checkbox" id="paypal_none" name="mercadopago_paypal" value="none" {{ ($mercadopago_method->mercadopago_paypal == 'none') ? 'checked' : '' }}>
+                                <label for="paypal_none">Pago con Paypal</label>
+                        </div>
 
                     <div class="alert alert-success">
                         <p class="mb-0">Este método de pago puede funcionar en conjunto con otros métodos de pago con tarjeta.</p>

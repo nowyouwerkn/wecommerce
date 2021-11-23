@@ -83,6 +83,8 @@ class PaymentMethodController extends Controller
                 'password_access' => $request->password_access,
                 'sandbox_email_access' => $request->sandbox_email_access,
                 'sandbox_password_access' => $request->sandbox_password_access,
+                'mercadopago_oxxo' => $request->mercadopago_oxxo,
+                'mercadopago_paypal' => $request->mercadopago_paypal,
                 'is_active' => true,
             ]);
         }else{
@@ -100,6 +102,8 @@ class PaymentMethodController extends Controller
                 'password_access' => $request->password_access,
                 'sandbox_email_access' => $request->sandbox_email_access,
                 'sandbox_password_access' => $request->sandbox_password_access,
+                'mercadopago_oxxo' => $request->mercadopago_oxxo,
+                'mercadopago_paypal' => $request->mercadopago_paypal,
                 'is_active' => true,
             ]);
         }
@@ -138,6 +142,8 @@ class PaymentMethodController extends Controller
             'sandbox_private_key' => $request->sandbox_private_key,
             'email_access' => $request->email_access,
             'password_access' => $request->password_access,
+            'mercadopago_oxxo' => $request->mercadopago_oxxo,
+            'mercadopago_paypal' => $request->mercadopago_paypal,
         ]);
 
         //Session message

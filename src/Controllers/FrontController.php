@@ -627,10 +627,13 @@ class FrontController extends Controller
                 "pending" => route('purchase.pending')
             );
 
+            $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_oxxo);
+            $mercadopago_oxxo = array ("id" => $mercado_payment->mercadopago_paypal);
+
             $preference->payment_methods = array(
                 "excluded_payment_methods" => array(
-                array("id" => "paypal"),
-                array("id" => "oxxo")
+                $mercadopago_paypal,
+                $mercadopago_oxxo
               ),
               "excluded_payment_types" => array(
                 array("id" => "ticket", "id" => "atm")

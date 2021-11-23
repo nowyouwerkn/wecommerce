@@ -11,9 +11,9 @@
 
                 $notifications_all = Nowyouwerkn\WeCommerce\Models\Notification::with('user')->where('read_at', NULL)->orderBy('created_at', 'desc')->count();
             @endphp
-          <a href="javascript:void(0)" class="dropdown-link new-indicator" data-toggle="dropdown">
+          <a href="javascript:void(0)" class="dropdown-link new-indicator" id="bell-notification" data-toggle="dropdown">
             <i data-feather="bell"></i>
-            <span>{{ $notifications_all }}</span>
+            <span id="notification-number">{{ $notifications_all }}</span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
             <div class="dropdown-header d-flex align-items-center justify-content-between">
@@ -56,3 +56,27 @@
         <a href="https://github.com/nowyouwerkn/wecommerce/blob/main/CHANGELOG.md" target="_blank" class="badge badge-info ml-3" style="line-height: 14px;">v. 1.4</a>
     </nav>
 </div>
+
+@push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/es.min.js" integrity="sha512-DekU3EtZYK7QnqJh6Y+0LSL4w48zh6ZP/f52wTKiRa7uTlS8Eecw9aBVPwT4pR17B3dxiZBJwo/+XH8FPehgkQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+     <script type="text/javascript">
+                    $('#bell-notification').on('click', function(){
+                        event.preventDefault();
+
+                        $.ajax({
+                            method: 'GET',
+                            url: "{{ route('notifications.mark.read') }}",
+                            data:{
+                                _token: "{{ Session::token() }}"
+                            },
+                            success: function(msg){
+                                $('#notification-number').text('0');
+                            },
+                            error: function(msg){
+
+                            }
+                        });
+                    });
+                </script>
+@endpush
