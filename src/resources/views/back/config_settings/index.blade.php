@@ -6,10 +6,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                 <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Preferencias Generales</li>
+                <li class="breadcrumb-item active" aria-current="page">Configuracion de tienda</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Preferencias Generales</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Configuracion de tienda</h4>
         </div>
         <div class="d-none d-md-block">
 
@@ -46,20 +46,12 @@
                 <h4 class="mb-0 ml-2">Regresar</h4>
             </div>
 
-            <h3>Preferencias Generales</h3>
-            <p>Conecta cualquier sistema de empresas de terceros para analítica, seguimiento de pedidos, reservaciones, chats en vivo y más. .</p>
+            <h3>Configuracion de tienda</h3>
+            <p>Aqui puedes manejar las configuraciones de tu Tienda.</p>
 
-            <p>Tu tienda puede vincularse con: </p>
+            
 
-            <ul>
-                <li>Google Analytics</li>
-                <li>Facebook Pixel</li>
-                <li>Jivo Chat</li>
-                <li>Sirvoy</li>
-                <li>Acuity Scheduling</li>
-                <li>Calendly</li>
-                <li>y mas...</li>
-            </ul>
+       
         </div>
         
     </div>
@@ -128,6 +120,7 @@
                     <label for="name">Teléfono</label>
                     <input type="text" class="form-control" name="phone" value="{{ old('phone') }}" />
                 </div>
+                
 
                 <div class="row">
                     @php

@@ -84,9 +84,9 @@ class ProductController extends Controller
         $product->in_index = $request->in_index;
         $product->is_favorite = $request->is_favorite;
         
-        $product->price = $request->price;
-        $product->discount_price = $request->discount_price;
-        $product->production_cost = $request->production_cost;
+        $product->price = str_replace(',', '', $request->price);
+        $product->discount_price = str_replace(',', '',  $request->discount_price);
+        $product->production_cost = str_replace(',', '', $request->production_cost);
 
         $product->has_discount = $request->has_discount;
         $product->discount_start = $request->discount_start;
@@ -313,9 +313,9 @@ class ProductController extends Controller
         $product->in_index = $request->in_index;
         $product->is_favorite = $request->is_favorite;
         
-        $product->price = $request->price;
-        $product->discount_price = $request->discount_price;
-        $product->production_cost = $request->production_cost;
+        $product->price = str_replace(',', '', $request->price);
+        $product->discount_price = str_replace(',', '',  $request->discount_price);
+        $product->production_cost = str_replace(',', '', $request->production_cost);
 
         $product->has_discount = $request->has_discount;
         $product->discount_start = $request->discount_start;

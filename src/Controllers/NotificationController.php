@@ -109,7 +109,7 @@ class NotificationController extends Controller
         });
     }
 
-      public function RegisterUser($data, $name, $email)
+      public function registerUser($name, $email)
     {
         $config = StoreConfig::find($id);
 
@@ -213,7 +213,7 @@ class NotificationController extends Controller
         return redirect()->back();
     }
 
-     public function OrderDelivered(Request $request, $order_id) {
+     public function orderDelivered( $order_id) {
         $mail = MailConfig::first();
 
         config(['mail.driver'=> $mail->mail_driver]);
@@ -226,8 +226,9 @@ class NotificationController extends Controller
         $order = Order::find($order_id);
         $order->cart = unserialize($order->cart);
 
-        $email = $request->email;
+        
         $user = User::find($order->user->id);
+        $email = $user->email;
         $name = $user->name;
 
         $config = StoreConfig::first();

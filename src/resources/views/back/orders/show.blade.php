@@ -114,46 +114,53 @@
         line-height: 1;
     }
 
-    .bg-pagado {
+   .btn-pagado {
         color: #fff;
         background-color: #10b759;
         border-color: #10b759;
     }
 
-    .bg-empaquetado {
+    .btn-empaquetado {
         color: #1c273c;
         background-color: #ffc107;
         border-color: #ffc107;
     }
 
-    .bg-pendiente {
+    .btn-pendiente,
+    .btn-pago-pendiente {
         color: #fff;
-        background-color: #3b4863;
-        border-color: #3b4863;
+        background-color: #fa983a;
+        border-color: #fa983a;
     }
 
-    .bg-enviado {
+    .btn-enviado {
         color: #fff;
         background-color: #00b8d4;
         border-color: #00b8d4;
     }
 
-    .bg-entregado {
+    .btn-entregado {
         color: #fff;
         background-color: #7987a1;
         border-color: #7987a1;
     }
 
-    .bg-cancelado {
+    .btn-cancelado {
         color: #fff;
         background-color: #dc3545;
         border-color: #dc3545;
     }
 
-    .bg-expirado {
+    .btn-expirado {
         color: #fff;
         background-color: #dc3545;
         border-color: #dc3545;
+    }
+
+    .btn-sin-completar {
+        color: #fff;
+        background-color: #0a3d62;
+        border-color: #0a3d62;
     }
 
     .tracking-card .badge{
@@ -260,40 +267,44 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="d-flex align-items-center status-row">
-                    <div class="status-box bg-{{ Str::slug($order->status) }}">
-                        @switch($order->status)
-                            @case('Pendiente')
-                                <i class="fas fa-exclamation mr-1"></i> 
-                                @break
+                    <div class="status-box btn-{{ Str::slug($order->status) }}">
+                         @switch($order->status)
+                                @case('Pago Pendiente')
+                                    <i class="fas fa-exclamation mr-1"></i> 
+                                    @break
 
-                            @case('Pagado')
-                                <i class="fas fa-check mr-1"></i> 
-                                @break
+                                @case('Pagado')
+                                    <i class="fas fa-check mr-1"></i> 
+                                    @break
 
-                            @case('Empaquetado')
-                                <i class="fas fa-box mr-1"></i>
-                                @break
+                                @case('Empaquetado')
+                                    <i class="fas fa-box mr-1"></i>
+                                    @break
 
-                            @case('Enviado')
-                                <i class="fas fa-truck mr-1"></i> 
-                                @break
+                                @case('Enviado')
+                                    <i class="fas fa-truck mr-1"></i> 
+                                    @break
 
-                            @case('Entregado')
-                                <i class="fas fa-dolly mr-1"></i>
-                                @break
+                                @case('Entregado')
+                                    <i class="fas fa-dolly mr-1"></i>
+                                    @break
 
-                            @case('Cancelado')
-                                <i class="fas fa-times mr-1"></i> 
-                                @break
+                                @case('Cancelado')
+                                    <i class="fas fa-times mr-1"></i> 
+                                    @break
 
-                            @case('Expirado')
-                                <i class="fas fa-times mr-1"></i> 
-                                @break
+                                @case('Expirado')
+                                    <i class="fas fa-times mr-1"></i> 
+                                    @break
 
-                            @default
-                                <i class="fas fa-check mr-1"></i> 
+                                @case('Sin Completar')
+                                    <i class="fas fa-user-clock"></i>
+                                    @break
 
-                        @endswitch
+                                @default
+                                    <i class="fas fa-check mr-1"></i> 
+
+                            @endswitch
                         
                         <span>{{ $order->status ?? 'Pagado'}}</span>
                     </div>

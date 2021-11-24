@@ -316,7 +316,7 @@
                               <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">MX$</span>
                               </div>
-                                <input type="number" id="price" name="price" class="form-control" value="{{ $product->price }}">
+                                <input type="text" id="price" name="price" class="form-control" value="{{ $product->price }}">
                             </div>
                         </div>
     
@@ -326,7 +326,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">MX$</span>
                                 </div>
-                                <input type="number" id="discount_price" name="discount_price" class="form-control" value="{{ $product->discount_price }}">
+                                <input type="text" id="discount_price" name="discount_price" class="form-control" value="{{ $product->discount_price }}">
                             </div>
                         </div>
 
@@ -354,7 +354,7 @@
                               <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">MX$</span>
                               </div>
-                                <input type="number" id="production_cost" name="production_cost" class="form-control value-checker" value="{{ $product->production_cost }}">
+                                <input type="text" id="production_cost" name="production_cost" class="form-control value-checker" value="{{ $product->production_cost }}">
                             </div>
                             <span class="tx-13 tx-color-03 d-block">Tus clientes no verán esto.</span>
                         </div>
@@ -634,6 +634,24 @@
 
 @push('scripts')
 <script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
+   <script src="{{ asset('lib/cleave.js/cleave.min.js') }}"></script>
+<script type="text/javascript">
+    var cleaveA = new Cleave('#price', {
+      numeral: true,
+      numeralThousandsGroupStyle: 'thousand'
+    });
+
+       var cleaveB = new Cleave('#discount_price', {
+          numeral: true,
+          numeralThousandsGroupStyle: 'thousand'
+        });
+
+        var cleaveC = new Cleave('#production_cost', {
+          numeral: true,
+          numeralThousandsGroupStyle: 'thousand'
+        });
+       
+</script>
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -646,12 +664,12 @@
     $('.value-checker').keyup(function(){
         event.preventDefault();
 
-        var price = $('#price').val();
-        var discount_price = $('#discount_price').val();
-        var production_cost = $('#production_cost').val();
+          var price = $('#price').val();
+        var discount_price = $('#discount_price').replace(/,/g, "").val();
+        var production_cost = $('#production_cost').replace(/,/g, "").val();
 
-        var margin = ((parseFloat(price) - parseFloat(production_cost)) / 100);
-        var profit = (parseFloat(price) - parseFloat(production_cost));
+        var margin = ((parseFloat(price.replace(/,/g, "")) - parseFloat(production_cost.replace(/,/g, ""))) / 100);
+        var profit = (parseFloat(price.replace(/,/g, "")) - parseFloat(production_cost.replace(/,/g, "")));
 
         $('#margin').text(parseFloat(margin).toFixed(2));
         $('#profit').text(parseFloat(profit).toFixed(2));

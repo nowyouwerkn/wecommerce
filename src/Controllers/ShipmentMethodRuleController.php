@@ -41,7 +41,7 @@ class ShipmentMethodRuleController extends Controller
             'type' => $request->type,
             'condition' => $request->condition,
             'comparison_operator' => $request->comparison_operator,
-            'value' => $request->value,
+            'value' => str_replace(',', '',$request->value),
             'allow_coupons' => $request->allow_coupons,
             'is_active' => true,
         ]);

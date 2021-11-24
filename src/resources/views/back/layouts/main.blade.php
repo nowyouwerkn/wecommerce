@@ -97,7 +97,7 @@
                 margin-bottom: 0;
             }
             .bg-teal{
-                margin-left: 50% !important ;
+                margin-left: 40% !important ;
             }
             @media only screen and (max-width: 1200px) {
             .p-tienda-desk{
@@ -233,7 +233,6 @@
     <script src="{{ asset('lib/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('lib/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('lib/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
-   
     <script src="{{ asset('assets/js/dashforge.js') }}"></script>
     <script src="{{ asset('assets/js/dashforge.aside.js') }}"></script>
 

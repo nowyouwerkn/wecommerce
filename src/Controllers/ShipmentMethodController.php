@@ -57,7 +57,7 @@ class ShipmentMethodController extends Controller
             $payment->update([
                 'type' => $request->type,
                 'supplier' => $request->supplier,
-                'cost' => $request->cost,
+                'cost' => str_replace(',', '',$request->cost),
                 'public_key' => $request->public_key,
                 'private_key' => $request->private_key,
                 'sandbox_mode' => true,
@@ -69,7 +69,7 @@ class ShipmentMethodController extends Controller
             $payment = ShipmentMethod::create([
                 'type' => $request->type,
                 'supplier' => $request->supplier,
-                'cost' => $request->cost,
+                'cost' => str_replace(',', '',$request->cost),
                 'public_key' => $request->public_key,
                 'private_key' => $request->private_key,
                 'sandbox_mode' => true,

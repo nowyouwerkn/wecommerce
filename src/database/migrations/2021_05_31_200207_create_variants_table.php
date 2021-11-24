@@ -17,6 +17,7 @@ class CreateVariantsTable extends Migration
             $table->id();
 
             $table->enum('type', ['Talla', 'Color', 'Material', 'Estilo', 'Nombre']);
+            $table->string('UPC');
             $table->string('value');
             
             $table->timestamps();

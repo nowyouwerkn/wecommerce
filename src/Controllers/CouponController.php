@@ -50,11 +50,11 @@ class CouponController extends Controller
         $coupon->code = $request->code;
         $coupon->description = $request->description;
         $coupon->type = $request->type;
-        $coupon->qty = $request->qty;
+        $coupon->qty = str_replace(',', '',$request->qty);
 
-        $coupon->minimum_requirements_value = $request->minimum_requirements_value;
-        $coupon->usage_limit_per_user = $request->usage_limit_per_user;
-        $coupon->usage_limit_per_code = $request->usage_limit_per_code;
+        $coupon->minimum_requirements_value = str_replace(',', '',$request->minimum_requirements_value);
+        $coupon->usage_limit_per_user = str_replace(',', '',$request->usage_limit_per_user);
+        $coupon->usage_limit_per_code = str_replace(',', '',$request->usage_limit_per_code);
         $coupon->exclude_discounted_items = $request->exclude_discounted_items;
         $coupon->individual_use = $request->individual_use;
 

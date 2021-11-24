@@ -43,12 +43,12 @@
 @endsection
 
 @section('content')
-    <div class="col-12">
+    <div class="">
              <form role="search" action="{{ route('products.query') }}">
                 <div class="input-group border-0">
                     <input type="search" name="query" class="form-control" placeholder="Busca tu producto">
                     <button class="btn btn-outline-secondary" type="submit">
-                        <ion-icon style="font-size: 1.5rem;" name="search-outline"></ion-icon>
+                        <i class="fas fa-search"></i>
                     </button>
                 </div>
             </form>
