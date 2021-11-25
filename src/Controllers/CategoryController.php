@@ -103,8 +103,9 @@ class CategoryController extends Controller
     {
 
         $category = Category::find($id);
-        $products = Product::with('subCategory')->get();
-        
+        $products = Product::whereHas('subCategory',function ($query) use($id) {
+        return $query->where('category_id', '=', $id);
+        })->get();
         return view('wecommerce::back.categories.show')->with('category', $category)->with('products',$products);
     }
 
