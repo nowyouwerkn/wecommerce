@@ -83,12 +83,13 @@
             <div class="card-body pb-0">
                 <h5 class="card-title display-4 mb-1">{{ $category->name }}</h5> 
 
-                <p class="card-text">Productos en esta categoría: <span class="badge badge-info">{{ $category->products->count() }}</span></p>
+                <p class="card-text">Productos en esta categoría: <span class="badge badge-info">{{ $products->count() }}</span></p>
 
                 <h5 class="card-title mt-3 mb-2">Sub-Categorías</h5>              
             </div>
 
             <ul class="mt-0 list-group list-group-flush">
+                
                 @foreach($category->children as $sub)
                 <li class="d-flex align-items-center justify-content-between list-group-item">
                     <div>

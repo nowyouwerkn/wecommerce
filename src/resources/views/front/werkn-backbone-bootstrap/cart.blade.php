@@ -6,190 +6,233 @@
 
 @push('stylesheets')
 <style type="text/css">
-    .cart-total .shop-cart-widget form ul li > span{
-        width: 50%;
+
+    .modal{
+        z-index: 999999;
     }
 
-    .cart-total .shop-cart-widget{
-        width: 30%;
+    .close-modal{
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 999999999;
+        font-size: 2rem;
+        pointer-events: all;
+        background-color: var(--color-purple);
+        color: var(--color-white);
+        border:none;
+        padding: 1rem;    
     }
+
+    .margin-top {
+        margin-top: 40px;
+    }
+
 </style>
 @endpush
 
 @section('content')
-<!-- breadcrumb-area -->
-<section class="breadcrumb-area breadcrumb-bg" data-background="{{ asset('themes/werkn-backbone/img/bg/s_breadcrumb_bg01.jpg') }}">
+
+<section class="margin-top">
     <div class="container">
+        <!-- title -->
         <div class="row">
-            <div class="col-12">
-                <div class="breadcrumb-content">
-                    <h2>Carrito de Compra</h2>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('index') }}">Inicio</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Carrito de Compra</li>
-                        </ol>
-                    </nav>
+            <div class="col-md-12">
+                <div class="title_image">
+                    <div class="title_image__info">
+                        <h1>Tu Carrito de compra</h1>
+                        <p >Tu elección</p>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <!-- cart -->
+        <div class="row mt-5">
+            @if(Session::has('cart'))
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($products as $product)
+                            @php
+                                $item_img = $product['item']['image'];
+                                $variant = $product['variant'];
+                            @endphp
+                            <tr>
+                                <td>
+                                    <a href="{{ route('catalog.all') }}">
+                                        <img src="{{ asset('img/products/' . $item_img ) }}" alt="" width="100">
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ route('catalog.all') }}" class="title_small">
+                                        {{ $product['item']['name'] }}
+                                    </a>
+                                    <p class="subtitle">Talla: {{ $variant }}</p>
+                                </td>
+                                @if($product['item']['has_discount'] == true)
+                                    <td>${{ number_format($product['item']['discount_price'],2) }}</td>
+                                @else
+                                    <td>${{ number_format($product['item']['price'],2) }}</td>
+                                @endif
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{{ route( 'cart.substract', [ 'id' => $product['item']['id'], 'variant' => $product['variant'] ] ) }}" class="btn btn_custom--purple d-flex align-items-center">-</a>
+                                            <p class="btn d-flex align-items-center h-100">{{ $product['qty'] }}</p>
+                                            <a href="{{ route( 'cart.add-more', [ 'id' => $product['item']['id'], 'variant' => $product['variant'], 'qty' => $product['qty'] ] ) }}" class="btn btn_custom--purple d-flex align-items-center">+</a>
+                                        </div>
+                                    </td>
+                                    <td><span>$ {{ number_format($product['price'], 2) }} </span></td>
+
+                                    <td>
+                                        <a href="{{ route( 'cart.delete', ['id' => $product['item']['id'], 'variant' => $variant ] ) }}" class="btn">
+                                            <ion-icon name="trash-outline"></ion-icon>
+                                        </a>
+                                    </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between my-5 cart_info">
+                    <div class="col-4 card px-4 pt-3 pb-3">
+
+                        @php
+                            $card_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', '!=','Paypal')->where('type', 'card')->where('is_active', true)->first();
+                            $cash_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
+                            $paypal_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
+                            $mercado_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', 'MercadoPago')->where('is_active', true)->first();
+                        @endphp
+
+                        <div class="list_custom">
+                            <div class="row">
+                                @if(!empty($card_payment))
+                                    <div class="col-6">
+                                        <img src="{{ asset('img/icons/card-info.png') }}" style="padding-top: 10px; margin-bottom: 5px; height: 35px; width: auto !important;">
+                                        <p>Aceptamos Todas las Tarjetas de Crédito</p>
+                                    </div>
+                                @endif
+
+                                <div class="col-6">
+                                    <!--<img src="{{ asset('img/icons/ssl.png') }}">-->
+                                    <div style="width: 90%; height: 50px;">
+                                        <script type="text/javascript"> //<![CDATA[
+                                            var tlJsHost = ((window.location.protocol == "https:") ? "https://secure.trust-provider.com/" : "http://www.trustlogo.com/");
+                                            document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
+                                        //]]></script>
+                                        <script language="JavaScript" type="text/javascript">
+                                            TrustLogo("https://www.positivessl.com/images/seals/positivessl_trust_seal_md_167x42.png", "POSDV", "none");
+                                        </script>
+                                    </div>
+                                    <p>Sitio Seguro con Encriptación de 256-Bits</p>
+                                </div>
+
+                                @if(!empty($paypal_payment))
+                                    <div class="col-6 mt-4">
+                                        <img src="{{ asset('assets/img/brands/paypal.png') }}" style="padding-top: 10px; margin-bottom: 5px; height: 35px; width: auto !important;">
+                                        <p>Aceptamos pagos por medio de Paypal</p>
+                                    </div>
+                                @endif
+
+                                @if(!empty($mercado_payment))
+                                    <div class="col-6 mt-4">
+                                        <img src="{{ asset('assets/img/brands/mercado-pago.png') }}" style="padding-top: 10px; margin-bottom: 5px; height: 35px; width: auto !important;">
+                                        <p>Aceptamos pagos por medio de MercadoPago</p>
+                                    </div>
+                                @endif
+
+                                @if(!empty($cash_payment))
+                                    <div class="col-6 mt-4">
+                                        <img src="{{ asset('assets/img/brands/oxxopay.png') }}" style="padding-top: 10px; margin-bottom: 5px; height: 35px; width: auto !important;">
+                                        <p>Aceptamos pagos en efectivo en Oxxo</p>
+                                    </div>
+                                @endif
+
+                             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-4 card px-4 pt-3 pb-3">
+                        <p class="subtitle">Total del Carrito</p>
+                        <div class="list_custom">
+                            <form action="#">
+                                <ul class="list_custom__block">
+                                    <li class="list_custom__item d-flex justify-content-between">
+                                        <span class="subtitle">Subtotal</span> ${{ number_format($subtotal,2) }}
+                                    </li>
+
+                                    <li class="list_custom__item d-flex justify-content-between">
+                                        <span class="subtitle">Envío</span>
+                                        @if($shipping == '0')
+                                        Gratis
+                                        @else
+                                        ${{ number_format($shipping,2) }}
+                                        @endif
+                                    </li>
+
+                                    <li class="list_custom__item d-flex justify-content-between">
+                                        <span class="subtitle">Total</span> <span class="amount">${{ number_format($total,2) }}</span>
+                                    </li>
+                                </ul>
+                                
+                    
+                                                
+                           
+                                    <a class="btn btn-primary mb-2 w-100 btn_icon" href="{{ route('checkout') }}">
+                                        <ion-icon name="cash-outline"></ion-icon> Completar pago
+                                    </a>
+                               
+                               
+                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="col-md-6 offset-md-3 mt-5 text-center">
+                    <p class="filter__title">No hay productos en el carrito</p>
+                    <p class="filter__info">
+                        <a href="{{ route('catalog.all') }}" class="btn btn_custom btn_custom--purple">¡Empieza a llenarlo!</a>
+                    </p>
+                </div>
+            @endif
         </div>
     </div>
 </section>
-<!-- breadcrumb-area-end -->
-
-@if(Session::has('cart'))
-<!-- cart-area -->
-<div class="cart-area pt-100 pb-100">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="cart-wrapper">
-                    <div class="table-responsive">
-                        <table class="table mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="product-thumbnail"></th>
-                                    <th class="product-name">Producto</th>
-                                    <th class="product-price">Precio</th>
-                                    <th class="product-quantity">Cantidad</th>
-                                    <th class="product-subtotal">Subtotal</th>
-                                    <th class="product-delete"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($products as $product)
-                                @php
-                                    $item_img = $product['item']['image'];
-                                    $variant = $product['variant'];
-                                @endphp
-                                <tr>
-                                    <td class="product-thumbnail" ><a href="{{ route('detail', [$product['item']['category']['slug'], $product['item']['slug']]) }}">
-                                        <img width="100" height="100" src="{{ asset('img/products/' . $item_img ) }}" alt=""></a></td>
-                                    <td class="product-name">
-                                        <h4><a href="{{ route('detail', [$product['item']['category']['slug'], $product['item']['slug']]) }}">{{ $product['item']['name'] }}</a></h4>
-                                        <p class="mb-2">Talla: {{ $variant }}</p>
-                                    </td>
-                                    @if($product['item']['has_discount'] == true)
-                                    <td class="product-price">${{ number_format($product['item']['discount_price'],2) }}</td>
-                                    @else
-                                    <td class="product-price">${{ number_format($product['item']['price'],2) }}</td>
-                                    @endif
-                                    <td class="product-quantity">
-                                        <div class="btn-group">
-                                            <a href="{{ route( 'cart.substract', [ 'id' => $product['item']['id'], 'variant' => $product['variant'] ] ) }}" class="btn btn-qty btn-outline-secondary">-</a>
-                                            <p class="btn btn-qty btn-link mb-0">{{ $product['qty'] }}</p>
-                                            <a href="{{ route( 'cart.add-more', [ 'id' => $product['item']['id'], 'variant' => $product['variant'], 'qty' => $product['qty'] ] ) }}" class="btn btn-qty btn-outline-secondary">+</a>
-                                        </div>
-                                    </td>
-                                    <td class="product-subtotal"><span>$ {{ number_format($product['price'], 2) }} </span></td>
-
-                                    <td class="product-delete"><a href="{{ route( 'cart.delete', ['id' => $product['item']['id'], 'variant' => $variant ] ) }}"><i class="far fa-trash-alt">borrar</i></a></td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <!--
-                    <div class="shop-cart-bottom mt-20">
-                        <div class="cart-coupon">
-                            <form action="#">
-                                <input type="text" placeholder="Enter Coupon Code...">
-                                <button class="btn">Apply Coupon</button>
-                            </form>
-                        </div>
-                        <div class="continue-shopping">
-                            <a href="shop.html" class="btn">update shopping</a>
-                        </div>
-                    </div>
-                    -->
-                </div>
-                <div class="cart-total pt-95" style="display:flex; justify-content: space-between;">
-                    <h3 class="title">Total del Carrito</h3>
-
-                    <div class="shop-cart-widget" style="display:inline-block;">
-                        <form action="#">
-                            <ul>
-                                <li class="sub-total"><span>Subtotal</span> ${{ number_format($subtotal,2) }}</li>
-                            
-                                <li class="sub-total"><span>Impuestos</span> ${{ number_format($tax,2) }}</li>
-                                
-                                <li class="sub-total">
-                                    <span>Envío</span>
-                                    @if($shipping == '0')
-                                    Gratis
-                                    @else
-                                    ${{ number_format($shipping,2) }}
-                                    @endif
-                                </li>
-
-                                @php
-                                    $rule = Nowyouwerkn\WeCommerce\Models\ShipmentMethodRule::where('is_active', true)->first();
-                                @endphp
-
-                                @if (!empty($rule))
-                                <div class="alert alert-info d-block">
-                                    <span style="margin-right: 2px"><strong>{{ $rule->type }}</strong></span>
-                                    <span style="margin-right: 2px">cuando <strong>{{ $rule->condition }}</strong> sea</span>
-                                    <span style="margin-right: 2px">
-                                    <strong>
-                                    @switch($rule->comparison_operator)
-                                        @case('==')
-                                            igual a
-                                            @break
-
-                                        @case('!=')
-                                            no igual a
-                                            @break
-
-                                        @case('<')
-                                            menor que
-                                            @break
-
-                                        @case('<=')
-                                            menor que o igual a
-                                            @break
-
-                                        @case('>')
-                                            mayor que
-                                            @break
-
-                                        @case('>=')
-                                            mayor que o igual a
-                                            @break
-
-                                        @default
-                                            Error. Elimina esta regla.
-                                    @endswitch
-                                    </strong>
-                                    </span>
-
-                                    <span style="margin-right: 2px"><strong>{{ number_format($rule->value) }}</strong></span> 
-                                </div>
-                                @endif
-
-                                <li class="cart-total-amount"><span>Total</span> <span class="amount">${{ number_format($total,2) }}</span></li>
-                            </ul>
-                            
-                            <a class="btn mt-2" href="{{ route('checkout') }}">Continuar tu compra</a>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+     <button type="button" class="close-modal" data-bs-dismiss="modal">&times;</button>
+      <!-- Modal content-->
+      <div class="modal-content">
+            <div class="row">
+    
+      <div class="col-12">
+        <div class="modal-title">
+          
+            <h2>¡Llena tu informacion para seguir con tu compra!</h2>
+            <hr>
+           
+           
         </div>
+        
+      </div>
     </div>
+  </div>
 </div>
-<!-- cart-area-end -->
-@else
-<div class="container shopping-cart color-wrap py-5">
-    <div class="row">
-        <div class="col-md-6 ml-auto mr-auto text-center my-5">
-            <h2>No hay productos en el carrito.<i class="fa fa-frown-o"></i></h2>
-            <br>
-            <a href="{{ route('catalog.all') }}" class="btn btn-lg btn-primary">¡Empieza a llenarlo!</a>
-        </div>
-    </div>
 </div>
-@endif
 @endsection
 
 @push('scripts')

@@ -155,7 +155,7 @@
                 <li class="d-flex align-items-center justify-content-between list-group-item">
                     <div>
                         <a href="{{ route('categories.show', $sub->id) }}">{{ $sub->name }} 
-                            <span class="badge badge-info">{{ $sub->products->count() }}</span>
+                            <span class="badge badge-info">{{ $sub->parent_id }}</span>
                         </a>
 
                     </div>

@@ -358,6 +358,7 @@ Route::get('/xml-feed', [
 */
 Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@index')->name('index');
 Route::get('catalog', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalogAll')->name('catalog.all');
+Route::post('catalog/order', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalog_order')->name('catalog.orderby');
 
 Route::get('/catalog/{category_slug}', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalog',

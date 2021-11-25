@@ -101,9 +101,11 @@ class CategoryController extends Controller
 
     public function show($id)
     {
-        $category = Category::find($id);
 
-        return view('wecommerce::back.categories.show')->with('category', $category);
+        $category = Category::find($id);
+        $products = Product::with('subCategory')->get();
+        
+        return view('wecommerce::back.categories.show')->with('category', $category)->with('products',$products);
     }
 
     public function edit($id)
