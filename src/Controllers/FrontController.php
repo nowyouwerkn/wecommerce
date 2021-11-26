@@ -644,7 +644,7 @@ class FrontController extends Controller
             $preference->back_urls = array(
                 "success" => route('purchase.complete'),
                 "failure" => route('checkout'),
-                "pending" => route('purchase.pending')
+                
             );
 
             $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_oxxo);
