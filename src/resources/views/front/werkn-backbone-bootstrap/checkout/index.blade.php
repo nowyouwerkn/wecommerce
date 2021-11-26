@@ -93,8 +93,9 @@
                     $('#cardInfo').fadeIn();
                     $('#cardInfo').find('input').prop('disabled', false);
                     $('input[name=method]').val('Pago con Tarjeta');
-
-                    $('#paymentMethod').text('{{ $card_payment->supplier }}');
+                    if (typeof {{$card_payment}} != null) {
+                      $('#paymentMethod').text('{{isset($card_payment) ? $card_payment->supplier : 'null' }}');
+                    }
 
                     break;
 

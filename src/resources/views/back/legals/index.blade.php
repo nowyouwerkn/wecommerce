@@ -25,7 +25,7 @@
             <h4 class="mg-b-0 tx-spacing--1">Textos Legales</h4>
         </div>
         <div class="d-none d-md-block">
-             <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateLegalText"  class="btn btn-sm btn-primary btn-uppercase"><i class="fas fa-plus"></i> Agregar Pregunta frecuente</a>
+             <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateLegalText"  class="btn btn-sm btn-primary btn-uppercase"><i class="fas fa-plus"></i> Agregar Texto legal</a>
         </div>
     </div>
 @endsection
