@@ -160,18 +160,12 @@ php artisan db:seed
 public const HOME = '/profile';
 ```
 
-2. Sobreescribir el archivo routes.php de tu proyecto de laravel con el archivo routes del repositorio.
-```
-Ruta:
-https://github.com/nowyouwerkn/wecommerce/blob/main/src/routes.php
-```
-
-3. En tu archivo `app.php` dentro de la carpeta `config` sobreescribe la información de zona horaria con lo siguiente:
+2. En tu archivo `app.php` dentro de la carpeta `config` sobreescribe la información de zona horaria con lo siguiente:
 ```
 'timezone' => 'America/Mexico_City',
 ```
 
-4. (OPCIONAL) Si quieres usar las traducciones en español debes sobreescribir tu objeto `locale` de tu archivo `app.php` dentro de la carpeta `config` con lo siguiente. Si publicaste los archivos del paquete correctamente el sistema automáticamente usará la traducción:
+3. (OPCIONAL) Si quieres usar las traducciones en español debes sobreescribir tu objeto `locale` de tu archivo `app.php` dentro de la carpeta `config` con lo siguiente. Si publicaste los archivos del paquete correctamente el sistema automáticamente usará la traducción:
 ```
 'locale' => 'es',
 ```
