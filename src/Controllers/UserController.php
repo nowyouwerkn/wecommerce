@@ -62,9 +62,31 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        return view('wecommerce::back.users.show', compact('id'));
+      $this->validate($request, [
+            'name' => 'required',
+            'email' => 'email|required',
+            'password' => 'required|min:4',
+        ]);
+
+        $user = User::find($id);
+
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->password = bcrypt($request->input('password'));
+ 
+
+        $rol = Role::findByName($request->rol);
+
+        // Guardar primero el admin
+        $user->save();
+
+        // Asignar el Rol
+        $user->assignRole($rol->name);
+        Session::flash('success', 'Se actualizó exitosamente tu usuario.');
+
+        return redirect()->back();
     }
 
     public function edit($id)
@@ -74,7 +96,8 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        
+       
     }
 
     public function destroy($id)

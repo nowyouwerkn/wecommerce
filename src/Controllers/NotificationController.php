@@ -109,6 +109,18 @@ class NotificationController extends Controller
         });
     }
 
+      public function registerUser($name, $email)
+    {
+        $config = StoreConfig::find($id);
+
+        Mail::send('wecommerce::mail.new_user', $data, function($message) use($name, $email) {
+
+            $message->to($email, $name)->subject('Gracias por registrarte en '. $config->store_name);
+            
+            $message->from($config->sender_email, $config->store_name);
+        });
+    }
+
     public function markAsRead()
     {
         $notifications = Notification::where('read_at', NULL)->orderBy('created_at', 'desc')->get();
@@ -197,6 +209,53 @@ class NotificationController extends Controller
         }
 
         Session::flash('success', 'Correo reenviado al usuario exitosamente.');
+
+        return redirect()->back();
+    }
+
+     public function orderDelivered( $order_id) {
+        $mail = MailConfig::first();
+
+        config(['mail.driver'=> $mail->mail_driver]);
+        config(['mail.host'=>$mail->mail_host]);
+        config(['mail.port'=>$mail->mail_port]);   
+        config(['mail.username'=>$mail->mail_username]);
+        config(['mail.password'=>$mail->mail_password]);
+        config(['mail.encryption'=>$mail->mail_encryption]);
+
+        $order = Order::find($order_id);
+        $order->cart = unserialize($order->cart);
+
+        
+        $user = User::find($order->user->id);
+        $email = $user->email;
+        $name = $user->name;
+
+        $config = StoreConfig::first();
+        $theme = StoreTheme::first();
+
+        $sender_email = $config->sender_email;
+        $store_name = $config->store_name;
+        $contact_email = $config->contact_email;
+
+        $logo = asset('themes/' . $theme->get_name() . '/img/logo.svg');
+
+        $data = array('order_id' => $order->id, 'user_id' => $order->user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at);
+
+        try {
+            Mail::send('wecommerce::mail.order_delivered', $data, function($message) use($name, $email, $sender_email, $store_name) {
+                $message->to($email, $name)->subject
+                ('¡Gracias por comprar con nosotros!');
+                
+                $message->from($sender_email, $store_name);
+            });
+        } catch (Exception $e) {
+            Session::flash('error', 'No se ha identificado servidor SMTP en la plataforma. Configuralo correctamente para enviar correos desde tu sistema.');
+
+            return redirect()->back();
+        }
+
+        Session::flash('success', 'Correo enviado al usuario exitosamente.');
 
         return redirect()->back();
     }

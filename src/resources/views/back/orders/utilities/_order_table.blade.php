@@ -153,18 +153,127 @@
     .tooltip-custom:hover:after{
         opacity: 1;
     }
+        .status-circle{
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px;
+            border-radius: 100%;
+        }
+
+        .filter-btn{
+            border: solid 1px;
+            background-color: transparent;
+            color: lightgrey ;
+        }
 </style>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Orden</th>
+            <th>
+            <div class="d-flex">
+                       Orden 
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="id">
+                    <input type="hidden" name="order" value="asc">
+                    <button class="filter-btn" type="submit">&#8613;</button>
+                </form>
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="id">
+                    <input type="hidden" name="order" value="desc">
+                    <button class="filter-btn" type="submit">&#8615;</button>
+                </form>
+                </div>
+            </th>
             <th>ID Pago</th>
-            <th>Método</th>
-            <th>Comprador</th>
-            <th>Fecha de Compra</th>
-            <th>Cantidad Pagada</th>
-            <th>Estatus</th>
+            <th>
+                   <div class="d-flex">
+                       Método
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="payment_method">
+                    <input type="hidden" name="order" value="asc">
+                    <button class="filter-btn" type="submit">&#8613;</button>
+                </form>
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="payment_method">
+                    <input type="hidden" name="order" value="desc">
+                    <button class="filter-btn" type="submit">&#8615;</button>
+                </form>
+                </div>
+            </th>
+            <th>
+                    <div class="d-flex">
+                       Comprador
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="client_name">
+                    <input type="hidden" name="order" value="asc">
+                    <button class="filter-btn" type="submit">&#8613;</button>
+                </form>
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="client_name">
+                    <input type="hidden" name="order" value="desc">
+                    <button class="filter-btn" type="submit">&#8615;</button>
+                </form>
+                </div>
+            </th>
+            <th>
+                    <div class="d-flex">
+                       Fecha de compra
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="created_at">
+                    <input type="hidden" name="order" value="asc">
+                    <button class="filter-btn" type="submit">&#8613;</button>
+                </form>
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="created_at">
+                    <input type="hidden" name="order" value="desc">
+                    <button class="filter-btn" type="submit">&#8615;</button>
+                </form>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                       Cantidad comprada
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="payment_total">
+                    <input type="hidden" name="order" value="asc">
+                    <button class="filter-btn" type="submit">&#8613;</button>
+                </form>
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="payment_total">
+                    <input type="hidden" name="order" value="desc">
+                    <button class="filter-btn" type="submit">&#8615;</button>
+                </form>
+                </div>
+            </th>
+            <th>
+                    <div class="d-flex">
+                       Estatus
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="status">
+                    <input type="hidden" name="order" value="asc">
+                    <button class="filter-btn" type="submit">&#8613;</button>
+                </form>
+                <form action="{{route('orders.filter')}}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="filter" value="status">
+                    <input type="hidden" name="order" value="desc">
+                    <button class="filter-btn" type="submit">&#8615;</button>
+                </form>
+                </div>
+            </th>
             <th class="text-center">-</th>
         </tr>
     </thead>
@@ -186,9 +295,16 @@
                 </a>
             </td>
           
-            <td class="type-td" style="width:280px;">{{ $order->payment_id }}</td>
+            <td class="type-td" style="width:280px;">
+                @if(strlen($order->payment_id) > 30)
+                {{$str = substr($order->payment_id, 0, 27) . '...';  }}
+                @endif
+                @if(strlen($order->payment_id) < 30)
+                {{ $order->payment_id }}
+                @endif
+                </td>
             <td class="text-muted">
-                <span style="display:block; width:100px;" data-toggle="tooltip" data-placement="bottom" title="ID de Pago: {{ $order->payment_id }}">
+                <span style="display:block; width:200px;" data-toggle="tooltip" data-placement="bottom" title="ID de Pago: {{ $order->payment_id }}">
                 	@if($order->payment_method == 'Paypal')
                 		<i class="fab fa-paypal"></i>
                 	@else

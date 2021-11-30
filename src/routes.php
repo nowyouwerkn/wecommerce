@@ -39,7 +39,7 @@ Route::prefix('/instalador')->group(function () {
 });
 
 // Back-End Views
-Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], function(){
+Route::group(['prefix' => 'admin','middleware' => ['web','auth']], function(){
     //Dashboard
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@index')->name('dashboard'); //
     Route::get('/change-color', [
@@ -82,6 +82,14 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
 
     //Catalog
     Route::resource('products', Nowyouwerkn\WeCommerce\Controllers\ProductController::class); //
+    Route::get('productsquery', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@search',
+        'as' => 'products.query',
+    ]);
+    Route::post('productsfilter', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@filter',
+        'as' => 'products.filter',
+    ]);
     Route::get('exportar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@export')->name('export.products');
     Route::post('importar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@import')->name('import.products');
 
@@ -114,6 +122,16 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
     Route::resource('variants', Nowyouwerkn\WeCommerce\Controllers\VariantController::class); //
     Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
 
+    Route::get('stocksquery', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@search',
+        'as' => 'stocks.query',
+    ]);
+
+    Route::post('stocks/filter', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@filter',
+        'as' => 'stocks.filter',
+    ]);
+
     Route::post('/variants/stock/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@store',
         'as' => 'stock.store',
@@ -137,6 +155,15 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
     Route::resource('clients', Nowyouwerkn\WeCommerce\Controllers\ClientController::class); //
     Route::get('exportar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@export')->name('export.clients');
     Route::post('importar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@import')->name('import.clients');
+    Route::post('filter/clients', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ClientController@filter',
+        'as' => 'clients.filter',
+    ]);
+    Route::get('clientsquery', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ClientController@query',
+        'as' => 'clients.search',
+    ]);
+
 
     Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
     Route::get('exportar-ordenes', 'Nowyouwerkn\WeCommerce\Controllers\OrderController@export')->name('export.orders');
@@ -160,6 +187,15 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
         'as' => 'tracking.complete',
     ]);
 
+    Route::post('filter/orders', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@filter',
+        'as' => 'orders.filter',
+    ]);
+    Route::get('ordersquery', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@query',
+        'as' => 'orders.search',
+    ]);
+
     Route::resource('coupons', Nowyouwerkn\WeCommerce\Controllers\CouponController::class); //
     Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class)->except(['store']); //  
 
@@ -172,6 +208,7 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
     //Administration
     Route::resource('seo', Nowyouwerkn\WeCommerce\Controllers\SEOController::class); //
     Route::resource('legals', Nowyouwerkn\WeCommerce\Controllers\LegalTextController::class);
+    Route::resource('faq', Nowyouwerkn\WeCommerce\Controllers\FAQController::class);
     Route::resource('taxes', Nowyouwerkn\WeCommerce\Controllers\StoreTaxController::class)->except(['create']); //
 
     Route::get('/taxes/create/{country_id}',[
@@ -197,6 +234,10 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
     ]);
 
     Route::resource('payments', Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController::class);
+    Route::get('/payments/change-status/{id}',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController@changeStatus',
+        'as' => 'payments.status',
+    ]);
     Route::resource('shipments', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodController::class);
     Route::resource('shipments-rules', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodRuleController::class);
 
@@ -226,7 +267,7 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
     Route::get('/themes/{id}/cambiar-estado', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StoreThemeController@changeStatus',
         'as' => 'themes.status',
-    ]);  
+    ]); 
 
     Route::post('store-logo',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\IntegrationController@storeLogo',
@@ -254,39 +295,39 @@ Route::group(['prefix' => 'admin','middleware' => ['can:admin_access']], functio
 
 // Shopping Cart
 Route::get('/cart/{id}/{variant}',[
-	'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@addCart',
-	'as' => 'add-cart',
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@addCart',
+    'as' => 'add-cart',
 ]);
 
 Route::get('/cart',[
-	'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@cart',
-	'as' => 'cart',
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@cart',
+    'as' => 'cart',
 ]);
 
 Route::get('/substract/{id}/{variant}',[
-	'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@substractOne',
-	'as' => 'cart.substract',
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@substractOne',
+    'as' => 'cart.substract',
 ]);
 
 Route::get('/add/{id}/{variant}/{qty}',[
-	'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@addMore',
-	'as' => 'cart.add-more',
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@addMore',
+    'as' => 'cart.add-more',
 ]);
 
 Route::get('/delete/{id}/{variant}',[
-	'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@deleteItem',
-	'as' => 'cart.delete',
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@deleteItem',
+    'as' => 'cart.delete',
 ]);
 
 // Wishlist
 Route::get('/wishlist/add/{id}', [
-	'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WishlistController@add',
-	'as' => 'wishlist.add',
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WishlistController@add',
+    'as' => 'wishlist.add',
 ]);
 
 Route::get('/wishlist/remove/{id}', [
-	'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WishlistController@destroy',
-	'as' => 'wishlist.remove',
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WishlistController@destroy',
+    'as' => 'wishlist.remove',
 ]);
 
 /*
@@ -317,6 +358,7 @@ Route::get('/xml-feed', [
 */
 Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@index')->name('index');
 Route::get('catalog', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalogAll')->name('catalog.all');
+Route::post('catalog/order', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalog_order')->name('catalog.orderby');
 
 Route::get('/catalog/{category_slug}', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalog',
@@ -398,16 +440,6 @@ Route::get('/compra-exitosa', [
     'as' => 'purchase.complete',
 ]);
 
-Route::get('/compra-fallida', [
-    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@purchaseFailed',
-    'as' => 'purchase.failed',
-]);
-
-Route::get('/compra-pendiente', [
-    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@purchasePending',
-    'as' => 'purchase.pending',
-]);
-
 // Seguimiento de Compra
 Route::get('/order-tracking', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@orderTracking',
@@ -422,4 +454,4 @@ Route::post('/order-tracking', [
 Route::get('reducir-stock', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@reduceStock',
     'as' => 'reduce.stock.test',
-]);
+]); 

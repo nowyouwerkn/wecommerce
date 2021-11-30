@@ -94,6 +94,14 @@ class WeCommerceServiceProvider extends ServiceProvider
             return view('front.theme.' . $this->theme->get_name() . '.auth');
         });
 
+        Fortify::requestPasswordResetLinkView(function () {
+            return view('front.theme.' . $this->theme->get_name() . '.authforget');
+        });
+
+         Fortify::resetPasswordView(function () {
+            return view('front.theme.' . $this->theme->get_name() . '.authreset', ['request' => $request]);
+        });
+
         // Redirección personalizada en Fortify
         $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
 

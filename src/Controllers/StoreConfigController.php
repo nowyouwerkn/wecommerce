@@ -16,7 +16,8 @@ class StoreConfigController extends Controller
 {
     public function index()
     {
-        //
+        $config = StoreConfig::find('1');
+        return view('wecommerce::back.config_settings.index')->with('config', $config);
     }
 
     public function create()
@@ -95,6 +96,12 @@ class StoreConfigController extends Controller
         $config->timezone = $request->timezone;
         $config->unit_system = $request->unit_system;
         $config->weight_system = $request->weight_system;
+        $config->currency_id = $request->currency_id;
+        $config->store_name = $request->store_name;
+        $config->contact_email = $request->contact_email;
+        $config->sender_email = $request->sender_email;
+        $config->store_industry = $request->store_industry;
+        $config->country_id = $request->country_id;
  
         $config->save();
 

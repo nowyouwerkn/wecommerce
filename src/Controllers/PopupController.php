@@ -57,6 +57,9 @@ class PopupController extends Controller
         $popup->link = $request->link;
         $popup->text = $request->text;
         $popup->has_button = $request->has_button;
+        if($popup->has_button == null){
+            $popup->has_button = 0;
+        }
         $popup->is_active = true;
         $popup->hex = $request->hex;
 

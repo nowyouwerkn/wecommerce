@@ -2,6 +2,19 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.4.1 - 2021-11-12
+
+### Agregado
+- Ahora es posible activar modo Sandbox en metodos de pago y guardar llaves de sandbox.
+- Se agregaron botones de filtro, y barra de busqueda en inventario y productos.
+- Ahora es posible desactivar metodos de pago individualmente.
+- Modificaciones generales en varios modulos del sistema.
+- Modificaciones en el modulo de pop-ups.
+- Modificaciones para reglas especiales de envio y su validacion en el checkout.
+- Seccion de preguntas frecuentes agregada.
+- Ahora se pueden crear nuevos textos legales y editar los titulos.
+- Ajustes del template werkn-backbone-bootstrap
+
 ## 1.4 - 2021-11-09
 
 ### Agregado

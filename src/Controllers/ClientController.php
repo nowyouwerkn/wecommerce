@@ -74,7 +74,7 @@ class ClientController extends Controller
             'password' => bcrypt($request->input('password')),
         ]);
         $client->assignRole('customer');
-
+        $this->notification->registerUser($request->input('name'),$request->input('email'));
         //Session message
         Session::flash('success', 'El cliente fue registrado exitosamente.');
 
@@ -130,5 +130,28 @@ class ClientController extends Controller
         Excel::import(new ClientImport, $request->import_file);
         
         return redirect()->back()->with('success', 'Información guardad exitosamente.');
+    }
+
+    public function query(Request $request)
+    {
+        $search_query = $request->input('query');
+         $client = User::where('name', 'LIKE', "%{$search_query}%")
+        ->orWhere('email', 'LIKE', "%{$search_query}%")->paginate(15);
+    
+
+        return view('wecommerce::back.clients.index')
+        ->with('clients', $client);
+    }
+
+    public function filter(Request $request)
+    {
+        $filter = $request->filter;
+        $order = $request->order;
+        $wishlists = Wishlist::all();
+        $client = User::orderBy($filter, $order)->paginate(15);
+        return view('wecommerce::back.clients.index')
+        ->with('wishlists', $wishlists)
+        ->with('clients', $client);
+
     }
 }

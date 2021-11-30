@@ -19,39 +19,13 @@
             <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase"><i class="fas fa-plus"></i> Agregar Usuario</a>
         </div>
     </div>
+
 @endsection
 
 @section('content')
     <div class="row">
         <div class="col-lg-12 col-xl-12 mg-t-10">
             <div class="card mg-b-10">
-                <div class="card-body pd-y-30">
-                    <!-- Filters -->
-                    {{--
-                    <div class="mb-4">
-                        <form action="" method="POST" class="d-flex">
-                            <div class="content-search col-6">
-                                <i data-feather="search"></i>
-                                <input type="search" class="form-control" placeholder="Buscar SEO...">
-                            </div>
-
-                            <select class="custom-select tx-13">
-                                <option value="1" selected>Estatus</option>
-                                <option value="2">...</option>
-                                <option value="3">...</option>
-                                <option value="4">...</option>
-                            </select>
-
-                            <select class="custom-select tx-13">
-                                <option value="1" selected>Ordenar</option>
-                                <option value="2">...</option>
-                                <option value="3">...</option>
-                                <option value="4">...</option>
-                            </select>
-                        </form>
-                    </div>
-                    --}}
-                </div>
 
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -90,9 +64,13 @@
                                 @if($users->count() > 1)
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
+                                            <a href="javascript:void(0)" data-toggle="modal" data-target="#modalEdit{{ $user->id }}" class="btn btn-outline-primary btn-sm btn-icon" data-toggle="tooltip" data-original-title="Editar">
+                                                <i class="fas fa-edit" aria-hidden="true"></i>
+                                            </a>
+
                                             <form method="POST" action="{{ route('users.destroy', $user->id) }}" style="display: inline-block;">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                    <i class="mdi mdi-delete"></i> Borrar
+                                                <button type="submit" class="btn btn-outline-danger btn-sm btn-icon" data-toggle="tooltip" data-original-title="Borrar">
+                                                    <i class="fas fa-trash" aria-hidden="true"></i>
                                                 </button>
                                                 {{ csrf_field() }}
                                                 {{ method_field('DELETE') }}
@@ -101,6 +79,73 @@
                                     </td>
                                 @endif
                             </tr>
+
+                            <div id="modalEdit{{ $user->id }}" class="modal fade">
+                                <div class="modal-dialog modal-dialog-vertical-center" role="document">
+                                    <div class="modal-content bd-0 tx-14">
+                                        <div class="modal-header">
+                                            <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Editar Usuario</h6>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                         <form method="PATCH" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data">
+                                        {{ csrf_field() }}
+                                        {{ method_field('PATCH') }}
+                                            <div class="modal-body pd-25">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="email">Nombre:</label>
+                                                            <input type="text" class="form-control" name="name" value="{{$user->name}}">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="email">Correo <span class="tx-danger">*</span></label>
+                                                            <input type="text" value="{{$user->email}}" name="email" class="form-control" required="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="password">Contraseña <span class="tx-danger">*</span></label>
+                                                            <input type="text" name="password" class="form-control" required="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="pwd">Confirmar Contraseña:</label>
+                                                            <input type="password" class="form-control">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label>Agregar Rol</label>
+                                                            <select class="form-control" name="rol">
+                                                                <option value="0">Selecciona un Rol de Usuario</option>
+                                                                @foreach($roles as $rol)
+                                                                    <option value="{{ $rol->name }}">
+                                                                        {{ $rol->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn btn-primary">Guardar Información</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div><!-- modal-dialog -->
+                            </div><!-- modal -->
                             @endforeach
                         </tbody>
                     </table>

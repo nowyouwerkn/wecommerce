@@ -132,8 +132,11 @@
     @endforeach
 </small></p>
 
+@if ($preference != null)
 <input type="hidden" id="mp_preference" name="mp_preference" value="{{ $preference->init_point }}" />
 <input type="hidden" id="mp_preference_id" name="mp_preference_id" value="{{ $preference->id }}" />
+@endif
+
 
 @push('scripts')
 <script type="text/javascript">

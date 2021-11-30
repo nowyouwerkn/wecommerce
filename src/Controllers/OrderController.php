@@ -111,9 +111,18 @@ class OrderController extends Controller
                     $product_stock->stock = $product_stock->stock + $product['qty'];
                     $product_stock->save();
                 }
+                if($request->value == 'Entregado'){
+                     $product_stock = Product::find($product['item']['id']);
+
+                    $product_stock->stock = $product_stock->stock + $product['qty'];
+                    $product_stock->save();
+                      $this->notification->orderDelivered($order->id);
+                }
                 
             }
         }
+
+     
 
         // Notificación
         $type = 'Orden';
@@ -127,57 +136,37 @@ class OrderController extends Controller
             'status' => $request->value
         ], 200);
 
-        /*
-        if($request->status == 'Pagado'){
-            $order->is_completed = true;
-            $order->status = NULL;
 
-            $order->save();
-        }
-
-        if($request->status == 'Pendiente'){
-            $order->is_completed = NULL;
-            $order->status = NULL;
-
-            $order->save();
-        }
-
-        if($request->status == 'Cancelar Orden'){
-            $order->is_completed = NULL;
-            $order->status = 1;
-
-            $cart = unserialize($order->cart);
-
-            // Actualizar existencias del producto
-            foreach ($cart->items as $product) {
-
-                if ($product['item']['has_variants'] == true) {
-                    $variant = Variant::where('value', $product['variant'])->first();
-                    $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
-                    
-                    $product_variant->stock = $product_variant->stock + $product['qty'];
-                    $product_variant->save();
-                }else{
-                    $product_stock = Product::find($product['item']['id']);
-
-                    $product_stock->stock = $product_stock->stock + $product['qty'];
-                    $product_stock->save();
-                }
-                
-            }
-
-            $order->save();
-        }
-
-        // Mensaje de session
-        Session::flash('success', 'Estado Actualizado Exitosamente.');
-
-        return redirect()->back();
-        */
     }
 
     public function export() 
     {
         return Excel::download(new OrderExport, 'ordenes.xlsx');
+    }
+
+     public function query(Request $request)
+    {
+        $search_query = $request->input('query');
+         $orders = Order::where('client_name', 'LIKE', "%{$search_query}%")
+        ->orWhere('id', 'LIKE', "%{$search_query}%")->paginate(30);
+    
+        $clients = User::all();
+
+         return view('wecommerce::back.orders.index')
+        ->with('clients', $clients)
+        ->with('orders', $orders);
+    }
+
+    public function filter(Request $request)
+    {
+        $filter = $request->filter;
+        $order = $request->order;
+        $orders = Order::orderBy($filter, $order)->paginate(30);
+        $clients = User::all();
+
+         return view('wecommerce::back.orders.index')
+        ->with('clients', $clients)
+        ->with('orders', $orders);
+
     }
 }

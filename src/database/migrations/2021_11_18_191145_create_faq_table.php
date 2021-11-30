@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLegalTextsTable extends Migration
+class CreateFAQTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateLegalTextsTable extends Migration
      */
     public function up()
     {
-        Schema::create('legal_texts', function (Blueprint $table) {
+        Schema::create('faq', function (Blueprint $table) {
             $table->id();
 
-            $table->enum('type', ['Returns', 'Privacy', 'Terms', 'Shipment']);
-            $table->string('title')->nullable();
-            $table->longText('description')->nullable();
+            $table->string('question')->nullable();
+            $table->longText('answer')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateLegalTextsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('legal_texts');
+        Schema::dropIfExists('faq');
     }
 }

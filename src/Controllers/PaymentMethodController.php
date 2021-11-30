@@ -50,7 +50,7 @@ class PaymentMethodController extends Controller
             if ($request->supplier == 'MercadoPago') {
                 
             }else{
-                $deactivate = PaymentMethod::where('supplier', '!=', 'Paypal')->where('type', 'card')->where('is_active', true)->get();
+                $deactivate = PaymentMethod::where('supplier', '!=', 'Paypal')->where('supplier', '!=', 'MercadoPago')->where('type', 'card')->where('is_active', true)->get();
             }
         }
 
@@ -61,6 +61,7 @@ class PaymentMethodController extends Controller
         if (!empty($deactivate)) {
             foreach ($deactivate as $dt) {
                 $dt->is_active = false;
+                $dt->sandbox_mode = false;
                 $dt->save();
             }
         }
@@ -71,22 +72,38 @@ class PaymentMethodController extends Controller
             $payment->update([
                 'type' => $request->type,
                 'supplier' => $request->supplier,
+                'merchant_id' => $request->merchant_id,
+                'sandbox_merchant_id' => $request->sandbox_merchant_id,
                 'public_key' => $request->public_key,
                 'private_key' => $request->private_key,
-                'sandbox_mode' => true,
+                'sandbox_mode' => $request->sandbox_mode,
+                'sandbox_public_key' => $request->sandbox_public_key,
+                'sandbox_private_key' => $request->sandbox_private_key,
                 'email_access' => $request->email_access,
                 'password_access' => $request->password_access,
+                'sandbox_email_access' => $request->sandbox_email_access,
+                'sandbox_password_access' => $request->sandbox_password_access,
+                'mercadopago_oxxo' => $request->mercadopago_oxxo,
+                'mercadopago_paypal' => $request->mercadopago_paypal,
                 'is_active' => true,
             ]);
         }else{
             $payment = PaymentMethod::create([
                 'type' => $request->type,
                 'supplier' => $request->supplier,
+                'merchant_id' => $request->merchant_id,
+                'sandbox_merchant_id' => $request->sandbox_merchant_id,
                 'public_key' => $request->public_key,
                 'private_key' => $request->private_key,
-                'sandbox_mode' => true,
+                'sandbox_mode' => $request->$sandbox_mode,
+                'sandbox_public_key' => $request->sandbox_public_key,
+                'sandbox_private_key' => $request->sandbox_private_key,
                 'email_access' => $request->email_access,
                 'password_access' => $request->password_access,
+                'sandbox_email_access' => $request->sandbox_email_access,
+                'sandbox_password_access' => $request->sandbox_password_access,
+                'mercadopago_oxxo' => $request->mercadopago_oxxo,
+                'mercadopago_paypal' => $request->mercadopago_paypal,
                 'is_active' => true,
             ]);
         }
@@ -121,14 +138,34 @@ class PaymentMethodController extends Controller
             'public_key' => $request->public_key,
             'private_key' => $request->private_key,
             'sandbox_mode' => $request->sandbox_mode,
+            'sandbox_public_key' => $request->sandbox_public_key,
+            'sandbox_private_key' => $request->sandbox_private_key,
             'email_access' => $request->email_access,
             'password_access' => $request->password_access,
+            'mercadopago_oxxo' => $request->mercadopago_oxxo,
+            'mercadopago_paypal' => $request->mercadopago_paypal,
         ]);
 
         //Session message
         Session::flash('success', 'El elemento fue registrado exitosamente.');
 
         return redirect()->route('payments.index');
+    }
+
+      public function changeStatus($id)
+    {
+
+        $payment = PaymentMethod::find($id);
+
+            $payment->update([
+            'is_active' => 0,
+            'sandbox_mode' => false
+        ]);
+
+        Session::flash('success', 'El elemento fue actualizado exitosamente.');
+
+        return redirect()->back();
+
     }
 
     public function destroy(PaymentMethod $paymentMethod)

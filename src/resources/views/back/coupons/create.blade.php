@@ -75,7 +75,7 @@
 
                 <div class="form-group mt-2">
                     <label>Cantidad minima de artículos</label>
-                    <input type="text" class="form-control" name="minimun_requirements_value" value="10" />
+                    <input type="text" class="form-control" name="minimun_requirements_value" id="minimun_requirements_value" value="10" />
                 </div>
 
             </div>
@@ -101,14 +101,14 @@
                     <div class="col-md-6">
                         <div class="form-group mt-2">
                             <label>Limite por Código</label>
-                            <input type="text" class="form-control" name="usage_limit_per_code" value="1" />
+                            <input type="text" class="form-control" name="usage_limit_per_code" id="usage_limit_per_code" value="1" />
                             <small>Limita la cantidad de veces que este cupón puede usarse en todas las compras.</small>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group mt-2">
                             <label>Limitar uso por usuario</label>
-                            <input type="text" class="form-control" name="usage_limit_per_user" value="1" required="" />
+                            <input type="text" class="form-control" name="usage_limit_per_user"  id="usage_limit_per_user" value="1" required="" />
                             <small>Limita la cantidad de veces que este cupón puede ser usado por usuario.</small>
                         </div>
                     </div>
@@ -182,6 +182,26 @@
 
 @push('scripts')
 <script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
+ <script src="{{ asset('lib/cleave.js/cleave.min.js') }}"></script>
+    <script type="text/javascript">
+        var cleaveA = new Cleave('#qty', {
+          numeral: true,
+          numeralThousandsGroupStyle: 'thousand'
+        });
+
+        var cleaveC = new Cleave('#usage_limit_per_code', {
+          numeral: true,
+          numeralThousandsGroupStyle: 'thousand'
+        });
+
+        var cleaveD = new Cleave('#usage_limit_per_user', {
+          numeral: true,
+          numeralThousandsGroupStyle: 'thousand'
+        });
+
+        
+           
+    </script>
 
 <script type="text/javascript">
     $(document).ready(function() {

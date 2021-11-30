@@ -73,10 +73,10 @@
                         <input type="hidden" name="supplier" value="WeCommerce">
                             <div class="d-flex">
                                 <div class="input-group wd-150">
-                                    <input type="text" class="form-control" name="cost" placeholder="0.00" value="{{ $manual_method->cost ?? '' }}">
+                                    <input type="text" class="form-control" id="manual_method_cost" name="cost" placeholder="0.00" value="{{ $manual_method->cost ?? '' }}">
                                     <div class="input-group-append">
                                         <span class="input-group-text">
-                                            @if($config->get_country_name() == 'México')
+                                           @if($config->currency_id=='2')
                                             MXN
                                             @else
                                             USD
@@ -299,12 +299,12 @@
 
                         <div class="form-group">
                             <label>Valor</label>
-                            <input type="text" class="form-control" name="value" required="" />
+                            <input type="text" id="value" class="form-control" name="value" required="" />
                             <small>Sin signos especiales ni comas.</small>
                         </div>
                     </div>
                     
-                    <div class="custom-control custom-checkbox mb-3" style="opacity:.3;">
+                    <div class="custom-control custom-checkbox mb-3" >
                         <input type="checkbox" class="custom-control-input" id="allow_coupons" name="allow_coupons" value="1">
                         <label class="custom-control-label" for="allow_coupons"> Permitir uso de cupones</label>
                     </div>
@@ -322,3 +322,18 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+   <script src="{{ asset('lib/cleave.js/cleave.min.js') }}"></script>
+    <script type="text/javascript">
+        var cleaveA = new Cleave('#manual_method_cost', {
+          numeral: true,
+          numeralThousandsGroupStyle: 'thousand'
+        });
+
+           var cleaveB = new Cleave('#value', {
+              numeral: true,
+              numeralThousandsGroupStyle: 'thousand'
+            });
+           
+    </script>
+@endpush

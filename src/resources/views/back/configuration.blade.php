@@ -23,6 +23,16 @@
 
 @section('content')
     <div class="row">
+
+         <div class="col-md-4 mb-4">
+            <a href="{{ route('config.index') }}">
+                <div class="card card-body h-100">
+                    <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">Configuracion de Tienda</h3>
+                    <h6 class="tx-12 tx-color-03 mg-b-0 mt-2">Administra la configuracion general de tu tienda.</h6>
+                </div>
+            </a>
+        </div>
+
         <div class="col-md-4 mb-4">
             <a href="{{ route('general.config') }}">
                 <div class="card card-body h-100">
@@ -100,6 +110,14 @@
                 <div class="card card-body h-100">
                     <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">Envíos</h3>
                     <h6 class="tx-12 tx-color-03 mg-b-0 mt-2">Administra las pasarelas de envío para tu tienda.</h6>
+                </div>
+            </a>
+        </div>
+         <div class="col-md-4 mb-4">
+            <a href="{{ route('faq.index') }}">
+                <div class="card card-body h-100">
+                    <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">Preguntas frecuentes</h3>
+                    <h6 class="tx-12 tx-color-03 mg-b-0 mt-2">Administra las preguntas frecuentes que apareceran en tu pagina</h6>
                 </div>
             </a>
         </div>

@@ -84,9 +84,9 @@ class ProductController extends Controller
         $product->in_index = $request->in_index;
         $product->is_favorite = $request->is_favorite;
         
-        $product->price = $request->price;
-        $product->discount_price = $request->discount_price;
-        $product->production_cost = $request->production_cost;
+        $product->price = str_replace(',', '', $request->price);
+        $product->discount_price = str_replace(',', '',  $request->discount_price);
+        $product->production_cost = str_replace(',', '', $request->production_cost);
 
         $product->has_discount = $request->has_discount;
         $product->discount_start = $request->discount_start;
@@ -313,9 +313,9 @@ class ProductController extends Controller
         $product->in_index = $request->in_index;
         $product->is_favorite = $request->is_favorite;
         
-        $product->price = $request->price;
-        $product->discount_price = $request->discount_price;
-        $product->production_cost = $request->production_cost;
+        $product->price = str_replace(',', '', $request->price);
+        $product->discount_price = str_replace(',', '',  $request->discount_price);
+        $product->production_cost = str_replace(',', '', $request->production_cost);
 
         $product->has_discount = $request->has_discount;
         $product->discount_start = $request->discount_start;
@@ -434,6 +434,29 @@ class ProductController extends Controller
 
         // Enviar a vista
         return redirect()->back();
+    }
+
+        public function search(Request $request)
+    {
+        $search_query = $request->input('query');
+         $products = Product::where('name', 'LIKE', "%{$search_query}%")
+        ->where('category_id', '!=', NULL)
+        ->orWhere('description', 'LIKE', "%{$search_query}%")
+        ->orWhere('search_tags', 'LIKE', "%{$search_query}%")
+        ->orWhereHas('category', function ($query) use ($search_query) {
+            $query->where(strtolower('name'), 'LIKE', '%' . strtolower($search_query) . '%');
+        })->paginate(10);
+
+        return view('wecommerce::back.products.index')->with('products', $products);
+    }
+
+      public function filter(Request $request)
+    {
+        $filter = $request->filter;
+        $order = $request->order;
+        $products = Product::orderBy($filter, $order)->paginate(15);
+        return view('wecommerce::back.products.index')->with('products', $products);
+
     }
 
     /*

@@ -16,37 +16,46 @@ class PaymentMethodSeeder extends Seeder
     {
         PaymentMethod::create([
             'type' => 'card',
-            'supplier' => 'Conekta'
+            'supplier' => 'Conekta',
+            'is_active' => false
         ]);
 
         PaymentMethod::create([
             'type' => 'card',
-            'supplier' => 'Stripe'
+            'supplier' => 'Stripe',
+             'is_active' => false
         ]);
 
         PaymentMethod::create([
             'type' => 'card',
-            'supplier' => 'OxxoPay'
+            'supplier' => 'OxxoPay',
+             'is_active' => false
         ]);
 
         PaymentMethod::create([
             'type' => 'cash',
-            'supplier' => 'Conekta'
+            'supplier' => 'Conekta',
+             'is_active' => false
         ]);
 
         PaymentMethod::create([
             'type' => 'card',
-            'supplier' => 'Paypal'
+            'supplier' => 'Paypal',
+             'is_active' => false
         ]);
 
         PaymentMethod::create([
             'type' => 'card',
-            'supplier' => 'OpenPay'
+            'supplier' => 'OpenPay',
+             'is_active' => false
         ]);
 
-        PaymentMethod::create([
+          PaymentMethod::create([
             'type' => 'card',
-            'supplier' => 'MercadoPago'
+            'supplier' => 'MercadoPago',
+            'is_active' => false,
+            'mercadopago_oxxo' => 'oxxo',
+            'mercadopago_paypal' => 'paypal'
         ]);
     }
 }

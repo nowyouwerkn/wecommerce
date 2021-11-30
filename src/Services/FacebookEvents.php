@@ -217,7 +217,7 @@ class FacebookEvents
         $user_data_0 = (new UserData())
         ->setClientIpAddress(Request::ip())
         ->setClientUserAgent(Request::header('user-agent'))
-        ->setEmail(Hash::make($customer_email))
+        ->setEmail($customer_email)
         ->setFirstName(Hash::make($customer_name))
         ->setLastName(Hash::make($customer_lastname))
         ->setPhone(Hash::make($customer_phone))

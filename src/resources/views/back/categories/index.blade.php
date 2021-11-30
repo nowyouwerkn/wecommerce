@@ -150,12 +150,14 @@
             </div>
 
             <ul class="mt-0 list-group list-group-flush">
+                
                 @foreach($category->children as $sub)
                 <li class="d-flex align-items-center justify-content-between list-group-item">
                     <div>
-                        <a href="#">{{ $sub->name }} 
-                            <span class="badge badge-info">{{ $sub->products->count() }}</span>
+                        <a href="{{ route('categories.show', $sub->id) }}">{{ $sub->name }} 
+                            <span class="badge badge-info">{{ $sub->parent_id }}</span>
                         </a>
+
                     </div>
                     <div style="transform: scale(.8);">
                         <a href="javascript:void(0)" data-toggle="modal" data-target="#editModalSub_{{ $sub->id }}" class="btn btn-rounded btn-icon btn-sm btn-dark"><i class="fas fa-edit"></i></a>

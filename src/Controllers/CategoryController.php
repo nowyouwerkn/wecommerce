@@ -29,8 +29,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::where('parent_id', 0)->orWhere('parent_id', NULL)->paginate(15);
-        $categories_all = Category::all()->count();
-
+        $categories_all = Category::all();
         return view('wecommerce::back.categories.index')->with('categories', $categories)->with('categories_all', $categories_all);
     }
 
@@ -102,9 +101,12 @@ class CategoryController extends Controller
 
     public function show($id)
     {
-        $category = Category::find($id);
 
-        return view('wecommerce::back.categories.show')->with('category', $category);
+        $category = Category::find($id);
+        $products = Product::whereHas('subCategory',function ($query) use($id) {
+        return $query->where('category_id', '=', $id);
+        })->get();
+        return view('wecommerce::back.categories.show')->with('category', $category)->with('products',$products);
     }
 
     public function edit($id)

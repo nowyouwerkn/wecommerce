@@ -1,5 +1,5 @@
 @php
-    $legals = Nowyouwerkn\WeCommerce\Models\LegalText::get(['type']);
+    $legals = Nowyouwerkn\WeCommerce\Models\LegalText::get();
     $card_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', '!=','Paypal')->where('type', 'card')->where('is_active', true)->first();
     $cash_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
     $paypal_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
@@ -55,7 +55,17 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <a href="index.html" class="footer-logo"><img src="{{ asset('themes/werkn-backbone/img/logo/w_logo.svg') }}" alt=""></a>
+                    <a href="{{ route('index') }}">
+                    @if(!empty($store_config))
+                        @if($store_config->store_logo == NULL)
+                        <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="img-fluid" width="300">
+                        @else
+                        <img src="{{ asset('assets/img/' . $store_config->store_logo) }}" alt="Logo" class="img-fluid" width="300">
+                        @endif
+                    @else
+                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="img-fluid" width="300">
+                    @endif
+                </a>   
             </div>
             <div class="col-md-8">
                 <div class="row">
@@ -82,26 +92,7 @@
                             @foreach($legals as $legal)
                             <li>
                                 <a href="{{ route('legal.text' , $legal->type) }}">
-                                    @switch($legal->type)
-                                        @case('Returns')
-                                            Política de Devoluciones
-                                            @break
-
-                                        @case('Privacy')
-                                            Política de Privacidad
-                                            @break
-
-                                        @case('Terms')
-                                            Términos y Condiciones
-                                            @break
-
-                                        @case('Shipment')
-                                            Política de Envíos
-                                            @break
-
-                                        @default
-                                            Hubo un problema, intenta después.
-                                    @endswitch 
+                                {{$legal->title}}
                                 </a>
                             </li>
                             @endforeach
@@ -140,7 +131,7 @@
 
             @if(!empty($mercado_payment))
             <div class="col mt-4">
-                <img src="{{ asset('assets/img/brands/mercado-pago.png') }}" style="height: 30px; margin-bottom: 5px; width: auto !important;">
+                <img src="{{ asset('assets/img/brands/mercado-pago.png') }}" style="height: 35px; margin-bottom: 5px; width: auto !important;">
                 <p>Aceptamos pagos por medio de MercadoPago</p>
             </div>
             @endif

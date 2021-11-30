@@ -35,9 +35,10 @@ class LegalTextController extends Controller
         ));
 
         // Guardar datos en la base de datos
-        $legal = new Legal;
+        $legal = new LegalText;
 
         $legal->type = $request->type;
+        $legal->title = Purifier::clean($request->title);
         $legal->description = Purifier::clean($request->description);
 
 
@@ -68,11 +69,13 @@ class LegalTextController extends Controller
         //Validar
         $this -> validate($request, array(
             'description' => 'required',
+            'title' => 'required'
         ));
 
         // Guardar datos en la base de datos
         $legal = LegalText::find($id);
 
+        $legal->title = Purifier::clean($request->title);
         $legal->description = Purifier::clean($request->description);
 
         $legal->save();
