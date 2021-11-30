@@ -50,6 +50,13 @@ class ProductController extends Controller
         ->with('categories', $categories);
     }
 
+        public function promotions()
+    {
+        $products = Product::where('has_discount', true)->paginate(15);
+
+        return view('wecommerce::back.products.index')->with('products', $products);
+    }
+
     public function store(Request $request)
     {
         //Validar

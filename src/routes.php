@@ -90,6 +90,10 @@ Route::group(['prefix' => 'admin','middleware' => ['web','auth']], function(){
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@filter',
         'as' => 'products.filter',
     ]);
+    Route::get('productspromotions', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@promotions',
+        'as' => 'products.promotions',
+    ]);
     Route::get('exportar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@export')->name('export.products');
     Route::post('importar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@import')->name('import.products');
 

@@ -162,6 +162,70 @@
                 white-space: nowrap;
                 overflow: hidden;
             }
+            .p-tienda-desk{
+                margin-bottom: 0;   
+            }
+
+            .p-tienda-responsive{
+                margin-bottom: 0;
+                display: none;
+            }
+
+            .responsive-add{
+                display: none;
+                margin-bottom: 0;
+            }
+            .desktop-add{
+                display: block;
+                margin-bottom: 0;
+            }
+            .bg-teal{
+                margin-left: 40% !important ;
+            }
+            @media only screen and (max-width: 1200px) {
+            .p-tienda-desk{
+                margin-bottom: 0; 
+                display: none;  
+            }
+
+            .p-tienda-responsive{
+                margin-bottom: 0;
+                display: block;
+            }
+
+            .responsive-add{
+                display: block;
+                padding:0;
+                margin-bottom: 0;
+            }
+
+            .desktop-add{
+                display: none;
+                margin-bottom: 0;
+            }
+
+            }
+            @media only screen and (max-width: 900px) {
+            .p-tienda-desk{
+                margin-bottom: 0; 
+                display: block;  
+            }
+
+            .p-tienda-responsive{
+                margin-bottom: 0;
+                display: none;
+            }
+
+            .responsive-add{
+                display: none;
+                padding:0;
+                margin-bottom: 0;
+            }
+
+            .desktop-add{
+                display: block;
+                margin-bottom: 0;
+            }
         </style>
     @endif
 
