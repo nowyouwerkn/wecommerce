@@ -39,7 +39,7 @@ Route::prefix('/instalador')->group(function () {
 });
 
 // Back-End Views
-Route::group(['prefix' => 'admin','middleware' => ['web','auth']], function(){
+Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']], function(){
     //Dashboard
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@index')->name('dashboard'); //
     Route::get('/change-color', [
