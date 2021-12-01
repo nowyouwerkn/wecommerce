@@ -99,7 +99,7 @@
 </div>
     
 <div class="alert alert-danger pay-error" style="display: none;" role="alert"></div>
-
+<input type="hidden" class="form-control" id="coupon_buy" name="coupon_id" value="null">
 <button type="submit" id="btnBuy" class="btn btn-primary btn-lg mt-4 w-100 pt-3 pb-3"><ion-icon name="checkmark"></ion-icon> Confirmar Compra</button>
 
 <p class="we-co--method">Tu pago será procesado por <span id="paymentMethod">-</span></p>
@@ -131,12 +131,10 @@
     </a>,
     @endforeach
 </small></p>
-
 @if ($preference != null)
 <input type="hidden" id="mp_preference" name="mp_preference" value="{{ $preference->init_point }}" />
 <input type="hidden" id="mp_preference_id" name="mp_preference_id" value="{{ $preference->id }}" />
 @endif
-
 
 @push('scripts')
 <script type="text/javascript">
@@ -148,6 +146,7 @@
         var subtotal =  parseFloat($('#subtotalInput').val());
         var shipping = parseFloat($('#shippingInput').val());
         $('#cp_spinner').fadeIn(500);
+        document.getElementById("coupon_buy").value = cuopon_code;
 
         $.ajax({
             method: 'POST',

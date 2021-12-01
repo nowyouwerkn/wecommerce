@@ -60,6 +60,7 @@ use Nowyouwerkn\WeCommerce\Models\StoreTax;
 use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethodRule;
+use Nowyouwerkn\WeCommerce\Models\Shipping_options;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
@@ -457,6 +458,7 @@ class FrontController extends Controller
 
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $store_shipping = ShipmentMethod::where('is_active', true)->first();
+        $shipment_options = Shipping_options::where('is_active', true)->get();
 
         if (empty($store_tax)) {
             $tax_rate = 0;
@@ -674,6 +676,7 @@ class FrontController extends Controller
             ->with('cash_payment', $cash_payment)
             ->with('paypal_payment', $paypal_payment)
             ->with('mercado_payment', $mercado_payment)
+            ->with('shipment_options', $shipment_options)
             ->with('subtotal', $subtotal)
             ->with('tax', $tax)
             ->with('shipping', $shipping)
@@ -702,10 +705,16 @@ class FrontController extends Controller
         }
 
         if (!Auth::check()) {
+            $rules = [
+               'email' => 'unique:users|required|max:255',
+            ];
+
+              $customMessages = [
+                'unique' => 'Este correo ya esta registrado en el sistema. ¿Eres tu? Inicia sesión. '
+             ];
+
             //Validar
-            $this -> validate($request, array(
-                'email' => 'unique:users|required|max:255',
-            ));
+            $this->validate($request, $rules, $customMessages);
         }
 
         if (!Session::has('cart')) {
@@ -1128,6 +1137,7 @@ class FrontController extends Controller
                     $order->discounts = $request->discounts;
                     $order->total = $request->final_total;
                     $order->payment_total = $request->final_total;
+                    
                     /*------------*/
                         
                     $order->card_digits = Str::substr($request->card_number, 15);
@@ -1188,8 +1198,10 @@ class FrontController extends Controller
         $order->sub_total = $request->sub_total;
         $order->tax_rate = $request->tax_rate;
         $order->discounts = $request->discounts;
+        $order->coupon_id = $request->coupon_id;
         $order->total = $request->final_total;
         $order->payment_total = $request->final_total;
+
         /*------------*/
             
         $order->card_digits = Str::substr($request->card_number, 15);
@@ -1701,7 +1713,6 @@ class FrontController extends Controller
 
             // Obteniendo datos desde el Request enviado por Ajax a esta ruta
             $coupon = Coupon::where('code', $cuopon_code)->first();
-
             if (empty($coupon)) {
                 // Regresar Respuesta a la Vista
                 return response()->json(['mensaje' => 'Ese cupón no existe o ya no está disponible. Intenta con otro o contacta con nosotros.', 'type' => 'exception'], 200);
@@ -1895,7 +1906,7 @@ class FrontController extends Controller
                         $preference->back_urls = array(
                             "success" => route('purchase.complete'),
                             "failure" => route('checkout'),
-                            "pending" => route('purchase.pending')
+                            "pending" => route('checkout')
                         );
 
                         $preference->payment_methods = array(

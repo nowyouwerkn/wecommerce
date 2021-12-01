@@ -9,7 +9,6 @@
 @endpush
 
 @section('content')
-
 <!-- Checkout -->
 <section class="mt-5 mb-5 container we-co--checkout-container">
     <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" data-parsley-validate="">
@@ -93,9 +92,8 @@
                     $('#cardInfo').fadeIn();
                     $('#cardInfo').find('input').prop('disabled', false);
                     $('input[name=method]').val('Pago con Tarjeta');
-                    if (typeof {{$card_payment}} != null) {
-                      $('#paymentMethod').text('{{isset($card_payment) ? $card_payment->supplier : 'null' }}');
-                    }
+
+                    $('#paymentMethod').text('{{ $card_payment->supplier }}');
 
                     break;
 
@@ -380,9 +378,7 @@
             $('.loader-standby').removeClass('loader-hidden');
             //console.log(response.id);
 
-            setTimeout(function() { 
-                $form.get(0).submit();
-            }, 2000);
+            $form.get(0).submit();
         }
     });
 </script>  
@@ -392,7 +388,7 @@
 <script type="text/javascript">
     $form.submit(function(event){
         if($('input[name=method]').val() === 'Pago con MercadoPago') {
-            //$('#checkout-form').append($('<input type="hidden" name="mp_preference" />').val('{{ $preference->sandbox_init_point }}'));
+            //$('#checkout-form').append($('<input type="hidden" name="mp_preference" />').val('{{ $preference->init_point }}'));
             //$('#checkout-form').append($('<input type="hidden" name="mp_preference_id" />').val('{{ $preference->id }}'));
 
             // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
@@ -415,6 +411,8 @@
     <script type="text/javascript">
         $form.submit(function(event){
 
+            
+
             if($('input[name=method]').val() === 'Pago con Oxxo') {
                 // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
                 $form.find('button').prop('disabled', true);
@@ -422,9 +420,7 @@
                 $('.loader-standby').removeClass('loader-hidden');
                 //console.log(response.id);
 
-                setTimeout(function() { 
-                    $form.get(0).submit();
-                }, 2000);
+                $form.get(0).submit();
             }
         });
     </script>  
@@ -434,5 +430,4 @@
 
     @endif
 @endif
-
 @endpush
