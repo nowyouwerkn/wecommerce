@@ -51,7 +51,7 @@ class OrderNoteController extends Controller
         $by = Auth::user();
         $data = 'creó una nueva nota en la orden #' . $request->order_id;
         $model_action = "update";
-        $model_id = $order->id;
+        $model_id = $request->order_id;
 
 
 

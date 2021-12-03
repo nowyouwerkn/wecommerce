@@ -87,7 +87,10 @@
                                 @endif
                                     <td>
                                         <div class="btn-group">
+                                            @if($product['qty'] == 1)
+                                            @else
                                             <a href="{{ route( 'cart.substract', [ 'id' => $product['item']['id'], 'variant' => $product['variant'] ] ) }}" class="btn btn_custom--purple d-flex align-items-center">-</a>
+                                             @endif
                                             <p class="btn d-flex align-items-center h-100">{{ $product['qty'] }}</p>
                                             <a href="{{ route( 'cart.add-more', [ 'id' => $product['item']['id'], 'variant' => $product['variant'], 'qty' => $product['qty'] ] ) }}" class="btn btn_custom--purple d-flex align-items-center">+</a>
                                         </div>
