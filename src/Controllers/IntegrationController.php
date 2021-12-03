@@ -100,8 +100,12 @@ class IntegrationController extends Controller
         $type = 'delete';
         $by = Auth::user();
         $data = 'eliminó la integración "' . $config->name . '" de la página web.';
+        $model_action = "delete";
+        $model_id = $config->id;
 
-        $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         //
         $config->delete();

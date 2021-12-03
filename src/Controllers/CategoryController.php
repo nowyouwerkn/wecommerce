@@ -90,8 +90,13 @@ class CategoryController extends Controller
         $type = 'Colección';
         $by = Auth::user();
         $data = 'creó una nueva colección con el nombre:' . $category->name;
+        $model_action = "create";
+        $model_id = $category->id;
 
-        $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
 
         // Mensaje de session
         Session::flash('exito', 'Elemento guardado correctamente en la base de datos.');
@@ -164,6 +169,15 @@ class CategoryController extends Controller
         $type = 'Colección';
         $by = Auth::user();
         $data = 'editó una colección con el nombre:' . $category->name;
+                $type = 'Orden';
+        $by = Auth::user();
+        $data = 'cambió el estado de la orden #0' . $order->id . ' a ' . $request->value;
+        $model_action = "update";
+        $model_id = $product->id;
+
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         $this->notification->send($type, $by ,$data);
 

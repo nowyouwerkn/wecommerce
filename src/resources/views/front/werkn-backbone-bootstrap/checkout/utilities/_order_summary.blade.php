@@ -48,6 +48,7 @@
 
                 <p>$ <span id="shippingRate">{{ number_format($shipping, 2) }}</span></p>
                 <input type="hidden" name="shipping_rate" id="shippingInput" value="{{ $shipping }}">
+                <input type="hidden" name="shipping_option" id="shippingOptions" value="0">
             </div>
 
             <!-- DISCOUNT DIV -->
@@ -134,6 +135,7 @@
 @if ($preference != null)
 <input type="hidden" id="mp_preference" name="mp_preference" value="{{ $preference->init_point }}" />
 <input type="hidden" id="mp_preference_id" name="mp_preference_id" value="{{ $preference->id }}" />
+<input type="hidden" id="mp_preference_id" name="mp_preference_external" value="{{ $preference->external_reference }}" />
 @endif
 
 @push('scripts')
@@ -185,16 +187,17 @@
 
                     /* Calculate Discount */
                     var discount = msg['discount'];
-                    $('#discountValue').text(parseFloat(discount).toFixed(2));
+                    console.log(discount);
+                    $('#discountValue').text(parseFloat(discount.toString().replace(/,/g, '')).toFixed(2));
                     $('#discount').val(discount);
-
                     //var subtotal = parseFloat($('#subtotalInput').val());
 
                     var shipping = msg['free_shipping'];
                     $('#shippingRate').text(shipping.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 
-                    var total_count = subtotal - parseFloat(discount) + parseFloat(shipping);
-                    var total = total_count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    var total_count = subtotal - parseFloat(discount.toString().replace(/,/g, '')) + parseFloat(shipping.toString().replace(/,/g, ''));
+
+                    var total = total_count.toString().replace(/,/g, '');
                     $('#totalPayment').text(total);
 
                     /* Calculate Tax */
@@ -204,11 +207,13 @@
                     $('#taxValue').text(tax);
 
                     // Clean Numbers
+                    var total = total_count.toString().replace(/,/g, '');
                     var total = parseFloat(total);
                     var tax = parseFloat(tax);
-
                     var finaltotal = parseFloat(total + tax).toFixed(2);
-                    $('#finalTotal').val(finaltotal);
+
+                    $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#finalTotal').val(parseFloat(finaltotal));
                 }
             },
             error: function(msg){

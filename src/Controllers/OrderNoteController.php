@@ -50,8 +50,12 @@ class OrderNoteController extends Controller
         $type = 'Orden';
         $by = Auth::user();
         $data = 'creó una nueva nota en la orden #' . $request->order_id;
+        $model_action = "update";
+        $model_id = $order->id;
 
-        $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         // Mensaje de session
         Session::flash('success', 'Tu nota se guardó exitosamente en la base de datos.');

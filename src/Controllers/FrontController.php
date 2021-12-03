@@ -648,9 +648,10 @@ class FrontController extends Controller
                 "failure" => route('checkout'),
                 
             );
+            $preference->external_reference = "mp_".Str::random(30);
 
-            $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_oxxo);
-            $mercadopago_oxxo = array ("id" => $mercado_payment->mercadopago_paypal);
+            $mercadopago_oxxo = array ("id" => $mercado_payment->mercadopago_oxxo);
+            $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_paypal);
 
             $preference->payment_methods = array(
                 "excluded_payment_methods" => array(
@@ -1065,6 +1066,7 @@ class FrontController extends Controller
                     $order->phone = $request->input('phone');
                     $order->suburb = $request->input('suburb');
                     $order->references = $request->input('references');
+                    $order->shipping_option = $request->shipping_option;
 
                     /* Money Info */
                     $order->cart_total = $cart->totalPrice;
@@ -1128,6 +1130,7 @@ class FrontController extends Controller
                     $order->phone = $request->input('phone');
                     $order->suburb = $request->input('suburb');
                     $order->references = $request->input('references');
+                    $order->shipping_option = $request->shipping_option;
 
                     /* Money Info */
                     $order->cart_total = $cart->totalPrice;
@@ -1145,7 +1148,7 @@ class FrontController extends Controller
 
                     $order->status = 'Sin Completar';
 
-                    $order->payment_id = Str::lower($request->mp_preference_id);   
+                    $order->payment_id = $request->mp_preference_external;   
                     
                     $order->payment_method = $payment_method->supplier;
                     
@@ -1191,6 +1194,7 @@ class FrontController extends Controller
         $order->phone = $request->input('phone');
         $order->suburb = $request->input('suburb');
         $order->references = $request->input('references');
+        $order->shipping_option = $request->shipping_option;
 
         /* Money Info */
         $order->cart_total = $cart->totalPrice;
@@ -1305,8 +1309,13 @@ class FrontController extends Controller
         $type = 'Orden';
         $by = $user;
         $data = 'hizo una compra por $' . $purchase_value;
+        $model_action = "create";
+        $model_id = "";
 
-        $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
 
         //Facebook Event
         if ($this->store_config->has_pixel() != NULL) {
@@ -1496,12 +1505,16 @@ class FrontController extends Controller
 
             $purchase_value = number_format($cart->totalPrice,2);
 
-            // Notificación
+                 // Notificación
             $type = 'Orden';
-            $by = $order->user;
+            $by = $user;
             $data = 'hizo una compra por $' . $purchase_value;
+            $model_action = "create";
+            $model_id = "";
 
-            $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
             //Facebook Event
             if ($this->store_config->has_pixel() != NULL) {
@@ -1836,7 +1849,7 @@ class FrontController extends Controller
                         case 'fixed_amount':
                             // Este cupon le resta un valor fijo al subtotal en el checkout
                             $qty = $coupon->qty;
-                            $discount = $subtotal - $qty;
+                            $discount = $qty;
 
                               
 
@@ -1909,10 +1922,13 @@ class FrontController extends Controller
                             "pending" => route('checkout')
                         );
 
+                           $mercadopago_oxxo = array ("id" => $mercado_payment->mercadopago_oxxo);
+                            $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_paypal);
+
                         $preference->payment_methods = array(
                             "excluded_payment_methods" => array(
-                            array("id" => "paypal"),
-                            array("id" => "oxxo")
+                            $mercadopago_paypal,
+                            $mercadopago_oxxo
                           ),
                           "excluded_payment_types" => array(
                             array("id" => "ticket", "id" => "atm")
@@ -1971,6 +1987,7 @@ class FrontController extends Controller
 
         if (!empty($request->preference_id)) {
             $order = Order::where('payment_id', $request->preference_id)->first();
+            $shipping_option_selected = Shipping_options::where('id', $order->shipping_option)->first();
             $order->status = 'Pagado';
 
             $order->save();
@@ -2015,7 +2032,7 @@ class FrontController extends Controller
             config(['mail.password'=>$mail->mail_password]);
             config(['mail.encryption'=>$mail->mail_encryption]);
 
-            $data = array('order_id' => $order->id, 'user_id' => $order->user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at);
+            $data = array('order_id' => $order->id, 'user_id' => $order->user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at, 'shipping_option' => $shipping_option_selected);
 
             try {
                 Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email, $sender_email, $store_name) {
@@ -2038,12 +2055,17 @@ class FrontController extends Controller
 
             $purchase_value = number_format($cart->totalPrice,2);
 
-            // Notificación
-            $type = 'Orden';
-            $by = $order->user;
-            $data = 'hizo una compra por $' . $purchase_value;
 
-            $this->notification->send($type, $by ,$data);
+                  // Notificación
+            $type = 'Orden';
+            $by = $user;
+            $data = 'hizo una compra por $' . $purchase_value;
+            $model_action = "create";
+            $model_id = "";
+
+
+
+            $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
             //Facebook Event
             if ($this->store_config->has_pixel() != NULL) {

@@ -99,8 +99,12 @@ class OrderTrackingController extends Controller
         $type = 'create';
         $by = Auth::user();
         $data = 'creó una nueva guía de envío en la orden #' . $request->order_id;
+        $model_action = "update";
+        $model_id = $order->id;
 
-        $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         // Mensaje de session
         Session::flash('success', 'La guía de envío de esta orden se guardó exitosamente en la base de datos.');

@@ -39,12 +39,12 @@
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_contact')
 
-                    {{-- 
+                    
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Método de Envío</h4>
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
-                    --}}
+                    
 
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Información de Envío</h4>
@@ -134,6 +134,34 @@
 
 <!-- PARSLEY VALIDATION -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.8.1/parsley.min.js"></script>
+<script type="text/javascript">
+       $(document).ready(function(){
+                 $('.shipping-options a').click(function() {
+            event.preventDefault();
+            console.log('Seleccionado:' , $(this).attr('data-value'));
+            
+            $('.shipping-options a').removeClass('active');
+
+
+            if($(this).hasClass('active')){
+                $(this).removeClass('active');
+            }else{
+                $(this).addClass('active');
+            }
+            
+            document.getElementById("shippingRate").textContent = $(this).attr('price-value');  
+            document.getElementById("shippingInput").value = $(this).attr('price-value');
+            document.getElementById("shippingOptions").value = $(this).attr('data-value');
+                    var subtotal =  parseFloat($('#subtotalInput').val());
+                    var shipping = parseFloat($('#shippingInput').val());  
+                     var total_count = subtotal + parseFloat(shipping);
+                    var total = total_count.toString()
+                    $('#totalPayment').text(total);
+            document.getElementById("finalTotal").value = total;   
+                    
+        });
+    });
+</script>
 <script type="text/javascript">
     // ParsleyConfig definition if not already set
     // Validation errors messages for Parsley

@@ -62,8 +62,12 @@ class ReviewController extends Controller
         $type = 'Reseña';
         $by = NULL;
         $data = 'Un usuario dejó una reseña para: ' . $product->name;
+        $model_action = "create";
+        $model_id = $product->id;
 
-        $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         Session::flash('success', 'Gracias por tu reseña. La estamos revisando para publicarla lo antes posible.');
 

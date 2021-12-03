@@ -22,16 +22,21 @@ class UpdateTables extends Migration
             $table->string('UPC')->after('type');
         });
 
+        Schema::table('notifications', function (Blueprint $table) {
+            $table->string('model_name')->after('action_by');
+            $table->string('model_id')->after('model_name');
+            $table->string('read_at')->after('data');
+        });
+
         Schema::table('orders', function (Blueprint $table) {
             $table->string('coupon_id')->after('payment_id');
-            $table->string('shipment_option_id')->after('coupon_id');
+            $table->string('shipping_option')->after('coupon_id');
         });
 
         Schema::table('payment_methods', function (Blueprint $table) {
             $table->string('sandbox_merchant_id')->after('merchant_id')->nullable();
             $table->string('sandbox_email_access')->after('password_access')nullable();
             $table->string('sandbox_password_access')->after('sandbox_email_access')->nullable();
-
             $table->boolean('sandbox_mode')->after('sandbox_password_access')->default(false)->nullable();
             $table->string('sandbox_public_key')->after('sandbox_mode')->nullable();
             $table->string('sandbox_private_key')->after('sandbox_public_key')->nullable();
@@ -55,9 +60,16 @@ class UpdateTables extends Migration
             $table->dropColumn('UPC');
         });
 
+        Schema::table('notifications', function (Blueprint $table) {
+            $table->dropColumn('model_name');
+            $table->dropColumn('model_id');
+            $table->dropColumn('read_at');
+        });
+
+
         Schema::table('orders', function (Blueprint $table) {
             $table->dropColumn('coupon_id');
-            $table->dropColumn('shipment_option_id');
+            $table->dropColumn('shipping_option');
         });
 
         Schema::table('payment_methods', function (Blueprint $table) {

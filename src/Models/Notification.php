@@ -13,6 +13,8 @@ class Notification extends Model
         'action_by',
         'type',
         'data',
+        'model_action',
+        'model_id',
         'read_at',
         'is_hidden'
     ];

@@ -70,8 +70,12 @@ class VariantController extends Controller
         $type = 'delete';
         $by = Auth::user();
         $data = 'eliminó la variante "' . $variant->value . '" del sistema.';
+        $model_action = "delete";
+        $model_id = $variant->id;
 
-        $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         //
         $variant->delete();
