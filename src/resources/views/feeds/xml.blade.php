@@ -60,8 +60,13 @@
 				<g:availability>out of stock</g:availability>
 				<visibility>hidden</visibility>
 			@else
+				@if($product->status == 'Publicado')
 				<g:availability>in stock</g:availability>
 				<visibility>published</visibility>
+				@else
+				<g:availability>out of stock</g:availability>
+				<visibility>hidden</visibility>
+				@endif
 			@endif
 			
 			@php
