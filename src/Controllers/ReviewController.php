@@ -53,6 +53,7 @@ class ReviewController extends Controller
         $review->name = $request->name;
         $review->email = $request->email;
         $review->review = $request->review;
+        $review->rating = $request->rating;
         $review->is_approved = false;
         $review->product()->associate($product);
 
@@ -90,8 +91,10 @@ class ReviewController extends Controller
         $type = 'Reseña';
         $by = Auth::user();
         $data = 'aprobó una reseña.';
+        $model_action = "update";
+        $model_id = $review->id;
 
-        $this->notification->send($type, $by ,$data);
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         Session::flash('success', 'Reseña aprobada con éxito. Aparecerá en el detalle de producto en breve.');
 
@@ -119,14 +122,17 @@ class ReviewController extends Controller
     {
         $review = Review::find($id);
 
-        $review->delete();
+        
 
         // Notificación
         $type = 'Reseña';
         $by = Auth::user();
         $data = 'eliminó una reseña.';
+        $model_action = "delete";
+        $model_id = $review->id;
+        $review->delete();
 
-        $this->notification->send($type, $by ,$data);
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         Session::flash('success', 'Reseña eliminada exitosamente. Ya no se mostrará en los productos.');
 

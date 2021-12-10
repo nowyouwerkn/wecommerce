@@ -33,7 +33,43 @@
 @endpush
 
 @push('stylesheets')
-
+<style type="text/css">
+    .rate {
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+}
+.rate:not(:checked) > input {
+    position:absolute;
+    visibility: hidden;
+}
+.rate:not(:checked) > label {
+    float:right;
+    width:1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:30px;
+    color:#ccc;
+}
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+.rate > input:checked ~ label {
+    color: #ffc700;    
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #deb217;  
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #c59b08;
+}
+</style>
 @endpush
 
 @section('content')
@@ -113,11 +149,48 @@
                     <h2 class="title mx-2 mt-2">{{ $product->name }}</h2>
 
                     <div class="rating d-flex mx-2 mt-2">
-                        <ion-icon name="star-outline"></ion-icon>
-                        <ion-icon name="star-outline"></ion-icon>
-                        <ion-icon name="star-outline"></ion-icon>
-                        <ion-icon name="star-outline"></ion-icon>
-                        <ion-icon name="star-outline"></ion-icon>
+                                @if(round($product->approved_reviews->avg('rating'), 0) == 0)
+                                <ion-icon name="star-outline"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                @endif
+                                  @if(round($product->approved_reviews->avg('rating'), 0) == 1)
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                @endif
+                                  @if(round($product->approved_reviews->avg('rating'), 0) == 2)
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                @endif
+                                  @if(round($product->approved_reviews->avg('rating'), 0) == 3)
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                @endif
+                                  @if(round($product->approved_reviews->avg('rating'), 0) == 4)
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star-outline"></ion-icon>
+                                @endif
+                                  @if(round($product->approved_reviews->avg('rating'), 0) == 5)
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                @endif
                     </div>
                     
                     <p class="style-name mx-2 mt-2">SKU : {{ $product->sku }}</p>
@@ -231,6 +304,50 @@
                                 @foreach($product->approved_reviews as $review)
                                     <div class="media">
                                         <img class="mr-3 rounded-circle" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($review->email))) . '?404' }}" width="50" alt="{{ $review->name }}">
+                                           <div class="rating d-flex mx-2 mt-2">
+                                                @if($review->rating == 0)
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                @endif
+                                                  @if($review->rating == 1)
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                @endif
+                                                  @if($review->rating == 2)
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                @endif
+                                                  @if($review->rating == 3)
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                @endif
+                                                  @if($review->rating == 4)
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star-outline"></ion-icon>
+                                                @endif
+                                                  @if($review->rating == 5)
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star"></ion-icon>
+                                                <ion-icon name="star"></ion-icon>
+                                                @endif
+                                            </div>
                                         <div class="media-body">
                                             <h5 class="mt-0 mb-0">{{ $review->name }}</h5>
                                             <p class="mb-2"><small><i>Publicado: {{ date( 'd, m, Y' ,strtotime($review->created_at)) }}</i></small></p>
@@ -248,8 +365,20 @@
 
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-                                <h5 class="mb-2">Tu reseña <span class="text-danger ">*</span></h5>
 
+                                <h5 class="mb-2">Tu reseña <span class="text-danger ">*</span></h5>
+                                <div class="rate">
+                                <input type="radio" id="star5" name="rating" value="5" />
+                                <label for="star5" title="text">5 stars</label>
+                                <input type="radio" id="star4" name="rating" value="4" />
+                                <label for="star4" title="text">4 stars</label>
+                                <input type="radio" id="star3" name="rating" value="3" />
+                                <label for="star3" title="text">3 stars</label>
+                                <input type="radio" id="star2" name="rating" value="2" />
+                                <label for="star2" title="text">2 stars</label>
+                                <input type="radio" id="star1" name="rating" value="1" />
+                                <label for="star1" title="text">1 star</label>
+                              </div>
                                 <textarea id="review" name="review" rows="4" class="form-control mb-4" placeholder="Este producto es genial..."></textarea>
 
                                 @guest
@@ -344,7 +473,7 @@
 
         <div class="row related-product-active">
             @foreach($products_selected as $product_info)
-            <div class="col">
+            <div class="col-3">
                 @include('front.theme.werkn-backbone-bootstrap.layouts.utilities._product_card')
             </div>
             @endforeach

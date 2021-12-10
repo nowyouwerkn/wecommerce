@@ -181,6 +181,22 @@ class FrontController extends Controller
         ->with('variants', $variants);
     }
 
+        public function catalogPromo()
+    {
+        $products = Product::with('category')->orderBy('created_at', 'desc')->where('status', 'Publicado')->where('has_discount', '1')->paginate(15);
+
+        /* Opciones para Filtro */
+        $popular_products = Product::with('category')->where('is_favorite', true)->where('status', 'Publicado')->get();
+        $categories = Category::with('productsIndex')->where('parent_id', 0)->orWhere('parent_id', NULL)->get();
+        $variants = Variant::orderBy('value', 'asc')->get(['value']);
+
+        return view('front.theme.' . $this->theme->get_name() . '.catalog')
+        ->with('products', $products)
+        ->with('popular_products', $popular_products)
+        ->with('categories', $categories)
+        ->with('variants', $variants);
+    }
+
     public function catalog($category_slug)
     {
         $catalog = Category::where('slug', $category_slug)->firstOrFail();

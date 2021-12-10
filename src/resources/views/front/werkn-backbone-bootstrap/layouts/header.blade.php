@@ -24,10 +24,10 @@
     background: rgba(0, 0, 0, 0.3);
     z-index: -1;
     position: fixed;
-    pointer-events: none;
     width: 100%;
     height: 150%;
     opacity: 0;
+    pointer-events: none;
     transition: opacity 0.5s ease;
     transform: translate3d(-260px, 0, 0);
 }
@@ -206,6 +206,7 @@ body.toggled .sidebar-overlay {
                            <li class="list-group-item"> <a  href="{{ route('catalog', $category->slug) }}">{{ $category->name }}</a></li>
                              @endforeach
                         </ul>
+                        <li class="list-inline-item btn"><a href="{{ route('catalog.promo') }}">Promociones</a></li>
                     </div>
                
                 </ul>
