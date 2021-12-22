@@ -13,7 +13,7 @@
         </div>
         <div class="d-none d-md-block">
 
-           <a href="{{ route('size_chart.create') }}" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
+           <a href="{{ route('size_chart.create') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
                 <i class="fas fa-plus"></i>  Agregar Nueva Guia de talla
             </a>
         </div>
@@ -52,7 +52,7 @@
     <img src="{{ asset('assets/img/group.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
     <h4>¡No hay Guias de talla guardadas en la base de datos!</h4>
     <p class="mb-4">Empieza a cargar guias de tallas en tu plataforma usando el botón superior.</p>
-    <a href="{{ route('size_chart.create') }}" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Agregar Nueva Guia de talla</a>
+    <a href="{{ route('size_chart.create') }}"  class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Agregar Nueva Guia de talla</a>
 </div>
 @else
 <div class="card-columns">
@@ -60,43 +60,12 @@
         <div class="card">
             <div class="action-btns">
                 <ul class="list-inline">
-                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal_{{ $size->id }}" class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-edit"></i></a></li>
+                     <li class="list-inline-item"><a href="{{ route('size_chart.edit', $size->id) }}"  data-toggle="tooltip" data-original-title="Editar"class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-edit"></i></a></li>
                     <li class="list-inline-item"><a href="{{ route('size_chart.show', $size->id) }}"  data-toggle="tooltip" data-original-title="Detalle"class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-eye"></i></a></li>
 
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalDelete_{{ $size->id }}" class="btn btn-rounded btn-icon btn-danger"><i class="fas fa-times" aria-hidden="true"></i></a></li>                  
                 </ul>
 
-                <div class="modal fade" id="editModal_{{ $size->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-sm" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Editar guia de tallas</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-
-                            <form method="POST" action="{{ route('size_chart.update', $size->id) }}" enctype="multipart/form-data">
-                            {{ csrf_field() }}
-                            {{ method_field('PUT') }}
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Nombre de la guia</label>
-                                                <input type="text" class="form-control" name="name" value="{{ $size->name }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                    <button type="submit" class="btn btn-primary">Guardar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
 
                 <div id="modalDelete_{{ $size->id }}" class="modal fade">
                     <div class="modal-dialog modal-dialog-vertical-center" role="document">
@@ -157,45 +126,5 @@
 </div>
 @endif
 
-
-<div id="modalCreate" class="modal fade">
-    <div class="modal-dialog modal-dialog-vertical-center" role="document">
-        <div class="modal-content bd-0 tx-14">
-            <div class="modal-header">
-                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear nueva Guia de tallas</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-             <form method="POST" action="{{ route('size_chart.store') }}" enctype="multipart/form-data">
-            {{ csrf_field() }}
-                <div class="modal-body pd-25">
-                    <div class="form-group mt-2">
-                        <label>Nombre de guia de talla</label>
-                        <input type="text" class="form-control" id="name" name="name" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Vincular con categoria <span class="text-info">(Opcional)</span></label>
-                        <select class="form-control" id="category_id" name="category_id">
-                            <option  value="0" selected="">Selecciona una opción..</option>
-                            @foreach($categories as $cat)
-                                @if($cat->parent_id == NULL || 0)
-                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                                @else
-                                
-                                @endif
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Información</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 @endsection

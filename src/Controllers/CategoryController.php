@@ -28,7 +28,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::where('parent_id', 0)->orWhere('parent_id', NULL)->paginate(15);
+        $categories = Category::where('parent_id', 0)->orWhere('parent_id', NULL)->orderBy('priority','asc')->paginate(15);
         $categories_all = Category::all();
         return view('wecommerce::back.categories.index')->with('categories', $categories)->with('categories_all', $categories_all);
     }
@@ -73,6 +73,7 @@ class CategoryController extends Controller
         }
         
         $category->parent_id = $request->parent_id;
+        $category->priority = $request->priority;
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -152,6 +153,7 @@ class CategoryController extends Controller
         }
         
         $category->parent_id = $request->parent_id;
+        $category->priority = $request->priority;
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -169,17 +171,13 @@ class CategoryController extends Controller
         $type = 'Colección';
         $by = Auth::user();
         $data = 'editó una colección con el nombre:' . $category->name;
-                $type = 'Orden';
-        $by = Auth::user();
-        $data = 'cambió el estado de la orden #0' . $order->id . ' a ' . $request->value;
         $model_action = "update";
-        $model_id = $product->id;
+        $model_id = $category->id;
 
 
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
-        $this->notification->send($type, $by ,$data);
 
         // Mensaje de session
         Session::flash('success', 'Se guardó tu categoría exitosamente en la base de datos.');

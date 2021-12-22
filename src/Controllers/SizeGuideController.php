@@ -43,11 +43,13 @@ class SizeGuideController extends Controller
         $size_guide = new Size_guide;
 
         $size_guide->name = $request->name;
-        $size_guide->category_id = $request->category_id;
+        $size_guide->size_value = $request->size_value;
+        $size_guide->size_chart_id = $request->size_chart_id;
         $size_guide->save();
-        $size_chart = size_chart::get();
-        $categories = Category::all();
-        return view('wecommerce::back.size_chart.index')->with('size_chart', $size_chart)->with('categories', $categories);
+        $size_chart = Size_chart::find($request->size_chart_id);
+         $size_guide = Size_guide::where('size_chart_id', $request->size_chart_id);
+         $categories = Category::all();
+        return view('wecommerce::back.size_chart.edit')->with('size_chart', $size_chart)->with('size_guide', $size_guide)->with('categories', $categories);
     }
 
     /**
@@ -81,13 +83,11 @@ class SizeGuideController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $guide = Size_guide::find($id);
-        $guide->name = $request->name;
-        $guide->category_id = $request->category_id;
-        $guide->save();
-        $size_chart = size_chart::get();
-        $categories = Category::all();
-        return view('wecommerce::back.size_chart.index')->with('size_chart', $size_chart)->with('categories', $categories);
+        $size_guide = Size_guide::find($id);
+        $size_guide->name = $request->name;
+        $size_guide->size_value = $request->size_value;
+        $size_guide->size_chart_id = $request->size_chart_id;
+        $size_guide->save();
     }
 
     /**

@@ -102,13 +102,11 @@
         <div class="card mb-2">
             <div class="card-header d-flex align-items-center justify-content-between">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="addressRadio" id="addressRadio_{{ $address->id }}">
+                    <input class="form-check-input option-address" type="radio" name="addressRadio" id="addressRadio_{{ $address->id }}" onchange="newAdress()">
                     <label class="form-check-label" for="addressRadio_{{ $address->id }}">
                         {{ $address->name }}
                     </label>
                 </div>
-
-                <a href="">Editar</a>
             </div>
             <div class="card-body" style="display:none;">
                 <div class="row">
@@ -192,15 +190,19 @@
         </div>
         @endforeach
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex align-items-center justify-content-between">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="addressRadio" id="addressRadio_new" checked="">
+                    <input class="form-check-input new-address" type="radio" name="addressRadio" id="addressRadio_new" checked="" onchange="newAdress()" checked>
                     <label class="form-check-label" for="addressRadio_new">
                         Nueva Dirección
                     </label>
                 </div>
+                
+               <label>
+                <input type="hidden" name="save_address" value="false">
+                <input type="checkbox" name="save_address" value="true">  Guardar dirección para despues</label>
             </div>
-            <div class="card-body">
+            <div class="card-body card-body-new-add" id="new_address_body">
                 <div class="row">
                     <div class="col-md-7">
                         <div class="mb-3">

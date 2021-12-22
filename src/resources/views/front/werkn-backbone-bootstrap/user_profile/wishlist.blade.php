@@ -5,7 +5,15 @@
 @endpush
 
 @push('stylesheets')
-
+<style type="text/css">
+    .footer-card-wish{
+        text-align: center;
+        padding: 1rem;
+        background-color: black;
+        color: white;
+        margin-top: 1rem;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -65,20 +73,49 @@
                         <hr>
 
                        @if($wishlist->count())
-                            <div class="card-columns">
-                                @foreach($wishlist as $ws)
-                                <a href="{{ route('detail', [$ws->product->category->slug, $ws->product->slug]) }}" class="card">
-                                    <img class="card-img-top" src="{{ asset('img/products/' . $ws->product->image ) }}" alt="{{ $ws->product->name }}">
+                            <div class="row">
+                                @foreach($wishlist as $product_info)
 
+
+                                
+                                <div class="col-4">
+                                    <div class="card mb-4 box-shadow">
+                                    <a href="{{ route('detail', [$product_info->product->category->slug, $product_info->product->slug]) }}">
+                                    <img class="card-img-top" src="{{ asset('img/products/' . $product_info->product->image) }}" data-holder-rendered="true">
+                                    </a>
                                     <div class="card-body">
-                                        <h4 class="card-title">{{ $ws->product->name }}</h4>
-                                        <p class="card-text"><strong>$ {{ $ws->product->price }}</strong></p>
+                                        <h5 class="card-text">{{$product_info->product->name}}</h5>
+                                      <p class="card-text">{{$product_info->product->description}}</p>
+                                      <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            @if(isset(Auth::user()->id) && Auth::user()->isInWishlist($product_info->product->id))
+                                             <a href="{{ route('wishlist.remove', $product_info->product->id) }}" class="btn-sm btn btn-outline-danger"><ion-icon name="heart-dislike"></ion-icon></a>
+                                            @else
+                                                @if(Auth::guest())
+                                                <a href="{{ route('login') }}" class="btn btn-sm btn-outline-secondary"><ion-icon name="heart"></ion-icon></a>
+                                                @else
+                                                 <a href="{{ route('wishlist.add', $product_info->product->id) }}"  class="btn btn-sm btn-outline-secondary"><ion-icon name="heart"></ion-icon></a>
+                                                @endif
+                                            @endif
+                                            @if($product_info->product->status == 'Publicado')
+                                            <a href="{{ route('add-cart', ['id' => $product_info->product->id, 'variant' => 'unique']) }}"  class="btn btn-sm btn-outline-secondary"><ion-icon name="cart"></ion-icon></a>
+                                            @else
+                                            <a href="#" class="btn btn-sm btn-outline-secondary">Disabled</a>
+                                            @endif
+                                        </div>
+                                                             @if($product_info->product->has_discount == true)
+                                            <span class="price">${{ number_format($product_info->product->discount_price, 2) }}</span>
+                                            @else
+                                            <span class="price">${{ number_format($product_info->product->price, 2) }}</span>
+                                            @endif
+                                      </div>
+                                      <div class="footer-card-wish">Solo quedan {{$product_info->product->stock}}</div>
                                     </div>
-                                    <div class="card-footer">
-                                        <small class="text-muted">¡Solo {{ $ws->product->stock }} en existencia!</small>
-                                    </div>
-                                </a>
-                                @endforeach
+                                  </div>
+                            </div> 
+                          
+
+                     @endforeach
                             </div>
                         @else
                             <div class="text-center my-5">

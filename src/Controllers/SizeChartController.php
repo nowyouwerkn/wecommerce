@@ -29,7 +29,8 @@ class SizeChartController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('wecommerce::back.size_chart.create')->with('categories', $categories);
     }
 
     /**
@@ -50,9 +51,9 @@ class SizeChartController extends Controller
         return view('wecommerce::back.size_chart.index')->with('size_chart', $size_chart)->with('categories', $categories);
     }
 
-    public function show(size_chart $size_chart)
+    public function show($id)
     {
-        //
+        return view('wecommerce::back.size_chart.show');
     }
 
     /**
@@ -61,9 +62,12 @@ class SizeChartController extends Controller
      * @param  \App\Models\size_chart  $size_chart
      * @return \Illuminate\Http\Response
      */
-    public function edit(size_chart $size_chart)
+    public function edit($id)
     {
-        //
+         $size_chart = Size_chart::find($id);
+         $size_guide = Size_guide::where('size_chart_id', $id);
+         $categories = Category::all();
+        return view('wecommerce::back.size_chart.edit')->with('size_chart', $size_chart)->with('size_guide', $size_guide)->with('categories', $categories);
     }
 
     /**
@@ -90,8 +94,11 @@ class SizeChartController extends Controller
      * @param  \App\Models\size_chart  $size_chart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(size_chart $size_chart)
+    public function destroy($id)
     {
-        //
+        $size_chart = Size_chart::find($id);
+        $size_chart->delete();
+
+        return redirect()->back();
     }
 }

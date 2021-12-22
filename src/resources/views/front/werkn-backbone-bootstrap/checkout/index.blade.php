@@ -41,15 +41,14 @@
 
                     
                     <div class="we-co--title d-flex align-items-center justify-content-between">
-                        <h4><span class="we-co--progress-indicator"></span> Método de Envío</h4>
+                        <h4><span class="we-co--progress-indicator"></span> Direccion de Envío</h4>
                     </div>
-                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
-                    
+                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')                    
 
                     <div class="we-co--title d-flex align-items-center justify-content-between">
-                        <h4><span class="we-co--progress-indicator"></span> Información de Envío</h4>
+                        <h4><span class="we-co--progress-indicator"></span> Metodos de Envío</h4>
                     </div>
-                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')
+                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
 
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>
@@ -134,6 +133,30 @@
 
 <!-- PARSLEY VALIDATION -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.8.1/parsley.min.js"></script>
+<script type="text/javascript">
+    function valueChanged()
+    {
+        if($('.billing_check').is(":checked"))   
+            $(".billing_form").fadeOut(500);
+        else
+            $(".billing_form").fadeIn(500);
+    }
+
+     function newAdress()
+    {
+        if($('.option-address').is(":checked"))   
+            $(".card-body-new-add").fadeOut(500);
+        else
+            $(".card-body-new-add").fadeOut(500);
+
+
+        if($('.new-address').is(":checked"))   
+            $(".card-body-new-add").fadeIn(500);
+        else
+            $(".card-body-new-add").fadeOut(500);
+    }
+
+</script>
 <script type="text/javascript">
        $(document).ready(function(){
                  $('.shipping-options a').click(function() {

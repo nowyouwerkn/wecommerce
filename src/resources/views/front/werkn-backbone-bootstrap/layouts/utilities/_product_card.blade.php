@@ -16,7 +16,11 @@
                              <a href="{{ route('wishlist.add', $product_info->id) }}"  class="btn btn-sm btn-outline-secondary"><ion-icon name="heart"></ion-icon></a>
                             @endif
                         @endif
+                        @if($product_info->status == 'Publicado')
                         <a href="{{ route('add-cart', ['id' => $product_info->id, 'variant' => 'unique']) }}"  class="btn btn-sm btn-outline-secondary"><ion-icon name="cart"></ion-icon></a>
+                        @else
+                        <a href="#" class="btn btn-sm btn-outline-secondary">Disabled</a>
+                        @endif
                     </div>
                          @if($product_info->has_discount == true)
         <span class="price">${{ number_format($product_info->discount_price, 2) }}</span>

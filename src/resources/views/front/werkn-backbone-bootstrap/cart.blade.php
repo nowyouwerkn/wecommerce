@@ -87,7 +87,7 @@
                                 @endif
                                     <td>
                                         <div class="btn-group">
-                                            @if($product['qty'] == 1)
+                                              @if($product['qty'] == 1)
                                             @else
                                             <a href="{{ route( 'cart.substract', [ 'id' => $product['item']['id'], 'variant' => $product['variant'] ] ) }}" class="btn btn_custom--purple d-flex align-items-center">-</a>
                                              @endif

@@ -24,6 +24,19 @@
         border: none;
         background-color: transparent;
       }
+      @media (max-width: 760px) {
+      .overlay-cookie {
+            position: fixed;
+            width: 70%;
+            background: black;
+            color: white;
+            border: solid 1px grey;
+            padding: 20px; 
+            bottom: 0;
+            left: 0;
+            z-index: 99;
+        }
+      }
     </style>
 
 <div id="myDiv" class="overlay-cookie">

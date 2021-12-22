@@ -260,6 +260,8 @@ class FrontController extends Controller
               $last_product = Product::where('id', '>' , $product->id)->orderBy('id','desc')->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
         }
 
+        $current_date_time = Carbon::now()->toDateTimeString();
+
         $store_config = $this->store_config;
 
         if (empty($product)) {
@@ -270,6 +272,7 @@ class FrontController extends Controller
             ->with('products_selected', $products_selected)
             ->with('store_config', $store_config)
             ->with('next_product', $next_product)
+            ->with('current_date_time', $current_date_time)
             ->with('last_product', $last_product);
         }
     }
@@ -1196,6 +1199,66 @@ class FrontController extends Controller
             $user = Auth::user();
         }
 
+                // GUARDAR LA DIRECCIÓN
+        if ($request->save_address == 'true') {
+        $check = UserAddress::where('street', $request->street)->count();
+
+        if ($check == NULL || $check == 0) {
+            $address = new UserAddress;
+            $address->name = 'Compra_' . Str::substr($request->card_number, 15);
+            $address->user_id = $user->id;
+            $address->street = $request->street;
+            $address->street_num = $request->street_num;
+            $address->postal_code = $request->postal_code;
+            $address->city = $request->city;
+            $address->country = $request->country;
+            $address->state = $request->state;
+            $address->phone = $request->phone;
+            $address->suburb = $request->suburb;
+            $address->references = $request->references;
+            $address->is_billing = false;
+
+            $address->save();
+        }
+        }
+
+        // GUARDAR LA DIRECCIÓN DE FACTURACIÓN
+
+        if ($request->billing_shipping == 'true') {
+            $address = new UserAddress;
+            $address->name = 'Compra_tajeta_' . Str::substr($request->card_number, 15);
+            $address->user_id = $user->id;
+            $address->street = $request->street;
+            $address->street_num = $request->street_num;
+            $address->postal_code = $request->postal_code;
+            $address->city = $request->city;
+            $address->country = $request->country;
+            $address->state = $request->state;
+            $address->phone = $request->phone;
+            $address->suburb = $request->suburb;
+            $address->references = $request->references;
+            $address->is_billing = true;
+            $address->save();
+            $billing_shipping_id = UserAddress::where('street', $request->street)->where('is_billing', true)->where('user_id', $user->id)->first();
+            }
+
+            if ($request->billing_shipping == 'false') {
+            $address_billing = new UserAddress;
+            $address_billing->name = 'Compra_tajeta_' . Str::substr($request->card_number, 15);
+            $address_billing->user_id = $user->id;
+            $address_billing->street = $request->street_billing;
+            $address_billing->street_num = $request->street_num_billing;
+            $address_billing->postal_code = $request->postal_code_billing;
+            $address_billing->city = $request->city_billing;
+            $address_billing->country = $request->country_billing;
+            $address_billing->state = $request->state_billing;
+            $address_billing->phone = $request->phone;
+            $address_billing->suburb = $request->suburb_billing;
+            $address_billing->is_billing = true;
+            $address_billing->save();
+            $billing_shipping_id = UserAddress::where('street', $request->street_billing)->where('is_billing', true)->where('user_id', $user->id)->first();
+            }
+
         // GUARDAR LA ORDEN
         $order = new Order();
 
@@ -1211,6 +1274,7 @@ class FrontController extends Controller
         $order->suburb = $request->input('suburb');
         $order->references = $request->input('references');
         $order->shipping_option = $request->shipping_option;
+        $order->billing_shipping_id = $billing_shipping_id->id;
 
         /* Money Info */
         $order->cart_total = $cart->totalPrice;
@@ -1256,28 +1320,6 @@ class FrontController extends Controller
                 $product_stock->save();
             }
         }
-
-        // GUARDAR LA DIRECCIÓN
-        /*
-        $check = UserAddress::where('street', $request->street)->count();
-
-        if ($check == NULL || $check == 0) {
-            $address = new UserAddress;
-            $address->name = 'Compra_' . substr($charge->id, 0, 3);
-            $address->user_id = $user->id;
-            $address->street = $request->street;
-            $address->street_num = $request->street_num;
-            $address->postal_code = $request->postal_code;
-            $address->city = $request->city;
-            $address->country = $request->country;
-            $address->state = $request->state;
-            $address->phone = $request->phone;
-            $address->suburb = $request->suburb;
-            $address->references = $request->references;
-
-            $address->save();
-        }
-        */
         
         $mail = MailConfig::first();
         $config = StoreConfig::first();
@@ -1298,7 +1340,7 @@ class FrontController extends Controller
         config(['mail.password'=>$mail->mail_password]);
         config(['mail.encryption'=>$mail->mail_encryption]);
 
-        $data = array('order_id' => $order->id, 'user_id' => $user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at);
+        $data = array('order_id' => $order->id, 'user_id' => $user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at, 'shipping_id' => $request->shipping_option);
 
         try {
             Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email, $sender_email, $store_name) {
@@ -1593,7 +1635,7 @@ class FrontController extends Controller
             return $order;
         });
 
-        $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
+        $addresses = UserAddress::where('user_id', Auth::user()->id)->where('is_billing', false)->get();
 
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')
         ->with('total_orders', $total_orders)
@@ -1626,7 +1668,7 @@ class FrontController extends Controller
 
     public function address ()
     {
-        $addresses = UserAddress::where('user_id', Auth::user()->id)->paginate(10);
+        $addresses = UserAddress::where('user_id', Auth::user()->id)->where('is_billing', false)->paginate(10);
 
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.address', compact('addresses'));
     }
@@ -1644,7 +1686,7 @@ class FrontController extends Controller
         ));
 
         // Save request in database
-        $address = new Address;
+        $address = new UserAddress;
         $address->name = $request->name;
         $address->user_id = $request->user_id;
         $address->street = $request->street;
@@ -1657,10 +1699,10 @@ class FrontController extends Controller
         $address->phone = $request->phone;
         $address->suburb = $request->suburb;
         $address->references = $request->references;
-
+        $address->is_billing = false;
         $address->save();
 
-        return redirect()->route('address');
+        return redirect()->back();
     }
 
     public function editAddress($id)

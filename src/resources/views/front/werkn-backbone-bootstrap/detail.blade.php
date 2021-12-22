@@ -195,7 +195,7 @@
                     
                     <p class="style-name mx-2 mt-2">SKU : {{ $product->sku }}</p>
                     <p class="style-name mx-2 mt-2">Stock : {{ $product->stock }}</p>
-                    @if($product->has_discount == true)
+                    @if($product->has_discount == true && $product->discount_end > $current_date_time)
                     <div class="price mx-2 mt-2">Precio : ${{ number_format($product->discount_price, 2) }}</div>
                     <div class="price price-discounted mx-2 mt-2">${{ number_format($product->price, 2) }}</div>
                     @else

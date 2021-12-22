@@ -138,6 +138,9 @@
                                     <h5>Subtítulo</h5>
 									<p>{{ $banner->subtitle}}</p>
 
+                                    <h5>Prioridad</h5>
+                                    <p>{{$banner->priority}}</p>
+
                                     <h5>Texto de botón</h5>
 									<p>{{ $banner->text_button}}</p>
 

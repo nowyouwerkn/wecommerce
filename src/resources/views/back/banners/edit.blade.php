@@ -108,6 +108,49 @@
                             <label for="link">URL del boton</label>
                             <input type="url" class="form-control" id="link" name="link" value="{{ $banner->link }}" required="" />
                         </div>
+                               <div class="form-group col-md-6">
+                            <label for="text_button">Color del botón</label>
+                            <input type="color" class="form-control" name="hex_button" value="{{$banner->hex_button}}" />
+                        </div>
+                          <div class="form-group col-md-6">
+                            <label for="link">Color del texto en el boton</label>
+                            <input type="color" class="form-control" name="hex_text_button" required="" value="{{$banner->hex_text_button}}"/>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="link">Color del texto del titulo</label>
+                            <input type="color" class="form-control" name="hex_text_title" required="" value="{{$banner->hex_text_title}}"/>
+                        </div>
+                         <div class="form-group col-md-6">
+                            <label for="link">Color del texto del subtitulo</label>
+                            <input type="color" class="form-control" name="hex_text_subtitle" required="" value="{{$banner->hex_text_subtitle}}"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="link">Link de video de fondo</label>
+                            <input type="text" class="form-control" name="video_background" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="link">Prioridad</label>
+                            <select class="form-control" name="priority">
+                                  <option value="{{$banner->priority}}">{{$banner->priority}}</option>
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="4">4</option>
+                                  <option value="5">5</option>
+                                  <option value="6">6</option>
+                                  <option value="7">7</option>
+                            </select>
+                        </div>
+                          <div class="form-group col-md-6">
+                            <label for="link">Posición</label>
+                            <select class="form-control" name="position">
+                                <option value="{{$banner->position}}">{{$banner->position}}</option>
+                                  <option value="Left">Left</option>
+                                  <option value="Right">Right</option>
+                                  <option value="Center">Center</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -129,7 +172,7 @@
 
             <div class="text-right mt-4 mb-5">
                 <a href="{{ route('banners.index') }}" class="btn btn-default btn-lg">Cancelar</a>
-                <button type="submit" class="btn btn-primary btn-lg">Guardar Nuevo Banner</button>
+                <button type="submit" class="btn btn-primary btn-lg">Guardar Banner</button>
             </div>
         </div>
 
@@ -142,9 +185,9 @@
                     <div class="d-flex">
                         <div class="card-banner d-flex justify-content-center align-items-center" id="hex_" style="background: {{ $banner->hex }}">
                             <div class="card-banner-content">
-                                <h5 id="title_">{{ $banner->title }}</h5>
-                                <p id="subtitle_">{{ $banner->subtitle}}</p>
-                                <a href="#" class="btn btn-light rounded" id="text_button_">{{ $banner->text_button }}</a>
+                                <h5 id="title_" style="color: {{$banner->hex_text_title}}">{{ $banner->title }}</h5>
+                                <p id="subtitle_" style="color: {{$banner->hex_text_subtitle}}">{{ $banner->subtitle}}</p>
+                                <a href="#" class="btn btn-light rounded" id="text_button_" style="background-color: {{$banner->hex_button}}; color: {{$banner->hex_text_button}} ">{{ $banner->text_button }}</a>
                             </div>
                             <img src="{{ asset('img/banners/' . $banner->image ) }}" id="output" class="card-banner-image" width="100">
                         </div>
