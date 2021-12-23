@@ -24,7 +24,7 @@
                 <div class="row">
                     <div class="col-12" style="position: relative;"> 
                      
-                        <div  style="z-index: 3; position: relative;" class="banner-content" style="text-align: {{$banner->position}}">
+                        <div  style="z-index: 3; position: relative; text-align:{{$banner->position}}" class="banner-content">
                             <h3 style="color: {{$banner->hex_text_title}}">{{ $banner->subtitle }}</h3>
                             <h2 style="color: {{$banner->hex_text_subtitle}}">{{ $banner->title }}</h2>
                             <p style="color: {{$banner->hex_text_subtitle}}">{{ $banner->text }}</p>

@@ -125,8 +125,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
     Route::resource('variants', Nowyouwerkn\WeCommerce\Controllers\VariantController::class); //
     Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
-    Route::resource('size_guide', Nowyouwerkn\WeCommerce\Controllers\SizeGuideController::class); //
-     Route::resource('size_chart', Nowyouwerkn\WeCommerce\Controllers\SizeChartController::class); //
+    Route::resource('size_chart', Nowyouwerkn\WeCommerce\Controllers\SizeChartController::class);
+    Route::post('size/add', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\SizeChartController@createsize',
+        'as' => 'size.add',
+    ]); //
+    Route::post('size/update', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\SizeChartController@update_value',
+        'as' => 'size_value.update',
+    ]);
 
     Route::get('stocksquery', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@search',

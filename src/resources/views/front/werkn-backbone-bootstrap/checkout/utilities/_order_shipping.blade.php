@@ -11,10 +11,10 @@
                     	</div>
 
                     	<div class="col-7"> 
-                    		<h5>
+                    		<label class="title-shipping">
                         	{{ $options->name }}
-                    		</h5>
-                    		<p class="mb-1">
+                    		</label>
+                    		<p class="mb-1" class="delivery-time">
                         	{{ $options->delivery_time }}
                     		</p>
                     		@if($options->price != 0)
@@ -22,7 +22,7 @@
                         	${{ $options->price }}
                     		</h6>
                     		@else
-                    		<h6 class="price-free" style="color: green;">
+                    		<h6 class=" price price-free">
                         	GRATIS
                     		</h6>
                     		@endif

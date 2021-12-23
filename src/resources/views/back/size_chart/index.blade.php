@@ -13,9 +13,11 @@
         </div>
         <div class="d-none d-md-block">
 
-           <a href="{{ route('size_chart.create') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                <i class="fas fa-plus"></i>  Agregar Nueva Guia de talla
+        <div class="d-none d-md-block">
+            <a href="{{ route('categories.create') }}" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
+                <i class="fas fa-plus"></i>  Agregar Nueva Guia de Talla
             </a>
+        </div>
         </div>
     </div>
 
@@ -37,6 +39,11 @@
             border-radius: 15px;
         }
 
+        .size-values {
+            width: 100%;
+            height: 100%;
+        }
+
 
 
         .list-group-item{
@@ -52,15 +59,17 @@
     <img src="{{ asset('assets/img/group.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
     <h4>¡No hay Guias de talla guardadas en la base de datos!</h4>
     <p class="mb-4">Empieza a cargar guias de tallas en tu plataforma usando el botón superior.</p>
-    <a href="{{ route('size_chart.create') }}"  class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Agregar Nueva Guia de talla</a>
+            <a href="{{ route('categories.create') }}" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
+                <i class="fas fa-plus"></i>  Agregar Nueva Guia de Talla
+            </a>
 </div>
 @else
-<div class="card-columns">
+<div class=" row">
     @foreach($size_chart as $size)
-        <div class="card">
-            <div class="action-btns">
+        <div class=" col-4 m-0 p-1">
+            <div class="card">            <div class="action-btns">
                 <ul class="list-inline">
-                     <li class="list-inline-item"><a href="{{ route('size_chart.edit', $size->id) }}"  data-toggle="tooltip" data-original-title="Editar"class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-edit"></i></a></li>
+                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalEdit_{{ $size->id }}" class="btn btn-rounded btn-icon btn-dark"><i style="color:white;" class="fas fa-edit"></i></a></li>
                     <li class="list-inline-item"><a href="{{ route('size_chart.show', $size->id) }}"  data-toggle="tooltip" data-original-title="Detalle"class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-eye"></i></a></li>
 
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalDelete_{{ $size->id }}" class="btn btn-rounded btn-icon btn-danger"><i class="fas fa-times" aria-hidden="true"></i></a></li>                  
@@ -109,22 +118,149 @@
             </div>
 
             <div class="card-body">
-                @if($size->size_guide != NULL || 0)
-                @foreach($size->size_guide as $size_guide)
-                <p class="card-text">{{ $size_guide->size_value }}</p>
-                @endforeach
-                @endif
+              
                 <p class="card-text mb-0">
                     <small class="text-muted">Creado: {{ $size->created_at }}</small>
                 </p>
                 <p class="card-text mb-0">
                     <small class="text-muted">Actualizado: {{ $size->updated_at }}</small>
                 </p>
+                @php 
+                $size_guide = Nowyouwerkn\WeCommerce\Models\Size_guide::where('size_chart_id', $size->id)->get();
+                @endphp
+                <div class="row">
+                    
+                        @if($size_guide != NULL || 0)
+                            @foreach($size_guide as $size_values)
+                            <hr>
+                            <div class="col-6">
+                            <form method="POST" action="{{ route('size_value.update') }}" enctype="multipart/form-data">
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="id" value="{{ $size_values->id }}">
+                                <input type="text" name="size_value" class="size-values" value="{{ $size_values->size_value }}"></input>
+                            
+                            </div>
+                            <div class="col-6">
+                                 <button  class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
+                                        <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
+                                    </button>
+                            </div>
+                            </form>
+                            <hr>
+                            @endforeach
+                        @endif
+                    
+                    <div class="col-12 mt-3">
+                        <div class="row">
+                       <div class="col-6">
+                            <form method="POST" action="{{ route('size.add') }}" enctype="multipart/form-data">
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="size_chart_id" value="{{ $size->id }}">
+                                <input type="text" name="size_value" class="size-values"></input>
+                            
+                            </div>
+                            <div class="col-6">
+                                 <button  class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
+                                        <i class="fas fa-add mr-1" aria-hidden="true"></i> Agregar Valor
+                                    </button>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                    
+                </div>
+                </div>
+
             </div>
-        </div>    
+        </div>
+
+
+<div id="modalEdit_{{ $size->id }}" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear nuevo Elemento</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+             <form method="POST" action="{{ route('size_chart.update', $size->id) }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+            {{ method_field('PUT') }}
+                <div class="modal-body pd-25">
+                    <div class="form-group mt-2">
+                        <label>Nombre de Guia de Talla</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{$size->name}}" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Vincular con otra categoría <span class="text-info">(Opcional)</span></label>
+                        <select class="form-control" id="category_id" name="category_id">
+                            @foreach($categories as $cat)
+                              @if($cat->id == $size->category_id)
+                              <option value="{{ $cat->id }}" selected>{{ $cat->name }}</option>
+                              @endif
+                                @if($cat->parent_id == NULL || 0)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                @else
+                                
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 
+     
     @endforeach
 </div>
 @endif
+
+<div id="modalCreate" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear nuevo Elemento</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+             <form method="POST" action="{{ route('size_chart.store') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+                <div class="modal-body pd-25">
+                    <div class="form-group mt-2">
+                        <label>Nombre de Guia de Talla</label>
+                        <input type="text" class="form-control" id="name" name="name" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Vincular con otra categoría <span class="text-info">(Opcional)</span></label>
+                        <select class="form-control" id="category_id" name="category_id">
+                            <option value="0" selected="">Selecciona una opción..</option>
+                            @foreach($categories as $cat)
+                                @if($cat->parent_id == NULL || 0)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                @else
+                                
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 @endsection

@@ -46,10 +46,31 @@ class SizeChartController extends Controller
         $size_chart->name = $request->name;
         $size_chart->category_id = $request->category_id;
         $size_chart->save();
-        $size_chart = size_chart::get();
+        $size_chart_id = Size_chart::where('name', $request->name)->where('category_id', $request->category_id)->first();
+
+
+        $size_chart = Size_chart::get();
         $categories = Category::all();
         return view('wecommerce::back.size_chart.index')->with('size_chart', $size_chart)->with('categories', $categories);
     }
+
+     public function createsize(Request $request)
+    {
+        $size_guide = new Size_guide;
+        $size_guide->size_chart_id = $request->size_chart_id;
+        $size_guide->size_value = $request->size_value;
+        $size_guide->save();
+        return redirect()->back();
+    }
+
+    public function update_value(Request $request)
+    {
+        $size_guide = Size_guide::find($request->id);
+        $size_guide->size_value = $request->size_value;
+        $size_guide->save();
+        return redirect()->back();
+    }
+
 
     public function show($id)
     {
@@ -64,9 +85,9 @@ class SizeChartController extends Controller
      */
     public function edit($id)
     {
-         $size_chart = Size_chart::find($id);
-         $size_guide = Size_guide::where('size_chart_id', $id);
-         $categories = Category::all();
+        $size_chart = Size_chart::find($id);
+        $size_guide = Size_guide::where('size_chart_id', $id)->get();
+        $categories = Category::all();
         return view('wecommerce::back.size_chart.edit')->with('size_chart', $size_chart)->with('size_guide', $size_guide)->with('categories', $categories);
     }
 
@@ -85,7 +106,7 @@ class SizeChartController extends Controller
         $size_chart->save();
         $size_chart = size_chart::get();
         $categories = Category::all();
-        return view('wecommerce::back.size_chart.index')->with('size_chart', $size_chart)->with('categories', $categories);
+        return redirect()->back();
     }
 
     /**

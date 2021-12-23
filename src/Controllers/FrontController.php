@@ -61,6 +61,8 @@ use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethodRule;
 use Nowyouwerkn\WeCommerce\Models\Shipping_options;
+use Nowyouwerkn\WeCommerce\Models\Size_chart;
+use Nowyouwerkn\WeCommerce\Models\Size_guide;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
@@ -261,6 +263,8 @@ class FrontController extends Controller
         }
 
         $current_date_time = Carbon::now()->toDateTimeString();
+        $size_charts = Size_chart::where('category_id', $catalog->id)->get();
+        $categories = Category::all();
 
         $store_config = $this->store_config;
 
@@ -273,6 +277,7 @@ class FrontController extends Controller
             ->with('store_config', $store_config)
             ->with('next_product', $next_product)
             ->with('current_date_time', $current_date_time)
+            ->with('size_charts', $size_charts)
             ->with('last_product', $last_product);
         }
     }
