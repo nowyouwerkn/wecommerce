@@ -40,7 +40,7 @@ class UpdateTablesv141 extends Migration
             $table->string('sandbox_public_key')->after('sandbox_mode')->nullable();
             $table->string('sandbox_private_key')->after('sandbox_public_key')->nullable();
             $table->string('mercadopago_oxxo')->after('sandbox_private_key')->nullable();
-            $table->string('mercadopago_paypal')->after('mercadopago_paypal')->nullable();
+            $table->string('mercadopago_paypal')->after('mercadopago_oxxo')->nullable();
         });
     }
 
