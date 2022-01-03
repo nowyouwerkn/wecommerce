@@ -22,7 +22,7 @@ class AddPriorityTables extends Migration
          Schema::table('legal_texts', function (Blueprint $table) {
             $table->string('priority')->nullable();
             });
-         Schema::table('user_addrasses', function (Blueprint $table) {
+         Schema::table('user_addresses', function (Blueprint $table) {
             $table->string('references')->nullable();
             $table->boolean('is_billing')->nullable();
             });
