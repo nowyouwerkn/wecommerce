@@ -47,11 +47,11 @@
 		<div class="row">
 			<div class="col-12">
 				<hr>
-		        <ul class="we-co--menu-links d-flex list-unstyled justify-content-between">
-		            <li><a href="{{ route('index') }}">Inicio</a></li>
-		            <li><a href="{{ route('catalog.all') }}">Catálogo</a></li>
+		        <ul class="we-co--menu-links row list-unstyled justify-content-between">
+		            <li class="col-md col-12" ><a href="{{ route('index') }}">Inicio</a></li>
+		            <li class="col-md col-12" ><a href="{{ route('catalog.all') }}">Catálogo</a></li>
 		            @foreach($legals as $legal)
-		            <li>
+		            <li class="col-md" >
 		                <a href="{{ route('legal.text' , $legal->type) }}">
 		                    @switch($legal->type)
 		                        @case('Returns')

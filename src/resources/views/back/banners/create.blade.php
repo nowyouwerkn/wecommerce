@@ -107,6 +107,47 @@
                             <label for="link">URL del botón</label>
                             <input type="url" class="form-control" id="link" name="link" value="{{ old('link') }}" required="" />
                         </div>
+                           <div class="form-group col-md-6">
+                            <label for="text_button">Color del botón</label>
+                            <input type="color" class="form-control" name="hex_button" required="" />
+                        </div>
+                         <div class="form-group col-md-6">
+                            <label for="link">Color del texto en el boton</label>
+                            <input type="color" class="form-control" name="hex_text_button" required="" />
+                        </div>
+
+                          <div class="form-group col-md-6">
+                            <label for="link">Color del texto del titulo</label>
+                            <input type="color" class="form-control" name="hex_text_title" required="" />
+                        </div>
+                         <div class="form-group col-md-6">
+                            <label for="link">Color del texto del subtitulo</label>
+                            <input type="color" class="form-control" name="hex_text_subtitle" required="" />
+                        </div>
+                           <div class="form-group col-md-6">
+                            <label for="link">Link de video de fondo</label>
+                            <input type="text" class="form-control" name="video_background" />
+                        </div>
+                          <div class="form-group col-md-6">
+                            <label for="link">Prioridad</label>
+                            <select class="form-control" name="priority">
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="4">4</option>
+                                  <option value="5">5</option>
+                                  <option value="6">6</option>
+                                  <option value="7">7</option>
+                            </select>
+                        </div>
+                            <div class="form-group col-md-6">
+                            <label for="link">Posición</label>
+                            <select class="form-control" name="position">
+                                  <option value="left">Izquierda</option>
+                                  <option value="right">Derecha</option>
+                                  <option value="Center">Centro</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="row">

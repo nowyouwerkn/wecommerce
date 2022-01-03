@@ -51,8 +51,100 @@
 				            <div class="card-wrapper"></div>    
 				        </div>
                     </div>
+
+                    <div class="col-md-12">
+                            <input type="hidden" name="billing_shipping" value="false">
+                            <label><input class="billing_check" type="checkbox" name="billing_shipping" value="true" onchange="valueChanged()">  Direccion de facturación es igual que dirección de envio</label>
+
+                            <div class="row">
+    <div class="col-md-12 billing_form" style="margin-top: 1rem;">
+            <div class="card-header">
+                    <label class="form-check-label" for="addressRadio">
+                       Dirección de Facturación
+                    </label>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="mb-3">
+                            <label class="form-label" for="last-name">Calle <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="street_billing" name="street_billing" value="{{ $address->street ?? '' }}" required="" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label" for="last-name">Num <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="street_num_billing" name="street_num_billing" value="{{ $address->street_num ?? '' }}" required="" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label class="form-label" for="last-name">Int </label>
+                            <input type="text" class="form-control" id="int_num_billing" name="int_num_billing" value="{{ $address->int_num ?? '' }}" />
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="zip">Colonia / Fraccionamiento <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="suburb_billing" name="suburb_billing" value="{{ $address->suburb ?? '' }}" required="" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="zip">Código Postal <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="postal_code_billing" name="postal_code_billing" value="{{ $address->postal_code ?? '' }}" required="" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="country">País <span class="text-danger">*</span></label>
+                            <select class="form-control form-control" id="country_billing" name="country_billing">
+                                <option value="México" selected="">México</option>
+                            </select>
+                        </div>
+                    </div> 
+                    
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="state">Estado <span class="text-danger">*</span></label>
+                            @php
+                                $states = Nowyouwerkn\WeCommerce\Models\State::all();
+                            @endphp
+                            <select class="form-control" id="state_billing" name="state_billing" data-parsley-trigger="change" required="">
+                                @foreach($states as $state)
+                                    @if(!empty($address))
+                                        <option {{ ($state->name == $address->state) ? 'selected' : '' }} value="{{ $state->name }}">{{ $state->name }}</option>
+                                    @else
+                                        <option value="{{ $state->name }}">{{ $state->name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <!--      
+                            <input type="text" class="form-control" id="state" name="state" value="" required="" />
+                            -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="city">Ciudad / Municipio <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="city_billing" name="city_billing" value="{{ $address->city ?? '' }}" required="" />
+                        </div>
+                    </div>
+                            <input type="hidden" class="form-control" id="references_billing"></input>
                 </div>
             </div>
+        </div>
+</div>
+                    </div>
+                </div>
+            </div>
+          
         </div>
         @endif
 

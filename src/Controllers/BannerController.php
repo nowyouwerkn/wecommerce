@@ -16,7 +16,7 @@ class BannerController extends Controller
 {
     public function index()
     {
-        $banners = Banner::paginate(5);
+        $banners = Banner::orderBy('priority','asc')->paginate(5);
 
         return view('wecommerce::back.banners.index', compact('banners'));
     }
@@ -48,6 +48,12 @@ class BannerController extends Controller
         $banner->has_button = true;
         $banner->is_active = true;
         $banner->hex = $request->hex;
+        $banner->hex_text_title = $request->hex_text_title;
+        $banner->hex_text_subtitle = $request->hex_text_subtitle;
+        $banner->hex_button = $request->hex_button;
+        $banner->hex_text_button = $request->hex_text_button;
+        $banner->position = $request->position;
+        $banner->priority = $request->priority;
 
         $img2 = 'banner';
 
@@ -98,6 +104,12 @@ class BannerController extends Controller
         $banner->has_button = true;
         $banner->is_active = true;
         $banner->hex = $request->hex;
+        $banner->hex_text_title = $request->hex_text_title;
+        $banner->hex_text_subtitle = $request->hex_text_subtitle;
+        $banner->hex_button = $request->hex_button;
+        $banner->hex_text_button = $request->hex_text_button;
+        $banner->position = $request->position;
+        $banner->priority = $request->priority;
 
         $img2 = 'model';
 

@@ -379,6 +379,14 @@
                                 <p class="mb-0" style="font-size: 1.3em;"><strong>${{ number_format($order->discounts, 2) ?? 'N/A' }}</strong></p>
                             </div>
                         </div>
+                          <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="mb-0 mt-0">Cupon usado:</h6>
+                            </div>
+                            <div class="col text-right">
+                                <p class="mb-0" style="font-size: 1.3em;"><strong>{{ $order->coupon_id, 2 ?? 'N/A' }}</strong></p>
+                            </div>
+                        </div>
 
                         <div class="row align-items-center">
                             <div class="col">
@@ -589,6 +597,61 @@
                         @endif
                     </div>
                 </div>
+
+                 @php
+
+                $notifications = Nowyouwerkn\WeCommerce\Models\Notification::with('user')->orderBy('created_at', 'desc')->where('type', 'Orden')->where('model_id', $order->id)->get();
+            @endphp
+
+             <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="mb-0">Listado de cambios realizados</h4>
+                            </div>
+                        </div>
+                        <hr>
+
+                        @if($notifications->count() != 0)
+
+                            @foreach($notifications as $notification)
+                            <div class="note-row row align-items-center mb-3">
+                                <div class="col-2">
+                                    <div class="user-image text-center mr-3">
+                                        @if($notification->model_action == 'update')
+                                        <ion-icon style = "font-size: 2rem;" name="create-outline"></ion-icon>
+                                        @endif
+                                        @if($notification->model_action == 'create')
+                                        <ion-icon name="add-circle-outline"></ion-icon>
+                                         @endif
+                                        <p class="mb-0" style="font-size: 0.8rem;">{{ $notification->model_action}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-10">
+                                    <div class="speech-wrap">
+                                        <div class="">
+                                            <p>{{ $notification->data }}</p>
+                                               @php
+
+                                                $user = Nowyouwerkn\WeCommerce\Models\User::where('id' , $notification->action_by)->first();
+                                            @endphp
+                                            <p class="mb-0"><small>{{ $user->name }}</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        @else
+                        <div class="text-center my-5">
+
+                            <h4 class="mb-0">No hay cambios en esta orden todavía.</h4>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+                <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
             </div>
         </div>
     </span>

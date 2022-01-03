@@ -125,11 +125,16 @@ class OrderController extends Controller
      
 
         // Notificación
+        
         $type = 'Orden';
         $by = Auth::user();
         $data = 'cambió el estado de la orden #0' . $order->id . ' a ' . $request->value;
+        $model_action = "update";
+        $model_id = $order->id;
 
-        $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         return response()->json([
             'mensaje' => 'Estado cambiado exitosamente', 

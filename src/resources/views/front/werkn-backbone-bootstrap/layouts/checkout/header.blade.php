@@ -46,3 +46,46 @@
 		</div>
 	</div>
 </div>
+
+<div class="we-co--header-responsive container">
+	<div class="row align-items-center">
+		<div class="col-12" style="text-align: center; margin-top: 20px;">
+			<div class="align-items-center">
+				@if(!empty($store_config))
+	                @if($store_config->store_logo == NULL)
+	                <img src="{{ asset('assets/img/logo.png') }}" class="we-co--logo" alt="Logo">
+	                @else
+	                <img src="{{ asset('assets/img/' . $store_config->store_logo) }}" class="we-co--logo" alt="Logo">
+	                @endif
+	            @else
+	            <img src="{{ asset('assets/img/logo.png') }}" class="we-co--logo" alt="Logo">
+	            @endif
+
+	       
+			</div>
+		</div>
+
+		<div class="col-6">
+			<div class="text-center">
+				<h2 class="mb-0">Checkout</h2>
+			</div>
+		</div>
+
+		<div class="col-6 d-flex justify-content-end">
+			<div class="we-co--trust-logo">
+				<div class="d-flex align-items-center">
+
+		            <div class="we-co--trust-logo-info">
+		            	<h5>Compra Segura</h5>
+		            	<p>Sitio Seguro con Encriptación de 256-Bits</p>
+		            </div>
+				</div>
+	        </div>
+		</div>
+
+		<div class="col-12">
+			     <a href="{{ route('catalog.all') }}" class="we-co--return-btn-responsive"><ion-icon name="return-down-back"></ion-icon> Volver a la tienda</a>
+			<hr>
+		</div>
+	</div>
+</div>

@@ -17,6 +17,11 @@ class Category extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function size_chart()
+    {
+        return $this->hasMany(Size_chart::class);
+    }
+
     public function productsIndex()
     {
         return $this->hasMany(Product::class)->where('status', 'Publicado');

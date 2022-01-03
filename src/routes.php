@@ -125,6 +125,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
     Route::resource('variants', Nowyouwerkn\WeCommerce\Controllers\VariantController::class); //
     Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
+    Route::resource('size_chart', Nowyouwerkn\WeCommerce\Controllers\SizeChartController::class);
+    Route::post('size/add', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\SizeChartController@createsize',
+        'as' => 'size.add',
+    ]); //
+    Route::post('size/update', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\SizeChartController@update_value',
+        'as' => 'size_value.update',
+    ]);
 
     Route::get('stocksquery', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@search',
@@ -244,6 +253,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     ]);
     Route::resource('shipments', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodController::class);
     Route::resource('shipments-rules', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodRuleController::class);
+    Route::resource('shipping-options', Nowyouwerkn\WeCommerce\Controllers\ShippingOptionsController::class);
 
     Route::get('/shipments-rule/change-status/{id}',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodRuleController@changeStatus',
@@ -362,6 +372,7 @@ Route::get('/xml-feed', [
 */
 Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@index')->name('index');
 Route::get('catalog', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalogAll')->name('catalog.all');
+Route::get('catalog_promo', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalogPromo')->name('catalog.promo');
 Route::post('catalog/order', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalog_order')->name('catalog.orderby');
 
 Route::get('/catalog/{category_slug}', [

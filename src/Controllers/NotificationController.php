@@ -76,13 +76,15 @@ class NotificationController extends Controller
         //
     }
 
-    public function send($type, $by, $data)
+    public function send($type, $by, $data, $model_action, $model_id)
     {
         /* LOG */
         if ($by == NULL) {
             $log = new Notification([
                 'type' => $type,
                 'data' => $data,
+                'model_action' => $model_action,
+                'model_id' => $model_id,
                 'is_hidden' => false
             ]);
         }else{
@@ -90,6 +92,8 @@ class NotificationController extends Controller
                 'action_by' => $by->id,
                 'type' => $type,
                 'data' => $data,
+                'model_action' => $model_action,
+                'model_id' => $model_id,
                 'is_hidden' => false
             ]);
         }

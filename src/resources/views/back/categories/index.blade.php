@@ -87,6 +87,20 @@
                                                 <label>Nombre del Elemento</label>
                                                 <input type="text" class="form-control" name="name" value="{{ $category->name }}">
                                             </div>
+                                                     <div class="form-group mt-2">
+                                                        <label for="link">Prioridad</label>
+                                                        <select name="priority">
+                                                              <option value="{{ $category->priority }}">{{ $category->priority }}</option>
+                                                              <option value="1">1</option>
+                                                              <option value="2">2</option>
+                                                              <option value="3">3</option>
+                                                              <option value="4">4</option>
+                                                              <option value="5">5</option>
+                                                              <option value="6">6</option>
+                                                              <option value="7">7</option>
+                                                        </select>
+                                                    
+                                                </div>
 
                                             <div class="form-group mt-2">
                                                 <label>Imágen <span class="text-info">(Opcional)</span></label>
@@ -143,7 +157,7 @@
 
             <div class="card-body pb-0">
                 <h5 class="card-title display-4 mb-1">{{ $category->name }}</h5> 
-
+                 <p class="card-text">Prioridad: <span class="badge badge-info">{{ $category->priority }}</span></p>
                 <p class="card-text">Productos en esta categoría: <span class="badge badge-info">{{ $category->products->count() }}</span></p>
 
                 <h5 class="card-title mt-3 mb-2">Sub-Categorías</h5>              
@@ -244,6 +258,20 @@
                     <div class="form-group mt-2">
                         <label>Imágen <span class="text-info">(Opcional)</span></label>
                         <input type="file" class="form-control" id="image" name="image" />
+                    </div>
+
+                    <div class="form-group mt-2">
+                            <label for="link">Prioridad</label>
+                            <select name="priority">
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="4">4</option>
+                                  <option value="5">5</option>
+                                  <option value="6">6</option>
+                                  <option value="7">7</option>
+                            </select>
+                        
                     </div>
 
                     <div class="form-group">

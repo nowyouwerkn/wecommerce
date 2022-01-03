@@ -153,8 +153,12 @@ class ProductController extends Controller
         $type = 'Producto';
         $by = Auth::user();
         $data = 'creó el nuevo producto con nombre: ' . $product->name;
+        $model_action = "create";
+        $model_id = $product->id;
 
-        $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         // Mensaje de session
         Session::flash('success', 'Tu producto se guardó exitosamente en la base de datos.');
@@ -379,8 +383,10 @@ class ProductController extends Controller
         $type = 'Producto';
         $by = Auth::user();
         $data = 'actualizó el producto ' . $product->name;
+        $model_action = "update";
+        $model_id = $id;
 
-        $this->notification->send($type, $by ,$data);
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         // Mensaje de session
         Session::flash('success', 'Producto actualizado exitosamente.');
@@ -397,8 +403,12 @@ class ProductController extends Controller
         $type = 'Producto';
         $by = Auth::user();
         $data = 'eliminó permanentemente el producto ' . $product->name;
+        $model_action = "delete";
+        $model_id = $product->id;
 
-        $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
         //
         $product->delete();
 
@@ -433,6 +443,17 @@ class ProductController extends Controller
         
         $product->stock = $request->stock_variant;
         //$stock->sku = $request->sku_variant;
+
+          // Notificación
+        $type = 'Producto';
+        $by = Auth::user();
+        $data = 'Actualizó el inventario del producto:' . $product->name;
+        $model_action = "update";
+        $model_id = $product->id;
+
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         $product->save();
 

@@ -3,7 +3,7 @@
 @endphp
 
 @extends('front.theme.' . $theme->name . '.layouts.main')
-
+@push('seo')
 @endpush
 
 @push('stylesheets')

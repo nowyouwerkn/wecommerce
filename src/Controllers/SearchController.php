@@ -30,7 +30,9 @@ class SearchController extends Controller
         ->where('category_id', '!=', NULL)
         ->where('name', 'LIKE', "%{$search_query}%")
         ->orWhere('description', 'LIKE', "%{$search_query}%")
+        ->where('status', 'Publicado')
         ->orWhere('search_tags', 'LIKE', "%{$search_query}%")
+        ->where('status', 'Publicado')
         ->orWhereHas('category', function ($query) use ($search_query) {
             $query->where(strtolower('name'), 'LIKE', '%' . strtolower($search_query) . '%');
         })->paginate(30);

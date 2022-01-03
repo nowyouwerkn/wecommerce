@@ -17,7 +17,7 @@ class LegalTextController extends Controller
 
     public function index()
     {
-        $legals = LegalText::all();
+        $legals = LegalText::orderBy('priority','asc')->get();
 
         return view('wecommerce::back.legals.index')->with('legals', $legals);
     }
@@ -40,7 +40,7 @@ class LegalTextController extends Controller
         $legal->type = $request->type;
         $legal->title = Purifier::clean($request->title);
         $legal->description = Purifier::clean($request->description);
-
+        $legal->priority = $request->priority;
 
         $legal->save();
 
@@ -77,7 +77,7 @@ class LegalTextController extends Controller
 
         $legal->title = Purifier::clean($request->title);
         $legal->description = Purifier::clean($request->description);
-
+        $legal->priority = $request->priority;
         $legal->save();
 
         // Mensaje de session

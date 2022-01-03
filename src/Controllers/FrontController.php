@@ -60,6 +60,9 @@ use Nowyouwerkn\WeCommerce\Models\StoreTax;
 use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethodRule;
+use Nowyouwerkn\WeCommerce\Models\Shipping_options;
+use Nowyouwerkn\WeCommerce\Models\Size_chart;
+use Nowyouwerkn\WeCommerce\Models\Size_guide;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
@@ -180,6 +183,22 @@ class FrontController extends Controller
         ->with('variants', $variants);
     }
 
+        public function catalogPromo()
+    {
+        $products = Product::with('category')->orderBy('created_at', 'desc')->where('status', 'Publicado')->where('has_discount', '1')->paginate(15);
+
+        /* Opciones para Filtro */
+        $popular_products = Product::with('category')->where('is_favorite', true)->where('status', 'Publicado')->get();
+        $categories = Category::with('productsIndex')->where('parent_id', 0)->orWhere('parent_id', NULL)->get();
+        $variants = Variant::orderBy('value', 'asc')->get(['value']);
+
+        return view('front.theme.' . $this->theme->get_name() . '.catalog')
+        ->with('products', $products)
+        ->with('popular_products', $popular_products)
+        ->with('categories', $categories)
+        ->with('variants', $variants);
+    }
+
     public function catalog($category_slug)
     {
         $catalog = Category::where('slug', $category_slug)->firstOrFail();
@@ -243,6 +262,10 @@ class FrontController extends Controller
               $last_product = Product::where('id', '>' , $product->id)->orderBy('id','desc')->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
         }
 
+        $current_date_time = Carbon::now()->toDateTimeString();
+        $size_charts = Size_chart::where('category_id', $catalog->id)->get();
+        $categories = Category::all();
+
         $store_config = $this->store_config;
 
         if (empty($product)) {
@@ -253,6 +276,8 @@ class FrontController extends Controller
             ->with('products_selected', $products_selected)
             ->with('store_config', $store_config)
             ->with('next_product', $next_product)
+            ->with('current_date_time', $current_date_time)
+            ->with('size_charts', $size_charts)
             ->with('last_product', $last_product);
         }
     }
@@ -457,6 +482,7 @@ class FrontController extends Controller
 
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $store_shipping = ShipmentMethod::where('is_active', true)->first();
+        $shipment_options = Shipping_options::where('is_active', true)->get();
 
         if (empty($store_tax)) {
             $tax_rate = 0;
@@ -646,9 +672,10 @@ class FrontController extends Controller
                 "failure" => route('checkout'),
                 
             );
+            $preference->external_reference = "mp_".Str::random(30);
 
-            $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_oxxo);
-            $mercadopago_oxxo = array ("id" => $mercado_payment->mercadopago_paypal);
+            $mercadopago_oxxo = array ("id" => $mercado_payment->mercadopago_oxxo);
+            $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_paypal);
 
             $preference->payment_methods = array(
                 "excluded_payment_methods" => array(
@@ -674,6 +701,7 @@ class FrontController extends Controller
             ->with('cash_payment', $cash_payment)
             ->with('paypal_payment', $paypal_payment)
             ->with('mercado_payment', $mercado_payment)
+            ->with('shipment_options', $shipment_options)
             ->with('subtotal', $subtotal)
             ->with('tax', $tax)
             ->with('shipping', $shipping)
@@ -702,10 +730,16 @@ class FrontController extends Controller
         }
 
         if (!Auth::check()) {
+            $rules = [
+               'email' => 'unique:users|required|max:255',
+            ];
+
+              $customMessages = [
+                'unique' => 'Este correo ya esta registrado en el sistema. ¿Eres tu? Inicia sesión. '
+             ];
+
             //Validar
-            $this -> validate($request, array(
-                'email' => 'unique:users|required|max:255',
-            ));
+            $this->validate($request, $rules, $customMessages);
         }
 
         if (!Session::has('cart')) {
@@ -1056,6 +1090,7 @@ class FrontController extends Controller
                     $order->phone = $request->input('phone');
                     $order->suburb = $request->input('suburb');
                     $order->references = $request->input('references');
+                    $order->shipping_option = $request->shipping_option;
 
                     /* Money Info */
                     $order->cart_total = $cart->totalPrice;
@@ -1119,6 +1154,7 @@ class FrontController extends Controller
                     $order->phone = $request->input('phone');
                     $order->suburb = $request->input('suburb');
                     $order->references = $request->input('references');
+                    $order->shipping_option = $request->shipping_option;
 
                     /* Money Info */
                     $order->cart_total = $cart->totalPrice;
@@ -1128,6 +1164,7 @@ class FrontController extends Controller
                     $order->discounts = $request->discounts;
                     $order->total = $request->final_total;
                     $order->payment_total = $request->final_total;
+                    
                     /*------------*/
                         
                     $order->card_digits = Str::substr($request->card_number, 15);
@@ -1135,7 +1172,7 @@ class FrontController extends Controller
 
                     $order->status = 'Sin Completar';
 
-                    $order->payment_id = Str::lower($request->mp_preference_id);   
+                    $order->payment_id = $request->mp_preference_external;   
                     
                     $order->payment_method = $payment_method->supplier;
                     
@@ -1167,6 +1204,66 @@ class FrontController extends Controller
             $user = Auth::user();
         }
 
+                // GUARDAR LA DIRECCIÓN
+        if ($request->save_address == 'true') {
+        $check = UserAddress::where('street', $request->street)->count();
+
+        if ($check == NULL || $check == 0) {
+            $address = new UserAddress;
+            $address->name = 'Compra_' . Str::substr($request->card_number, 15);
+            $address->user_id = $user->id;
+            $address->street = $request->street;
+            $address->street_num = $request->street_num;
+            $address->postal_code = $request->postal_code;
+            $address->city = $request->city;
+            $address->country = $request->country;
+            $address->state = $request->state;
+            $address->phone = $request->phone;
+            $address->suburb = $request->suburb;
+            $address->references = $request->references;
+            $address->is_billing = false;
+
+            $address->save();
+        }
+        }
+
+        // GUARDAR LA DIRECCIÓN DE FACTURACIÓN
+
+        if ($request->billing_shipping == 'true') {
+            $address = new UserAddress;
+            $address->name = 'Compra_tajeta_' . Str::substr($request->card_number, 15);
+            $address->user_id = $user->id;
+            $address->street = $request->street;
+            $address->street_num = $request->street_num;
+            $address->postal_code = $request->postal_code;
+            $address->city = $request->city;
+            $address->country = $request->country;
+            $address->state = $request->state;
+            $address->phone = $request->phone;
+            $address->suburb = $request->suburb;
+            $address->references = $request->references;
+            $address->is_billing = true;
+            $address->save();
+            $billing_shipping_id = UserAddress::where('street', $request->street)->where('is_billing', true)->where('user_id', $user->id)->first();
+            }
+
+            if ($request->billing_shipping == 'false') {
+            $address_billing = new UserAddress;
+            $address_billing->name = 'Compra_tajeta_' . Str::substr($request->card_number, 15);
+            $address_billing->user_id = $user->id;
+            $address_billing->street = $request->street_billing;
+            $address_billing->street_num = $request->street_num_billing;
+            $address_billing->postal_code = $request->postal_code_billing;
+            $address_billing->city = $request->city_billing;
+            $address_billing->country = $request->country_billing;
+            $address_billing->state = $request->state_billing;
+            $address_billing->phone = $request->phone;
+            $address_billing->suburb = $request->suburb_billing;
+            $address_billing->is_billing = true;
+            $address_billing->save();
+            $billing_shipping_id = UserAddress::where('street', $request->street_billing)->where('is_billing', true)->where('user_id', $user->id)->first();
+            }
+
         // GUARDAR LA ORDEN
         $order = new Order();
 
@@ -1181,6 +1278,8 @@ class FrontController extends Controller
         $order->phone = $request->input('phone');
         $order->suburb = $request->input('suburb');
         $order->references = $request->input('references');
+        $order->shipping_option = $request->shipping_option;
+        $order->billing_shipping_id = $billing_shipping_id->id;
 
         /* Money Info */
         $order->cart_total = $cart->totalPrice;
@@ -1188,8 +1287,10 @@ class FrontController extends Controller
         $order->sub_total = $request->sub_total;
         $order->tax_rate = $request->tax_rate;
         $order->discounts = $request->discounts;
+        $order->coupon_id = $request->coupon_id;
         $order->total = $request->final_total;
         $order->payment_total = $request->final_total;
+
         /*------------*/
             
         $order->card_digits = Str::substr($request->card_number, 15);
@@ -1224,28 +1325,6 @@ class FrontController extends Controller
                 $product_stock->save();
             }
         }
-
-        // GUARDAR LA DIRECCIÓN
-        /*
-        $check = UserAddress::where('street', $request->street)->count();
-
-        if ($check == NULL || $check == 0) {
-            $address = new UserAddress;
-            $address->name = 'Compra_' . substr($charge->id, 0, 3);
-            $address->user_id = $user->id;
-            $address->street = $request->street;
-            $address->street_num = $request->street_num;
-            $address->postal_code = $request->postal_code;
-            $address->city = $request->city;
-            $address->country = $request->country;
-            $address->state = $request->state;
-            $address->phone = $request->phone;
-            $address->suburb = $request->suburb;
-            $address->references = $request->references;
-
-            $address->save();
-        }
-        */
         
         $mail = MailConfig::first();
         $config = StoreConfig::first();
@@ -1266,7 +1345,7 @@ class FrontController extends Controller
         config(['mail.password'=>$mail->mail_password]);
         config(['mail.encryption'=>$mail->mail_encryption]);
 
-        $data = array('order_id' => $order->id, 'user_id' => $user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at);
+        $data = array('order_id' => $order->id, 'user_id' => $user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at, 'shipping_id' => $request->shipping_option);
 
         try {
             Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email, $sender_email, $store_name) {
@@ -1293,8 +1372,13 @@ class FrontController extends Controller
         $type = 'Orden';
         $by = $user;
         $data = 'hizo una compra por $' . $purchase_value;
+        $model_action = "create";
+        $model_id = "";
 
-        $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
 
         //Facebook Event
         if ($this->store_config->has_pixel() != NULL) {
@@ -1484,12 +1568,16 @@ class FrontController extends Controller
 
             $purchase_value = number_format($cart->totalPrice,2);
 
-            // Notificación
+                 // Notificación
             $type = 'Orden';
-            $by = $order->user;
+            $by = $user;
             $data = 'hizo una compra por $' . $purchase_value;
+            $model_action = "create";
+            $model_id = "";
 
-            $this->notification->send($type, $by ,$data);
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
             //Facebook Event
             if ($this->store_config->has_pixel() != NULL) {
@@ -1552,7 +1640,7 @@ class FrontController extends Controller
             return $order;
         });
 
-        $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
+        $addresses = UserAddress::where('user_id', Auth::user()->id)->where('is_billing', false)->get();
 
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')
         ->with('total_orders', $total_orders)
@@ -1585,7 +1673,7 @@ class FrontController extends Controller
 
     public function address ()
     {
-        $addresses = UserAddress::where('user_id', Auth::user()->id)->paginate(10);
+        $addresses = UserAddress::where('user_id', Auth::user()->id)->where('is_billing', false)->paginate(10);
 
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.address', compact('addresses'));
     }
@@ -1603,7 +1691,7 @@ class FrontController extends Controller
         ));
 
         // Save request in database
-        $address = new Address;
+        $address = new UserAddress;
         $address->name = $request->name;
         $address->user_id = $request->user_id;
         $address->street = $request->street;
@@ -1616,10 +1704,10 @@ class FrontController extends Controller
         $address->phone = $request->phone;
         $address->suburb = $request->suburb;
         $address->references = $request->references;
-
+        $address->is_billing = false;
         $address->save();
 
-        return redirect()->route('address');
+        return redirect()->back();
     }
 
     public function editAddress($id)
@@ -1701,7 +1789,6 @@ class FrontController extends Controller
 
             // Obteniendo datos desde el Request enviado por Ajax a esta ruta
             $coupon = Coupon::where('code', $cuopon_code)->first();
-
             if (empty($coupon)) {
                 // Regresar Respuesta a la Vista
                 return response()->json(['mensaje' => 'Ese cupón no existe o ya no está disponible. Intenta con otro o contacta con nosotros.', 'type' => 'exception'], 200);
@@ -1825,7 +1912,7 @@ class FrontController extends Controller
                         case 'fixed_amount':
                             // Este cupon le resta un valor fijo al subtotal en el checkout
                             $qty = $coupon->qty;
-                            $discount = $subtotal - $qty;
+                            $discount = $qty;
 
                               
 
@@ -1895,13 +1982,16 @@ class FrontController extends Controller
                         $preference->back_urls = array(
                             "success" => route('purchase.complete'),
                             "failure" => route('checkout'),
-                            "pending" => route('purchase.pending')
+                            "pending" => route('checkout')
                         );
+
+                           $mercadopago_oxxo = array ("id" => $mercado_payment->mercadopago_oxxo);
+                            $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_paypal);
 
                         $preference->payment_methods = array(
                             "excluded_payment_methods" => array(
-                            array("id" => "paypal"),
-                            array("id" => "oxxo")
+                            $mercadopago_paypal,
+                            $mercadopago_oxxo
                           ),
                           "excluded_payment_types" => array(
                             array("id" => "ticket", "id" => "atm")
@@ -1960,6 +2050,7 @@ class FrontController extends Controller
 
         if (!empty($request->preference_id)) {
             $order = Order::where('payment_id', $request->preference_id)->first();
+            $shipping_option_selected = Shipping_options::where('id', $order->shipping_option)->first();
             $order->status = 'Pagado';
 
             $order->save();
@@ -2004,7 +2095,7 @@ class FrontController extends Controller
             config(['mail.password'=>$mail->mail_password]);
             config(['mail.encryption'=>$mail->mail_encryption]);
 
-            $data = array('order_id' => $order->id, 'user_id' => $order->user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at);
+            $data = array('order_id' => $order->id, 'user_id' => $order->user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at, 'shipping_option' => $shipping_option_selected);
 
             try {
                 Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email, $sender_email, $store_name) {
@@ -2027,12 +2118,17 @@ class FrontController extends Controller
 
             $purchase_value = number_format($cart->totalPrice,2);
 
-            // Notificación
-            $type = 'Orden';
-            $by = $order->user;
-            $data = 'hizo una compra por $' . $purchase_value;
 
-            $this->notification->send($type, $by ,$data);
+                  // Notificación
+            $type = 'Orden';
+            $by = $user;
+            $data = 'hizo una compra por $' . $purchase_value;
+            $model_action = "create";
+            $model_id = "";
+
+
+
+            $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
             //Facebook Event
             if ($this->store_config->has_pixel() != NULL) {

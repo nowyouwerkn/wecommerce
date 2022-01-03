@@ -38,7 +38,7 @@
             <p>Tu tienda puede vincularse con: </p>
 
             <ul>
-                <li>UPS (Cálculo de Énvio Solo Estados Unidos)</li>
+                <li>UPS (Cálculo de Envío Solo Estados Unidos)</li>
                 <li>FedEx <span class="badge badge-info">PROXIMAMENTE</span></li>
                 <li>Estafeta <span class="badge badge-info">PROXIMAMENTE</span></li>
                 <li>DHL <span class="badge badge-info">PROXIMAMENTE</span></li>
@@ -192,6 +192,76 @@
             </div>
         </div>
 
+        <div class="card mb-4 payment-methods">
+            <div class="card-body d-flex justify-content-between">
+                <h4>Opciones de envio</h4>
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateOption" class="btn btn-outline-primary btn-sm">Crear nueva opcion de envio</a>
+
+            </div>
+            
+            <div class="card-header" style="border-bottom: none;">
+                <div class="d-flex align-items-center justify-content-between">
+                 
+                    <div class="d-flex align-items-between w-100">
+                        @if($shipment_options->count() == 0)
+                        No tienes configurado algun metodo de envio
+                        @else
+                        
+                       <div class="table-responsive">
+                    <table class="table ">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             @foreach($shipment_options as $options)
+                            <tr>
+                                
+                                <td>
+                                <span style="margin-right: 2px"><strong>{{ $options->name }}</strong></span>
+                                </td>
+                                <td>
+                                    <span style="margin-right: 2px">${{ $options->price }}</span>
+                                </td>
+
+                                <td>
+                                    @if($options->is_active == true)
+                                    <span class="btn badge-success">Activado</span>
+                                    @else
+                                    <span class="btn badge-danger">Desactivado</span>
+                                    @endif 
+                                </td>
+                            
+                                <td class="d-flex">
+                                  <a href="javascript:void(0)" data-toggle="modal" data-target="#modalEditOption{{$options->id}}" class="btn btn-outline-primary btn-sm">Editar</a>
+                                    <form method="POST" action="{{ route('shipping-options.destroy', $options->id) }}" style="display: inline-block;">
+                                        <button type="submit" class="btn btn-sm btn-light" data-toggle="tooltip" data-original-title="Borrar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+
+
+                         @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card card-body mb-4">
             <h4>Pasarelas de Envío</h4>
             <p class="mb-4"><strong>(Solo puedes tener activado uno a la vez)</strong></p>
@@ -257,6 +327,140 @@
         </div>
     </div><!-- modal-dialog -->
 </div><!-- modal -->
+
+@foreach($shipment_options as $options)
+<div id="modalEditOption{{$options->id}}" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Creacion de Opciones de envio</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ route('shipping-options.update',$options->id ) }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+            {{ method_field('PUT') }}
+                <div class="modal-body pd-25">
+
+                    <div class="form-group mt-2">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" name="name"  value="{{ $options->name }}" />
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label>Tiempo de entrega</label>
+                        <input type="text" class="form-control" name="delivery_time" value="{{ $options->delivery_time }}" />
+                    </div>
+                      <div class="form-group mt-2">
+                        <label>Activado</label>
+                        @if($options->is_active == true)
+                                <input type="hidden" id="none" name="is_active" value="0">
+                                <input type="checkbox" class="form-control" checked="" name="is_active" value="1" />
+                            @else
+                            <input type="hidden" id="none" name="is_active" value="0">
+                            <input type="checkbox" class="form-control" name="is_active" value="1" />
+                        @endif 
+                     
+                    </div>
+                    <label>Precio</label>
+                        <div class="d-flex">
+                            <div class="input-group ">
+                            <input type="text" class="form-control" id="manual_method_cost" name="price" placeholder="0.00" value="{{ $options->price }}">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                           @if($config->currency_id=='2')
+                                            MXN
+                                            @else
+                                            USD
+                                            @endif
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mt-2">
+                       <!-- <label>Icono</label>-->
+                        <input type="hidden" class="form-control" name="icon" value="1" />
+                    </div>
+                    <div class="alert alert-warning">
+                        <p class="mb-0">Al guardar la información de esta pasarela se activará automáticamente. El usuario podra seleccionar la opcion al momento del checkout</p>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+                         @endforeach
+
+<div id="modalCreateOption" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Creacion de Opciones de envio</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ route('shipping-options.store') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+
+                <div class="modal-body pd-25">
+
+                    <div class="form-group mt-2">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" name="name" />
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label>Tiempo de entrega</label>
+                        <input type="text" class="form-control" name="delivery_time" />
+                    </div>
+                      <div class="form-group mt-2">
+                        <label>Activado</label>
+                        <input type="hidden" id="none" name="is_active" value="0">
+                        <input type="checkbox" class="form-control" name="is_active" value="1" />
+                    </div>
+                    <label>Precio</label>
+                        <div class="d-flex">
+                            <div class="input-group ">
+                            <input type="text" class="form-control" id="manual_method_cost" name="price" placeholder="0.00">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                           @if($config->currency_id=='2')
+                                            MXN
+                                            @else
+                                            USD
+                                            @endif
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mt-2">
+                       <!-- <label>Icono</label>-->
+                        <input type="hidden" class="form-control" name="icon" value="1" />
+                    </div>
+                    <div class="alert alert-warning">
+                        <p class="mb-0">Al guardar la información de esta pasarela se activará automáticamente. El usuario podra seleccionar la opcion al momento del checkout</p>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+
 
 <div id="modalCreateRule" class="modal fade">
     <div class="modal-dialog modal-lg modal-dialog-vertical-center" role="document">

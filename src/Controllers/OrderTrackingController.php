@@ -72,6 +72,17 @@ class OrderTrackingController extends Controller
         $logo = asset('themes/' . $this->theme->get_name() . '/img/logo.svg');
         //$logo = asset('assets/img/logo-store.jpg');
 
+                // Notificación
+        $type = 'Orden';
+        $by = Auth::user();
+        $data = 'creó una nueva guía de envío en la orden #' . $request->order_id;
+        $model_action = "update";
+        $model_id = $request->order_id;
+
+
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
         config(['mail.driver'=> $mail->mail_driver]);
         config(['mail.host'=>$mail->mail_host]);
         config(['mail.port'=>$mail->mail_port]);   
@@ -95,12 +106,7 @@ class OrderTrackingController extends Controller
             return redirect()->back();
         }
 
-        // Notificación
-        $type = 'create';
-        $by = Auth::user();
-        $data = 'creó una nueva guía de envío en la orden #' . $request->order_id;
 
-        $this->notification->send($type, $by ,$data);
 
         // Mensaje de session
         Session::flash('success', 'La guía de envío de esta orden se guardó exitosamente en la base de datos.');

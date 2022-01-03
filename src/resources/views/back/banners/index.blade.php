@@ -41,6 +41,7 @@
                         <tr>
                             <th>Imagen</th>
                             <th>Información</th>
+                            <th>Prioridad</th>
                             <th>Botón</th>
                             <th>Link</th>
                             <th>Estatus</th>
@@ -58,6 +59,7 @@
                                 <strong>{{ $banner->title }}</strong><br>
                                 {{ $banner->subtitle }}
                             </td>
+                            <td> {{$banner->priority}}</td>
                             <td>{{ $banner->text_button }}</td>
                             <td>{{ $banner->link }}</td>
 

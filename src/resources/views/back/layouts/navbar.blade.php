@@ -99,6 +99,9 @@
                     <li>
                         <a href="{{ route('categories.index') }}">Colecciones</a>
                     </li>
+                    <li>
+                        <a href="{{ route('size_chart.index') }}">Guia de tallas</a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-item">

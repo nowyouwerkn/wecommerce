@@ -19,7 +19,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col">
+    <div class="col-12">
         <div class="card card-body">
             <h4>Esperando Aprobación</h4>
             <hr>
@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <div class="col">
+    <div class="col-12" style="margin-top: 1rem;">
         <div class="card card-body">
             <h4>Reseñas</h4>
             <hr>

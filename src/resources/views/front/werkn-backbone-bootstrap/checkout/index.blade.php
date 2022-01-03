@@ -9,7 +9,6 @@
 @endpush
 
 @section('content')
-
 <!-- Checkout -->
 <section class="mt-5 mb-5 container we-co--checkout-container">
     <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" data-parsley-validate="">
@@ -40,17 +39,16 @@
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_contact')
 
-                    {{-- 
+                    
                     <div class="we-co--title d-flex align-items-center justify-content-between">
-                        <h4><span class="we-co--progress-indicator"></span> Método de Envío</h4>
+                        <h4><span class="we-co--progress-indicator"></span> Direccion de Envío</h4>
                     </div>
-                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
-                    --}}
+                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')                    
 
                     <div class="we-co--title d-flex align-items-center justify-content-between">
-                        <h4><span class="we-co--progress-indicator"></span> Información de Envío</h4>
+                        <h4><span class="we-co--progress-indicator"></span> Metodos de Envío</h4>
                     </div>
-                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')
+                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
 
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>
@@ -93,9 +91,8 @@
                     $('#cardInfo').fadeIn();
                     $('#cardInfo').find('input').prop('disabled', false);
                     $('input[name=method]').val('Pago con Tarjeta');
-                    if (typeof {{$card_payment}} != null) {
-                      $('#paymentMethod').text('{{isset($card_payment) ? $card_payment->supplier : 'null' }}');
-                    }
+
+                    $('#paymentMethod').text('{{ $card_payment->supplier }}');
 
                     break;
 
@@ -136,6 +133,58 @@
 
 <!-- PARSLEY VALIDATION -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.8.1/parsley.min.js"></script>
+<script type="text/javascript">
+    function valueChanged()
+    {
+        if($('.billing_check').is(":checked"))   
+            $(".billing_form").fadeOut(500);
+        else
+            $(".billing_form").fadeIn(500);
+    }
+
+     function newAdress()
+    {
+        if($('.option-address').is(":checked"))   
+            $(".card-body-new-add").fadeOut(500);
+        else
+            $(".card-body-new-add").fadeOut(500);
+
+
+        if($('.new-address').is(":checked"))   
+            $(".card-body-new-add").fadeIn(500);
+        else
+            $(".card-body-new-add").fadeOut(500);
+    }
+
+</script>
+<script type="text/javascript">
+       $(document).ready(function(){
+                 $('.shipping-options a').click(function() {
+            event.preventDefault();
+            console.log('Seleccionado:' , $(this).attr('data-value'));
+            
+            $('.shipping-options a').removeClass('active');
+
+
+            if($(this).hasClass('active')){
+                $(this).removeClass('active');
+            }else{
+                $(this).addClass('active');
+            }
+            
+            document.getElementById("shippingRate").textContent = $(this).attr('price-value');  
+            document.getElementById("shippingInput").value = $(this).attr('price-value');
+            document.getElementById("shippingOptions").value = $(this).attr('data-value');
+                    var subtotal =  parseFloat($('#subtotalInput').val());
+                    var shipping = parseFloat($('#shippingInput').val());  
+                     var total_count = subtotal + parseFloat(shipping);
+                    var total = total_count.toString()
+                    $('#totalPayment').text(total);
+            document.getElementById("finalTotal").value = total;   
+                    
+        });
+    });
+</script>
 <script type="text/javascript">
     // ParsleyConfig definition if not already set
     // Validation errors messages for Parsley
@@ -380,9 +429,7 @@
             $('.loader-standby').removeClass('loader-hidden');
             //console.log(response.id);
 
-            setTimeout(function() { 
-                $form.get(0).submit();
-            }, 2000);
+            $form.get(0).submit();
         }
     });
 </script>  
@@ -392,7 +439,7 @@
 <script type="text/javascript">
     $form.submit(function(event){
         if($('input[name=method]').val() === 'Pago con MercadoPago') {
-            //$('#checkout-form').append($('<input type="hidden" name="mp_preference" />').val('{{ $preference->sandbox_init_point }}'));
+            //$('#checkout-form').append($('<input type="hidden" name="mp_preference" />').val('{{ $preference->init_point }}'));
             //$('#checkout-form').append($('<input type="hidden" name="mp_preference_id" />').val('{{ $preference->id }}'));
 
             // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
@@ -415,6 +462,8 @@
     <script type="text/javascript">
         $form.submit(function(event){
 
+            
+
             if($('input[name=method]').val() === 'Pago con Oxxo') {
                 // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
                 $form.find('button').prop('disabled', true);
@@ -422,9 +471,7 @@
                 $('.loader-standby').removeClass('loader-hidden');
                 //console.log(response.id);
 
-                setTimeout(function() { 
-                    $form.get(0).submit();
-                }, 2000);
+                $form.get(0).submit();
             }
         });
     </script>  
@@ -434,5 +481,4 @@
 
     @endif
 @endif
-
 @endpush
