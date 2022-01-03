@@ -421,34 +421,21 @@
                             </form>
                         </div>
                              <div class="tab-pane fade show " id="sizes" role="tabpanel" aria-labelledby="reviews-tab">
+
                                 <table class="table table-hover table-responsive mt-2 mb-4">
                                             <tbody>
+                                                 @foreach($size_charts as $size_chart)
                                                 <tr>
-                                                    <th scope="row" style="width: 150px;">MEX</th>
-                                                    <td style="text-align: center;">25.5</td>
-                                                    <td style="text-align: center;">26</td>
-                                                    <td style="text-align: center;">26.5</td>
-                                                    <td style="text-align: center;">27</td>
-                                                    <td style="text-align: center;">27.5</td>
-                                                    <td style="text-align: center;">28</td>
-                                                    <td style="text-align: center;">28.5</td>
-                                                    <td style="text-align: center;">29</td>
-                                                    <td style="text-align: center;">29.5</td>
-                                                    <td style="text-align: center;">30</td>
+                                                    @php
+                                                    $size_values = Nowyouwerkn\WeCommerce\Models\Size_guide::where('size_chart_id', '=', $size_chart->id)->get();
+                                                    @endphp
+                                                    <th scope="row" style="width: 150px;">{{$size_chart->name}}</th>
+                                                     @foreach($size_values as $size)
+                                                    <td style="text-align: center;">{{$size->size_value}}</td>
+                                                    @endforeach
+                                                    
                                                 </tr>
-                                                <tr>
-                                                    <th scope="row" style="width: 150px;">USA</th>
-                                                    <td style="text-align: center;">-</td>
-                                                    <td style="text-align: center;">8</td>
-                                                    <td style="text-align: center;">8.5</td>
-                                                    <td style="text-align: center;">9</td>
-                                                    <td style="text-align: center;">9.5</td>
-                                                    <td style="text-align: center;">10</td>
-                                                    <td style="text-align: center;">10.5</td>
-                                                    <td style="text-align: center;">11</td>
-                                                    <td style="text-align: center;">11.5</td>
-                                                    <td style="text-align: center;">12</td>
-                                                </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                             </div>

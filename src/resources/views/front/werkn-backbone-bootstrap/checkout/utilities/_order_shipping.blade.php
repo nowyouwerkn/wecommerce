@@ -1,5 +1,6 @@
      <link href="{{ asset('lib/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
 	<div class="shipping-options row">
+		@if(isset($shipment_options))
 		@foreach($shipment_options as $options)
 		    <div class="col-md-4 col-12 mt-1">
                  
@@ -34,4 +35,6 @@
             </a>
              </div>
             @endforeach
+            @else
+            @endif
 	</div>

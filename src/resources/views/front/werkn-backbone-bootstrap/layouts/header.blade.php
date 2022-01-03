@@ -160,7 +160,9 @@ body.toggled .sidebar-overlay {
         <div class="row justify-content-between align-items-center">
             <div class="col-md-6">
                 <ul class="list-inline mb-0">
+                    @if($store_config->contact_email != NULL)
                     <li class="list-inline-item"><a class="contact_action" href="mailto:{{ $store_config->contact_email }}">{{ $store_config->contact_email }}</a></li>
+                    @endif
 
                     @if($store_config->phone != NULL)
                     <li class="list-inline-item"><a class="contact_action" href="tel:{{ $store_config->phone }}">Tel. {{ $store_config->phone }}</a></li>
