@@ -35,7 +35,7 @@ class UpdateTables extends Migration
 
         Schema::table('payment_methods', function (Blueprint $table) {
             $table->string('sandbox_merchant_id')->after('merchant_id')->nullable();
-            $table->string('sandbox_email_access')->after('password_access')nullable();
+            $table->string('sandbox_email_access')->after('password_access')->nullable();
             $table->string('sandbox_password_access')->after('sandbox_email_access')->nullable();
             $table->boolean('sandbox_mode')->after('sandbox_password_access')->default(false)->nullable();
             $table->string('sandbox_public_key')->after('sandbox_mode')->nullable();
