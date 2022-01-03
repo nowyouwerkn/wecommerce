@@ -23,7 +23,7 @@ class UpdateTablesv141 extends Migration
         });
 
         Schema::table('notifications', function (Blueprint $table) {
-            $table->string('model_name')->after('action_by');
+            $table->string('model_action')->after('action_by');
             $table->string('model_id')->after('model_name');
         });
 
