@@ -44,12 +44,13 @@
                         <h4><span class="we-co--progress-indicator"></span> Direccion de Envío</h4>
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')                    
-
+                    @if($shipment_options->count() >0)
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Metodos de Envío</h4>
                     </div>
                      @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
-
+                     @else
+                    @endif
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>
 

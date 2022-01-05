@@ -75,12 +75,14 @@
 						<p style="margin-bottom:10px;"><strong>Fecha del pedido</strong></p>
 						<p style="margin-top:5px;">{{ $order->created_at }}</p>
 					</td>
+					@if ($shipping_option != null)
 					<td style="width: 50%; vertical-align: top;">
 						<p style="margin-bottom:10px;"><strong>Método de envío</strong></p>
 						<p style="margin-top:5px;">{{ $shipping_option->name }}<br>
 							<small>Con un tiempo estimado de entrega de: {{ $shipping_option->delivery_time }}</small><br>
 							<small>Se te enviará un correo con tu guía de seguimiento</small></p>
 					</td>
+					@endif
 				</tr>
 			</tbody>
 		</table>
