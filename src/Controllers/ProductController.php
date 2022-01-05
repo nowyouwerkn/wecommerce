@@ -92,7 +92,12 @@ class ProductController extends Controller
         $product->is_favorite = $request->is_favorite;
         
         $product->price = str_replace(',', '', $request->price);
-        $product->discount_price = str_replace(',', '',  $request->discount_price);
+          if ($request->discount_price != NULL) {
+             $product->discount_price = str_replace(',', '',  $request->discount_price);
+        }else{
+             $product->discount_price = $request->discount_price;
+        }
+       
         $product->production_cost = str_replace(',', '', $request->production_cost);
 
         $product->has_discount = $request->has_discount;

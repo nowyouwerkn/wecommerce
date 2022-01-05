@@ -215,7 +215,7 @@
                         @endif
                         <a href="" data-toggle="modal" data-target="#modalCreateOpenPay" class="btn btn-outline-secondary btn-sm">Configurar OpenPay</a>
                         <a href="https://www.openpay.mx" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
-                        @if($paypal_method->is_active == true)
+                        @if($openpay_method->is_active == true)
                             <a href="{{ route('payments.status', $openpay_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
                         @endif
                     </div>
