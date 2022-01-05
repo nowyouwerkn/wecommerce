@@ -97,8 +97,14 @@ class ProductController extends Controller
         }else{
              $product->discount_price = $request->discount_price;
         }
+
+        if ($request->production_cost != NULL) {
+              $product->production_cost = str_replace(',', '', $request->production_cost);
+        }else{
+             $product->production_cost = $request->production_cost;
+        }
        
-        $product->production_cost = str_replace(',', '', $request->production_cost);
+       
 
         $product->has_discount = $request->has_discount;
         $product->discount_start = $request->discount_start;
