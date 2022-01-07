@@ -98,10 +98,11 @@ class StockController extends Controller
         // Guardar datos en la base de datos
         $stock = ProductVariant::find($id);
         
+        $values = array('action_by' => Auth::user(),'inital_value' => $stock->stock, 'final_value' => $request->stock_variant, 'id' => $id);
+        DB::table('inventory_record')->insert($values);
         $stock->stock = $request->stock_variant;
         $stock->new_price = $request->price_variant;
         $stock->sku = $request->sku_variant;
-
         $stock->save();
 
         // Mensaje de session
