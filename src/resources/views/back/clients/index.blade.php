@@ -1,56 +1,58 @@
 @extends('wecommerce::back.layouts.main')
 
 @section('title')
-    <style type="text/css">
-        .status-circle{
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            margin-right: 5px;
-            border-radius: 100%;
-        }
-
-        .filter-btn{
-            border: solid 1px;
-            background-color: transparent;
-            color: lightgrey ;
-        }
-    </style>
-    <div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">
-        <div>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb breadcrumb-style1 mg-b-10">
-                <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Clientes</li>
-                </ol>
-            </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Clientes</h4>
-        </div>
-        <div class="d-none d-md-block">
-            <a href="{{ route('export.clients') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
-                <i class="fas fa-file-export"></i> Exportar
-            </a>
-            <a href="javascript:void(0)"  data-toggle="modal" data-target="#modalImport" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5 mr-1">
-                <i class="fas fa-file-import"></i> Importar
-            </a>
-            
-            <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase"><i class="fas fa-plus"></i> Agregar Cliente</a>
-        </div>
+<div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-style1 mg-b-10">
+            <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Clientes</li>
+            </ol>
+        </nav>
+        <h4 class="mg-b-0 tx-spacing--1">Clientes</h4>
     </div>
-   
+    <div class="d-none d-flex align-items-center">
+        <form role="search" action="{{ route('clients.search') }}" class="search-form mr-3">
+            <input type="search"  name="query" class="form-control" style="height: calc(1.5em + 0.9375rem - 2px);" placeholder="Buscar por nombre o email...">
+            <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+        </form>
+
+        <a href="{{ route('export.clients') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
+            <i class="fas fa-file-export"></i> Exportar
+        </a>
+        <a href="javascript:void(0)"  data-toggle="modal" data-target="#modalImport" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5 mr-1">
+            <i class="fas fa-file-import"></i> Importar
+        </a>
+        
+        <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase"><i class="fas fa-plus"></i> Agregar Cliente</a>
+    </div>
+</div>
+
+<style type="text/css">
+    .filter-btn{
+        border: none;
+        background-color: transparent;
+        color: rgba(27, 46, 75, 0.7);
+        font-size: 12px;
+        padding: 0px 2px;
+    }
+
+    .table .table-title{
+        margin-right: 6px;
+    }
+
+    .filter-btn:hover{
+        color: #000;
+    }
+
+    .table-dashboard thead th, .table-dashboard tbody td{
+        white-space: initial;
+    }
+</style>
 @endsection
 
 @section('content')
-    <div class="">
-             <form role="search" action="{{ route('clients.search') }}">
-                <div class="input-group border-0">
-                    <input type="search" name="query" class="form-control" placeholder="Busca tu cliente">
-                    <button class="btn btn-outline-secondary" type="submit">
-                         <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </form>
-    </div>
+
 @if($clients->count() == 0)
 <div class="card card-body text-center" style="padding:80px 0px 100px 0px;">
     <img src="{{ asset('assets/img/group_3.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
@@ -68,70 +70,70 @@
     <div class="row">
         <div class="col-lg-12 col-xl-12 mg-t-10">
             <div class="card mg-b-10">
-                <div class="card-body pd-y-30">
-                    <!-- Filters -->
-                    <div class="mb-4">
-
-                    </div>
-                </div>
-
                 <!-- Table -->
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table table-dashboard">
                         <thead>
                             <tr>
                                 <th>
-                                    <div class="d-flex">
-                                        Usuario
-                                     <form action="{{route('clients.filter')}}" method="POST">
-                                        {{ csrf_field() }}
-                                        <input type="hidden" name="filter" value="name">
-                                        <input type="hidden" name="order" value="asc">
-                                        <button class="filter-btn" type="submit">&#8613;</button>
-                                    </form>
-                                    <form action="{{route('clients.filter')}}" method="POST">
-                                        {{ csrf_field() }}
-                                        <input type="hidden" name="filter" value="name">
-                                        <input type="hidden" name="order" value="desc">
-                                        <button class="filter-btn" type="submit">&#8615;</button>
-                                    </form>
+                                    <div class="d-flex align-items-center">
+                                        <span class="table-title">Usuario</span>
+
+                                        <form action="{{route('clients.filter')}}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="filter" value="name">
+                                            <input type="hidden" name="order" value="asc">
+                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-up"></i></button>
+                                        </form>
+                                        <form action="{{route('clients.filter')}}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="filter" value="name">
+                                            <input type="hidden" name="order" value="desc">
+                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-down"></i></button>
+                                        </form>
                                     </div>
                                 </th>
+
                                 <th>
-                                    <div class="d-flex">
-                                        Fecha Registro
-                                             <form action="{{route('clients.filter')}}" method="POST">
-                                                {{ csrf_field() }}
-                                                <input type="hidden" name="filter" value="created_at">
-                                                <input type="hidden" name="order" value="asc">
-                                                <button class="filter-btn" type="submit">&#8613;</button>
-                                            </form>
-                                            <form action="{{route('clients.filter')}}" method="POST">
-                                                {{ csrf_field() }}
-                                                <input type="hidden" name="filter" value="created_at">
-                                                <input type="hidden" name="order" value="desc">
-                                                <button class="filter-btn" type="submit">&#8615;</button>
-                                            </form>
+                                    <div class="d-flex align-items-center">
+                                        <span class="table-title">Fecha Registro</span>
+
+                                        <form action="{{route('clients.filter')}}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="filter" value="created_at">
+                                            <input type="hidden" name="order" value="asc">
+                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-up"></i></button>
+                                        </form>
+                                        <form action="{{route('clients.filter')}}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="filter" value="created_at">
+                                            <input type="hidden" name="order" value="desc">
+                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-down"></i></button>
+                                        </form>
                                     </div>
                                 </th>
+
                                 <th>
-                                   <div class="d-flex">
-                                        Email
-                                             <form action="{{route('clients.filter')}}" method="POST">
-                                                {{ csrf_field() }}
-                                                <input type="hidden" name="filter" value="email">
-                                                <input type="hidden" name="order" value="asc">
-                                                <button class="filter-btn" type="submit">&#8613;</button>
-                                            </form>
-                                            <form action="{{route('clients.filter')}}" method="POST">
-                                                {{ csrf_field() }}
-                                                <input type="hidden" name="filter" value="email">
-                                                <input type="hidden" name="order" value="desc">
-                                                <button class="filter-btn" type="submit">&#8615;</button>
-                                            </form>
+                                   <div class="d-flex align-items-center">
+                                        <span class="table-title">Email</span>
+
+                                        <form action="{{route('clients.filter')}}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="filter" value="email">
+                                            <input type="hidden" name="order" value="asc">
+                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-up"></i></button>
+                                        </form>
+                                        <form action="{{route('clients.filter')}}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="filter" value="email">
+                                            <input type="hidden" name="order" value="desc">
+                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-down"></i></button>
+                                        </form>
                                     </div>
                                 </th>
+
                                 <th>Wishlist</th>
+
                                 <th>Órdenes</th>
                             </tr>
                         </thead>
@@ -140,7 +142,7 @@
                             <tr>
                                 <td><a href="{{ route('clients.show', $client->id) }}">{{ $client->name }}</a></td>
                                 <td>
-                                    <span class="text-muted"><i class="iconsminds-timer"></i> {{ Carbon\Carbon::parse($client->created_at)->format('d M Y, H:i') }}</span>
+                                    <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($client->created_at)->format('d M Y - H:i') }}</span>
                                 </td>
                                 <td>{{ $client->email }}</td>
                                 <td>
@@ -169,7 +171,8 @@
                             @endforeach
                         </tbody>
                     </table>
-                         {{ $clients->links() }}
+
+                    {{ $clients->links() }}
                 </div>
             </div>
         </div>

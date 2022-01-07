@@ -34,9 +34,9 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card card-body">
+        <div class="card mg-b-10">
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-dashboard">
                     <thead>
                         <tr>
                             <th>Imagen</th>
@@ -47,6 +47,7 @@
                             <th>Acciones</th>
                         </tr>
                     </thead>
+                    
                     <tbody>
                         @foreach($popups as $banner)
                         <tr>
@@ -70,17 +71,17 @@
                             </td>
                             
                             <td class="d-flex">
-                                <a href="{{ route('popups.show', $banner->id) }}" class="btn btn-link text-dark px-2" data-toggle="tooltip" data-original-title="Ver Detalle">
+                                <a href="{{ route('popups.show', $banner->id) }}" class="btn btn-link text-dark px-1 py-0" data-toggle="tooltip" data-original-title="Ver Detalle">
                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                 </a>
 
-                                <a href="{{ route('popups.edit', $banner->id) }}" class="btn btn-link text-dark px-2" data-toggle="tooltip" data-original-title="Editar">
+                                <a href="{{ route('popups.edit', $banner->id) }}" class="btn btn-link text-dark px-1 py-0" data-toggle="tooltip" data-original-title="Editar">
                                     <i class="fa fa-edit" aria-hidden="true"></i>
                                 </a>
 
                                 <form method="POST" action="{{ route('popups.status', $banner->id) }}">
                                     {{ csrf_field() }}
-                                    <button type="submit" class="btn btn-link text-dark px-2" data-toggle="tooltip" data-original-title="Cambiar estado">
+                                    <button type="submit" class="btn btn-link text-dark px-1 py-0" data-toggle="tooltip" data-original-title="Cambiar estado">
                                         <i class="fas fa-sync-alt"></i>
                                     </button>
                                 </form>
@@ -90,7 +91,7 @@
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
 
-                                    <button type="submit" class="btn btn-link text-danger px-2" data-toggle="tooltip" data-original-title="Eliminar Banner">
+                                    <button type="submit" class="btn btn-link text-danger px-1 py-0" data-toggle="tooltip" data-original-title="Eliminar Banner">
                                         <i class="fas fa-trash" aria-hidden="true"></i>
                                     </button>
                                 </form>

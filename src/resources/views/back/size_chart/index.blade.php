@@ -11,13 +11,11 @@
             </nav>
             <h4 class="mg-b-0 tx-spacing--1">Guia de tallas</h4>
         </div>
-        <div class="d-none d-md-block">
 
         <div class="d-none d-md-block">
-            <a href="{{ route('categories.create') }}" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                <i class="fas fa-plus"></i>  Agregar Nueva Guia de Talla
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
+                <i class="fas fa-plus"></i> Crear una nueva guía
             </a>
-        </div>
         </div>
     </div>
 
@@ -56,18 +54,18 @@
 
 @if($size_chart->count() == 0)
 <div class="card card-body text-center" style="padding:80px 0px 100px 0px;">
-    <img src="{{ asset('assets/img/group.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
-    <h4>¡No hay Guias de talla guardadas en la base de datos!</h4>
-    <p class="mb-4">Empieza a cargar guias de tallas en tu plataforma usando el botón superior.</p>
-            <a href="{{ route('categories.create') }}" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                <i class="fas fa-plus"></i>  Agregar Nueva Guia de Talla
-            </a>
+    <img src="{{ asset('assets/img/group_7.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
+    <h4>¡No hay guías de talla guardadas en la base de datos!</h4>
+    <p class="mb-4">Empieza a cargar guías de talla en tu plataforma usando el botón superior.</p>
+    <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto"><i data-feather="plus"></i> Crear una nueva guía</a>
 </div>
 @else
+
 <div class=" row">
     @foreach($size_chart as $size)
         <div class=" col-4 m-0 p-1">
-            <div class="card">            <div class="action-btns">
+            <div class="card">            
+                <div class="action-btns">
                 <ul class="list-inline">
                      <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalEdit_{{ $size->id }}" class="btn btn-rounded btn-icon btn-dark"><i style="color:white;" class="fas fa-edit"></i></a></li>
                     <li class="list-inline-item"><a href="{{ route('size_chart.show', $size->id) }}"  data-toggle="tooltip" data-original-title="Detalle"class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-eye"></i></a></li>
@@ -152,72 +150,68 @@
                     
                     <div class="col-12 mt-3">
                         <div class="row">
-                       <div class="col-6">
                             <form method="POST" action="{{ route('size.add') }}" enctype="multipart/form-data">
-                                    {{ csrf_field() }}
+                                {{ csrf_field() }}
+                                <div class="col-6">
                                     <input type="hidden" name="size_chart_id" value="{{ $size->id }}">
-                                <input type="text" name="size_value" class="size-values"></input>
+                                    <input type="text" name="size_value" class="size-values"></input>
+                                </div>
                             
-                            </div>
-                            <div class="col-6">
-                                 <button  class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
+                                <div class="col-6">
+                                    <button  class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
                                         <i class="fas fa-add mr-1" aria-hidden="true"></i> Agregar Valor
                                     </button>
-                            </div>
-                        </form>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    
                 </div>
-                </div>
-
             </div>
-        </div>
-
-
-<div id="modalEdit_{{ $size->id }}" class="modal fade">
-    <div class="modal-dialog modal-dialog-vertical-center" role="document">
-        <div class="modal-content bd-0 tx-14">
-            <div class="modal-header">
-                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear nuevo Elemento</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-             <form method="POST" action="{{ route('size_chart.update', $size->id) }}" enctype="multipart/form-data">
-            {{ csrf_field() }}
-            {{ method_field('PUT') }}
-                <div class="modal-body pd-25">
-                    <div class="form-group mt-2">
-                        <label>Nombre de Guia de Talla</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{$size->name}}" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Vincular con otra categoría <span class="text-info">(Opcional)</span></label>
-                        <select class="form-control" id="category_id" name="category_id">
-                            @foreach($categories as $cat)
-                              @if($cat->id == $size->category_id)
-                              <option value="{{ $cat->id }}" selected>{{ $cat->name }}</option>
-                              @endif
-                                @if($cat->parent_id == NULL || 0)
-                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                                @else
-                                
-                                @endif
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Información</button>
-                </div>
-            </form>
         </div>
     </div>
-</div> 
-     
+
+    <div id="modalEdit_{{ $size->id }}" class="modal fade">
+        <div class="modal-dialog modal-dialog-vertical-center" role="document">
+            <div class="modal-content bd-0 tx-14">
+                <div class="modal-header">
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear nuevo Elemento</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                 <form method="POST" action="{{ route('size_chart.update', $size->id) }}" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                {{ method_field('PUT') }}
+                    <div class="modal-body pd-25">
+                        <div class="form-group mt-2">
+                            <label>Nombre de Guia de Talla</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{$size->name}}" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Vincular con otra categoría <span class="text-info">(Opcional)</span></label>
+                            <select class="form-control" id="category_id" name="category_id">
+                                @foreach($categories as $cat)
+                                  @if($cat->id == $size->category_id)
+                                  <option value="{{ $cat->id }}" selected>{{ $cat->name }}</option>
+                                  @endif
+                                    @if($cat->parent_id == NULL || 0)
+                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                    @else
+                                    
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Información</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     @endforeach
 </div>
 @endif

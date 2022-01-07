@@ -21,14 +21,14 @@ class HeaderbandController extends Controller
 
     public function index()
     {
-        $headerband = Headerband::paginate(5);
+        $headerbands = Headerband::paginate(5);
 
-        return view('wecommerce::back.headerband.index', compact('headerband'));
+        return view('wecommerce::back.headerbands.index', compact('headerbands'));
     }
 
     public function create()
     {
-        return view('wecommerce::back.headerband.create');
+        return view('wecommerce::back.headerbands.create');
     }
 
     public function store(Request $request)
@@ -61,21 +61,19 @@ class HeaderbandController extends Controller
     {
         $headerband = Headerband::find($id);
 
-        return view('wecommerce::back.headerband.show')->with('headerband', $headerband);
+        return view('wecommerce::back.headerbands.show')->with('headerband', $headerband);
     }
 
 
     public function edit($id)
     {
-        $headerband = headerband::find($id);
-        return view('wecommerce::back.headerband.edit', compact('headerband'));
+        $headerband = Headerband::find($id);
+
+        return view('wecommerce::back.headerbands.edit', compact('headerband'));
     }
 
     public function update(Request $request, $id)
     {
-        // Guardar datos en la base de datos
-        
-
        //Validar
         $this -> validate($request, array(
             'title' => 'required|max:255',
@@ -123,11 +121,9 @@ class HeaderbandController extends Controller
     public function destroy($id)
     {
         $headerband = Headerband::find($id);
-
         $headerband->delete();
 
-        Session::flash('success', 'El cintillo se elimino correctamente.');
-
+        Session::flash('success', 'El cintillo se eliminó correctamente.');
         return redirect()->route('band.index');
     }
 }

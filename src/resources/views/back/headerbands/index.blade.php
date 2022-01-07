@@ -14,7 +14,7 @@
         @if(auth()->user()->can('admin_access'))
         <div class="d-none d-md-block">
             <a href="{{ route('band.create') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                <i data-feather="plus"></i> Crear nuevo Cintillo
+                <i class="fas fa-plus"></i> Crear nuevo Cintillo
             </a>
         </div>
         @endif
@@ -23,7 +23,7 @@
 
 @section('content')
 
-@if($headerband->count() == 0)
+@if($headerbands->count() == 0)
 <div class="card card-body text-center" style="padding:80px 0px 100px 0px;">
     <img src="{{ asset('assets/img/group_7.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
     <h4>¡No hay cintillos guardadas en la base de datos!</h4>
@@ -48,20 +48,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($headerband as $banner)
+                        @foreach($headerbands as $headerband)
                         <tr>
-                            <td style="width: 250px;">
-                                <strong>{{ $banner->title }}</strong><br>
+                            <td style="width:250px;">
+                                <strong>{{ $headerband->title }}</strong><br>
                                 
                             </td>
                             <td>
-                                {{ $banner->text }}
+                                {{ $headerband->text }}
                             </td>
-                            <td>{{ $banner->band_link }}</td>
-                            <td>{{ $banner->priority}}</td>
+                            <td>{{ $headerband->band_link }}</td>
+                            <td>{{ $headerband->priority}}</td>
 
                             <td>
-                                @if($banner->is_active == true)
+                                @if($headerband->is_active == true)
                                     <span class="badge badge-success">Activado</span><br>
                                 @else
                                     <span class="badge badge-info">Desactivado</span><br>
@@ -69,25 +69,22 @@
                             </td>
                             
                             <td class="d-flex">
-                              
-
-                                <a href="{{ route('band.edit', $banner->id) }}" class="btn btn-link text-dark px-2" data-toggle="tooltip" data-original-title="Editar">
+                                <a href="{{ route('band.edit', $headerband->id) }}" class="btn btn-link text-dark px-1 py-0" data-toggle="tooltip" data-original-title="Editar">
                                     <i class="fa fa-edit" aria-hidden="true"></i>
                                 </a>
 
-                                <form method="POST" action="{{ route('band.status', $banner->id) }}">
+                                <form method="POST" action="{{ route('band.status', $headerband->id) }}">
                                     {{ csrf_field() }}
-                                    <button type="submit" class="btn btn-link text-dark px-2" data-toggle="tooltip" data-original-title="Cambiar estado">
+                                    <button type="submit" class="btn btn-link text-dark px-1 py-0" data-toggle="tooltip" data-original-title="Cambiar estado">
                                         <i class="fas fa-sync-alt"></i>
                                     </button>
                                 </form>
 
-                    
-                                <form method="POST" action="{{ route('band.destroy', $banner->id) }}">
+                                <form method="POST" action="{{ route('band.destroy', $headerband->id) }}">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
 
-                                    <button type="submit" class="btn btn-link text-danger px-2" data-toggle="tooltip" data-original-title="Eliminar Banner">
+                                    <button type="submit" class="btn btn-link text-danger px-1 py-0" data-toggle="tooltip" data-original-title="Eliminar Cintillo">
                                         <i class="fas fa-trash" aria-hidden="true"></i>
                                     </button>
                                 </form>

@@ -118,7 +118,7 @@
                                 <th>Variantes</th>
                                 <th>Imagen</th>
                                 <th>       
-                                    <div class="d-flex align-items-center4">
+                                    <div class="d-flex align-items-center">
                                         <span class="table-title">SKU / UPC</span>
 
                                         <form action="{{route('stocks.filter')}}" method="POST">
@@ -136,7 +136,7 @@
                                     </div>
                                 </th>
                                 <th>
-                                    <div class="d-flex align-items-center4">
+                                    <div class="d-flex align-items-center">
                                         <span class="table-title">Producto</span>
                                         <form action="{{route('stocks.filter')}}" method="POST">
                                             {{ csrf_field() }}
@@ -153,7 +153,7 @@
                                     </div>
                                 </th>
                                 <th>
-                                    <div class="d-flex align-items-center4">
+                                    <div class="d-flex align-items-center">
                                         <span class="table-title">Precio </span>
                                         <form action="{{route('stocks.filter')}}" method="POST">
                                             {{ csrf_field() }}
@@ -170,7 +170,7 @@
                                     </div>
                                 </th>
                                 <th>
-                                    <div class="d-flex align-items-center4">
+                                    <div class="d-flex align-items-center">
                                         <span class="table-title">Disponibilidad</span>
                                         <form action="{{route('stocks.filter')}}" method="POST">
                                             {{ csrf_field() }}

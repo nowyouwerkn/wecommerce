@@ -78,8 +78,8 @@
                             </div>
 
                             <form method="POST" action="{{ route('categories.update', $category->id) }}" enctype="multipart/form-data">
-                            {{ csrf_field() }}
-                            {{ method_field('PUT') }}
+                                {{ csrf_field() }}
+                                {{ method_field('PUT') }}
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -87,20 +87,20 @@
                                                 <label>Nombre del Elemento</label>
                                                 <input type="text" class="form-control" name="name" value="{{ $category->name }}">
                                             </div>
-                                                     <div class="form-group mt-2">
-                                                        <label for="link">Prioridad</label>
-                                                        <select name="priority">
-                                                              <option value="{{ $category->priority }}">{{ $category->priority }}</option>
-                                                              <option value="1">1</option>
-                                                              <option value="2">2</option>
-                                                              <option value="3">3</option>
-                                                              <option value="4">4</option>
-                                                              <option value="5">5</option>
-                                                              <option value="6">6</option>
-                                                              <option value="7">7</option>
-                                                        </select>
-                                                    
-                                                </div>
+
+                                             <div class="form-group mt-2">
+                                                <label for="link">Prioridad</label>
+
+                                                <select name="priority" class="form-control">
+                                                      <option {{ ($category->priority == '1') ? 'selected' : '' }} value="1">1</option>
+                                                      <option {{ ($category->priority == '2') ? 'selected' : '' }} value="2">2</option>
+                                                      <option {{ ($category->priority == '3') ? 'selected' : '' }} value="3">3</option>
+                                                      <option {{ ($category->priority == '4') ? 'selected' : '' }} value="4">4</option>
+                                                      <option {{ ($category->priority == '5') ? 'selected' : '' }} value="5">5</option>
+                                                      <option {{ ($category->priority == '6') ? 'selected' : '' }} value="6">6</option>
+                                                      <option {{ ($category->priority == '7') ? 'selected' : '' }} value="7">7</option>
+                                                </select>  
+                                            </div>
 
                                             <div class="form-group mt-2">
                                                 <label>Imágen <span class="text-info">(Opcional)</span></label>
@@ -109,6 +109,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                                     <button type="submit" class="btn btn-primary">Guardar</button>
@@ -164,7 +165,6 @@
             </div>
 
             <ul class="mt-0 list-group list-group-flush">
-                
                 @foreach($category->children as $sub)
                 <li class="d-flex align-items-center justify-content-between list-group-item">
                     <div>  
@@ -174,7 +174,6 @@
                         <a href="{{ route('categories.show', $sub->id) }}">{{ $sub->name }} 
                             <span class="badge badge-info">{{ $users->count() }}</span>
                         </a>
-
                     </div>
                     <div style="transform: scale(.8);">
                         <a href="javascript:void(0)" data-toggle="modal" data-target="#editModalSub_{{ $sub->id }}" class="btn btn-rounded btn-icon btn-sm btn-dark"><i class="fas fa-edit"></i></a>
@@ -250,8 +249,9 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-             <form method="POST" action="{{ route('categories.store') }}" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            
+            <form method="POST" action="{{ route('categories.store') }}" enctype="multipart/form-data">
+                {{ csrf_field() }}
                 <div class="modal-body pd-25">
                     <div class="form-group mt-2">
                         <label>Nombre de Categoría o Sub-categoría</label>
@@ -264,17 +264,17 @@
                     </div>
 
                     <div class="form-group mt-2">
-                            <label for="link">Prioridad</label>
-                            <select name="priority">
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                  <option value="4">4</option>
-                                  <option value="5">5</option>
-                                  <option value="6">6</option>
-                                  <option value="7">7</option>
-                            </select>
-                        
+                        <label for="link">Prioridad</label>
+
+                        <select name="priority" class="form-control">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -291,6 +291,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar Información</button>
