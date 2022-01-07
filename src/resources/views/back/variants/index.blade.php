@@ -13,7 +13,7 @@
         </div>
         <div class="d-none d-md-block">
             <a data-toggle="modal" data-target="#modalCreate" href="javascript:void(0)" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Agregar Variante
+                <i class="fas fa-plus"></i> Agregar Variante
             </a>
         </div>
     </div>

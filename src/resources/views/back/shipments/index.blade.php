@@ -194,8 +194,9 @@
 
         <div class="card mb-4 payment-methods">
             <div class="card-body d-flex justify-content-between">
-                <h4>Opciones de envio</h4>
-                <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateOption" class="btn btn-outline-primary btn-sm">Crear nueva opcion de envio</a>
+                <h4>Opciones de Envío</h4>
+
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateOption" class="btn btn-outline-primary btn-sm">Crear nueva opcion de envío</a>
 
             </div>
             
@@ -204,59 +205,54 @@
                  
                     <div class="d-flex align-items-between w-100">
                         @if($shipment_options->count() == 0)
-                        No tienes configurado algun metodo de envio
+                        No tienes configurado métodos de envío para tu tienda.
                         @else
-                        
                        <div class="table-responsive">
-                    <table class="table ">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Precio</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                             @foreach($shipment_options as $options)
-                            <tr>
+                            <table class="table ">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
                                 
-                                <td>
-                                <span style="margin-right: 2px"><strong>{{ $options->name }}</strong></span>
-                                </td>
-                                <td>
-                                    <span style="margin-right: 2px">${{ $options->price }}</span>
-                                </td>
+                                <tbody>
+                                     @foreach($shipment_options as $options)
+                                    <tr>
+                                        
+                                        <td>
+                                        <span style="margin-right: 2px"><strong>{{ $options->name }}</strong></span>
+                                        </td>
+                                        <td>
+                                            <span style="margin-right: 2px">${{ $options->price }}</span>
+                                        </td>
 
-                                <td>
-                                    @if($options->is_active == true)
-                                    <span class="btn badge-success">Activado</span>
-                                    @else
-                                    <span class="btn badge-danger">Desactivado</span>
-                                    @endif 
-                                </td>
-                            
-                                <td class="d-flex">
-                                  <a href="javascript:void(0)" data-toggle="modal" data-target="#modalEditOption{{$options->id}}" class="btn btn-outline-primary btn-sm">Editar</a>
-                                    <form method="POST" action="{{ route('shipping-options.destroy', $options->id) }}" style="display: inline-block;">
-                                        <button type="submit" class="btn btn-sm btn-light" data-toggle="tooltip" data-original-title="Borrar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-
-
-
-
-                         @endif
+                                        <td>
+                                            @if($options->is_active == true)
+                                            <span class="btn badge-success">Activado</span>
+                                            @else
+                                            <span class="btn badge-danger">Desactivado</span>
+                                            @endif 
+                                        </td>
+                                    
+                                        <td class="d-flex">
+                                          <a href="javascript:void(0)" data-toggle="modal" data-target="#modalEditOption{{$options->id}}" class="btn btn-outline-primary btn-sm">Editar</a>
+                                            <form method="POST" action="{{ route('shipping-options.destroy', $options->id) }}" style="display: inline-block;">
+                                                <button type="submit" class="btn btn-sm btn-light" data-toggle="tooltip" data-original-title="Borrar">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -396,47 +392,47 @@
         </div>
     </div><!-- modal-dialog -->
 </div><!-- modal -->
-                         @endforeach
+@endforeach
 
 <div id="modalCreateOption" class="modal fade">
     <div class="modal-dialog modal-dialog-vertical-center" role="document">
         <div class="modal-content bd-0 tx-14">
             <div class="modal-header">
-                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Creacion de Opciones de envio</h6>
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Creacion de Opciones de envío</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <form method="POST" action="{{ route('shipping-options.store') }}" enctype="multipart/form-data">
             {{ csrf_field() }}
-
                 <div class="modal-body pd-25">
-
-                    <div class="form-group mt-2">
-                        <label>Nombre</label>
-                        <input type="text" class="form-control" name="name" />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group mt-2">
+                                <label>Nombre</label>
+                                <input type="text" class="form-control" name="name" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mt-2">
+                                <label>Tiempo de entrega</label>
+                                <input type="text" class="form-control" name="delivery_time" />
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-group mt-2">
-                        <label>Tiempo de entrega</label>
-                        <input type="text" class="form-control" name="delivery_time" />
-                    </div>
-                      <div class="form-group mt-2">
-                        <label>Activado</label>
-                        <input type="hidden" id="none" name="is_active" value="0">
-                        <input type="checkbox" class="form-control" name="is_active" value="1" />
-                    </div>
                     <label>Precio</label>
                         <div class="d-flex">
                             <div class="input-group ">
                             <input type="text" class="form-control" id="manual_method_cost" name="price" placeholder="0.00">
                                 <div class="input-group-append">
                                     <span class="input-group-text">
-                                           @if($config->currency_id=='2')
-                                            MXN
-                                            @else
-                                            USD
-                                            @endif
+                                        @if($config->currency_id=='2')
+                                        MXN
+                                        @else
+                                        USD
+                                        @endif
                                     </span>
                                 </div>
                             </div>
@@ -445,8 +441,14 @@
                        <!-- <label>Icono</label>-->
                         <input type="hidden" class="form-control" name="icon" value="1" />
                     </div>
+
+                    <div class="custom-control custom-checkbox mb-3">
+                        <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" value="1" checked>
+                        <label class="custom-control-label" for="is_active"> Activado</label>
+                    </div>
+
                     <div class="alert alert-warning">
-                        <p class="mb-0">Al guardar la información de esta pasarela se activará automáticamente. El usuario podra seleccionar la opcion al momento del checkout</p>
+                        <p class="mb-0">Al guardar la información de esta opción se activará automáticamente. El usuario podra seleccionarla en el proceso de checkout.</p>
                     </div>
 
                 </div>

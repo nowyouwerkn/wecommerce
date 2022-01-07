@@ -14,7 +14,7 @@
         @if(auth()->user()->can('admin_access'))
         <div class="d-none d-md-block">
             <a href="{{ route('banners.create') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Crear nuevo Banner
+               <i class="fas fa-plus"></i> Crear nuevo Banner
             </a>
         </div>
         @endif
@@ -34,9 +34,9 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card card-body">
+        <div class="card mg-b-10">
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-dashboard">
                     <thead>
                         <tr>
                             <th>Imagen</th>
@@ -72,27 +72,26 @@
                             </td>
                             
                             <td class="d-flex">
-                                <a href="{{ route('banners.show', $banner->id) }}" class="btn btn-link text-dark px-2" data-toggle="tooltip" data-original-title="Ver Detalle">
+                                <a href="{{ route('banners.show', $banner->id) }}" class="btn btn-link text-dark px-1 py-0" data-toggle="tooltip" data-original-title="Ver Detalle">
                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                 </a>
 
-                                <a href="{{ route('banners.edit', $banner->id) }}" class="btn btn-link text-dark px-2" data-toggle="tooltip" data-original-title="Editar">
+                                <a href="{{ route('banners.edit', $banner->id) }}" class="btn btn-link text-dark px-1 py-0" data-toggle="tooltip" data-original-title="Editar">
                                     <i class="fa fa-edit" aria-hidden="true"></i>
                                 </a>
 
                                 <form method="POST" action="{{ route('banners.status', $banner->id) }}">
                                     {{ csrf_field() }}
-                                    <button type="submit" class="btn btn-link text-dark px-2" data-toggle="tooltip" data-original-title="Cambiar estado">
+                                    <button type="submit" class="btn btn-link text-dark px-1 py-0" data-toggle="tooltip" data-original-title="Cambiar estado">
                                         <i class="fas fa-sync-alt"></i>
                                     </button>
                                 </form>
 
-                    
                                 <form method="POST" action="{{ route('banners.destroy', $banner->id) }}">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
 
-                                    <button type="submit" class="btn btn-link text-danger px-2" data-toggle="tooltip" data-original-title="Eliminar Banner">
+                                    <button type="submit" class="btn btn-link text-danger px-1 py-0" data-toggle="tooltip" data-original-title="Eliminar Banner">
                                         <i class="fas fa-trash" aria-hidden="true"></i>
                                     </button>
                                 </form>

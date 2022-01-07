@@ -1,9 +1,7 @@
 @extends('wecommerce::back.layouts.main')
 
 @section('stylesheets')
-
 <style>
-
     h5#title_ {
 
         font-size: 2.5rem;
@@ -72,21 +70,23 @@
     }
 </style>
 @endpush
+
 @section('title')
     <div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">
         <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                 <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Cintillo</li>
+                <li class="breadcrumb-item active" aria-current="page">Cintillo Promocional</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Cintillo</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Cintillo Promocional</h4>
         </div>
     </div>
 @endsection
 
 @section('content')
+
 <form method="POST" action="{{ route('band.update', $headerband->id) }}" enctype="multipart/form-data">
     {{ csrf_field() }}
     {{ method_field('PUT') }}
@@ -113,30 +113,31 @@
                             <div id="editor-container-create" class="ht-350 mb-4">{!! $headerband->text ?? '' !!}</div>
                             <textarea id="justHtml_create" name="text" required="" style="display:none;">{!! $headerband->text ?? '' !!}</textarea>
                         </div>
+
                         <div class="form-group col-md-6">
                             <label for="text_button">Color del texto<span class="text-danger">*</span></label>
                             <input type="color" class="form-control" name="hex_text" value="{{ $headerband->hex_text }}" required="" />
                         </div>
 
-                      <div class="form-group col-md-6">
+                        <div class="form-group col-md-6">
                             <label for="text_button">Color del cintillo<span class="text-danger">*</span></label>
                             <input type="color" class="form-control" value="{{ $headerband->hex_background }}" name="hex_background" required="" />
-                    </div>
+                        </div>
+
                         <div class="form-group col-md-6">
                             <label for="priority">Prioridad</label>
-                            <select name="priority">
-                            <option value="{{ $headerband->priority }}" selected>{{ $headerband->priority }}</option>
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                              <option value="4">4</option>
-                              <option value="5">5</option>
-                              <option value="6">6</option>
-                              <option value="7">7</option>
-                        </select>
-                    </div>
-                    </div>
 
+                            <select name="priority" class="form-control">
+                              <option {{ ($headerband->priority == '1') ? 'selected' : '' }} value="1">1</option>
+                              <option {{ ($headerband->priority == '2') ? 'selected' : '' }} value="2">2</option>
+                              <option {{ ($headerband->priority == '3') ? 'selected' : '' }} value="3">3</option>
+                              <option {{ ($headerband->priority == '4') ? 'selected' : '' }} value="4">4</option>
+                              <option {{ ($headerband->priority == '5') ? 'selected' : '' }} value="5">5</option>
+                              <option {{ ($headerband->priority == '6') ? 'selected' : '' }} value="6">6</option>
+                              <option {{ ($headerband->priority == '7') ? 'selected' : '' }} value="7">7</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
 

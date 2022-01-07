@@ -54,6 +54,10 @@
         .filter-btn:hover{
             color: #000;
         }
+
+        .table-dashboard thead th, .table-dashboard tbody td{
+            white-space: initial;
+        }
     </style>
 @endsection
 

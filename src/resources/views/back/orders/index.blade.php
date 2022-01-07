@@ -11,26 +11,21 @@
             </nav>
             <h4 class="mg-b-0 tx-spacing--1">Órdenes</h4>
         </div>
-        <div class="d-none d-md-block">
+        <div class="d-none d-flex align-items-center">
+            <form role="search" action="{{ route('orders.search') }}" class="search-form mr-3" style="width:350px;">
+                <input type="search"  name="query" class="form-control" style="height: calc(1.5em + 0.9375rem - 2px);" placeholder="Número de órden o ID de Pago">
+                <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+
             <a href="{{ route('export.orders') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
                 <i class="fas fa-file-export"></i> Exportar
             </a>
         </div>
     </div>
-
 @endsection
 
 @section('content')
-    <div class="">
-             <form role="search" action="{{ route('orders.search') }}">
-                <div class="input-group border-0">
-                    <input type="search" name="query" class="form-control" placeholder="Busca tu orden">
-                    <button class="btn btn-outline-secondary" type="submit">
-                         <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </form>
-    </div>
+
 @if($orders->count() == 0)
     <div class="card card-body text-center" style="padding:80px 0px 100px 0px;">
         <img src="{{ asset('assets/img/group_2.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
