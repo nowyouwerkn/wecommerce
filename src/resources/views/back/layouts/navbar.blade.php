@@ -78,6 +78,7 @@
                 <ul>
                   <li><a href="{{ route('banners.index') }}">Banners</a></li>
                   <li><a href="{{ route('popups.index') }}">Pop-ups</a></li>
+                  <li><a href="{{ route('band.index') }}">Cintillo</a></li>
                 </ul>
             </li>
 

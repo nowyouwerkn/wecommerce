@@ -66,6 +66,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'popups.status',
     ]);
 
+     Route::resource('band', Nowyouwerkn\WeCommerce\Controllers\HeaderbandController::class);
+       Route::post('/band/status/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\HeaderbandController@status',
+        'as' => 'band.status',
+    ]);
 
     //Configuration
     Route::get('/configuration', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@configuration')->name('configuration'); //

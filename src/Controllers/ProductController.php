@@ -103,9 +103,6 @@ class ProductController extends Controller
         }else{
              $product->production_cost = $request->production_cost;
         }
-       
-       
-
         $product->has_discount = $request->has_discount;
         $product->discount_start = $request->discount_start;
         $product->discount_end = $request->discount_end;
