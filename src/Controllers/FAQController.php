@@ -75,8 +75,8 @@ class FAQController extends Controller
         // Guardar datos en la base de datos
         $faq = FAQ::find($id);
 
-        $faq->title = Purifier::clean($request->title);
-        $faq->description = Purifier::clean($request->description);
+        $faq->question = Purifier::clean($request->title);
+        $faq->answer = Purifier::clean($request->description);
 
         $faq->save();
 

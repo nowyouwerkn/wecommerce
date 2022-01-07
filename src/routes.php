@@ -66,6 +66,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'popups.status',
     ]);
 
+     Route::resource('band', Nowyouwerkn\WeCommerce\Controllers\HeaderbandController::class);
+       Route::post('/band/status/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\HeaderbandController@status',
+        'as' => 'band.status',
+    ]);
 
     //Configuration
     Route::get('/configuration', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@configuration')->name('configuration'); //
@@ -96,6 +101,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     ]);
     Route::get('exportar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@export')->name('export.products');
     Route::post('importar-productos', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@import')->name('import.products');
+    Route::get('exportar-inventario', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@export_inventory_changes')->name('inventory.clients');
 
     Route::post('/get-subcategories', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@fetchSubcategory',

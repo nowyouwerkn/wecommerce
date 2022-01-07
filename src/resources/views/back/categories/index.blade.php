@@ -167,9 +167,12 @@
                 
                 @foreach($category->children as $sub)
                 <li class="d-flex align-items-center justify-content-between list-group-item">
-                    <div>
+                    <div>  
+                        @php 
+                         $users = DB::table('product_category')->where('category_id', $sub->id)->get();
+                        @endphp
                         <a href="{{ route('categories.show', $sub->id) }}">{{ $sub->name }} 
-                            <span class="badge badge-info">{{ $sub->parent_id }}</span>
+                            <span class="badge badge-info">{{ $users->count() }}</span>
                         </a>
 
                     </div>

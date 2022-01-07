@@ -95,6 +95,9 @@
                     </button>
                 </div>
             </form>
+            <div>
+                <a href="{{ route('inventory.clients') }}" class="btn btn-outline-primary">Exportar movimientos de inventario</a>
+            </div>
     </div>
 @if($products->count() == 0)
     <div class="card card-body text-center" style="padding:80px 0px 100px 0px;">

@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Session;
 use Auth;
+use DB;
 
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Variant;
@@ -20,6 +21,7 @@ class StockController extends Controller
         $products = Product::paginate(10);
 
         return view('wecommerce::back.stocks.index')->with('products', $products);
+
     }
 
     public function create()
@@ -97,11 +99,12 @@ class StockController extends Controller
     {
         // Guardar datos en la base de datos
         $stock = ProductVariant::find($id);
-        
+        $by = Auth::user();
+        $values = array('action_by' => $by->id,'initial_value' => $product->stock, 'final_value' => $request->stock_variant, 'product_id' => $id);
+        DB::table('inventory_record')->insert($values);
         $stock->stock = $request->stock_variant;
         $stock->new_price = $request->price_variant;
         $stock->sku = $request->sku_variant;
-
         $stock->save();
 
         // Mensaje de session

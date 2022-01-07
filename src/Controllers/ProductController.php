@@ -8,6 +8,7 @@ use Auth;
 use Purifier;
 use Storage;
 use Image;
+use DB;
 
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Category;
@@ -18,6 +19,7 @@ use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 /* Exportar Info */
 use Maatwebsite\Excel\Facades\Excel;
 use Nowyouwerkn\WeCommerce\Exports\ProductExport;
+use Nowyouwerkn\WeCommerce\Exports\InventoryExport;
 use Nowyouwerkn\WeCommerce\Imports\ProductImport;
 
 /* Notificaciones */
@@ -103,9 +105,6 @@ class ProductController extends Controller
         }else{
              $product->production_cost = $request->production_cost;
         }
-       
-       
-
         $product->has_discount = $request->has_discount;
         $product->discount_start = $request->discount_start;
         $product->discount_end = $request->discount_end;
@@ -440,6 +439,11 @@ class ProductController extends Controller
         return Excel::download(new ProductExport, 'productos.xlsx');
     }
 
+      public function export_inventory_changes() 
+    {
+        return Excel::download(new InventoryExport, 'inventario.xlsx');
+    }
+
     public function import(Request $request) 
     {
         Excel::import(new ProductImport, $request->import_file);
@@ -451,13 +455,18 @@ class ProductController extends Controller
     {
         // Guardar datos en la base de datos
         $product = Product::find($id);
+        $by = Auth::user();
+        if ($product->stock != $request->stock_variant) {
+             $values = array('action_by' => $by->id,'initial_value' => $product->stock, 'final_value' => $request->stock_variant, 'product_id' => $id);
+            DB::table('inventory_record')->insert($values);
+        }
+       
         
         $product->stock = $request->stock_variant;
         //$stock->sku = $request->sku_variant;
 
           // Notificación
         $type = 'Producto';
-        $by = Auth::user();
         $data = 'Actualizó el inventario del producto:' . $product->name;
         $model_action = "update";
         $model_id = $product->id;
