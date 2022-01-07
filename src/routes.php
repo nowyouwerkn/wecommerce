@@ -476,3 +476,19 @@ Route::get('reducir-stock', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@reduceStock',
     'as' => 'reduce.stock.test',
 ]); 
+
+/* Webhooks */
+Route::get('/webhook',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WebhookController@testJson',
+    'as' => 'webhook.test',
+]);
+
+Route::post('/webhook/orden_action',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WebhookController@order',
+    'as' => 'webhook.order.oxxo',
+]);
+
+Route::post('/webhook/mercadopago_stataus',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WebhookController@orderMercadoPago',
+    'as' => 'webhook.order.mercadopago',
+]);

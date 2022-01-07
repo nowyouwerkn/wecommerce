@@ -640,7 +640,7 @@ class FrontController extends Controller
         if (empty($mercado_payment)) {
             $preference = NULL;
         }else{
-               if ($mercado_payment->sandbox_mode == '1') {
+            if ($mercado_payment->sandbox_mode == '1') {
                 $private_key_mercadopago = $mercado_payment->sandbox_private_key;
             }elseif ($mercado_payment->sandbox_mode == '0') {
                 $private_key_mercadopago = $mercado_payment->private_key;
