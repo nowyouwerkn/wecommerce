@@ -15,9 +15,12 @@ class CreateInventoryRecordTable extends Migration
     {
         Schema::create('inventory_record', function (Blueprint $table) {
             $table->id();
-            $table->int('inital_value');
-            $table->int('final_value');
-            $table->int('action_by');
+            
+            $table->string('initial_value');
+            $table->string('final_value');
+            $table->integer('product_id')->unsigned();
+            $table->integer('action_by')->unsigned();
+            
             $table->timestamps();
         });
     }

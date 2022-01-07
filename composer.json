@@ -9,7 +9,6 @@
         "checkout"
     ],
     "type": "library",
-    "version": "1.4.3",
     "authors": [
         {
             "name": "Jorge Peña Lama",

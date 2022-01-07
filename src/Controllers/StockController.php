@@ -100,8 +100,11 @@ class StockController extends Controller
         // Guardar datos en la base de datos
         $stock = ProductVariant::find($id);
         $by = Auth::user();
-        $values = array('action_by' => $by->id,'initial_value' => $product->stock, 'final_value' => $request->stock_variant, 'product_id' => $id);
+
+        $values = array('action_by' => $by->id, 'initial_value' => $stock->stock, 'final_value' => $request->stock_variant, 'product_id' => $id);
+
         DB::table('inventory_record')->insert($values);
+
         $stock->stock = $request->stock_variant;
         $stock->new_price = $request->price_variant;
         $stock->sku = $request->sku_variant;
@@ -131,7 +134,7 @@ class StockController extends Controller
        public function search(Request $request)
     {
         $search_query = $request->input('query');
-         $products = Product::where('name', 'LIKE', "%{$search_query}%")
+        $products = Product::where('name', 'LIKE', "%{$search_query}%")
         ->where('category_id', '!=', NULL)
         ->orWhere('description', 'LIKE', "%{$search_query}%")
         ->orWhere('search_tags', 'LIKE', "%{$search_query}%")
