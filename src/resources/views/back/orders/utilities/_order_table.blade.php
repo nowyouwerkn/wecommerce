@@ -310,8 +310,7 @@
             <td class="type-td" style="width:280px;">
                 @if(strlen($order->payment_id) > 30)
                 {{$str = substr($order->payment_id, 0, 27) . '...';  }}
-                @endif
-                @if(strlen($order->payment_id) < 30)
+                @else
                 {{ $order->payment_id }}
                 @endif
             </td>
