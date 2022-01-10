@@ -1280,7 +1280,7 @@ class FrontController extends Controller
         $order->references = $request->input('references');
         $order->shipping_option = $request->shipping_option;
         
-        if ($billing_shipping_id->id != null) {
+        if (isset($billing_shipping_id)) {
             $order->billing_shipping_id = $billing_shipping_id->id;
         }
 
