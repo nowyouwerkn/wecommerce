@@ -1245,9 +1245,9 @@ class FrontController extends Controller
             $address->is_billing = true;
             $address->save();
             $billing_shipping_id = UserAddress::where('street', $request->street)->where('is_billing', true)->where('user_id', $user->id)->first();
-            }
+        }
 
-            if ($request->billing_shipping == 'false') {
+        if ($request->billing_shipping == 'false') {
             $address_billing = new UserAddress;
             $address_billing->name = 'Compra_tajeta_' . Str::substr($request->card_number, 15);
             $address_billing->user_id = $user->id;
@@ -1262,7 +1262,7 @@ class FrontController extends Controller
             $address_billing->is_billing = true;
             $address_billing->save();
             $billing_shipping_id = UserAddress::where('street', $request->street_billing)->where('is_billing', true)->where('user_id', $user->id)->first();
-            }
+        }
 
         // GUARDAR LA ORDEN
         $order = new Order();
@@ -1279,7 +1279,10 @@ class FrontController extends Controller
         $order->suburb = $request->input('suburb');
         $order->references = $request->input('references');
         $order->shipping_option = $request->shipping_option;
-        $order->billing_shipping_id = $billing_shipping_id->id;
+        
+        if ($billing_shipping_id->id != null) {
+            $order->billing_shipping_id = $billing_shipping_id->id;
+        }
 
         /* Money Info */
         $order->cart_total = $cart->totalPrice;
