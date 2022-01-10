@@ -100,7 +100,7 @@
 
 <div class="row justify-items-center">
     <div class="col text-center">
-        {{ $headerband->links() }}
+        {{ $headerbands->links() }}
     </div>
 </div>
 @endif
