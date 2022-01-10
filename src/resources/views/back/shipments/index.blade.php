@@ -217,9 +217,9 @@
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
-                                
+
                                 <tbody>
-                                     @foreach($shipment_options as $options)
+                                    @foreach($shipment_options as $options)
                                     <tr>
                                         
                                         <td>
@@ -462,8 +462,6 @@
     </div><!-- modal-dialog -->
 </div><!-- modal -->
 
-
-
 <div id="modalCreateRule" class="modal fade">
     <div class="modal-dialog modal-lg modal-dialog-vertical-center" role="document">
         <div class="modal-content bd-0 tx-14">
@@ -528,6 +526,7 @@
     </div>
 </div>
 @endsection
+
 @push('scripts')
    <script src="{{ asset('lib/cleave.js/cleave.min.js') }}"></script>
     <script type="text/javascript">
