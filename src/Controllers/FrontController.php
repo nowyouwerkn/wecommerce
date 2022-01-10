@@ -1101,7 +1101,11 @@ class FrontController extends Controller
                     $order->total = $request->final_total;
                     $order->payment_total = $request->final_total;
                     /*------------*/
-                        
+                    
+                    if (isset($billing_shipping_id)) {
+                        $order->billing_shipping_id = $billing_shipping_id->id;
+                    }
+                    
                     $order->card_digits = Str::substr($request->card_number, 15);
                     $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
 
@@ -1156,6 +1160,10 @@ class FrontController extends Controller
                     $order->references = $request->input('references');
                     $order->shipping_option = $request->shipping_option;
 
+                    if (isset($billing_shipping_id)) {
+                        $order->billing_shipping_id = $billing_shipping_id->id;
+                    }
+
                     /* Money Info */
                     $order->cart_total = $cart->totalPrice;
                     $order->shipping_rate = $request->shipping_rate;
@@ -1204,31 +1212,30 @@ class FrontController extends Controller
             $user = Auth::user();
         }
 
-                // GUARDAR LA DIRECCIÓN
+        // GUARDAR LA DIRECCIÓN
         if ($request->save_address == 'true') {
-        $check = UserAddress::where('street', $request->street)->count();
+            $check = UserAddress::where('street', $request->street)->count();
 
-        if ($check == NULL || $check == 0) {
-            $address = new UserAddress;
-            $address->name = 'Compra_' . Str::substr($request->card_number, 15);
-            $address->user_id = $user->id;
-            $address->street = $request->street;
-            $address->street_num = $request->street_num;
-            $address->postal_code = $request->postal_code;
-            $address->city = $request->city;
-            $address->country = $request->country;
-            $address->state = $request->state;
-            $address->phone = $request->phone;
-            $address->suburb = $request->suburb;
-            $address->references = $request->references;
-            $address->is_billing = false;
+            if ($check == NULL || $check == 0) {
+                $address = new UserAddress;
+                $address->name = 'Compra_' . Str::substr($request->card_number, 15);
+                $address->user_id = $user->id;
+                $address->street = $request->street;
+                $address->street_num = $request->street_num;
+                $address->postal_code = $request->postal_code;
+                $address->city = $request->city;
+                $address->country = $request->country;
+                $address->state = $request->state;
+                $address->phone = $request->phone;
+                $address->suburb = $request->suburb;
+                $address->references = $request->references;
+                $address->is_billing = false;
 
-            $address->save();
-        }
+                $address->save();
+            }
         }
 
         // GUARDAR LA DIRECCIÓN DE FACTURACIÓN
-
         if ($request->billing_shipping == 'true') {
             $address = new UserAddress;
             $address->name = 'Compra_tajeta_' . Str::substr($request->card_number, 15);
@@ -1245,9 +1252,7 @@ class FrontController extends Controller
             $address->is_billing = true;
             $address->save();
             $billing_shipping_id = UserAddress::where('street', $request->street)->where('is_billing', true)->where('user_id', $user->id)->first();
-        }
-
-        if ($request->billing_shipping == 'false') {
+        }else{
             $address_billing = new UserAddress;
             $address_billing->name = 'Compra_tajeta_' . Str::substr($request->card_number, 15);
             $address_billing->user_id = $user->id;
@@ -1295,19 +1300,13 @@ class FrontController extends Controller
         $order->payment_total = $request->final_total;
 
         /*------------*/
-            
         $order->card_digits = Str::substr($request->card_number, 15);
         $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
 
-        if ($payment_method->supplier == 'Paypal') {
-            $order->payment_id = $payment->id;
-            $order->is_completed = false;
-            $order->status = 'Pendiente';
-        }else{
-            $order->payment_id = $charge->id;
-            $order->is_completed = true;
-            $order->status = 'Pagado';
-        }
+        $order->payment_id = $charge->id;
+        $order->is_completed = true;
+        $order->status = 'Pagado';
+
         $order->payment_method = $payment_method->supplier;
 
         // Identificar al usuario para guardar sus datos.
