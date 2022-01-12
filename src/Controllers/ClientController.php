@@ -136,19 +136,17 @@ class ClientController extends Controller
     {
         $search_query = $request->input('query');
          $client = User::where('name', 'LIKE', "%{$search_query}%")
-        ->orWhere('email', 'LIKE', "%{$search_query}%")->paginate(15);
+        ->orWhere('email', 'LIKE', "%{$search_query}%")->paginate(30);
     
 
         return view('wecommerce::back.clients.index')
         ->with('clients', $client);
     }
 
-    public function filter(Request $request)
+    public function filter($order , $filter)
     {
-        $filter = $request->filter;
-        $order = $request->order;
         $wishlists = Wishlist::all();
-        $client = User::orderBy($filter, $order)->paginate(15);
+        $client = User::orderBy($filter, $order)->paginate(30);
         return view('wecommerce::back.clients.index')
         ->with('wishlists', $wishlists)
         ->with('clients', $client);

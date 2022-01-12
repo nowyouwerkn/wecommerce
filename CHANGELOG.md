@@ -2,6 +2,84 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.4.3 - 2022-01-4
+- Ya está disponible la opción de activar y desactivar los métodos de pago de Mercado Pago. 
+- Se Agrega la funcionalidad de activar y desactivar el modo sandbox para las pasarelas de pago.
+- Se añade un botón para activar y desactivar el  método de pago.
+- Se permite elegir la estructura del banner para alinear y acomodar los textos.
+- Ya está disponible la opción de elegir un color para los textos y botones presentes en el banner. 
+- La sección de banners ahora acepta la inclusión de videos (Desde Youtube).
+- En el listado de Subcategorías, se generó un contador de productos diferentes en cada subcategoría. 
+- Ya se cuenta con un sistema de prioridad, para determinar el orden en las colecciones. En caso de que dos elementos tengan el mismo número de prioridad, se determinará cuál procederá primero por orden de creación. 
+- Al dar clic en el listado de subcategorías, se abrirá una vista de detalle con el listado de productos vinculados. 
+- Se validarán los requisitos para aplicar un cupón. Si no se cumplen dichos requerimientos, no se permitirá el uso del cupón. 
+- El check out ahora es responsivo. 
+- Cuando se compre como invitado, si ya se tiene una cuenta se manda un mensaje especificando que el correo ya se encuentra ocupado. 
+- El cliente ahora tiene la opción de usar una casilla de verificación en caso de que la dirección en envío y la dirección de facturación sean la misma. 
+- Ahora se cuenta con sistema de múltiples direcciones para preseleccionar en el check out. 
+- El administrador ahora podrá expandir las opciones de envío para sus clientes. Esta opción permite cambiar el modo de envío y las fechas de entrega (Ej. Envío estándar o envío express). Se mostrarán los detalles en en check out. 
+ menú del modo responsivo ya permite el uso del scroll para ver todos los elementos.
+- Ahora es responsivo el botón de seguimiento. 
+- Revisión responsiva del menú lateral .
+- Ahora se incluye una bandera con la versión de sistema en la parte superior derecha del pánel.
+- Se agrega la funcionalidad de orden y filtrado para el listado de clientes. 
+- Los clientes ahora pueden acceder a la opción Vista de perfil, en dicha sección tiene la opción de cambiar su contraseña y correo.
+- Se agrega la funcionalidad de búsqueda en el listado de clientes. 
+- El listado ahora se puede ordenar por fecha de registro
+- El listado ahora se puede ordenar por cantidad de órdenes. 
+- El listado ahora se puede ordenar alfabéticamente
+- Ahora se cuenta con sistema de priorización. 
+- Ahora se cuenta con tarjetas de reseñas en el detalle de producto. En las tarjetas aprobadas, se mostrará un indicador visual con la calificación proporcionada por el usuario.
+- Ya está disponible la opción de hacer visible o hacer invisibles, los productos que se encuentren en borrador. 
+- Ahora se guarda el historial de cambios a los productos. 
+- Se puede agregar una vista personalizada a los productos que tienen descuento, para poder filtrar los objetos más eficazmente. 
+- El inventario ahora cuenta con un sistema de orden y filtrado.
+- El inventario ahora cuenta con sistema de búsqueda específico. 
+- Barra de búsqueda específica para productos y características. 
+- Se incluye un verificador “Descuento activo hasta” en el detalle de producto y en los indicadores de descuento. Si la fecha “hasta” es mejor al día actual, no se mostrará el descuento. 
+- La sección de productos ahora cuenta con un sistema de orden y filtrado.
+- Expansión para permitir calificar los productos mediante estrellas. 
+- El listado ahora se puede ordenar por fecha de registro
+- El listado ahora se puede ordenar por cantidad de órdenes. 
+- El listado ahora se puede ordenar alfabéticamente
+- Ahora se cuenta con sistema de priorización. 
+- Se Agrega campo de EAN/UPC a la creación de variantes. (Adaptación para ligar a otras tiendas).
+- Ya está disponible la función de “reglas especiales” para envíos. 
+- Envíos gratis después de cierta cantidad monetaria
+- Envíos gratis después de cierta cantidad de productos en carrito
+- Ya está disponible la función de “opciones de envío” .
+- La sección envíos ahora empleará la moneda configurada para la tienda.
+- Se puede hacer seguimiento de un pedido por medio del número de orden. Sin necesidad de hacer login.
+- Se Agrega a la plantilla de correo de Número de Seguimiento un link en el párrafo que lleve a la vista de número de Seguimiento en la plataforma.
+- Despliegue el estado de la orden de manera visual.
+- Funcionalidad de categorización por tipo: Shipping y Billing.
+- Se implementó un sistema histórico de cambios para guardar los cambios realizados por los usuarios por módulo. 
+- Correos de notificación para varios procesos. 
+- Ahora se encuentra disponible la opción de marcar como leídas todas las notificaciones, al dar clic en la campana de notificaciones. Se actualiza el contador de notificaciones a cero. 
+- Notificación de Registro de cuenta exitosa. 
+- Ya se cuenta con plantilla de correo. 
+- Ya se cuenta con correo de “Confirmación de entrega”.
+- Los correos de confirmación de compra ya cuentan con el número de días para la entrega de la guía.
+- Se guarda ahora el historial de las órdenes. 
+- En la orden, guardar la opción de envío seleccionada y reflejar eso en el correo de confirmación con las fechas aproximadas.
+- El indicador del estado de orden ahora cuenta con color de acuerdo a la fase en la que se encuentre el paquete. 
+- En el listado de órdenes si el ID de pago supera los 50 caracteres, se coloca dinámicamente tres puntos suspensivos. Al pasar sobre el cursor sobre el ID se muestra completo.
+- Ahora se indica en la orden, el cupón que el cliente empleó a la hora de hacer su pedido.
+- El listado de órdenes ahora cuenta con sistema de filtrado y búsqueda. 
+- La orden ahora guarda el ID del cupón empleado. 
+- El listado ahora se puede ordenar por fecha de registro
+- El listado ahora se puede ordenar por cantidad de órdenes. 
+- El listado ahora se puede ordenar alfabéticamente
+- Ahora se cuenta con sistema de priorización. 
+- CLAB de catálogo de guías de tallas categorizadas por colección. (Se puede crear un tipo de guía de talla que aplique la colección de zapatos o de playeras respectivamente).
+- Se genera la opción de subir guía de tallas de acuerdo con las colecciones. 
+- Ahora las plataformas cuentan con sección de preguntas frecuentes.
+- Los textos legales ya se pueden priorizar.
+- Los textos legales ya permiten la modificación del los títulos y textos. 
+- Ahora se encuentra disponible un formulario para la edición de los usuarios administrativos. 
+- Los usuarios ya pueden emplear la función “recuperar contraseña”.
+- El resumen de ventas ahora solo toma en cuanta las ventas pagadas, enviadas, empaquetadas y entregadas. 
+
 ## 1.4.1 - 2021-11-12
 
 ### Agregado

@@ -145,11 +145,24 @@ class StockController extends Controller
         return view('wecommerce::back.stocks.index')->with('products', $products);
     }
 
-          public function filter(Request $request)
+
+      public function filter($order , $filter)
     {
-        $filter = $request->filter;
-        $order = $request->order;
         $products = Product::orderBy($filter, $order)->paginate(15);
+
+        if ($filter == 'price' && $order == 'desc') {
+            $products = Product::orderByRaw('price * 1 desc')->paginate(15);
+        }
+        if($filter == 'price'&& $order == 'asc'){
+            $products = Product::orderByRaw('price * 1 asc')->paginate(15);
+        }
+        if ($filter == 'stock' && $order == 'desc') {
+            $products = Product::orderByRaw('stock * 1 desc')->paginate(15);
+        }
+        if($filter == 'stock'&& $order == 'asc'){
+            $products = Product::orderByRaw('stock * 1 asc')->paginate(15);
+        }
+
         return view('wecommerce::back.stocks.index')->with('products', $products);
 
     }

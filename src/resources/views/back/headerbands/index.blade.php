@@ -55,7 +55,7 @@
                                 
                             </td>
                             <td>
-                                {{ $headerband->text }}
+                                {!! $headerband->text ?? '' !!}
                             </td>
                             <td>{{ $headerband->band_link }}</td>
                             <td>{{ $headerband->priority}}</td>
