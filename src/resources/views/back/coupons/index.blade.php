@@ -96,8 +96,8 @@
                                             {{ csrf_field() }}
                                             {{ method_field('PUT') }}
                                                 <div class="modal-body">
-                                                    <div class="alert alert-info">
-                                                        Solo es posible cambiar el código y descripción del cupón. Cualquier otra configuración deberás crear otro. Si no estas contento con este cupón puedes eliminarlo.    
+                                                    <div class="alert alert-info d-block">
+                                                        Solo es posible cambiar el código y descripción del cupón. Cualquier otra configuración deberás crear otro. Si no estás contento con este cupón puedes eliminarlo.    
                                                     </div>
 
                                                     <div class="row">

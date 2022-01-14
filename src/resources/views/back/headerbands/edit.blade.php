@@ -113,12 +113,23 @@
                             <div id="editor-container-create" class="ht-350 mb-4">{!! $headerband->text ?? '' !!}</div>
                             <textarea id="justHtml_create" name="text" required="" style="display:none;">{!! $headerband->text ?? '' !!}</textarea>
                         </div>
-
+                        <div class="form-group col-md-12">
+                            <label>Texto del boton<span class="text-danger">*</span></label>
+                            <div id="editor-container-button" class="ht-350 mb-4">{!! $headerband->button_text ?? '' !!}</div>
+                            <textarea id="justHtml_button" name="button_text" style="display:none;">{!! $headerband->button_text ?? '' !!}</textarea>
+                        </div>
                         <div class="form-group col-md-6">
                             <label for="text_button">Color del texto<span class="text-danger">*</span></label>
-                            <input type="color" class="form-control" name="hex_text" value="{{ $headerband->hex_text }}" required="" />
+                            <input type="color" class="form-control" name="hex_text" value="{{ $headerband->hex_text }}"/>
                         </div>
-
+                        <div class="form-group col-md-6">
+                            <label for="text_button">Color del texto del boton<span class="text-danger">*</span></label>
+                            <input type="color" class="form-control" name="hex_button_text" value="{{ $headerband->hex_button_text }}"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="text_button">Color del boton<span class="text-danger">*</span></label>
+                            <input type="color" class="form-control" name="hex_button_back" value="{{ $headerband->hex_button_back }}"/>
+                        </div>
                         <div class="form-group col-md-6">
                             <label for="text_button">Color del cintillo<span class="text-danger">*</span></label>
                             <input type="color" class="form-control" value="{{ $headerband->hex_background }}" name="hex_background" required="" />
@@ -219,6 +230,28 @@
     editor_create.on('text-change', function() {
       var justHtml_create = editor_create.root.innerHTML;
       justHtmlContent_create.innerHTML = justHtml_create;
+    });
+</script>
+<script type="text/javascript">
+    var options_button = {
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic'],
+                ['link'],
+                [{ list: 'ordered' }, { list: 'bullet' }]
+            ]
+        },
+        placeholder: 'Comienza a escribir aqui...',
+        theme: 'snow'
+    };
+
+    var editor_button = new Quill('#editor-container-button', options_button);
+    var justHtmlContent_button = document.getElementById('justHtml_button');
+
+    editor_button.on('text-change', function() {
+      var justHtml_button = editor_button.root.innerHTML;
+      justHtmlContent_button.innerHTML = justHtml_button;
     });
 </script>
 @endpush

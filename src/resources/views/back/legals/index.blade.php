@@ -41,7 +41,7 @@
 
             <h3>Páginas legales</h3>
             <p>Puedes crear tus propias páginas legales.</p>
-            <p>Tus políticas guardadas se vincularán en el pie de página de tu pantalla de pago y los menús de tu tienda.</p>
+            <p>Tus políticas guardadas se vincularán al pie de página de tu tienda.</p>
             <!--<p>Al usar estas plantillas, aceptas que has leído y aceptado el descargo de responsabilidad.</p>-->
         </div>
         
@@ -63,7 +63,7 @@
                         <h4 class="mb-3">
                         <input type="text" name="title" value="{{ $legal->title }}" required="" />
                         Prioridad    
-                        <select name="priority">
+                        <select class="form-group" name="priority">
                               <option value="{{ $legal->priority }}">{{ $legal->priority }}</option>
                               <option value="1">1</option>
                               <option value="2">2</option>

@@ -56,6 +56,7 @@ class PopupController extends Controller
         $popup->text_button = $request->text_button;
         $popup->link = $request->link;
         $popup->text = $request->text;
+        $popup->position = $request->position;
         $popup->has_button = $request->has_button;
         if($popup->has_button == null){
             $popup->has_button = 0;
@@ -112,6 +113,7 @@ class PopupController extends Controller
         $popup->text_button = $request->text_button;
         $popup->link = $request->link;
         $popup->text = $request->text;
+        $popup->position = $request->position;
         $popup->has_button = $request->has_button;
         if ($popup->has_button == null) {
             $popup->has_button = 0;

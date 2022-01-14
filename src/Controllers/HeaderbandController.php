@@ -43,8 +43,11 @@ class HeaderbandController extends Controller
         $headerband = new Headerband;
         $headerband->title = $request->title;
         $headerband->text= Purifier::clean($request->text);
+        $headerband->button_text= Purifier::clean($request->button_text);
         $headerband->priority = $request->priority;
         $headerband->hex_text = $request->hex_text;
+        $headerband->hex_button_text = $request->hex_button_text;
+        $headerband->hex_button_back = $request->hex_button_back;
         $headerband->band_link = $request->band_link;
         $headerband->is_active = true;
         $headerband->hex_background = $request->hex_background;
@@ -84,10 +87,12 @@ class HeaderbandController extends Controller
         $headerband = Headerband::find($id);
         $headerband->title = $request->title;
         $headerband->text= Purifier::clean($request->text);
+        $headerband->button_text= Purifier::clean($request->button_text);
         $headerband->priority = $request->priority;
         $headerband->hex_text = $request->hex_text;
+        $headerband->hex_button_text = $request->hex_button_text;
+        $headerband->hex_button_back = $request->hex_button_back;
         $headerband->band_link = $request->band_link;
-        $headerband->is_active = true;
         $headerband->hex_background = $request->hex_background;
         $headerband->save();
 

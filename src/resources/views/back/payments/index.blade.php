@@ -115,7 +115,7 @@
                     <p class="mb-4">Un botón que les permite a los clientes utilizar PayPal directamente desde tu pantalla de pago.</p>
                     <a href="" data-toggle="modal" data-target="#modalCreatePaypal" class="btn btn-outline-primary btn-sm">Configurar Paypal Checkout</a>
                      @if($paypal_method->is_active == true)
-                        <a href="{{ route('payments.status', $paypal_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                        <a href="{{ route('payments.status', $paypal_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar método de pago">Desactivar método de pago</a>  
                     @endif
                 </div>
             </div>
@@ -137,7 +137,7 @@
                     <p class="mb-4">Un botón que les permite a los clientes pagar por medio de MercadoPago.</p>
                     <a href="" data-toggle="modal" data-target="#modalCreateMercadoPago" class="btn btn-outline-primary btn-sm">Configurar MercadoPago</a>
                      @if($mercadopago_method->is_active == true)
-                         <a href="{{ route('payments.status', $mercadopago_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                         <a href="{{ route('payments.status', $mercadopago_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar método de pago">Desactivar método de pago</a>  
                     @endif
                 </div>
             </div>
@@ -146,7 +146,7 @@
 
         <div class="card card-body mb-4">
             <h4>Tarjetas de Crédito y Débito</h4>
-            <p class="mb-4">Acepta pagos con tarjetas de crédito y débito con alguno de estos proveedores. <strong>(Solo puedes tener activado uno a la vez)</strong></p>
+            <p class="mb-4">Acepta pagos con tarjetas de crédito y débito con alguno de estos proveedores. <strong>(Solo puedes tener activado uno a la vez).</strong></p>
 
             <div class="row payment-methods">
                 <div class="col-md-6">
@@ -169,7 +169,7 @@
                         <a href="" data-toggle="modal" data-target="#modalCreateConekta" class="btn btn-outline-secondary btn-sm">Configurar Conekta</a>
                         <a href="http://www.conekta.com" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
                          @if($conekta_method->is_active == true)
-                             <a href="{{ route('payments.status', $conekta_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                             <a href="{{ route('payments.status', $conekta_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar método de pago">Desactivar método de pago</a>  
                         @endif
                     </div>
                     
@@ -194,7 +194,7 @@
                         <a href="" data-toggle="modal" data-target="#modalCreateStripe" class="btn btn-outline-secondary btn-sm">Configurar Stripe</a>
                         <a href="http://www.stripe.com" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
                         @if($stripe_method->is_active == true)
-                         <a href="{{ route('payments.status', $stripe_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                         <a href="{{ route('payments.status', $stripe_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar método de pago">Desactivar método de pago</a>  
                         @endif
                     </div>
                 </div>
@@ -216,7 +216,7 @@
                         <a href="" data-toggle="modal" data-target="#modalCreateOpenPay" class="btn btn-outline-secondary btn-sm">Configurar OpenPay</a>
                         <a href="https://www.openpay.mx" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
                         @if($openpay_method->is_active == true)
-                            <a href="{{ route('payments.status', $openpay_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                            <a href="{{ route('payments.status', $openpay_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar método de pago">Desactivar método de pago</a>  
                         @endif
                     </div>
                 </div>
@@ -249,7 +249,7 @@
                         <a href="" data-toggle="modal" data-target="#modalCreateOxxoConekta" class="btn btn-outline-secondary btn-sm">Configurar OxxoPay de Conekta</a>
                         <a href="http://www.conekta.com" target="_blank" class="btn btn-link btn-sm">Visita el sitio</a>
                         @if($oxxo_pay->is_active == true)
-                            <a href="{{ route('payments.status', $oxxo_pay->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar metodo de pago">Desactivar metodo de pago</a>  
+                            <a href="{{ route('payments.status', $oxxo_pay->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar método de pago">Desactivar método de pago</a>  
                         @endif
                     </div>
                 </div>
@@ -276,21 +276,21 @@
                 <div class="modal-body pd-25">
                     <img src="{{ asset('assets/img/brands/paypal.png') }}" width="250" style="margin: 10px 0px;">
                     <div id="live-keys-paypal">
-                        <h4>Estas en modo produccion</h4>
+                        <h4>Estás en modo producción</h4>
                         <a class="btn btn-danger change-sandbox" onclick="sandboxpaypal()">Cambiar a sandbox</a>
                         <div class="form-group mt-2">
-                            <label>Correo de Acceso(Produccion)</label>
+                            <label>Correo de Acceso(Producción)</label>
                             <input type="text" class="form-control" name="email_access" value="{{ $paypal_method->email_access }}" />
                         </div>
 
                         <div class="form-group mt-2">
-                            <label>Contraseña (Produccion)</label>
+                            <label>Contraseña (Producción)</label>
                             <input type="text" class="form-control" name="password_access" value="{{ $paypal_method->password_access }}"/>
                         </div>
                     </div>
                     <div id="sandbox-keys-paypal">
-                        <h4>Estas en modo sandbox</h4>
-                        <a class="btn btn-success change-sandbox" onclick="sandboxpaypal()">Cambiar a proudccion</a>
+                        <h4>Estás en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxpaypal()">Cambiar a producción</a>
                         <div class="form-group mt-2">
                             <label>Correo de Acceso (Sandbox)</label>
                             <input type="text" class="form-control" name="sandbox_email_access" value="{{ $paypal_method->sandbox_email_access }}" />
@@ -334,21 +334,21 @@
                     <img src="{{ asset('assets/img/brands/mercado-pago.png') }}" width="250" style="margin: 10px 0px;">
 
                     <div id="live-keys-mercadopago">
-                        <h4>Estas en modo produccion</h4>
+                        <h4>Estás en modo producción</h4>
                         <a class="btn btn-danger change-sandbox" onclick="sandboxmercadopago()">Cambiar a sandbox</a>
                         <div class="form-group mt-2">
-                            <label>Llave Privada (Produccion)</label>
+                            <label>Llave Privada (Producción)</label>
                             <input type="text" class="form-control" name="private_key" value="{{ $mercadopago_method->private_key }}" />
                         </div>
 
                         <div class="form-group mt-2">
-                            <label>Llave Pública (Produccion)</label>
+                            <label>Llave Pública (Producción)</label>
                             <input type="text" class="form-control" name="public_key" value="{{ $mercadopago_method->public_key }}"/>
                         </div>
                     </div>
                     <div id="sandbox-keys-mercadopago">
-                        <h4>Estas en modo sandbox</h4>
-                        <a class="btn btn-success change-sandbox" onclick="sandboxmercadopago()">Cambiar a proudccion</a>
+                        <h4>Estás en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxmercadopago()">Cambiar a producción</a>
                         <div class="form-group mt-2">
                             <label>Llave Privada (Sandbox)</label>
                             <input type="text" class="form-control" name="sandbox_private_key" value="{{ $mercadopago_method->sandbox_private_key }}" />
@@ -409,21 +409,21 @@
                     <img src="{{ asset('assets/img/brands/oxxopay.png') }}" width="250" style="margin: 10px 0px;">
 
                     <div id="live-keys-oxxopay">
-                        <h4>Estas en modo produccion</h4>
+                        <h4>Estás en modo producción</h4>
                         <a class="btn btn-danger change-sandbox" onclick="sandboxoxxopay()">Cambiar a sandbox</a>
                         <div class="form-group mt-2">
-                            <label>Llave Privada (Produccion)</label>
+                            <label>Llave Privada (Producción)</label>
                             <input type="text" class="form-control" name="private_key" value="{{ $oxxo_pay->private_key }}" />
                         </div>
 
                         <div class="form-group mt-2">
-                            <label>Llave Pública (Produccion)</label>
+                            <label>Llave Pública (Producción)</label>
                             <input type="text" class="form-control" name="public_key" value="{{ $oxxo_pay->public_key }}"/>
                         </div>
                     </div>
                     <div id="sandbox-keys-oxxopay">
-                        <h4>Estas en modo sandbox</h4>
-                        <a class="btn btn-success change-sandbox" onclick="sandboxoxxopay()">Cambiar a proudccion</a>
+                        <h4>Estás en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxoxxopay()">Cambiar a producción</a>
                         <div class="form-group mt-2">
                             <label>Llave Privada (Sandbox)</label>
                             <input type="text" class="form-control" name="sandbox_private_key" 
@@ -471,21 +471,21 @@
                     <img src="{{ asset('assets/img/brands/conekta.png') }}" width="250" style="margin: 10px 0px;">
 
                        <div id="live-keys-conekta">
-                        <h4>Estas en modo produccion</h4>
+                        <h4>Estás en modo producción</h4>
                         <a class="btn btn-danger change-sandbox" onclick="sandboxconekta()">Cambiar a sandbox</a>
                         <div class="form-group mt-2">
-                            <label>Llave Privada (Produccion)</label>
+                            <label>Llave Privada (Producción)</label>
                             <input type="text" class="form-control" name="private_key" value="{{$conekta_method->private_key}}" />
                         </div>
 
                         <div class="form-group mt-2">
-                            <label>Llave Pública (Produccion)</label>
+                            <label>Llave Pública (Producción)</label>
                             <input type="text" class="form-control" name="public_key" value="{{$conekta_method->public_key}}" />
                         </div>
                     </div>
                     <div id="sandbox-keys-conekta">
-                        <h4>Estas en modo sandbox</h4>
-                        <a class="btn btn-success change-sandbox" onclick="sandboxconekta()">Cambiar a proudccion</a>
+                        <h4>Estás en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxconekta()">Cambiar a producción</a>
                         <div class="form-group mt-2">
                             <label>Llave Privada (Sandbox)</label>
                             <input type="text" class="form-control" name="sandbox_private_key" 
@@ -531,21 +531,21 @@
                 <div class="modal-body pd-25">
                     <img src="{{ asset('assets/img/brands/stripe.png') }}" width="250" style="margin: 10px 0px;">
                     <div id="live-keys-stripe">
-                        <h4>Estas en modo produccion</h4>
+                        <h4>Estás en modo producción</h4>
                         <a class="btn btn-danger change-sandbox" onclick="sandboxstripe()">Cambiar a sandbox</a>
                         <div class="form-group mt-2">
-                            <label>Llave Privada (Produccion)</label>
+                            <label>Llave Privada (Producción)</label>
                             <input type="text" class="form-control" name="private_key" value="{{ $stripe_method->private_key }}" />
                         </div>
 
                         <div class="form-group mt-2">
-                            <label>Llave Pública (Produccion)</label>
+                            <label>Llave Pública (Producción)</label>
                             <input type="text" class="form-control" name="public_key" value="{{ $stripe_method->public_key }}"/>
                         </div>
                     </div>
                     <div id="sandbox-keys-stripe">
-                        <h4>Estas en modo sandbox</h4>
-                        <a class="btn btn-success change-sandbox" onclick="sandboxstripe()">Cambiar a proudccion</a>
+                        <h4>Estás en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxstripe()">Cambiar a producción</a>
                         <div class="form-group mt-2">
                             <label>Llave Privada (Sandbox)</label>
                             <input type="text" class="form-control" name="sandbox_private_key" 
@@ -590,25 +590,25 @@
                     <img src="{{ asset('assets/img/brands/openpay.png') }}" width="250" style="margin: 10px 0px;">
 
                     <div id="live-keys-openpay">
-                        <h4>Estas en modo produccion</h4>
+                        <h4>Estás en modo producción</h4>
                         <a class="btn btn-danger change-sandbox" onclick="sandboxopenpay()">Cambiar a sandbox</a>
                         <div class="form-group mt-2">
-                            <label>Clave de Comerciante (Merchant ID)  (Produccion)</label>
+                            <label>Clave de Comerciante (Merchant ID)  (Producción)</label>
                             <input type="text" class="form-control" name="merchant_id" value="{{ $openpay_method->merchant_id}}" />
                         </div>
                         <div class="form-group mt-2">
-                            <label>Llave Privada (Produccion)</label>
+                            <label>Llave Privada (Producción)</label>
                             <input type="text" class="form-control" name="private_key" value="{{ $openpay_method->private_key}}" />
                         </div>
 
                         <div class="form-group mt-2">
-                            <label>Llave Pública (Produccion)</label>
+                            <label>Llave Pública (Producción)</label>
                             <input type="text" class="form-control" name="public_key" value="{{ $openpay_method->public_key}}" />
                         </div>
                     </div>
                     <div id="sandbox-keys-openpay">
-                        <h4>Estas en modo sandbox</h4>
-                        <a class="btn btn-success change-sandbox" onclick="sandboxopenpay()">Cambiar a proudccion</a>
+                        <h4>Estás en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxopenpay()">Cambiar a producción</a>
                         <div class="form-group mt-2">
                             <label>Clave de Comerciante (Merchant ID)  (Sandbox)</label>
                             <input type="text" class="form-control" name="sandbox_merchant_id" 

@@ -17,9 +17,12 @@ class CreateHeaderbandsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('text');
+            $table->string('button_text')->nullable();
             $table->string('band_link')->nullable();
             $table->string('priority')->nullable();
             $table->string('hex_text')->nullable();
+            $table->string('hex_button_back')->nullable();
+            $table->string('hex_button_text')->nullable();
             $table->string('hex_background')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();

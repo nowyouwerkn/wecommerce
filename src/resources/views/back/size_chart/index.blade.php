@@ -6,10 +6,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                 <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Guia de tallas</li>
+                <li class="breadcrumb-item active" aria-current="page">Guía de tallas</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Guia de tallas</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Guía de tallas</h4>
         </div>
 
         <div class="d-none d-md-block">
@@ -86,7 +86,7 @@
 
                             <div class="modal-body pd-25">
                                 <h4 class="text-warning">¡Atención!</h4>
-                                <p>Al eliminar esta guia de talla <em>({{ $size->name }})</em> se eliminarán tambien cualquier valores de talla que tenga.
+                                <p>Al eliminar esta guía de talla <em>({{ $size->name }})</em> se eliminarán tambien cualquier valores de talla que tenga.
 
                             </div>
                             <div class="modal-footer">
@@ -111,7 +111,7 @@
             <div class="card-body pb-0">
                 <h5 class="card-title display-4 mb-1">{{ $size->name }}</h5> 
                 @if($size->size_guide != NULL || 0)
-                <p class="card-text">Tallas en esta guia: <span class="badge badge-info">{{ $size->size_guide->count() }}</span></p>
+                <p class="card-text">Tallas en esta guía: <span class="badge badge-info">{{ $size->size_guide->count() }}</span></p>
                 @endif
             </div>
 
@@ -184,7 +184,7 @@
                 {{ method_field('PUT') }}
                     <div class="modal-body pd-25">
                         <div class="form-group mt-2">
-                            <label>Nombre de Guia de Talla</label>
+                            <label>Nombre de Guía de Talla</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{$size->name}}" />
                         </div>
 
@@ -229,7 +229,7 @@
             {{ csrf_field() }}
                 <div class="modal-body pd-25">
                     <div class="form-group mt-2">
-                        <label>Nombre de Guia de Talla</label>
+                        <label>Nombre de Guía de Talla</label>
                         <input type="text" class="form-control" id="name" name="name" />
                     </div>
 

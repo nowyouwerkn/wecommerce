@@ -112,18 +112,30 @@
                             <div id="editor-container-create" class="ht-350 mb-4"></div>
                         	<textarea id="justHtml_create" name="text" required="" style="display:none;"></textarea>
                         </div>
+                        <div class="form-group col-md-12">
+                            <label>Texto del botón<span class="text-danger">*</span></label>
+                            <div id="editor-container-button" class="ht-350 mb-4"></div>
+                            <textarea id="justHtml_button" name="button_text" required="" style="display:none;"></textarea>
+                        </div>
                         <div class="form-group col-md-6">
                             <label for="text_button">Color del texto<span class="text-danger">*</span></label>
                             <input type="color" class="form-control" name="hex_text" required="" />
                         </div>
-
-                      <div class="form-group col-md-6">
+                        <div class="form-group col-md-6">
+                            <label for="text_button">Color del texto del botón<span class="text-danger">*</span></label>
+                            <input type="color" class="form-control" name="hex_button_text" required="" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="text_button">Color del botón<span class="text-danger">*</span></label>
+                            <input type="color" class="form-control" name="hex_button_back" required="" />
+                        </div>
+                        <div class="form-group col-md-6">
                             <label for="text_button">Color del cintillo<span class="text-danger">*</span></label>
                             <input type="color" class="form-control" name="hex_background" required="" />
-                    </div>
+                        </div>
                         <div class="form-group col-md-6">
                             <label for="priority">Prioridad</label>
-                            <select name="priority">
+                            <select class="form-control" name="priority">
                               <option value="1">1</option>
                               <option value="2">2</option>
                               <option value="3">3</option>
@@ -206,7 +218,7 @@
                 [{ list: 'ordered' }, { list: 'bullet' }]
             ]
         },
-        placeholder: 'Comienza a escribir aqui...',
+        placeholder: 'Comienza a escribir aquí...',
         theme: 'snow'
     };
 
@@ -216,6 +228,28 @@
     editor_create.on('text-change', function() {
       var justHtml_create = editor_create.root.innerHTML;
       justHtmlContent_create.innerHTML = justHtml_create;
+    });
+</script>
+<script type="text/javascript">
+    var options_button = {
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic'],
+                ['link'],
+                [{ list: 'ordered' }, { list: 'bullet' }]
+            ]
+        },
+        placeholder: 'Comienza a escribir aquí...',
+        theme: 'snow'
+    };
+
+    var editor_button = new Quill('#editor-container-button', options_button);
+    var justHtmlContent_button = document.getElementById('justHtml_button');
+
+    editor_button.on('text-change', function() {
+      var justHtml_button = editor_button.root.innerHTML;
+      justHtmlContent_button.innerHTML = justHtml_button;
     });
 </script>
 @endpush

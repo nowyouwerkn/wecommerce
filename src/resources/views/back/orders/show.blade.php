@@ -381,7 +381,7 @@
                         </div>
                           <div class="row align-items-center">
                             <div class="col">
-                                <h6 class="mb-0 mt-0">Cupon usado:</h6>
+                                <h6 class="mb-0 mt-0">Cupón usado:</h6>
                             </div>
                             <div class="col text-right">
                                 <p class="mb-0" style="font-size: 1.3em;"><strong>{{ $order->coupon_id, 2 ?? 'N/A' }}</strong></p>

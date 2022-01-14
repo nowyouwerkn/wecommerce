@@ -66,7 +66,7 @@
 
             <div class="card-header card-body">
                 <h6 class="text-uppercase">Regiones</h6>
-                <p>Registra aqui cualquier impuesto adicional de acuerdo a una región dentro del país. (Estado, Comunidad, Etc.)</p>
+                <p>Registra aquí cualquier impuesto adicional de acuerdo a una región dentro del país. (Estado, Comunidad, etc..)</p>
 
                 @if(!empty($tax->regions))
                     @foreach($tax->regions as $region)
