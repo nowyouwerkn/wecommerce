@@ -39,10 +39,10 @@
 
             <ul>
                 <li>UPS (Cálculo de Envío Solo Estados Unidos)</li>
-                <li>FedEx <span class="badge badge-info">PROXIMAMENTE</span></li>
-                <li>Estafeta <span class="badge badge-info">PROXIMAMENTE</span></li>
-                <li>DHL <span class="badge badge-info">PROXIMAMENTE</span></li>
-                <li>Gearcom <span class="badge badge-info">PROXIMAMENTE</span></li>
+                <li>FedEx <span class="badge badge-info">PRÓXIMAMENTE</span></li>
+                <li>Estafeta <span class="badge badge-info">PRÓXIMAMENTE</span></li>
+                <li>DHL <span class="badge badge-info">PRÓXIMAMENTE</span></li>
+                <li>Gearcom <span class="badge badge-info">PRÓXIMAMENTE</span></li>
             </ul>
         </div>    
     </div>

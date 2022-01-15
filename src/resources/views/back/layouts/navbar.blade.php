@@ -101,7 +101,7 @@
                         <a href="{{ route('categories.index') }}">Colecciones</a>
                     </li>
                     <li>
-                        <a href="{{ route('size_chart.index') }}">Guia de tallas</a>
+                        <a href="{{ route('size_chart.index') }}">Guía de tallas</a>
                     </li>
                 </ul>
             </li>

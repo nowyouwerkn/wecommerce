@@ -153,7 +153,7 @@
             </div>
 
             <div class="card card-body mb-4">
-                <h3>Período de duración</h3>
+                <h3>Periodo de duración</h3>
 
                 <div class="row">
                     <div class="col">

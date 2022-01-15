@@ -112,16 +112,16 @@
                             <input type="color" class="form-control" name="hex_button" required="" />
                         </div>
                          <div class="form-group col-md-6">
-                            <label for="link">Color del texto en el boton</label>
+                            <label for="link">Color del texto en el botón</label>
                             <input type="color" class="form-control" name="hex_text_button" required="" />
                         </div>
 
                           <div class="form-group col-md-6">
-                            <label for="link">Color del texto del titulo</label>
+                            <label for="link">Color del texto del título</label>
                             <input type="color" class="form-control" name="hex_text_title" required="" />
                         </div>
                          <div class="form-group col-md-6">
-                            <label for="link">Color del texto del subtitulo</label>
+                            <label for="link">Color del texto del subtítulo</label>
                             <input type="color" class="form-control" name="hex_text_subtitle" required="" />
                         </div>
                            <div class="form-group col-md-6">

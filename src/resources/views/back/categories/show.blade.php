@@ -120,7 +120,7 @@
                                 <th>Precio</th>
                                 <th>Precio Descuento</th>
                                 <!--<th>Existencias</th>-->
-                                <th>Caracteristicas</th>
+                                <th>Características</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>

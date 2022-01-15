@@ -6,10 +6,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                 <li class="breadcrumb-item"><a href="#">wcommerce</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Configuracion de tienda</li>
+                <li class="breadcrumb-item active" aria-current="page">Configuración de tienda</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Configuracion de tienda</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Configuración de tienda</h4>
         </div>
         <div class="d-none d-md-block">
 
@@ -46,8 +46,8 @@
                 <h4 class="mb-0 ml-2">Regresar</h4>
             </div>
 
-            <h3>Configuracion de tienda</h3>
-            <p>Aqui puedes manejar las configuraciones de tu Tienda.</p>
+            <h3>Configuración de tienda</h3>
+            <p>Aquí puedes manejar las configuraciones de tu tienda.</p>
 
             
 
@@ -66,7 +66,7 @@
                         <p>Necesitamos unos datos para comenzar a configurar tu sistema.</p>
 
                         <div class="form-group">
-                            <label for="name">Nombre de tu Tienda <span class="text-danger">*</span></label>
+                            <label for="name">Nombre de tu tienda <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="store_name" value="{{$config->store_name}}" required="" placeholder="Tienda de Werkn" />
                         </div>
                         <hr>

@@ -41,8 +41,8 @@
                 </div>
 
                 <h3>Notificaciones</h3>
-                <p>Para comunicarte por medio de correo electrónico por medio de tu plataforma necesitas configurar los datos del servidor.</p>
-                <p>Las plantillas de correo son prediseñadas especialmente para mejorar la conversión y comunicación de tu marca con tus clientes.</p>
+                <p>Para comunicarte por correo electrónico por medio de tu plataforma necesitas configurar los datos del servidor.</p>
+                <p>Las plantillas de correo son prediseñadas especialmente para mejorar la conversión y comunicación de tu marca.</p>
 
                 <button type="submit" class="btn btn-primary btn-lg">Guardar Cambios <i class="far fa-save"></i></button>
             </div>

@@ -47,7 +47,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="page_title">Título general del Sitio</label>
+                                <label for="page_title">Título general del sitio</label>
                                 <input type="text" class="form-control" id="page_title" name="page_title" value="{{ $seo->page_title ?? '' }}"/>
                             </div>
                         </div>

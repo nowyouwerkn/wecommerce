@@ -39,7 +39,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Titulo</th>
+                            <th>Título</th>
                             <th>Texto</th>
                             <th>Link</th>
                             <th>Prioridad</th>

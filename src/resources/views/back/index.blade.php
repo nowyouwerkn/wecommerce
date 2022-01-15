@@ -303,7 +303,7 @@
     <div class="col-md-3">
         <div class="card">
             <div class="card-header">
-                <h6 class="mg-b-0">Status de ordenes</h6>
+                <h6 class="mg-b-0">Status de órdenes</h6>
             </div>
 
             <div class="card-body">
@@ -358,7 +358,7 @@
             </div>
 
             <div class="card-footer bd-t-0 pd-t-0">
-                <a href="{{ route('orders.index') }}" class="btn btn-sm btn-block btn-outline-primary btn-uppercase tx-spacing-1">Ir a ordenes</a>
+                <a href="{{ route('orders.index') }}" class="btn btn-sm btn-block btn-outline-primary btn-uppercase tx-spacing-1">Ir a órdenes</a>
             </div>
       </div>
     </div>

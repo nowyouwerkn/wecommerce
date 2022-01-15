@@ -41,7 +41,7 @@
 
             <h3>Preguntas frecuentes</h3>
             <p>Puedes crear tus propias preguntas frecuentes.</p>
-            <p>Tus preguntas seran guardadas y seran vinculadas a su propia pagina dentro de tu sitio</p>
+            <p>Tus preguntas serán guardadas y vinculadas a su propia página dentro de tu sitio.</p>
             <!--<p>Al usar estas plantillas, aceptas que has leído y aceptado el descargo de responsabilidad.</p>-->
         </div>
         
@@ -134,7 +134,7 @@
                 [{ list: 'ordered' }, { list: 'bullet' }]
             ]
         },
-        placeholder: 'Comienza a escribir aqui...',
+        placeholder: 'Comienza a escribir aquí...',
         theme: 'snow'
     };
 
@@ -158,7 +158,7 @@
                 [{ list: 'ordered' }, { list: 'bullet' }]
             ]
         },
-        placeholder: 'Comienza a escribir aqui...',
+        placeholder: 'Comienza a escribir aquí...',
         theme: 'snow'
     };
 

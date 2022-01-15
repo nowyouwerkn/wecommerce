@@ -58,7 +58,41 @@
         color: #fff;
     }
 </style>
+
 @endsection
+
+@push('stylesheets')
+<style type="text/css">
+    .hidden-form{
+        display: none;
+    }
+
+    .selector {
+        margin:  1rem;
+        border:  1px solid black;
+    }
+    .cube {
+        width: 100%;
+        height: 60px;
+        border: 1px solid grey;
+        margin: 0.5rem;
+        outline: 2px solid #333;
+        box-sizing: border-box;
+        appearance: none;
+        background: white;
+        border: 3px solid white;
+
+    }
+    .cube:checked {
+         background: #333;
+    }
+
+    .cube:hover {
+        background-color: grey;
+        cursor: pointer;
+    }
+</style>
+@endpush
 
 @section('title')
     <div class="d-sm-flex align-items-center justify-content-between mg-lg-b-30">
@@ -85,6 +119,13 @@
                     <hr>
                     
                     <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="style_type">Tipo de popup <span class="text-danger">*</span></label>
+                        <select id="style_type" name="style_type" class="form-control" onchange="showDiv('selector', this)">
+                            <option value="fixed">Fijo</option>
+                            <option value="floating">Flotante</option>
+                        </select>
+                    </div>
                         <div class="form-group col-md-6">
                             <label for="title">Título <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" required="" />
@@ -151,6 +192,42 @@
                             <label for="link">URL del botón <span class="text-info">(Opcional)</span></label>
                             <input type="url" class="form-control" id="link" name="link" value="{{ old('link') }}" />
                         </div>
+                        <div id="selector" class="form-group col-md-12 hidden-form">
+                            <label for="priority">Posición</label>
+                            <div class="row selector" name="priority">
+
+                                <div class="col-md-4">
+                                    <input type="radio" class="cube" name="position" value="top-left"> </input> 
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="cube" name="position" value="top-mid"> </input>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="cube" name="position" value="top-right"> </input>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <input type="radio" class="cube" name="position" value="mid-left"> </input> 
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="cube" name="position" value="mid-mid"> </input>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="cube" name="position" value="mid-right"> </input>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <input type="radio" class="cube" name="position" value="bottom-left"> </input> 
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="cube" name="position" value="bottom-mid"> </input>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="cube" name="position" value="bottom-right"> </input>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
 
 
@@ -186,8 +263,14 @@
 </form>
 
 @endsection
-
-
+@push('scripts')
+<script>
+    function showDiv(divId, element)
+    {
+        document.getElementById(divId).style.display = element.value == 'floating' ? 'block' : 'none';
+    }
+</script>
+@endpush
 @section('scripts')
 <script>
     $("#title").bind("keyup keydown change", function(){
@@ -201,6 +284,8 @@
     $("#text_button").bind("keyup keydown change", function(){
         $("#text_button_").html($("#text_button").val());
     });
+
+
 
     var loadFile = function(event) {
         var reader = new FileReader();
