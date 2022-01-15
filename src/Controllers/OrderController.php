@@ -162,11 +162,18 @@ class OrderController extends Controller
         ->with('orders', $orders);
     }
 
-    public function filter(Request $request)
+    public function filter($order , $filter)
     {
-        $filter = $request->filter;
-        $order = $request->order;
-        $orders = Order::orderBy($filter, $order)->paginate(30);
+
+        if ($filter == 'payment_total' && $order == 'desc') {
+            $orders = Order::orderByRaw('payment_total * 1 desc')->paginate(30);
+        }elseif($filter == 'payment_total'&& $order == 'asc'){
+            $orders = Order::orderByRaw('payment_total * 1 asc')->paginate(30);
+        }
+        else{
+            $orders = Order::orderBy($filter, $order)->paginate(30);
+        }
+        
         $clients = User::all();
 
          return view('wecommerce::back.orders.index')

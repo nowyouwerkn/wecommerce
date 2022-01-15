@@ -78,57 +78,30 @@
                                 <th>
                                     <div class="d-flex align-items-center">
                                         <span class="table-title">Usuario</span>
-
-                                        <form action="{{route('clients.filter')}}" method="POST">
-                                            {{ csrf_field() }}
-                                            <input type="hidden" name="filter" value="name">
-                                            <input type="hidden" name="order" value="asc">
-                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-up"></i></button>
-                                        </form>
-                                        <form action="{{route('clients.filter')}}" method="POST">
-                                            {{ csrf_field() }}
-                                            <input type="hidden" name="filter" value="name">
-                                            <input type="hidden" name="order" value="desc">
-                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-down"></i></button>
-                                        </form>
+                                        <a class="filter-btn" href="{{route('filter.clients', ['asc', 'name'])}}">
+                                        <i class="icon ion-md-arrow-up"></i></a>
+                                        <a class="filter-btn" href="{{route('filter.clients', ['desc', 'name'])}}">
+                                        <i class="icon ion-md-arrow-down"></i></a>
                                     </div>
                                 </th>
 
                                 <th>
                                     <div class="d-flex align-items-center">
                                         <span class="table-title">Fecha Registro</span>
-
-                                        <form action="{{route('clients.filter')}}" method="POST">
-                                            {{ csrf_field() }}
-                                            <input type="hidden" name="filter" value="created_at">
-                                            <input type="hidden" name="order" value="asc">
-                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-up"></i></button>
-                                        </form>
-                                        <form action="{{route('clients.filter')}}" method="POST">
-                                            {{ csrf_field() }}
-                                            <input type="hidden" name="filter" value="created_at">
-                                            <input type="hidden" name="order" value="desc">
-                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-down"></i></button>
-                                        </form>
+                                        <a class="filter-btn" href="{{route('filter.clients', ['asc', 'created_at'])}}">
+                                        <i class="icon ion-md-arrow-up"></i></a>
+                                        <a class="filter-btn" href="{{route('filter.clients', ['desc', 'created_at'])}}">
+                                        <i class="icon ion-md-arrow-down"></i></a>
                                     </div>
                                 </th>
 
                                 <th>
                                    <div class="d-flex align-items-center">
                                         <span class="table-title">Email</span>
-
-                                        <form action="{{route('clients.filter')}}" method="POST">
-                                            {{ csrf_field() }}
-                                            <input type="hidden" name="filter" value="email">
-                                            <input type="hidden" name="order" value="asc">
-                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-up"></i></button>
-                                        </form>
-                                        <form action="{{route('clients.filter')}}" method="POST">
-                                            {{ csrf_field() }}
-                                            <input type="hidden" name="filter" value="email">
-                                            <input type="hidden" name="order" value="desc">
-                                            <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-down"></i></button>
-                                        </form>
+                                        <a class="filter-btn" href="{{route('filter.clients', ['asc', 'email'])}}">
+                                        <i class="icon ion-md-arrow-up"></i></a>
+                                        <a class="filter-btn" href="{{route('filter.clients', ['desc', 'email'])}}">
+                                        <i class="icon ion-md-arrow-down"></i></a>
                                     </div>
                                 </th>
 
@@ -171,8 +144,9 @@
                             @endforeach
                         </tbody>
                     </table>
-
+                    <div class="d-flex align-items-center justify-content-center">
                     {{ $clients->links() }}
+                    </div>
                 </div>
             </div>
         </div>

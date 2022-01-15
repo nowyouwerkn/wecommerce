@@ -102,7 +102,6 @@ class FrontController extends Controller
 
         $products = Product::where('in_index', true)->where('status', 'Publicado')->with('category')->get()->take(6);
         $products_favorites = Product::where('in_index', true)->where('is_favorite', true)->where('status', 'Publicado')->with('category')->get()->take(6);
-
         return view('front.theme.' . $this->theme->get_name() . '.index')
         ->with('products', $products)
         ->with('products_favorites', $products_favorites)

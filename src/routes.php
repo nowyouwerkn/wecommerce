@@ -91,9 +91,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@search',
         'as' => 'products.query',
     ]);
-    Route::post('productsfilter', [
+    Route::get('productsfilter/{filter}/{order}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@filter',
-        'as' => 'products.filter',
+        'as' => 'filter.products',
     ]);
     Route::get('productspromotions', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@promotions',
@@ -146,9 +146,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'stocks.query',
     ]);
 
-    Route::post('stocks/filter', [
+    Route::get('stocks/filter/{filter}/{order}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@filter',
-        'as' => 'stocks.filter',
+        'as' => 'filter.stock',
     ]);
 
     Route::post('/variants/stock/{id}', [
@@ -174,9 +174,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('clients', Nowyouwerkn\WeCommerce\Controllers\ClientController::class); //
     Route::get('exportar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@export')->name('export.clients');
     Route::post('importar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@import')->name('import.clients');
-    Route::post('filter/clients', [
+    Route::get('filter/clients/{order}/{filter}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ClientController@filter',
-        'as' => 'clients.filter',
+        'as' => 'filter.clients',
     ]);
     Route::get('clientsquery', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ClientController@query',
@@ -206,9 +206,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'tracking.complete',
     ]);
 
-    Route::post('filter/orders', [
+    Route::get('filter/orders/{order}/{filter}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@filter',
-        'as' => 'orders.filter',
+        'as' => 'filter.orders',
     ]);
     Route::get('ordersquery', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@query',

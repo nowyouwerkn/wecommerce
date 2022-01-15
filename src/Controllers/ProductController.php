@@ -498,11 +498,30 @@ class ProductController extends Controller
         return view('wecommerce::back.products.index')->with('products', $products);
     }
 
-      public function filter(Request $request)
+      public function filter($order , $filter)
     {
-        $filter = $request->filter;
-        $order = $request->order;
-        $products = Product::orderBy($filter, $order)->paginate(15);
+
+        $products = Product::orderBy($filter, $order)->paginate(15); 
+        
+        if ($filter == 'sku' && $order == 'desc') {
+            $products = Product::orderByRaw('sku * 1 desc')->paginate(15);
+        }
+        if($filter == 'sku'&& $order == 'asc'){
+            $products = Product::orderByRaw('sku * 1 asc')->paginate(15);
+        }
+        if ($filter == 'price' && $order == 'desc') {
+            $products = Product::orderByRaw('price * 1 desc')->paginate(15);
+        }
+        if($filter == 'price'&& $order == 'asc'){
+            $products = Product::orderByRaw('price * 1 asc')->paginate(15);
+        }
+        if ($filter == 'discount_price' && $order == 'desc') {
+            $products = Product::orderByRaw('discount_price * 1 desc')->paginate(15);
+        }
+        if($filter == 'discount_price'&& $order == 'asc'){
+            $products = Product::orderByRaw('discount_price * 1 asc')->paginate(15);
+        }
+       
         return view('wecommerce::back.products.index')->with('products', $products);
 
     }

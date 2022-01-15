@@ -5,91 +5,47 @@
             <th> 
                 <div class="d-flex align-items-center">
                     <span class="table-title">Nombre</span>
-
-                    <form action="{{route('products.filter')}}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="filter" value="name">
-                        <input type="hidden" name="order" value="asc">
-                        <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-up"></i></button>
-                    </form>
-                    <form action="{{route('products.filter')}}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="filter" value="name">
-                        <input type="hidden" name="order" value="desc">
-                        <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-down"></i></button>
-                    </form>
+                    <a class="filter-btn" href="{{route('filter.products', ['asc', 'name'])}}">
+                    <i class="icon ion-md-arrow-up"></i></a>
+                    <a class="filter-btn" href="{{route('filter.products', ['desc', 'name'])}}">
+                    <i class="icon ion-md-arrow-down"></i></a>
                 </div>
              </th>
             <th style="min-width:130px;">          
                 <div class="d-flex align-items-center">
                     <span class="table-title">SKU / UPC</span>
-                    
-                    <form action="{{route('products.filter')}}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="filter" value="sku">
-                        <input type="hidden" name="order" value="asc">
-                        <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-up"></i></button>
-                    </form>
-                    <form action="{{route('products.filter')}}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="filter" value="sku">
-                        <input type="hidden" name="order" value="desc">
-                        <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-down"></i></button>
-                    </form>
+                    <a class="filter-btn" href="{{route('filter.products', ['asc', 'sku'])}}">
+                    <i class="icon ion-md-arrow-up"></i></a>
+                    <a class="filter-btn" href="{{route('filter.products', ['desc', 'sku'])}}">
+                    <i class="icon ion-md-arrow-down"></i></a>
                 </div>
             </th>
             <th>          
                 <div class="d-flex align-items-center">
                     <span class="table-title">Precio</span>
-
-                    <form action="{{route('products.filter')}}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="filter" value="price">
-                        <input type="hidden" name="order" value="asc">
-                        <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-up"></i></button>
-                    </form>
-                    <form action="{{route('products.filter')}}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="filter" value="price">
-                        <input type="hidden" name="order" value="desc">
-                        <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-down"></i></button>
-                    </form>
+                    <a class="filter-btn" href="{{route('filter.products', ['asc', 'price'])}}">
+                    <i class="icon ion-md-arrow-up"></i></a>
+                    <a class="filter-btn" href="{{route('filter.products', ['desc', 'price'])}}">
+                    <i class="icon ion-md-arrow-down"></i></a>
                 </div>
             </th>
             <th>        
                 <div class="d-flex align-items-center">
                     <span class="table-title">Descuento</span>
-
-                    <form action="{{route('products.filter')}}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="filter" value="discount_price">
-                        <input type="hidden" name="order" value="asc">
-                        <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-up"></i></button>
-                    </form>
-                    <form action="{{route('products.filter')}}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="filter" value="discount_price">
-                        <input type="hidden" name="order" value="desc">
-                        <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-down"></i></button>
-                    </form>
+                    <a class="filter-btn" href="{{route('filter.products', ['asc', 'discount_price'])}}">
+                    <i class="icon ion-md-arrow-up"></i></a>
+                    <a class="filter-btn" href="{{route('filter.products', ['desc', 'discount_price'])}}">
+                    <i class="icon ion-md-arrow-down"></i></a>
                 </div>
             </th>
             <th>Características</th>
             <th>        
                 <div class="d-flex align-items-center">
                     <span class="table-title">Estado</span>
-                    <form action="{{route('products.filter')}}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="filter" value="status">
-                        <input type="hidden" name="order" value="desc">
-                        <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-up"></i></button>
-                    </form>
-                    <form action="{{route('products.filter')}}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="filter" value="status">
-                        <input type="hidden" name="order" value="asc">
-                        <button class="filter-btn" type="submit"><i class="icon ion-md-arrow-down"></i></button>
-                    </form>
+                    <a class="filter-btn" href="{{route('filter.products', ['asc', 'status'])}}">
+                    <i class="icon ion-md-arrow-up"></i></a>
+                    <a class="filter-btn" href="{{route('filter.products', ['desc', 'status'])}}">
+                    <i class="icon ion-md-arrow-down"></i></a>
                 </div>
             </th>
             <th>Acciones</th>
