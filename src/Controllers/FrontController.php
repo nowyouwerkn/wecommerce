@@ -639,27 +639,27 @@ class FrontController extends Controller
         if (empty($mercado_payment)) {
             $preference = NULL;
         }else{
-            if ($mercado_payment->sandbox_mode == '1') {
+            if ($mercado_payment->sandbox_mode == true) {
                 $private_key_mercadopago = $mercado_payment->sandbox_private_key;
-            }elseif ($mercado_payment->sandbox_mode == '0') {
+            }else{
                 $private_key_mercadopago = $mercado_payment->private_key;
             }
             MercadoPago\SDK::setAccessToken($private_key_mercadopago);
 
-            // Create a Item to Pay
+            // Crear el elemento a pagar
             $item = new MercadoPago\Item();
-            $item->title = 'Tu compra en linea';
+            $item->title = 'Tu compra desde tu tienda en linea';
             $item->quantity = 1;
             $item->unit_price = $total;
 
-            // Create Payer
+            // Crear el perfil del comprador
             if (!empty(Auth::user())) {
                 $payer = new MercadoPago\Payer();  
                 $payer->name = Auth::user()->name;  
                 $payer->email = Auth::user()->email;  
             }
 
-            // Create Preference
+            // Crear la preferencia de pago
             $preference = new MercadoPago\Preference();
             $preference->items = array($item);
             if (!empty(Auth::user())) {
@@ -669,21 +669,21 @@ class FrontController extends Controller
             $preference->back_urls = array(
                 "success" => route('purchase.complete'),
                 "failure" => route('checkout'),
-                
             );
             $preference->external_reference = "mp_".Str::random(30);
+            $preference->notification_url = route('webhook.order.mercadopago'),
 
             $mercadopago_oxxo = array ("id" => $mercado_payment->mercadopago_oxxo);
             $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_paypal);
 
             $preference->payment_methods = array(
                 "excluded_payment_methods" => array(
-                $mercadopago_paypal,
-                $mercadopago_oxxo
-              ),
-              "excluded_payment_types" => array(
-                array("id" => "ticket", "id" => "atm")
-              ),
+                    $mercadopago_paypal,
+                    $mercadopago_oxxo
+                ),
+                "excluded_payment_types" => array(
+                    array("id" => "ticket", "id" => "atm")
+                ),
             );
 
             $preference->auto_return = "approved";
