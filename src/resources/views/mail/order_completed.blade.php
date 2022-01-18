@@ -2,7 +2,11 @@
 	$user = Nowyouwerkn\WeCommerce\Models\User::where('id', $user_id)->first();
 	$order = Nowyouwerkn\WeCommerce\Models\Order::where('id', $order_id)->first();
 	$order->cart = unserialize($order->cart);
-	$shipping_option = Nowyouwerkn\WeCommerce\Models\Shipping_options::where('id', $shipping_id)->first();
+
+	@if($shipping_id != 0)
+		$shipping_option = Nowyouwerkn\WeCommerce\Models\ShippingOptions::where('id', $shipping_id)->first();
+	@endif
+
 	$legals = Nowyouwerkn\WeCommerce\Models\LegalText::all();
 @endphp
 
@@ -79,8 +83,8 @@
 					<td style="width: 50%; vertical-align: top;">
 						<p style="margin-bottom:10px;"><strong>Método de envío</strong></p>
 						<p style="margin-top:5px;">{{ $shipping_option->name }}<br>
-							<small>Con un tiempo estimado de entrega de: {{ $shipping_option->delivery_time }}</small><br>
-							<small>Se te enviará un correo con tu guía de seguimiento</small></p>
+						<small>Con un tiempo estimado de entrega de: {{ $shipping_option->delivery_time }}</small><br>
+						<small>Se te enviará un correo con tu guía de seguimiento</small></p>
 					</td>
 					@endif
 				</tr>

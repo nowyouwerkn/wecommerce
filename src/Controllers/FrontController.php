@@ -1337,6 +1337,13 @@ class FrontController extends Controller
         $store_name = $config->store_name;
         $contact_email = $config->contact_email;
         $logo = asset('themes/' . $this->theme->get_name() . '/img/logo.svg');
+
+        if (isset($request->shipping_option)) {
+            $shipping_id = $request->shipping_option;
+        }else{
+            $shipping_id = 0;
+        }
+        
         //$logo = asset('assets/img/logo-store.jpg');
 
         config(['mail.driver'=> $mail->mail_driver]);
@@ -1346,7 +1353,8 @@ class FrontController extends Controller
         config(['mail.password'=>$mail->mail_password]);
         config(['mail.encryption'=>$mail->mail_encryption]);
 
-        $data = array('order_id' => $order->id, 'user_id' => $user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at, 'shipping_id' => $request->shipping_option);
+
+        $data = array('order_id' => $order->id, 'user_id' => $user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at, 'shipping_id' => $shipping_id);
 
         try {
             Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email, $sender_email, $store_name) {
