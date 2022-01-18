@@ -671,7 +671,7 @@ class FrontController extends Controller
                 "failure" => route('checkout'),
             );
             $preference->external_reference = "mp_".Str::random(30);
-            $preference->notification_url = route('webhook.order.mercadopago'),
+            $preference->notification_url = route('webhook.order.mercadopago');
 
             $mercadopago_oxxo = array ("id" => $mercado_payment->mercadopago_oxxo);
             $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_paypal);
@@ -1352,7 +1352,6 @@ class FrontController extends Controller
         config(['mail.username'=>$mail->mail_username]);
         config(['mail.password'=>$mail->mail_password]);
         config(['mail.encryption'=>$mail->mail_encryption]);
-
 
         $data = array('order_id' => $order->id, 'user_id' => $user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at, 'shipping_id' => $shipping_id);
 
