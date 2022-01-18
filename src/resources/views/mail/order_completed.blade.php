@@ -3,9 +3,9 @@
 	$order = Nowyouwerkn\WeCommerce\Models\Order::where('id', $order_id)->first();
 	$order->cart = unserialize($order->cart);
 
-	@if($shipping_id != 0)
+	if($shipping_id != 0){
 		$shipping_option = Nowyouwerkn\WeCommerce\Models\ShippingOptions::where('id', $shipping_id)->first();
-	@endif
+	}
 
 	$legals = Nowyouwerkn\WeCommerce\Models\LegalText::all();
 @endphp
