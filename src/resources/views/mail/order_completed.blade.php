@@ -2,7 +2,7 @@
 	$user = Nowyouwerkn\WeCommerce\Models\User::where('id', $user_id)->first();
 	$order = Nowyouwerkn\WeCommerce\Models\Order::where('id', $order_id)->first();
 	$order->cart = unserialize($order->cart);
-	$shipping_option = Nowyouwerkn\WeCommerce\Models\Shipping_options::where('id', $shipping_id)->first();
+	$shipping_option = Nowyouwerkn\WeCommerce\Models\ShipmentOption::where('id', $shipping_id)->first();
 	$legals = Nowyouwerkn\WeCommerce\Models\LegalText::all();
 @endphp
 

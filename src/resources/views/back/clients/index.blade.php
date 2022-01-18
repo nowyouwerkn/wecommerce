@@ -16,7 +16,9 @@
             <input type="search"  name="query" class="form-control" style="height: calc(1.5em + 0.9375rem - 2px);" placeholder="Buscar por nombre o email...">
             <button class="btn" type="submit"><i class="fas fa-search"></i></button>
         </form>
-
+        <a href="javascript:void(0)"  data-toggle="modal" data-target="#modalUserRules" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5 mr-1">
+             Reglas especiales
+        </a>
         <a href="{{ route('export.clients') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
             <i class="fas fa-file-export"></i> Exportar
         </a>
@@ -208,6 +210,72 @@
                     <button type="submit" class="btn btn-primary">Guardar Información</button>
                 </div>
             </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<div id="modalUserRules" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Editar reglas de usuarios</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <h4 class="p-1">Crear nueva regla especial para usuarios</h4>
+            <form method="POST" action="{{ route('user-rules.store' ) }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+                <div class="modal-body pd-25">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label>Tipo de promocion</label>
+                                <input type="text" class="form-control" name="type" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label>Valor de promocion</label>
+                                <input type="text" class="form-control" name="delivery_time" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-control custom-checkbox mb-3">
+                        <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" value="1" checked>
+                        <label class="custom-control-label" for="is_active"> Activado</label>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+            <hr>
+            <h4 class="p-1">Actualizar reglas existentes</h4>
+            @foreach($user_rules as $rule)
+                <div class="modal-body pd-25">
+                    <div class="row">
+            <form method="POST" action="{{ route('user-rules.update', $rule->id ) }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+            {{ method_field('PUT') }}
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{$rule->type}}</label>
+                                <div class="custom-control custom-checkbox mb-3">
+                                <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" value="1" {{  ($rule->is_active == 1 ? ' checked' : '') }}>
+                                <label class="custom-control-label" for="is_active"> Activado</label>
+                            </div>
+                            </div>
+                        </div>
+                    <button type="submit" class="btn btn-primary">Actualizar regla</button>
+            </form>
+            @endforeach
+                </div>
+            </div>
         </div>
     </div><!-- modal-dialog -->
 </div><!-- modal -->

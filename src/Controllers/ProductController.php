@@ -198,11 +198,6 @@ class ProductController extends Controller
 
     public function storeImage(Request $request)
     {
-        //Validar
-        $this -> validate($request, array(
-            'description' => 'nullable',
-        ));
-
         if ($request->hasFile('model_image')) {
 
             $product = Product::find($request->product_id);
@@ -224,6 +219,7 @@ class ProductController extends Controller
 
             $var_imagen->description = $request->description;
             $var_imagen->product_id = $request->product_id;
+            $var_imagen->priority = $request->priority;
 
             // Esto se logra gracias a la libreria de imagen Intervention de Laravel
             $imagen = $request->file('image');
@@ -244,11 +240,25 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
+       public function updateImage(Request $request)
+    {
+
+        $var_imagen = ProductImage::find($request->id);
+        $var_imagen->priority = $request->priority;
+        $var_imagen->description = $request->description;
+
+        $var_imagen->save();
+
+        Session::flash('success', 'La imagen fue actualizada exitosamente');
+
+
+        return redirect()->back();
+    }
+
     public function destroyImage($id)
     {
         $var_imagen = ProductImage::find($id);
         $var_imagen->delete();
-
         Session::flash('success', 'La imagen fue borrada exitosamente');
 
 

@@ -60,9 +60,9 @@ use Nowyouwerkn\WeCommerce\Models\StoreTax;
 use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethodRule;
-use Nowyouwerkn\WeCommerce\Models\Shipping_options;
-use Nowyouwerkn\WeCommerce\Models\Size_chart;
-use Nowyouwerkn\WeCommerce\Models\Size_guide;
+use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
+use Nowyouwerkn\WeCommerce\Models\SizeChart;
+use Nowyouwerkn\WeCommerce\Models\SizeGuide;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
@@ -262,7 +262,7 @@ class FrontController extends Controller
         }
 
         $current_date_time = Carbon::now()->toDateTimeString();
-        $size_charts = Size_chart::where('category_id', $catalog->id)->get();
+        $size_charts = SizeChart::where('category_id', $catalog->id)->get();
         $categories = Category::all();
 
         $store_config = $this->store_config;
@@ -481,7 +481,7 @@ class FrontController extends Controller
 
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $store_shipping = ShipmentMethod::where('is_active', true)->first();
-        $shipment_options = Shipping_options::where('is_active', true)->get();
+        $shipment_options = ShipmentOption::where('is_active', true)->get();
 
         if (empty($store_tax)) {
             $tax_rate = 0;
@@ -2051,7 +2051,7 @@ class FrontController extends Controller
 
         if (!empty($request->preference_id)) {
             $order = Order::where('payment_id', $request->preference_id)->first();
-            $shipping_option_selected = Shipping_options::where('id', $order->shipping_option)->first();
+            $shipping_option_selected = ShipmentOption::where('id', $order->shipping_option)->first();
             $order->status = 'Pagado';
 
             $order->save();

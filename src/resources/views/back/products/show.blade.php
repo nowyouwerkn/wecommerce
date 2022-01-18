@@ -71,6 +71,27 @@
         font-size: .8em;
         padding: 1px 3px;
     }
+
+    .update {
+        color: green;
+        background: none;
+        border:  1px solid green;
+        text-align: center;
+    }
+
+    .priority-badge {
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        background-color: grey;
+        color: white;
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding: 0.5rem;
+        width: 30px;
+        border-radius: 30px;
+    }
 </style>
 @endpush
 
@@ -191,11 +212,22 @@
 
                 <!-- Form -->
                 <div class="card-body row">
-                    <div class="col-md-4">
-                        <div class="thumbnail-wrap">
-                            <a href="javascript:void(0)" data-target="#modalChangeImage" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imágen"><i class="fas fa-edit" aria-hidden="true"></i></a>
-                            <img class="img-fluid mb-4" src="{{ asset('img/products/' . $product->image ) }}">
+                    <div class="col-md-12">
+                        <div class="thumbnail-wrap row">
+                            <div class="col-12 justify-content-center">
+                                <h5>Imagen principal</h5>
+                            </div>
+                            <div class="col-4"></div>
+                            <div class="col-4">
+                                <a href="javascript:void(0)" data-target="#modalChangeImage" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imágen"><i class="fas fa-edit" aria-hidden="true"></i></a>
+                                <img  class="img-fluid mb-4" src="{{ asset('img/products/' . $product->image ) }}">
+                            </div>
+
                         </div>
+                    </div>
+
+                    <div class="col-12">
+                        <h5>Imagenes extras</h5>
                     </div>
                     @foreach($product->images as $image)
                         <div class="col-md-4">
@@ -221,80 +253,14 @@
                                 
                                 
                                 <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}">
+                                <p class="priority-badge" >{{$image->priority}}</p>
+                                <a style="right: 30px;" href="javascript:void(0)" data-target="#modalEditImage_{{$image->id}}" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imágen"><i class="fas fa-edit" aria-hidden="true"></i></a>
                             </div>
-                            <p>{{ $image->descripcion }}</p>
                         </div>
                     @endforeach
 
                     <div class="col-md-4">
                         <a href="javascript:void(0)" data-target="#modalNewImage" data-toggle="modal" class="image-btn"><span class="fas fa-plus"></span> Agregar más imágenes</a>
-                    </div>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="modalChangeImage" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="modalCreateLabel">Cambiar Imágen de Modelo</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                <form method="POST" action="{{ route('image.store') }}" enctype="multipart/form-data">
-                                    {{ csrf_field() }}
-
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                                    <div class="form-group">
-                                        <label for="model_image">Imagen de Modelo</label>
-                                        <input type="file" name="model_image" class="form-control">
-                                    </div>
-
-                                    <div class="text-right">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
-                                        <button type="submit" class="btn btn-success">Guardar Imagen</button>
-                                    </div>
-                                </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="modalNewImage" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="modalCreateLabel">Nueva Imágen</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                <form method="POST" action="{{ route('image.store') }}" enctype="multipart/form-data">
-                                    {{ csrf_field() }}
-
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                                    <div class="form-group">
-                                        <label for="image">Imagen</label>
-                                        <input type="file" name="image" class="form-control">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label" for="description">Descripción</label>
-                                        <textarea class="form-control" name="description" rows="5"></textarea>
-                                    </div>
-
-                                    <div class="text-right">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
-                                        <button type="submit" class="btn btn-success">Guardar Imagen</button>
-                                    </div>
-                                </form>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -476,8 +442,7 @@
             @if($product->has_variants == true)
                 @include('wecommerce::back.products.partials._variant_card')
             @endif
-                                      @php
-
+            @php
                 $notifications = Nowyouwerkn\WeCommerce\Models\Notification::with('user')->orderBy('created_at', 'desc')->where('type', 'Producto')->where('model_id', $product->id)->get();
             @endphp
 
@@ -681,6 +646,145 @@
         <!-- Button -->
     </div>
 </form>
+
+<!-- Modal -->
+<div class="modal fade" id="modalNewImage" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalCreateLabel">Nueva Imágen</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <form method="POST" action="{{ route('image.store') }}" enctype="multipart/form-data">
+                {{ csrf_field() }}
+
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                <div class="form-group">
+                    <label for="image">Imagen <span class="text-danger">*</span></label>
+                    <input type="file" name="image" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="description">Descripción <span class="text-info tx-12">(Opcional)</span></label>
+                    <textarea class="form-control" name="description" rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="description">Prioridad </label><span class="text-danger">*</span>
+                    <select class="form-control" name="priority">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+
+                <div class="text-right">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Imagen</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalChangeImage" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalCreateLabel">Cambiar Imágen de Modelo</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <form method="POST" action="{{ route('image.store') }}" enctype="multipart/form-data">
+                {{ csrf_field() }}
+
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                <div class="form-group">
+                    <label for="model_image">Imagen de Modelo</label>
+                    <input type="file" name="model_image" class="form-control">
+                </div>
+
+                <div class="text-right">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Imagen</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@foreach($product->images as $image)
+<div class="modal fade" id="modalEditImage_{{$image->id}}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalCreateLabel">Editar prioridad y descripción</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <form method="POST" action="{{ route('image.update') }}" enctype="multipart/form-data">
+                {{ csrf_field() }}
+
+                <input type="hidden" name="id" value="{{ $image->id }}">
+
+                <div class="form-group">
+                    <label class="control-label" for="description">Descripción <span class="text-info tx-12">(Opcional)</span></label>
+                    <textarea class="form-control" name="description" rows="5">{{$image->description}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="description">Prioridad</label><span class="text-danger">*</span>
+                    <select class="form-control" name="priority">
+                        <option {{ ($image->priority == '1') ? 'selected' : '' }} value="1">1</option>
+                        <option {{ ($image->priority == '2') ? 'selected' : '' }} value="2">2</option>
+                        <option {{ ($image->priority == '3') ? 'selected' : '' }} value="3">3</option>
+                        <option {{ ($image->priority == '4') ? 'selected' : '' }} value="4">4</option>
+                        <option {{ ($image->priority == '5') ? 'selected' : '' }} value="5">5</option>
+                        <option {{ ($image->priority == '6') ? 'selected' : '' }} value="6">6</option>
+                        <option {{ ($image->priority == '7') ? 'selected' : '' }} value="7">7</option>
+                        <option {{ ($image->priority == '8') ? 'selected' : '' }} value="8">8</option>
+                        <option {{ ($image->priority == '9') ? 'selected' : '' }} value="9">9</option>
+                        <option {{ ($image->priority == '10') ? 'selected' : '' }} value="10">10</option>
+                        <option {{ ($image->priority == '11') ? 'selected' : '' }} value="11">11</option>
+                        <option {{ ($image->priority == '12') ? 'selected' : '' }} value="12">12</option>
+                        <option {{ ($image->priority == '13') ? 'selected' : '' }} value="13">13</option>
+                        <option {{ ($image->priority == '14') ? 'selected' : '' }} value="14">14</option>
+                        <option {{ ($image->priority == '15') ? 'selected' : '' }} value="15">15</option>
+                    </select>
+                </div>
+
+                <div class="text-right">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Imagen</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection
 
 @push('scripts')

@@ -5,8 +5,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Nowyouwerkn\WeCommerce\Models\Category;
-use Nowyouwerkn\WeCommerce\Models\Size_chart;
-use Nowyouwerkn\WeCommerce\Models\Size_guide;
+use Nowyouwerkn\WeCommerce\Models\SizeChart;
+use Nowyouwerkn\WeCommerce\Models\SizeGuide;
 
 class SizeGuideController extends Controller
 {
@@ -17,7 +17,7 @@ class SizeGuideController extends Controller
      */
     public function index()
     {
-        $size_guide = Size_guide::get();
+        $size_guide = SizeGuide::get();
         $categories = Category::all();
         return view('wecommerce::back.size_guide.index')->with('size_guide', $size_guide)->with('categories', $categories);
     }
@@ -40,14 +40,14 @@ class SizeGuideController extends Controller
      */
     public function store(Request $request)
     {
-        $size_guide = new Size_guide;
+        $size_guide = new SizeGuide;
 
         $size_guide->name = $request->name;
         $size_guide->size_value = $request->size_value;
         $size_guide->size_chart_id = $request->size_chart_id;
         $size_guide->save();
-        $size_chart = Size_chart::find($request->size_chart_id);
-         $size_guide = Size_guide::where('size_chart_id', $request->size_chart_id);
+        $size_chart = SizeChart::find($request->size_chart_id);
+         $size_guide = SizeGuide::where('size_chart_id', $request->size_chart_id);
          $categories = Category::all();
         return view('wecommerce::back.size_chart.edit')->with('size_chart', $size_chart)->with('size_guide', $size_guide)->with('categories', $categories);
     }
@@ -83,7 +83,7 @@ class SizeGuideController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $size_guide = Size_guide::find($id);
+        $size_guide = SizeGuide::find($id);
         $size_guide->name = $request->name;
         $size_guide->size_value = $request->size_value;
         $size_guide->size_chart_id = $request->size_chart_id;

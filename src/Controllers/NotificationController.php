@@ -16,6 +16,7 @@ use Session;
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\Order;
 use Nowyouwerkn\WeCommerce\Models\MailConfig;
+use Nowyouwerkn\WeCommerce\Models\MailTheme;
 use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 use Nowyouwerkn\WeCommerce\Models\StoreTheme;
 use Nowyouwerkn\WeCommerce\Models\Notification;
@@ -30,8 +31,9 @@ class NotificationController extends Controller
     public function index()
     {
         $mail = MailConfig::take(1)->first();
+        $template = MailTheme::take(1)->first();
 
-        return view('wecommerce::back.notifications.index', compact('mail'));
+        return view('wecommerce::back.notifications.index')->with('mail', $mail)->with('template', $template);
     }
 
     public function all()

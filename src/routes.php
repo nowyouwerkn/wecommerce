@@ -113,6 +113,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'image.store',
     ]);
 
+    Route::post('products/update-image', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@updateImage',
+        'as' => 'image.update',
+    ]);
+
     Route::delete('products/delete-image/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@destroyImage',
         'as' => 'image.destroy',
@@ -171,7 +176,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'stock.destroy',
     ]);
 
-    Route::resource('clients', Nowyouwerkn\WeCommerce\Controllers\ClientController::class); //
+    Route::resource('clients', Nowyouwerkn\WeCommerce\Controllers\ClientController::class);
+    Route::resource('user-rules', Nowyouwerkn\WeCommerce\Controllers\UserRuleController::class);  //
     Route::get('exportar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@export')->name('export.clients');
     Route::post('importar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@import')->name('import.clients');
     Route::get('filter/clients/{order}/{filter}', [
@@ -239,6 +245,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::get('user/config', 'Nowyouwerkn\WeCommerce\Controllers\UserController@config')->name('user.config');  //
     Route::get('user/help', 'Nowyouwerkn\WeCommerce\Controllers\UserController@help')->name('user.help');  //
 
+    Route::resource('template', Nowyouwerkn\WeCommerce\Controllers\MailThemeController::class); //
     Route::resource('mail', Nowyouwerkn\WeCommerce\Controllers\MailController::class)->except(['show, create, index']);
     Route::resource('notifications', Nowyouwerkn\WeCommerce\Controllers\NotificationController::class)->except(['show']); //
 
