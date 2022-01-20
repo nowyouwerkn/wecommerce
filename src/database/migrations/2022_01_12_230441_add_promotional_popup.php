@@ -14,7 +14,7 @@ class AddPromotionalPopup extends Migration
     public function up()
     {
         Schema::table('popups', function (Blueprint $table) {
-            $table->string('position')->nullable();
+            $table->string('position')->after('show_on_enter')->nullable();
         });
     }
 

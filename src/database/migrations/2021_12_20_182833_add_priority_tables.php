@@ -14,20 +14,20 @@ class AddPriorityTables extends Migration
     public function up()
     {
          Schema::table('categories', function (Blueprint $table) {
-            $table->string('priority')->nullable();
+            $table->string('priority')->after('image')->nullable();
             });
          Schema::table('banners', function (Blueprint $table) {
-            $table->string('priority')->nullable();
+            $table->string('priority')->after('link')->nullable();
             });
          Schema::table('legal_texts', function (Blueprint $table) {
-            $table->string('priority')->nullable();
+            $table->string('priority')->after('description')->nullable();
             });
          Schema::table('user_addresses', function (Blueprint $table) {
-            $table->string('references')->nullable();
-            $table->boolean('is_billing')->nullable();
+            $table->string('references')->after('between_streets')->nullable();
+            $table->boolean('is_billing')->after('references')->nullable();
             });
           Schema::table('orders', function (Blueprint $table) {
-            $table->string('billing_shipping_id')->nullable();
+            $table->string('billing_shipping_id')->after('action_by')->after('shipping_option')->nullable();
             });
     }
 
