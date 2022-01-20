@@ -73,7 +73,7 @@ class ShippingOptionsController extends Controller
         ));
 
         // Guardar datos en la base de datos
-        $shipping = Shipping_options::find($id);
+        $shipping = ShipmentOption::find($id);
         $shipping->name = $request->name;
         $shipping->delivery_time = $request->delivery_time;
         $shipping->is_active = $request->is_active;
@@ -92,7 +92,7 @@ class ShippingOptionsController extends Controller
 
     public function destroy($id)
     {
-          $shipping = Shipping_options::find($id);
+          $shipping = ShipmentOption::find($id);
 
         $shipping->delete();
 
