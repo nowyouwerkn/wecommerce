@@ -25,6 +25,9 @@ class AddRatingReview extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('reviews', function (Blueprint $table) {
+            $table->dropColumn('rating');
+
+        });
     }
 }

@@ -25,6 +25,8 @@ class AddPromotionalPopup extends Migration
      */
     public function down()
     {
-       
+       Schema::table('popups', function (Blueprint $table) {
+            $table->dropColumn('position');
+        });
     }
 }

@@ -25,6 +25,8 @@ class AddPriorityProductImages extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('product_images', function (Blueprint $table) {
+            $table->dropColumn('priority');
+        });
     }
 }

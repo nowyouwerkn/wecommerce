@@ -30,6 +30,13 @@ class UpdateBannerTableFeatures extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('banners', function (Blueprint $table) {
+            $table->dropColumn('video_background');
+            $table->dropColumn('hex_text_title');
+            $table->dropColumn('hex_text_subtitle');
+            $table->dropColumn('hex_button');
+            $table->dropColumn('hex_text_button');
+            $table->dropColumn('position');
+        });
     }
 }

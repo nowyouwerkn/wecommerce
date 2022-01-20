@@ -38,6 +38,21 @@ class AddPriorityTables extends Migration
      */
     public function down()
     {
-        //
+      Schema::table('categories', function (Blueprint $table) {
+            $table->dropColumn('priority');
+        });
+      Schema::table('banners', function (Blueprint $table) {
+            $table->dropColumn('priority');
+        });
+      Schema::table('legal_texts', function (Blueprint $table) {
+            $table->dropColumn('priority');
+        });
+      Schema::table('user_addresses', function (Blueprint $table) {
+            $table->dropColumn('references');
+            $table->dropColumn('is_billing');
+        });
+      Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('billing_shipping_id');
+        });
     }
 }

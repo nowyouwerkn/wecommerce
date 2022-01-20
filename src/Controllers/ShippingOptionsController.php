@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Session;
 use Auth;
 
-use Nowyouwerkn\WeCommerce\Models\Shipping_options;
+use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
 use Illuminate\Http\Request;
 
 class ShippingOptionsController extends Controller
@@ -35,7 +35,7 @@ class ShippingOptionsController extends Controller
         ));
 
         // Guardar datos en la base de datos
-        $shipping = new Shipping_options;
+        $shipping = new ShipmentOption;
 
         $shipping->name = $request->name;
         $shipping->delivery_time = $request->delivery_time;

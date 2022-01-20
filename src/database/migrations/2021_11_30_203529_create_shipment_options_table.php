@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateShippingOptionsTable extends Migration
+class CreateShipmentOptionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -32,6 +32,6 @@ class CreateShippingOptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shipping_options');
+        Schema::dropIfExists('shipment_options');
     }
 }
