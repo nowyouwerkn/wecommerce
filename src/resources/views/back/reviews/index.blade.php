@@ -30,6 +30,7 @@
                     <th>Usuario</th>
                     <th>Producto</th>
                     <th>Reseña</th>
+                    <th>Calificación</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -41,6 +42,52 @@
                 <td>{{ $rp->name }} <br> {{ $rp->email }}</td>
                 <td><a href="">{{ $rp->product->name }}</a></td>
                 <td>{{ $rp->review }}</td>
+                <td>
+                    <div class="d-flex">
+                         @if($rp->rating == 0)
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                        @if($rp->rating == 1)
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                        @if($rp->rating == 2)
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                        @if($rp->rating == 3)
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                        @if($rp->rating == 4)
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                        @if($rp->rating == 5)
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                        @endif
+                    </div>
+                </td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Acciones">
                         <a href="{{ route('review.approve', $rp->id) }}" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5"><i class="fas fa-check-circle"></i> Aprobar</a>
@@ -64,7 +111,9 @@
                     <th>Usuario</th>
                     <th>Producto</th>
                     <th>Reseña</th>
+                    <th>Calificacion</th>
                     <th>Acciones</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -75,6 +124,50 @@
                     <td>{{ $review->name }} <br> {{ $review->email }}</td>
                     <td><a href="">{{ $review->product->name }}</a></td>
                     <td>{{ $review->review }}</td>
+                    <td>
+                        @if($review->rating == 0)
+                        <ion-icon name="star-outline"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                          @if($review->rating == 1)
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                          @if($review->rating == 2)
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                          @if($review->rating == 3)
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                          @if($review->rating == 4)
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                          @if($review->rating == 5)
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        @endif
+                    </td>
                     <td>
                         <form method="POST" action="{{ route('reviews.destroy', $review->id) }}" style="display: inline-block;">
                             <button type="submit" class="btn btn-sm pd-x-15 btn-outline-danger btn-uppercase mg-l-5">
@@ -92,3 +185,5 @@
     </div>
 </div>
 @endsection
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

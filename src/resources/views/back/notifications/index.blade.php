@@ -24,6 +24,10 @@
             margin-right: 5px;
             border-radius: 100%;
         }
+
+        .btn-template {
+            margin-top:  2rem;
+        }
     </style>
 @endsection
 
@@ -93,9 +97,38 @@
                     </div>
                 </div>
             </div>
+            </form>
+<form method="POST" action="{{ route('template.update', 1) }}" enctype="multipart/form-data">
+    {{ csrf_field() }}
+    {{ method_field('PUT') }}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h6 class="text-uppercase mb-3">Color de plantilla de correo</h6>
+            <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="text_button">Color de la plantilla<span class="text-danger">*</span></label>
+                        <input type="color" class="form-control" name="hex" required="" value="{{ $template->hex ?? '' }}" />
+                        <div class="justify-content-center" style="text-align:center;">
+                            <button type="submit" class="btn btn-primary btn-lg btn-template">Guardar Cambios <i class="far fa-save"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6" style="border: 1px solid black; padding: 0;">
+                            <div style="height: 100px; background:lightgrey;"></div>
+                            <div style="height: 100px; background:{{ $template->hex ?? '' }}"></div>
+                            <div style="height: 100px; background:lightgrey"></div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</form>
             
         </div>
     </div>
 
+
+
+<form method="POST" action="{{ route('mail.update', $mail->id) }}" enctype="multipart/form-data">
+    {{ csrf_field() }}
+    {{ method_field('PUT') }}
 </form>
 @endsection

@@ -68,8 +68,6 @@
                 <div class="action-btns">
                 <ul class="list-inline">
                      <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalEdit_{{ $size->id }}" class="btn btn-rounded btn-icon btn-dark"><i style="color:white;" class="fas fa-edit"></i></a></li>
-                    <li class="list-inline-item"><a href="{{ route('size_chart.show', $size->id) }}"  data-toggle="tooltip" data-original-title="Detalle"class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-eye"></i></a></li>
-
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalDelete_{{ $size->id }}" class="btn btn-rounded btn-icon btn-danger"><i class="fas fa-times" aria-hidden="true"></i></a></li>                  
                 </ul>
 
@@ -124,7 +122,7 @@
                     <small class="text-muted">Actualizado: {{ $size->updated_at }}</small>
                 </p>
                 @php 
-                $size_guide = Nowyouwerkn\WeCommerce\Models\Size_guide::where('size_chart_id', $size->id)->get();
+                $size_guide = Nowyouwerkn\WeCommerce\Models\SizeGuide::where('size_chart_id', $size->id)->get();
                 @endphp
                 <div class="row">
                     

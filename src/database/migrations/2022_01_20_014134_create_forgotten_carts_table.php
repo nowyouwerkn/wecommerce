@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddPaymentMethodToOrdersTable extends Migration
+class CreateForgottenCartsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,12 @@ class AddPaymentMethodToOrdersTable extends Migration
      */
     public function up()
     {
- 
+        Schema::create('forgotten_carts', function (Blueprint $table) {
+            $table->id();
+            $table->string('correo')->nullable();
+            $table->string('cart')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,6 +28,6 @@ class AddPaymentMethodToOrdersTable extends Migration
      */
     public function down()
     {
-
+        Schema::dropIfExists('forgotten_carts');
     }
 }

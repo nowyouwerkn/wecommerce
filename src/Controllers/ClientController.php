@@ -10,9 +10,11 @@ use Storage;
 use Session;
 
 use Nowyouwerkn\WeCommerce\Models\User;
+use Nowyouwerkn\WeCommerce\Models\UserRule;
 use Nowyouwerkn\WeCommerce\Models\Client;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
 use Nowyouwerkn\WeCommerce\Models\Wishlist;
+use Nowyouwerkn\WeCommerce\Models\Coupon;
 
 /* Exportar Info */
 use Maatwebsite\Excel\Facades\Excel;
@@ -47,12 +49,13 @@ class ClientController extends Controller
 
         $wishlists_today = Wishlist::where('created_at', '<=', $today)
         ->count();
-
+        $user_rules = UserRule::all(); 
         return view('wecommerce::back.clients.index')
         ->with('clients', $clients)
         ->with('new_clients', $new_clients)
         ->with('clients_today', $clients_today)
         ->with('wishlists', $wishlists)
+        ->with('user_rules', $user_rules)
         ->with('wishlists_today', $wishlists_today);
     }
 
@@ -74,6 +77,7 @@ class ClientController extends Controller
             'password' => bcrypt($request->input('password')),
         ]);
         $client->assignRole('customer');
+
         $this->notification->registerUser($request->input('name'),$request->input('email'));
         //Session message
         Session::flash('success', 'El cliente fue registrado exitosamente.');

@@ -60,9 +60,9 @@ use Nowyouwerkn\WeCommerce\Models\StoreTax;
 use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethodRule;
-use Nowyouwerkn\WeCommerce\Models\Shipping_options;
-use Nowyouwerkn\WeCommerce\Models\Size_chart;
-use Nowyouwerkn\WeCommerce\Models\Size_guide;
+use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
+use Nowyouwerkn\WeCommerce\Models\SizeChart;
+use Nowyouwerkn\WeCommerce\Models\SizeGuide;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
@@ -81,6 +81,7 @@ use Nowyouwerkn\WeCommerce\Services\FacebookEvents;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class FrontController extends Controller
 {
@@ -102,6 +103,7 @@ class FrontController extends Controller
 
         $products = Product::where('in_index', true)->where('status', 'Publicado')->with('category')->get()->take(6);
         $products_favorites = Product::where('in_index', true)->where('is_favorite', true)->where('status', 'Publicado')->with('category')->get()->take(6);
+
         return view('front.theme.' . $this->theme->get_name() . '.index')
         ->with('products', $products)
         ->with('products_favorites', $products_favorites)
@@ -248,6 +250,8 @@ class FrontController extends Controller
         $catalog = Category::where('slug', $category_slug)->first();
         $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->with('category')->firstOrFail();
 
+        Session::push('watch_history', $product);
+
         $products_selected = Product::with('category')->where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->inRandomOrder()->take(6)->get();
 
 
@@ -262,9 +266,15 @@ class FrontController extends Controller
         }
 
         $current_date_time = Carbon::now()->toDateTimeString();
-        $size_charts = Size_chart::where('category_id', $catalog->id)->get();
+        $size_charts = SizeChart::where('category_id', $catalog->id)->get();
         $categories = Category::all();
 
+        $recomendations = Session::get('watch_history');
+        $randomItems = Arr::random($recomendations, 1);
+
+        $recomendation_category = Category::where('id', $randomItems[0]->category_id)->first();
+        $recomendation_products = Product::where('category_id', $recomendation_category->id)->take(10)->get()
+        ->random(5);
         $store_config = $this->store_config;
 
         if (empty($product)) {
@@ -277,6 +287,7 @@ class FrontController extends Controller
             ->with('next_product', $next_product)
             ->with('current_date_time', $current_date_time)
             ->with('size_charts', $size_charts)
+            ->with('recomendation_products', $recomendation_products)
             ->with('last_product', $last_product);
         }
     }
@@ -481,7 +492,7 @@ class FrontController extends Controller
 
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $store_shipping = ShipmentMethod::where('is_active', true)->first();
-        $shipment_options = Shipping_options::where('is_active', true)->get();
+        $shipment_options = ShipmentOption::where('is_active', true)->get();
 
         if (empty($store_tax)) {
             $tax_rate = 0;
@@ -2058,7 +2069,7 @@ class FrontController extends Controller
 
         if (!empty($request->preference_id)) {
             $order = Order::where('payment_id', $request->preference_id)->first();
-            $shipping_option_selected = Shipping_options::where('id', $order->shipping_option)->first();
+            $shipping_option_selected = ShipmentOption::where('id', $order->shipping_option)->first();
             $order->status = 'Pagado';
 
             $order->save();

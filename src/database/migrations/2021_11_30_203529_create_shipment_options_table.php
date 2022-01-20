@@ -13,7 +13,7 @@ class CreateShippingOptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('shipping_options', function (Blueprint $table) {
+        Schema::create('shipment_options', function (Blueprint $table) {
             $table->id();
 
             $table->string('name')->required();

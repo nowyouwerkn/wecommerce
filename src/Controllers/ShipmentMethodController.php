@@ -8,7 +8,7 @@ use Session;
 use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
 use Nowyouwerkn\WeCommerce\Models\ShipmentMethodRule;
-use Nowyouwerkn\WeCommerce\Models\Shipping_options;
+use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
 use Illuminate\Http\Request;
 
 class ShipmentMethodController extends Controller
@@ -19,7 +19,7 @@ class ShipmentMethodController extends Controller
 
         $shipments = ShipmentMethod::all();
         $shipment_rules = ShipmentMethodRule::all();
-        $shipment_options = Shipping_options::all();
+        $shipment_options = ShipmentOption::all();
 
         $ups_method = ShipmentMethod::where('supplier', 'UPS')->first();
         $manual_method = ShipmentMethod::where('type', 'manual')->first();
