@@ -495,7 +495,7 @@ Route::post('/webhook/orden_action',[
     'as' => 'webhook.order.oxxo',
 ]);
 
-Route::post('/webhook/mercadopago_stataus',[
+Route::post('/webhook/mercadopago_status',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WebhookController@orderMercadoPago',
     'as' => 'webhook.order.mercadopago',
 ]);

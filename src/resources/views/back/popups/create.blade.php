@@ -57,14 +57,12 @@
     .card-banner .btn{
         color: #fff;
     }
-
-
 </style>
+
 @endsection
 
 @push('stylesheets')
 <style type="text/css">
-
     .hidden-form{
         display: none;
     }
@@ -93,8 +91,6 @@
         background-color: grey;
         cursor: pointer;
     }
-
-
 </style>
 @endpush
 

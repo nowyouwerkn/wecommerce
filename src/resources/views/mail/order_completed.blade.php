@@ -1,6 +1,7 @@
 @php
 	$user = Nowyouwerkn\WeCommerce\Models\User::where('id', $user_id)->first();
 	$order = Nowyouwerkn\WeCommerce\Models\Order::where('id', $order_id)->first();
+  
 	$order->cart = unserialize($order->cart);
 	$legals = Nowyouwerkn\WeCommerce\Models\LegalText::all();
 @endphp
@@ -133,41 +134,40 @@
 				<tr>
 					<td>
 						<ul style="list-style: none;display: inline-flex;padding: 0px;">
-                            <li style="padding:0px 5px;"><a href="">Inicio</a></li>
-                            <li style="padding:0px 5px;"><a href="">Catálogo</a></li>
-                            
-                            @foreach($legals as $legal)
-                            <li style="padding:0px 5px;">
-                                <a href="{{ route('legal.text' , $legal->type) }}">
-                                    @switch($legal->type)
-                                        @case('Returns')
-                                            Política de Devoluciones
-                                            @break
+                  <li style="padding:0px 5px;"><a href="">Inicio</a></li>
+                  <li style="padding:0px 5px;"><a href="">Catálogo</a></li>
 
-                                        @case('Privacy')
-                                            Política de Privacidad
-                                            @break
+                  @foreach($legals as $legal)
+                  <li style="padding:0px 5px;">
+                      <a href="{{ route('legal.text' , $legal->type) }}">
+                          @switch($legal->type)
+                              @case('Returns')
+                                  Política de Devoluciones
+                                  @break
 
-                                        @case('Terms')
-                                            Términos y Condiciones
-                                            @break
+                              @case('Privacy')
+                                  Política de Privacidad
+                                  @break
 
-                                        @case('Shipment')
-                                            Política de Envíos
-                                            @break
+                              @case('Terms')
+                                  Términos y Condiciones
+                                  @break
 
-                                        @default
-                                            Hubo un problema, intenta después.
-                                    @endswitch 
-                                </a>
-                            </li>
-                            @endforeach
-                        </ul>
+                              @case('Shipment')
+                                  Política de Envíos
+                                  @break
 
-						<p>Si tienes alguna pregunta, no dudes en contactarnos (Si respondes a este correo electr&oacute;nico, no podremos verlo)</p>
+                              @default
+                                  Hubo un problema, intenta después.
+                          @endswitch 
+                      </a>
+                  </li>
+                  @endforeach
+              </ul>
 
-						<p>&nbsp;</p>
-						<p>2021 {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
+						  <p>Si tienes alguna pregunta, no dudes en contactarnos (Si respondes a este correo electr&oacute;nico, no podremos verlo)</p>
+						  <p>&nbsp;</p>
+						  <p>2021 {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
 					</td>
 				</tr>
 			</tbody>
