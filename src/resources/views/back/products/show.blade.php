@@ -400,6 +400,66 @@
                 </div>
             </div>
 
+
+            <!-- Inventory -->
+            <div class="card mg-t-10 mb-4">
+                <!-- Header -->
+                <div class="card-header pd-t-20 pd-b-0 bd-b-0 row justify-content-between">
+                    <h5 class="mg-b-5">Relaciones de productos</h5> 
+                    @if($base_product->id != $product->id)
+                    <a href="{{ route('products.show', $base_product->id) }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">Ir al producto base</a>
+                    @else
+                    <a href="javascript:void(0)" data-target="#modalAddRelationship" data-toggle="modal" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5"><span class="fas fa-plus"></span> Agregar más relaciones</a>
+                    @endif
+                    <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
+                </div>
+                <!-- Form -->
+                <div class="card-body row">
+                    @if(!empty($base_product))
+                    <div class="col-md-3 card">
+                        <div class="form-group text-center">
+                            <label>Producto base</label>
+                           <img  class="img-fluid mb-4" src="{{ asset('img/products/' . $base_product->image ) }}">
+                           <label>{{$base_product->name}}</label>
+                        </div>
+                    </div> 
+                        @foreach($products_in_relationship as $product_rel)
+                            @php
+                                $image = Nowyouwerkn\WeCommerce\Models\Product::where('id' , $product_rel->product_id)->first();
+                            @endphp
+                            <div class="col-md-3 card">
+                            <label>{{$product_rel->value}}</label>
+                            <div class="thumbnail-wrap">
+                                <button type="button" id="deleteRelationship_{{ $product_rel->id }}" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
+                                    <i class="fas fa-times" aria-hidden="true"></i>
+                                 </button>
+
+                                @push('scripts')
+
+                                <form method="POST" id="deleteRel_{{ $product_rel->id }}" action="{{ route('relationship.destroy', $product_rel->id) }}" style="display: none;">
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
+                                </form>
+
+                                <script type="text/javascript">
+                                    $('#deleteRelationship_{{ $product_rel->id }}').on('click', function(){
+                                        event.preventDefault();
+                                        $('#deleteRel_{{ $product_rel->id }}').submit();
+                                    });
+                                </script>
+                                @endpush
+                                <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}">
+                            </div>
+                                <label>{{$image->name}}</label>
+                            </div> 
+                        @endforeach
+                    @else
+                    <label>Este producto no cuenta con relaciones agrega una</label>
+                    @endif
+                </div>
+            </div>
+
+
             <div class="card mg-t-10 mb-4">
                 <!-- Header -->
                 <div class="card-header pd-t-20 pd-b-0 bd-b-0">
@@ -734,6 +794,96 @@
 </div>
 
 
+
+@if(!empty($base_relationship))
+<div class="modal fade" id="modalAddRelationship" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalCreateLabel">Agregar producto a relacion</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <form method="POST" action="{{ route('relationship.store') }}" enctype="multipart/form-data">
+                {{ csrf_field() }}
+
+                <input type="hidden" name="base_product_id" value="{{ $product->id }}">
+                <input type="hidden" name="type" value="{{ $base_relationship->type }}">
+                <div class="form-group">
+                    <label for="type">Tipo de relación</label>
+                        <h5>{{$base_relationship->type}}</h5>
+                </div>
+                <div class="form-group">
+                    <label for="value">Valor de la relación</label>
+                    <input type="text" name="value" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Producto para agregar a la relación</label>
+                    <select class="form-control" name="product_id">
+                        @foreach($related_products as $related)
+                        <option value="{{$related->id}}">{{$related->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="text-right">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Relacion</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@else
+<div class="modal fade" id="modalAddRelationship" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalCreateLabel">Crear una nueva relacion de producto</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <form method="POST" action="{{ route('relationship.store') }}" enctype="multipart/form-data">
+                {{ csrf_field() }}
+
+                <input type="hidden" name="base_product_id" value="{{ $product->id }}">
+
+                <div class="form-group">
+                    <label>Tipo de relación</label>
+                    <select class="form-control" name="type">
+                        <option value="color">Color</option>
+                        <option value="material">Material</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="value">Valor de la relación</label>
+                    <input type="text" name="value" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="model_image">Producto inicial de la relacion</label>
+                    <select class="form-control" name="product_id">
+                        @foreach($related_products as $related)
+                        <option value="{{$related->id}}">{{$related->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="text-right">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Imagen</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @foreach($product->images as $image)
 <div class="modal fade" id="modalEditImage_{{$image->id}}" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">

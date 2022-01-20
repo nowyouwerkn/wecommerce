@@ -81,6 +81,7 @@ use Nowyouwerkn\WeCommerce\Services\FacebookEvents;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class FrontController extends Controller
 {
@@ -102,6 +103,10 @@ class FrontController extends Controller
 
         $products = Product::where('in_index', true)->where('status', 'Publicado')->with('category')->get()->take(6);
         $products_favorites = Product::where('in_index', true)->where('is_favorite', true)->where('status', 'Publicado')->with('category')->get()->take(6);
+
+        $var = Session::get('watch_history');
+        dd($var);
+
         return view('front.theme.' . $this->theme->get_name() . '.index')
         ->with('products', $products)
         ->with('products_favorites', $products_favorites)
@@ -248,6 +253,8 @@ class FrontController extends Controller
         $catalog = Category::where('slug', $category_slug)->first();
         $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->with('category')->firstOrFail();
 
+        Session::push('watch_history', $product);
+
         $products_selected = Product::with('category')->where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->inRandomOrder()->take(6)->get();
 
 
@@ -265,6 +272,13 @@ class FrontController extends Controller
         $size_charts = SizeChart::where('category_id', $catalog->id)->get();
         $categories = Category::all();
 
+        $recomendations = Session::get('watch_history');
+        $randomItems = Arr::random($recomendations, 1);
+
+        $recomendation_category = Category::where('id', $randomItems[0]->category_id)->first();
+        $recomendation_products = Product::where('category_id', $recomendation_category->id)->take(10)->get()
+        ->random(5);
+        dd($recomendation_products);
         $store_config = $this->store_config;
 
         if (empty($product)) {
@@ -277,6 +291,7 @@ class FrontController extends Controller
             ->with('next_product', $next_product)
             ->with('current_date_time', $current_date_time)
             ->with('size_charts', $size_charts)
+            ->with('recomendation_products', $recomendation_products)
             ->with('last_product', $last_product);
         }
     }

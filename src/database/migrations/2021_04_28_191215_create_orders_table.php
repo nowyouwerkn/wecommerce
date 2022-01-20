@@ -47,7 +47,7 @@ class CreateOrdersTable extends Migration
             $table->string('payment_id');
             $table->string('payment_method');
             $table->string('coupon_id')->nullable();
-            $table->string('shipment_option_id')->nullable();
+            $table->string('shipping_option')->nullable();
 
             $table->boolean('is_completed')->nullable();
             $table->string('status')->nullable();

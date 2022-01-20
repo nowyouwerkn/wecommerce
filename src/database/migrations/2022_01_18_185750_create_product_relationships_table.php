@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserRulesTable extends Migration
+class CreateProductRelationshipsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateUserRulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_rules', function (Blueprint $table) {
+        Schema::create('product_relationships', function (Blueprint $table) {
             $table->id();
             $table->string('type')->nullable();
             $table->string('value')->nullable();
-            $table->boolean('is_active')->default(false);
+            $table->string('product_id')->nullable();
+            $table->string('base_product_id')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateUserRulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_rules');
+        Schema::dropIfExists('product_relationships');
     }
 }

@@ -15,6 +15,7 @@ use Nowyouwerkn\WeCommerce\Models\Category;
 use Nowyouwerkn\WeCommerce\Models\ProductSize;
 use Nowyouwerkn\WeCommerce\Models\ProductImage;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
+use Nowyouwerkn\WeCommerce\Models\ProductRelationship;
 
 /* Exportar Info */
 use Maatwebsite\Excel\Facades\Excel;
@@ -184,6 +185,17 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $categories = Category::where('parent_id', NULL)->orWhere('parent_id', '0')->get();
         $variant_stock = ProductVariant::where('product_id', $product->id)->get();
+        $related_products = Product::where('category_id', $product->category_id)->orWhere('brand', $product->brand)->where('id', '!=' , $product->id)->get();
+        $product_is_base = ProductRelationship::where('base_product_id', $product->id)->first();
+        $relationship_product = ProductRelationship::where('product_id', $product->id)->first();
+
+        if (!empty($product_is_base)) {
+            $base_product = Product::where('id', $product_is_base->base_product_id)->first();
+        }elseif(!empty($relationship_product)){
+            $base_product = Product::where('id', $relationship_product->base_product_id)->first();
+        }
+        $base_relationship = ProductRelationship::where('base_product_id', $base_product->id)->first();
+        $products_in_relationship = ProductRelationship::where('base_product_id', $base_product->id)->get();
 
         $total_qty = 0;
 
@@ -193,7 +205,16 @@ class ProductController extends Controller
 
         $total_qty;
 
-        return view('wecommerce::back.products.show')->with('product', $product)->with('variant_stock', $variant_stock)->with('categories', $categories)->with('total_qty', $total_qty);
+        return view('wecommerce::back.products.show')
+        ->with('product', $product)
+        ->with('variant_stock', $variant_stock)
+        ->with('categories', $categories)
+        ->with('total_qty', $total_qty)
+        ->with('related_products', $related_products)
+        ->with('base_product', $base_product)
+        ->with('base_relationship', $base_relationship)
+        ->with('products_in_relationship', $products_in_relationship)
+        ->with('relationship_product', $relationship_product);
     }
 
     public function storeImage(Request $request)
