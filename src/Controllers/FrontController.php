@@ -104,9 +104,6 @@ class FrontController extends Controller
         $products = Product::where('in_index', true)->where('status', 'Publicado')->with('category')->get()->take(6);
         $products_favorites = Product::where('in_index', true)->where('is_favorite', true)->where('status', 'Publicado')->with('category')->get()->take(6);
 
-        $var = Session::get('watch_history');
-        dd($var);
-
         return view('front.theme.' . $this->theme->get_name() . '.index')
         ->with('products', $products)
         ->with('products_favorites', $products_favorites)
@@ -278,7 +275,6 @@ class FrontController extends Controller
         $recomendation_category = Category::where('id', $randomItems[0]->category_id)->first();
         $recomendation_products = Product::where('category_id', $recomendation_category->id)->take(10)->get()
         ->random(5);
-        dd($recomendation_products);
         $store_config = $this->store_config;
 
         if (empty($product)) {
