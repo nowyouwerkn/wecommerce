@@ -406,10 +406,12 @@
                 <!-- Header -->
                 <div class="card-header pd-t-20 pd-b-0 bd-b-0 row justify-content-between">
                     <h5 class="mg-b-5">Relaciones de productos</h5> 
-                    @if($base_product->id != $product->id)
-                    <a href="{{ route('products.show', $base_product->id) }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">Ir al producto base</a>
-                    @else
-                    <a href="javascript:void(0)" data-target="#modalAddRelationship" data-toggle="modal" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5"><span class="fas fa-plus"></span> Agregar más relaciones</a>
+                    @if(!empty($base_product))
+                        @if($base_product->id != $product->id)
+                        <a href="{{ route('products.show', $base_product->id) }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">Ir al producto base</a>
+                        @endif
+                        @else
+                        <a href="javascript:void(0)" data-target="#modalAddRelationship" data-toggle="modal" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5"><span class="fas fa-plus"></span> Agregar más relaciones</a>
                     @endif
                     <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
                 </div>
