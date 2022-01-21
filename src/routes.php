@@ -266,7 +266,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     ]);
     Route::resource('shipments', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodController::class);
     Route::resource('shipments-rules', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodRuleController::class);
-    Route::resource('shipping-options', Nowyouwerkn\WeCommerce\Controllers\ShippingOptionsController::class);
+    Route::resource('shipping-options', Nowyouwerkn\WeCommerce\Controllers\ShipmentOptionsController::class);
 
     Route::get('/shipments-rule/change-status/{id}',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodRuleController@changeStatus',

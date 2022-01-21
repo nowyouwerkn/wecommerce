@@ -9,7 +9,7 @@ use Auth;
 use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
 use Illuminate\Http\Request;
 
-class ShippingOptionsController extends Controller
+class ShipmentOptionsController extends Controller
 {
 
      /**
