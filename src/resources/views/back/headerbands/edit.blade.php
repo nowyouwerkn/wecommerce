@@ -113,15 +113,18 @@
                             <div id="editor-container-create" class="ht-350 mb-4">{!! $headerband->text ?? '' !!}</div>
                             <textarea id="justHtml_create" name="text" required="" style="display:none;">{!! $headerband->text ?? '' !!}</textarea>
                         </div>
+                        <!--
                         <div class="form-group col-md-12">
                             <label>Texto del boton<span class="text-danger">*</span></label>
                             <div id="editor-container-button" class="ht-350 mb-4">{!! $headerband->button_text ?? '' !!}</div>
                             <textarea id="justHtml_button" name="button_text" style="display:none;">{!! $headerband->button_text ?? '' !!}</textarea>
                         </div>
+                        -->
                         <div class="form-group col-md-6">
                             <label for="text_button">Color del texto<span class="text-danger">*</span></label>
                             <input type="color" class="form-control" name="hex_text" value="{{ $headerband->hex_text }}"/>
                         </div>
+                        <!--
                         <div class="form-group col-md-6">
                             <label for="text_button">Color del texto del boton<span class="text-danger">*</span></label>
                             <input type="color" class="form-control" name="hex_button_text" value="{{ $headerband->hex_button_text }}"/>
@@ -130,6 +133,7 @@
                             <label for="text_button">Color del boton<span class="text-danger">*</span></label>
                             <input type="color" class="form-control" name="hex_button_back" value="{{ $headerband->hex_button_back }}"/>
                         </div>
+                        -->
                         <div class="form-group col-md-6">
                             <label for="text_button">Color del cintillo<span class="text-danger">*</span></label>
                             <input type="color" class="form-control" value="{{ $headerband->hex_background }}" name="hex_background" required="" />
@@ -167,7 +171,7 @@
                     <div class="d-flex">
                         <div class="card-banner d-flex justify-content-center align-items-center" id="hex_">
                             <div class="card-banner-content">
-                                <h5 class="card p-4" id="title_" style="background: {{ $headerband->hex_background }}; color: {{ $headerband->hex_text }}">Texto</h5>
+                                <h5 class="card p-4" id="title_" style="background: {{ $headerband->hex_background }}; color: {{ $headerband->hex_text }}">{!! $headerband->text ?? '' !!}</h5>
                             </div>
                         </div>
                     </div>
