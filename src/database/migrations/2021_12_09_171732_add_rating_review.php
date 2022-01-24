@@ -14,7 +14,7 @@ class AddRatingReview extends Migration
     public function up()
     {
             Schema::table('reviews', function (Blueprint $table) {
-            $table->string('rating')->nullable();
+            $table->string('rating')->after('review')->nullable();
             });
     }
 
@@ -25,6 +25,9 @@ class AddRatingReview extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('reviews', function (Blueprint $table) {
+            $table->dropColumn('rating');
+
+        });
     }
 }

@@ -119,7 +119,7 @@
 					<div class="card mb-4">
 						<div class="card-body">
 							<h4 class="mb-0">
-								Información del Banner 
+								Información del Cintillo 
 
 								@if($popup->is_active == true)
 									<span class="badge badge-success">Activo</span>
@@ -170,8 +170,7 @@
 					<div class="d-flex">
 						<div class="card-banner d-flex justify-content-center align-items-center" id="hex_" style="background: {{ $popup->hex }}">
 							<div class="card-banner-content">
-								<h5 id="title_">{{ $popup->title }}</h5>
-								<p id="subtitle_">{{ $popup->subtitle}}</p>
+								<h5 id="title_">{!! $headerband->text ?? '' !!}</h5>
 								<a href="#" class="btn btn-light rounded" id="text_button_">{{ $popup->text_button }}</a>
 							</div>
 							<img src="{{ asset('img/popups/' . $popup->image ) }}" id="output" class="card-banner-image" width="100">

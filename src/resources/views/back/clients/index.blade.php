@@ -231,7 +231,9 @@
                         <div class="col-md-6">
                             <div class="form-group mt-2">
                                 <label>Tipo de promocion</label>
-                                <input type="text" class="form-control" name="type" />
+                                <select class="form-control" name="type" >
+                                    <option value="register_coupon">Cupon de registro</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -266,8 +268,8 @@
                             <div class="form-group">
                                 <label>{{$rule->type}}</label>
                                 <div class="custom-control custom-checkbox mb-3">
-                                <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" value="1" {{  ($rule->is_active == 1 ? ' checked' : '') }}>
-                                <label class="custom-control-label" for="is_active"> Activado</label>
+                                <input type="checkbox" class="custom-control-input" id="is_active_select" name="is_active" value="1" {{  ($rule->is_active == 1 ? ' checked' : '') }}>
+                                <label class="custom-control-label" for="is_active_select"> Activado</label>
                             </div>
                             </div>
                         </div>

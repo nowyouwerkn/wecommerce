@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Session;
 use Auth;
 
-use Nowyouwerkn\WeCommerce\Models\Shipping_options;
+use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
 use Illuminate\Http\Request;
 
-class ShippingOptionsController extends Controller
+class ShipmentOptionsController extends Controller
 {
 
      /**
@@ -35,7 +35,7 @@ class ShippingOptionsController extends Controller
         ));
 
         // Guardar datos en la base de datos
-        $shipping = new Shipping_options;
+        $shipping = new ShipmentOption;
 
         $shipping->name = $request->name;
         $shipping->delivery_time = $request->delivery_time;
@@ -73,7 +73,7 @@ class ShippingOptionsController extends Controller
         ));
 
         // Guardar datos en la base de datos
-        $shipping = Shipping_options::find($id);
+        $shipping = ShipmentOption::find($id);
         $shipping->name = $request->name;
         $shipping->delivery_time = $request->delivery_time;
         $shipping->is_active = $request->is_active;
@@ -92,7 +92,7 @@ class ShippingOptionsController extends Controller
 
     public function destroy($id)
     {
-          $shipping = Shipping_options::find($id);
+          $shipping = ShipmentOption::find($id);
 
         $shipping->delete();
 
