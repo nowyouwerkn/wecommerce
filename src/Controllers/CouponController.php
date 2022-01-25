@@ -70,7 +70,7 @@ class CouponController extends Controller
 
         // Notificación
         $type = 'Cupón';
-        $by = $user;
+        $by = Auth::user();
         $data = 'creó un nuevo cupón con el código: ' . $coupon->code;
         $model_action = "create";
         $model_id = $coupon->id;
@@ -112,7 +112,7 @@ class CouponController extends Controller
 
         // Notificación
         $type = 'Cupón';
-        $by = $user;
+        $by = Auth::user();
         $data = 'editó las condiciones del cupón: ' . $coupon->code;
         $model_action = "update";
         $model_id = $coupon->id;
@@ -132,7 +132,7 @@ class CouponController extends Controller
 
         // Notificación
         $type = 'Cupón';
-        $by = $user;
+        $by = Auth::user();
         $data = 'eliminó el cupón con código: ' . $coupon->code;
         $model_action = "destroy";
         $model_id = $coupon->id;
