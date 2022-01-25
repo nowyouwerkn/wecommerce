@@ -15,7 +15,7 @@ class CreateForgottenCartsTable extends Migration
     {
         Schema::create('forgotten_carts', function (Blueprint $table) {
             $table->id();
-            $table->string('correo')->nullable();
+            $table->string('email')->nullable();
             $table->string('cart')->nullable();
             $table->timestamps();
         });

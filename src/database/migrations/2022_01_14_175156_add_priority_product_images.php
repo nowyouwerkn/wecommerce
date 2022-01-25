@@ -14,7 +14,7 @@ class AddPriorityProductImages extends Migration
     public function up()
     {
         Schema::table('product_images', function (Blueprint $table) {
-            $table->int('priority')->after('image')->unsigned()->nullable();
+            $table->integer('priority')->after('image')->unsigned()->nullable();
         });
     }
 
