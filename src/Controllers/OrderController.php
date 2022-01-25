@@ -122,8 +122,7 @@ class OrderController extends Controller
             }
         }
 
-     
-
+    
         // Notificación
         
         $type = 'Orden';
@@ -133,14 +132,12 @@ class OrderController extends Controller
         $model_id = $order->id;
 
 
-
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         return response()->json([
             'mensaje' => 'Estado cambiado exitosamente', 
             'status' => $request->value
         ], 200);
-
 
     }
 

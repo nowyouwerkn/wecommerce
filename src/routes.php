@@ -436,7 +436,7 @@ Route::post('/apply-cuopon', [
 ]);
 
 //Profile
-Route::group(['prefix' => 'profile', 'middleware' => 'auth'], function(){
+Route::group(['prefix' => 'profile', 'middleware' => 'can:customer_access'], function(){
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
     Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
     Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');

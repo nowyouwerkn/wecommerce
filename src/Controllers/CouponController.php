@@ -70,10 +70,12 @@ class CouponController extends Controller
 
         // Notificación
         $type = 'Cupón';
-        $by = Auth::user();
+        $by = $user;
         $data = 'creó un nuevo cupón con el código: ' . $coupon->code;
+        $model_action = "create";
+        $model_id = $coupon->id;
 
-        $this->notification->send($type, $by ,$data);
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         // Mensaje de session
         Session::flash('success', 'Se guardó correctamente la información en tu base de datos.');
@@ -110,10 +112,12 @@ class CouponController extends Controller
 
         // Notificación
         $type = 'Cupón';
-        $by = Auth::user();
+        $by = $user;
         $data = 'editó las condiciones del cupón: ' . $coupon->code;
+        $model_action = "update";
+        $model_id = $coupon->id;
 
-        $this->notification->send($type, $by ,$data);
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         // Mensaje de session
         Session::flash('success', 'Se guardó correctamente la información en tu base de datos.');
@@ -128,10 +132,12 @@ class CouponController extends Controller
 
         // Notificación
         $type = 'Cupón';
-        $by = Auth::user();
-        $data = 'eliminó el cupón con código: ' . $coupon->code;
+        $by = $user;
+        $data = 'eliminó el cupón con código: ' . $coupon->code
+        $model_action = "destroy";
+        $model_id = $coupon->id;
 
-        $this->notification->send($type, $by ,$data);
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         //
         $coupon->coupons()->delete();
