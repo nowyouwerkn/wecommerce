@@ -133,7 +133,7 @@ class CouponController extends Controller
         // Notificación
         $type = 'Cupón';
         $by = $user;
-        $data = 'eliminó el cupón con código: ' . $coupon->code
+        $data = 'eliminó el cupón con código: ' . $coupon->code;
         $model_action = "destroy";
         $model_id = $coupon->id;
 
