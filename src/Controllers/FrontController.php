@@ -792,7 +792,16 @@ class FrontController extends Controller
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',
-            'references' => 'required'
+            'references' => 'required',
+
+            'street_billing' => 'required',
+            'street_num_billing' => 'required',
+            'suburb_billing' => 'required',
+            'postal_code_billing' => 'required',
+            'country_billing' => 'required',
+            'state_billing' => 'required',
+            'city_billing' => 'required',
+
         ));
 
         if ($request->method == 'Pago con Tarjeta') {
@@ -1393,7 +1402,6 @@ class FrontController extends Controller
         $data = 'hizo una compra por $' . $purchase_value;
         $model_action = "create";
         $model_id = "";
-
 
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
