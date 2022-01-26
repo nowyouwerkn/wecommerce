@@ -2,6 +2,7 @@
 
 @push('stylesheets')
 <link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
+<link href="{{ asset('lib/spectrum-colorpicker/spectrum.css') }}" rel="stylesheet"> 
 
 <style type="text/css">
     .save-bar{
@@ -168,9 +169,16 @@
                     </div>
 
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="color">Color<span class="text-danger">*</span></label>
-                            <input type="text" name="color" class="form-control" placeholder="Ej. Negro" value="{{ $product->color }}">
+                        <div class="d-flex">
+                            <div class="form-group me-2">
+                                <label for="color">Color <span class="text-danger">*</span></label>
+                                <input type="text" name="color" class="form-control" placeholder="Ej. Negro" value="{{ $product->color }}" required="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="hex_color"># <span class="text-danger">*</span></label>
+                                <input type="color" name="hex_color" class="form-control" value="{{ $product->hex_color ?? '#17A2B8'}}" style="width:50px;" required="">
+                            </div>
                         </div>
                     </div>
 
@@ -282,7 +290,7 @@
                               <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">MX$</span>
                               </div>
-                                <input type="text" id="price" name="price" class="form-control" value="{{ $product->price }}">
+                                <input type="number" id="price" name="price" class="form-control" value="{{ $product->price }}">
                             </div>
                         </div>
     
@@ -292,7 +300,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">MX$</span>
                                 </div>
-                                <input type="text" id="discount_price" name="discount_price" class="form-control" value="{{ $product->discount_price }}">
+                                <input type="number" id="discount_price" name="discount_price" class="form-control" value="{{ $product->discount_price }}">
                             </div>
                         </div>
 
@@ -313,14 +321,13 @@
 
                 <div class="card-footer">
                     <div class="row">
-                        
                         <div class="col-md-6">
                             <label for="production_cost">Costo de Producción</label>
                             <div class="input-group mg-b-10">
                               <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">MX$</span>
                               </div>
-                                <input type="text" id="production_cost" name="production_cost" class="form-control value-checker" value="{{ $product->production_cost }}">
+                                <input type="number" id="production_cost" name="production_cost" class="form-control value-checker" value="{{ $product->production_cost }}">
                             </div>
                             <span class="tx-13 tx-color-03 d-block">Tus clientes no verán esto.</span>
                         </div>
@@ -400,160 +407,27 @@
                 </div>
             </div>
 
-
             <!-- Inventory -->
-            <div class="card mg-t-10 mb-4">
-                <!-- Header -->
-                <div class="card-header pd-t-20 pd-b-0 bd-b-0 row justify-content-between">
-                    <h5 class="mg-b-5">Relaciones de productos</h5> 
-                    @if(!empty($base_product))
-                        @if($base_product->id != $product->id)
-                        <a href="{{ route('products.show', $base_product->id) }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">Ir al producto base</a>
-                        @endif
-                        @else
-                        <a href="javascript:void(0)" data-target="#modalAddRelationship" data-toggle="modal" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5"><span class="fas fa-plus"></span> Agregar más relaciones</a>
-                    @endif
-                    <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
-                </div>
-                <!-- Form -->
-                <div class="card-body row">
-                    @if(!empty($base_product))
-                    <div class="col-md-3 card">
-                        <div class="form-group text-center">
-                            <label>Producto base</label>
-                           <img  class="img-fluid mb-4" src="{{ asset('img/products/' . $base_product->image ) }}">
-                           <label>{{$base_product->name}}</label>
-                        </div>
-                    </div> 
-                        @foreach($products_in_relationship as $product_rel)
-                            @php
-                                $image = Nowyouwerkn\WeCommerce\Models\Product::where('id' , $product_rel->product_id)->first();
-                            @endphp
-                            <div class="col-md-3 card">
-                            <label>{{$product_rel->value}}</label>
-                            <div class="thumbnail-wrap">
-                                <button type="button" id="deleteRelationship_{{ $product_rel->id }}" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
-                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                 </button>
-
-                                @push('scripts')
-
-                                <form method="POST" id="deleteRel_{{ $product_rel->id }}" action="{{ route('relationship.destroy', $product_rel->id) }}" style="display: none;">
-                                    {{ csrf_field() }}
-                                    {{ method_field('DELETE') }}
-                                </form>
-
-                                <script type="text/javascript">
-                                    $('#deleteRelationship_{{ $product_rel->id }}').on('click', function(){
-                                        event.preventDefault();
-                                        $('#deleteRel_{{ $product_rel->id }}').submit();
-                                    });
-                                </script>
-                                @endpush
-                                <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}">
-                            </div>
-                                <label>{{$image->name}}</label>
-                            </div> 
-                        @endforeach
-                    @else
-                    <label>Este producto no cuenta con relaciones agrega una</label>
-                    @endif
-                </div>
-            </div>
-
-
-            <div class="card mg-t-10 mb-4">
-                <!-- Header -->
-                <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                    <h5 class="mg-b-5">Características de Envío</h5>
-                    <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
-                </div>
-
-                <!-- Form -->
-                <div class="card-body row">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="height">Alto</label>
-                            <input type="number" name="height" class="form-control" value="{{ $product->height }}">
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="width">Ancho</label>
-                            <input type="number" name="width" class="form-control" value="{{ $product->width }}">
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="lenght">Largo</label>
-                            <input type="number" name="lenght" class="form-control" value="{{ $product->lenght }}">
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="weight">Peso</label>
-                            <input type="number" name="weight" class="form-control" value="{{ $product->weight }}">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             @if($product->has_variants == true)
                 @include('wecommerce::back.products.partials._variant_card')
             @endif
-            @php
-                $notifications = Nowyouwerkn\WeCommerce\Models\Notification::with('user')->orderBy('created_at', 'desc')->where('type', 'Producto')->where('model_id', $product->id)->get();
-            @endphp
 
-             <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h4 class="mb-0">Listado de cambios realizados</h4>
-                            </div>
-                        </div>
-                        <hr>
-
-                        @if($notifications->count() != 0)
-
-                            @foreach($notifications as $notification)
-                            <div class="note-row row align-items-center mb-3">
-                                <div class="col-2">
-                                    <div class="user-image text-center mr-3">
-                                        @if($notification->model_action == 'update')
-                                        <ion-icon style = "font-size: 2rem;" name="create-outline"></ion-icon>
-                                        @endif
-
-                                        <p class="mb-0" style="font-size: 0.8rem;">{{ $notification->model_action}}</p>
-                                    </div>
-                                </div>
-                                <div class="col-10">
-                                    <div class="speech-wrap">
-                                        <div class="">
-                                            <p>{{ $notification->data }}</p>
-                                               @php
-
-                                                $user = Nowyouwerkn\WeCommerce\Models\User::where('id' , $notification->action_by)->first();
-                                            @endphp
-                                            <p class="mb-0"><small>{{ $user->name }}</small></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        @else
-                        <div class="text-center my-5">
-
-                            <h4 class="mb-0">No hay cambios en este producto todavía.</h4>
-                        </div>
-                        @endif
-                    </div>
+            <div class="card mg-t-10 mb-4">
+                <div class="card-header pd-t-20 pd-b-0 bd-b-0">
+                    <h6 class="mg-b-5">Histórico de este producto</h6>
+                    @php
+                        $logs = Nowyouwerkn\WeCommerce\Models\Notification::where('type', 'Producto')->where('model_id', $product->id)->get();
+                    @endphp
                 </div>
-                <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-                <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>       
+
+                @if($logs->count() != 0)
+                    @include('wecommerce::back.layouts.partials._notification_table')
+                @else
+                <div class="card-body">
+                    <h6 class="mb-0">No hay cambios en este producto todavía.</h6>
+                </div>
+                @endif
+            </div>   
         </div>
 
         <!-- Second -->
@@ -678,6 +552,45 @@
                 </div>
             </div>
 
+            <div class="card mg-t-10 mb-4">
+                <!-- Header -->
+                <div class="card-header pd-t-20 pd-b-0 bd-b-0">
+                    <h5 class="mg-b-5">Características de Envío</h5>
+                    <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
+                </div>
+
+                <!-- Form -->
+                <div class="card-body row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="height">Alto</label>
+                            <input type="number" name="height" class="form-control" value="{{ $product->height }}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="width">Ancho</label>
+                            <input type="number" name="width" class="form-control" value="{{ $product->width }}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="lenght">Largo</label>
+                            <input type="number" name="lenght" class="form-control" value="{{ $product->lenght }}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="weight">Peso</label>
+                            <input type="number" name="weight" class="form-control" value="{{ $product->weight }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- 
             <!-- Disponibility -->
             <div class="card mg-t-10 mb-4">
@@ -795,97 +708,6 @@
     </div>
 </div>
 
-
-
-@if(!empty($base_relationship))
-<div class="modal fade" id="modalAddRelationship" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="modalCreateLabel">Agregar producto a relacion</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-            <form method="POST" action="{{ route('relationship.store') }}" enctype="multipart/form-data">
-                {{ csrf_field() }}
-
-                <input type="hidden" name="base_product_id" value="{{ $product->id }}">
-                <input type="hidden" name="type" value="{{ $base_relationship->type }}">
-                <div class="form-group">
-                    <label for="type">Tipo de relación</label>
-                        <h5>{{$base_relationship->type}}</h5>
-                </div>
-                <div class="form-group">
-                    <label for="value">Valor de la relación</label>
-                    <input type="text" name="value" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Producto para agregar a la relación</label>
-                    <select class="form-control" name="product_id">
-                        @foreach($related_products as $related)
-                        <option value="{{$related->id}}">{{$related->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="text-right">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Guardar Relacion</button>
-                </div>
-            </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-@else
-<div class="modal fade" id="modalAddRelationship" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="modalCreateLabel">Crear una nueva relacion de producto</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-            <form method="POST" action="{{ route('relationship.store') }}" enctype="multipart/form-data">
-                {{ csrf_field() }}
-
-                <input type="hidden" name="base_product_id" value="{{ $product->id }}">
-
-                <div class="form-group">
-                    <label>Tipo de relación</label>
-                    <select class="form-control" name="type">
-                        <option value="color">Color</option>
-                        <option value="material">Material</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="value">Valor de la relación</label>
-                    <input type="text" name="value" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="model_image">Producto inicial de la relacion</label>
-                    <select class="form-control" name="product_id">
-                        @foreach($related_products as $related)
-                        <option value="{{$related->id}}">{{$related->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="text-right">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Guardar Imagen</button>
-                </div>
-            </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
 @foreach($product->images as $image)
 <div class="modal fade" id="modalEditImage_{{$image->id}}" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -941,23 +763,12 @@
 
 @push('scripts')
 <script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
-   <script src="{{ asset('lib/cleave.js/cleave.min.js') }}"></script>
+<script src="{{ asset('lib/spectrum-colorpicker/spectrum.js') }}"></script>
+
 <script type="text/javascript">
-    var cleaveA = new Cleave('#price', {
-      numeral: true,
-      numeralThousandsGroupStyle: 'thousand'
+    $('#colorpicker').spectrum({
+      color: '#17A2B8'
     });
-
-       var cleaveB = new Cleave('#discount_price', {
-          numeral: true,
-          numeralThousandsGroupStyle: 'thousand'
-        });
-
-        var cleaveC = new Cleave('#production_cost', {
-          numeral: true,
-          numeralThousandsGroupStyle: 'thousand'
-        });
-       
 </script>
 
 <script type="text/javascript">
@@ -971,12 +782,12 @@
     $('.value-checker').keyup(function(){
         event.preventDefault();
 
-          var price = $('#price').val();
-        var discount_price = $('#discount_price').replace(/,/g, "").val();
-        var production_cost = $('#production_cost').replace(/,/g, "").val();
+        var price = $('#price').val();
+        var discount_price = $('#discount_price').val();
+        var production_cost = $('#production_cost').val();
 
-        var margin = ((parseFloat(price.replace(/,/g, "")) - parseFloat(production_cost.replace(/,/g, ""))) / 100);
-        var profit = (parseFloat(price.replace(/,/g, "")) - parseFloat(production_cost.replace(/,/g, "")));
+        var margin = ((parseFloat(price) - parseFloat(production_cost)) / 100);
+        var profit = (parseFloat(price) - parseFloat(production_cost));
 
         $('#margin').text(parseFloat(margin).toFixed(2));
         $('#profit').text(parseFloat(profit).toFixed(2));

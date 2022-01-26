@@ -94,15 +94,15 @@ class ProductController extends Controller
         $product->in_index = $request->in_index;
         $product->is_favorite = $request->is_favorite;
         
-        $product->price = str_replace(',', '', $request->price);
+        $product->price = $request->price;
           if ($request->discount_price != NULL) {
-             $product->discount_price = str_replace(',', '',  $request->discount_price);
+             $product->discount_price =  $request->discount_price;
         }else{
              $product->discount_price = $request->discount_price;
         }
 
         if ($request->production_cost != NULL) {
-              $product->production_cost = str_replace(',', '', $request->production_cost);
+              $product->production_cost = $request->production_cost;
         }else{
              $product->production_cost = $request->production_cost;
         }
@@ -281,7 +281,7 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-       public function updateImage(Request $request)
+    public function updateImage(Request $request)
     {
 
         $var_imagen = ProductImage::find($request->id);
@@ -385,9 +385,9 @@ class ProductController extends Controller
         $product->in_index = $request->in_index;
         $product->is_favorite = $request->is_favorite;
         
-        $product->price = str_replace(',', '', $request->price);
-        $product->discount_price = str_replace(',', '',  $request->discount_price);
-        $product->production_cost = str_replace(',', '', $request->production_cost);
+        $product->price = $request->price;
+        $product->discount_price =  $request->discount_price;
+        $product->production_cost = $request->production_cost;
 
         $product->has_discount = $request->has_discount;
         $product->discount_start = $request->discount_start;
