@@ -184,7 +184,7 @@ class FrontController extends Controller
         ->with('variants', $variants);
     }
 
-        public function catalogPromo()
+    public function catalogPromo()
     {
         $products = Product::with('category')->orderBy('created_at', 'desc')->where('status', 'Publicado')->where('has_discount', '1')->paginate(15);
 
@@ -225,13 +225,12 @@ class FrontController extends Controller
         ->with('variants', $variants);
     }
 
-       public function catalog_order(Request $request)
+   public function catalog_order(Request $request)
     {
-
         /* Opciones para Filtro */
         $filter = $request->filter;
         $order = $request->order;
-      $products = Product::with('category')->orderBy($filter, $order)->where('status', 'Publicado')->paginate(15);
+        $products = Product::with('category')->orderBy($filter, $order)->where('status', 'Publicado')->paginate(15);
 
         $popular_products = Product::with('category')->where('is_favorite', true)->where('status', 'Publicado')->get();
         $categories = Category::with('productsIndex')->where('parent_id', 0)->orWhere('parent_id', NULL)->get();
@@ -245,7 +244,7 @@ class FrontController extends Controller
 
     }
 
-    public function detail ($category_slug, $slug)
+    public function detail($category_slug, $slug)
     {
         $catalog = Category::where('slug', $category_slug)->first();
         $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->with('category')->firstOrFail();
@@ -269,12 +268,13 @@ class FrontController extends Controller
         $size_charts = SizeChart::where('category_id', $catalog->id)->get();
         $categories = Category::all();
 
+
         $recomendations = Session::get('watch_history');
         $randomItems = Arr::random($recomendations, 1);
 
         $recomendation_category = Category::where('id', $randomItems[0]->category_id)->first();
-        $recomendation_products = Product::where('category_id', $recomendation_category->id)->take(10)->get()
-        ->random(5);
+        $recomendation_products = Product::where('category_id', $recomendation_category->id)->inRandomOrder()->take(10)->get();
+
         $store_config = $this->store_config;
 
         if (empty($product)) {
@@ -793,15 +793,6 @@ class FrontController extends Controller
             'state' => 'required',
             'city' => 'required',
             'references' => 'required',
-
-            'street_billing' => 'required',
-            'street_num_billing' => 'required',
-            'suburb_billing' => 'required',
-            'postal_code_billing' => 'required',
-            'country_billing' => 'required',
-            'state_billing' => 'required',
-            'city_billing' => 'required',
-
         ));
 
         if ($request->method == 'Pago con Tarjeta') {
@@ -811,11 +802,18 @@ class FrontController extends Controller
                 'card-month' => 'required|max:2',
                 'card-year' => 'required|max:4',
                 'card-cvc' => 'required|max:4',
+
+                'street_billing' => 'required',
+                'street_num_billing' => 'required',
+                'suburb_billing' => 'required',
+                'postal_code_billing' => 'required',
+                'country_billing' => 'required',
+                'state_billing' => 'required',
+                'city_billing' => 'required',
             ));
         }
 
         if ($payment_method->supplier == 'Conekta') {
-
             require_once(base_path() . '/vendor/conekta/conekta-php/lib/Conekta/Conekta.php');
             if ($payment_method->sandbox_mode == '1') {
                 $private_key_conekta = $payment_method->sandbox_private_key;
