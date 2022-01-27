@@ -172,7 +172,7 @@
 
                         <ul class="d-flex list-unstyled mb-4">
                             <li>
-                                <a href="{{ route('detail', [$base_product->base_product->category->slug, $base_product->base_product->slug]) }}" style="background-color: {{ $base_product->base_product->hex_color  }};" class="rs-variant" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $base_product->base_product->color }}">{{ $base_product->base_product->color }}</a>
+                                <a href="{{ route('detail', [$base_product->base_product->category->slug, $base_product->base_product->slug]) }}" style="background-color: {{ $base_product->base_product->hex_color  }}; border-color:{{ $base_product->base_product->hex_color  }};" class="rs-variant" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $base_product->base_product->color }}">{{ $base_product->base_product->color }}</a>
                             </li>
 
                             @foreach($all_relationships as $rs_variant)

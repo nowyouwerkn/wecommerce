@@ -57,10 +57,19 @@ class HeaderbandController extends Controller
         $headerband->save();
 
         // Mensaje de session
-        Session::flash('success', 'Se creo el cintillo con exito.');
+        Session::flash('success', 'Se creó el cintillo con exito.');
+
+        // Notificación
+        $type = 'Headerband';
+        $by = Auth::user();
+        $data = 'creó un cintillo promocional';
+        $model_action = "create";
+        $model_id = $headerband->id;
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         // Enviar a vista
-        return redirect()->route('band.index', $headerband->id);
+        return redirect()->route('band.index');
     }
 
     public function show($id)
@@ -102,8 +111,17 @@ class HeaderbandController extends Controller
         // Mensaje de session
         Session::flash('success', 'Se creo el cintillo con exito.');
 
+        // Notificación
+        $type = 'Headerband';
+        $by = Auth::user();
+        $data = 'editó un cintillo promocional';
+        $model_action = "update";
+        $model_id = $headerband->id;
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
         // Enviar a vista
-        return redirect()->route('band.index', $headerband->id);
+        return redirect()->route('band.index');
     }
 
     public function status(Request $request)
@@ -116,11 +134,19 @@ class HeaderbandController extends Controller
         }else {
             $headerband->is_active = true;
         }
-
         $headerband->save();
 
         // Mensaje de session
         Session::flash('success', 'El cintillo se ha cambiado de estado.');
+
+        // Notificación
+        $type = 'Headerband';
+        $by = Auth::user();
+        $data = 'cambió el estado de un cintillo promocional';
+        $model_action = "update";
+        $model_id = $headerband->id;
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         // Enviar a vista
         return redirect()->route('band.index');
@@ -129,9 +155,20 @@ class HeaderbandController extends Controller
     public function destroy($id)
     {
         $headerband = Headerband::find($id);
+
+        // Notificación
+        $type = 'Headerband';
+        $by = Auth::user();
+        $data = 'eliminó un cintillo promocional';
+        $model_action = "destroy";
+        $model_id = $headerband->id;
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
         $headerband->delete();
 
         Session::flash('success', 'El cintillo se eliminó correctamente.');
+
         return redirect()->route('band.index');
     }
 }

@@ -81,10 +81,20 @@
 
                     @guest
                     <li class="list-inline-item"><a href="{{ route('login') }}" class="btn btn-link px-1"><ion-icon name="person"></ion-icon></a></li>
-                    <li class="list-inline-item"><a href="{{ route('login') }}" class="btn btn-link px-1"><ion-icon name="heart"></ion-icon></a></li>
+                    <li class="list-inline-item">
+                        <a href="{{ route('login') }}" class="btn btn-link px-1">
+                            <ion-icon name="heart"></ion-icon>
+                            <span class="badge bg-info">0</span>
+                        </a>
+                    </li>
                     @else
                     <li class="list-inline-item"><a href="{{ route('profile') }}" class="btn btn-link px-1"><ion-icon name="person"></ion-icon></a></li>
-                    <li class="list-inline-item"><a href="{{ route('wishlist') }}" class="btn btn-link px-1"><ion-icon name="heart"></ion-icon></a></li>
+                    <li class="list-inline-item">
+                        <a href="{{ route('wishlist') }}" class="btn btn-link px-1">
+                            <ion-icon name="heart"></ion-icon>
+                            <span class="badge bg-info">{{ Auth::user()->wishlists->count() ?? '0'}}</span>
+                        </a>
+                    </li>
                     @endguest
 
                     @if(request()->is('checkout'))
@@ -93,7 +103,7 @@
                     <div class="dropdown" style="display: inline-flex;">
                         <a class="btn btn-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                             <ion-icon name="bag"></ion-icon>
-                            <span class="badge badge-danger">{{ Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
+                            <span class="badge bg-danger">{{ Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
                         </a>
 
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="min-width: 20rem; padding: 10px;">
@@ -139,7 +149,7 @@
                     @if(request()->is('checkout'))
 
                     @else
-                   <div class="dropdown" style="display: inline-flex;">
+                    <div class="dropdown" style="display: inline-flex;">
                       <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                         <ion-icon name="bag"></ion-icon>
                         <span>{{ Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
@@ -320,8 +330,9 @@
       $("body").removeClass("toggled");
       $(".clonado").remove();
     });
-        function toggleMenu() {
+    
+    function toggleMenu() {
       $("body").addClass("toggled");
-        }
+    }
 </script>
 @endpush

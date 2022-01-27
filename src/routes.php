@@ -187,7 +187,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     ]);
 
     Route::resource('clients', Nowyouwerkn\WeCommerce\Controllers\ClientController::class);
-    Route::resource('user-rules', Nowyouwerkn\WeCommerce\Controllers\UserRuleController::class);  //
+    Route::resource('user-rules', Nowyouwerkn\WeCommerce\Controllers\UserRuleController::class);
+
+    Route::get('/user-rules/change-status/{id}',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\UserRuleController@changeStatus',
+        'as' => 'user-rules.status',
+    ]);
+
     Route::get('exportar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@export')->name('export.clients');
     Route::post('importar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@import')->name('import.clients');
     Route::get('filter/clients/{order}/{filter}', [
