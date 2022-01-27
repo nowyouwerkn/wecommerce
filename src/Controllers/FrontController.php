@@ -49,6 +49,7 @@ use Nowyouwerkn\WeCommerce\Models\MailConfig;
 use Nowyouwerkn\WeCommerce\Models\Banner;
 use Nowyouwerkn\WeCommerce\Models\Cart;
 use Nowyouwerkn\WeCommerce\Models\Product;
+use Nowyouwerkn\WeCommerce\Models\ProductRelationship;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 use Nowyouwerkn\WeCommerce\Models\Variant;
 use Nowyouwerkn\WeCommerce\Models\Category;
@@ -92,7 +93,7 @@ class FrontController extends Controller
     public function __construct()
     {
         $this->middleware('web');
-        
+
         $this->notification = new NotificationController;
         $this->theme = new StoreTheme;
         $this->store_config = new StoreConfig;
@@ -257,7 +258,6 @@ class FrontController extends Controller
 
         $products_selected = Product::with('category')->where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->inRandomOrder()->take(6)->get();
 
-
         $next_product = Product::where('id', '>' , $product->id)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
         if ($next_product == null) {
              $next_product = Product::where('id', '<' , $product->id)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
@@ -268,10 +268,19 @@ class FrontController extends Controller
               $last_product = Product::where('id', '>' , $product->id)->orderBy('id','desc')->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
         }
 
-        $current_date_time = Carbon::now()->toDateTimeString();
-        $size_charts = SizeChart::where('category_id', $catalog->id)->get();
-        $categories = Category::all();
+        /* Double Variant System */
+        $product_relationships = ProductRelationship::where('base_product_id', $product->id)->orWhere('product_id', $product->id)->get();
 
+        if ($product_relationships->count() == NULL) {
+            $base_product = NULL;
+            $all_relationships = NULL;
+        }else{
+            $base_product = $product_relationships->take(1)->first();
+            $all_relationships = ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
+        }
+
+        /* Recommendation System */
+        $size_charts = SizeChart::where('category_id', $catalog->id)->get();
 
         $recomendations = Session::get('watch_history');
         $randomItems = Arr::random($recomendations, 1);
@@ -289,10 +298,11 @@ class FrontController extends Controller
             ->with('products_selected', $products_selected)
             ->with('store_config', $store_config)
             ->with('next_product', $next_product)
-            ->with('current_date_time', $current_date_time)
             ->with('size_charts', $size_charts)
             ->with('recomendation_products', $recomendation_products)
-            ->with('last_product', $last_product);
+            ->with('last_product', $last_product)
+            ->with('base_product', $base_product)
+            ->with('all_relationships', $all_relationships);
         }
     }
 

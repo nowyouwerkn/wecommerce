@@ -89,6 +89,7 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->materials = $request->materials;
         $product->color = $request->color;
+        $product->hex_color = $request->hex_color;
         $product->pattern = $request->pattern;
 
         $product->in_index = $request->in_index;
@@ -182,13 +183,12 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::findOrFail($id);
+        
         $categories = Category::where('parent_id', NULL)->orWhere('parent_id', '0')->get();
+        
         $variant_stock = ProductVariant::where('product_id', $product->id)->get();
 
         $related_products = Product::where('id', '!=' , $id)->where('category_id', $product->category_id)->get();
-
-        //$product_is_base = ProductRelationship::where('base_product_id', $product->id)->first();
-        //$relationship_product = ProductRelationship::where('product_id', $product->id)->first();
 
         $total_qty = 0;
 
@@ -200,37 +200,14 @@ class ProductController extends Controller
 
         $product_relationships = ProductRelationship::where('base_product_id', $id)->orWhere('product_id', $id)->get();
 
-        /*
-        if (!empty($product_is_base)) {
-            $base_product = Product::where('id', $product_is_base->base_product_id)->first();
-            $base_relationship = ProductRelationship::where('base_product_id', $base_product->id)->first();
-            $products_in_relationship = ProductRelationship::where('base_product_id', $base_product->id)->get();
-                    return view('wecommerce::back.products.show')
-                    ->with('product', $product)
-                    ->with('variant_stock', $variant_stock)
-                    ->with('categories', $categories)
-                    ->with('total_qty', $total_qty)
-                    ->with('related_products', $related_products)
-                    ->with('base_product', $base_product)
-                    ->with('base_relationship', $base_relationship)
-                    ->with('products_in_relationship', $products_in_relationship)
-                    ->with('relationship_product', $relationship_product);
-        }elseif(!empty($relationship_product)){
-            $base_product = Product::where('id', $relationship_product->base_product_id)->first();
-            $base_relationship = ProductRelationship::where('base_product_id', $base_product->id)->first();
-            $products_in_relationship = ProductRelationship::where('base_product_id', $base_product->id)->get();
-                    return view('wecommerce::back.products.show')
-                    ->with('product', $product)
-                    ->with('variant_stock', $variant_stock)
-                    ->with('categories', $categories)
-                    ->with('total_qty', $total_qty)
-                    ->with('related_products', $related_products)
-                    ->with('base_product', $base_product)
-                    ->with('base_relationship', $base_relationship)
-                    ->with('products_in_relationship', $products_in_relationship)
-                    ->with('relationship_product', $relationship_product);
+        if ($product_relationships->count() == NULL) {
+            $base_product = NULL;
+            $all_relationships = NULL;
+        }else{
+            $base_product = $product_relationships->take(1)->first();
+            $all_relationships = ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
         }
-        */
+        
 
         return view('wecommerce::back.products.show')
         ->with('product', $product)
@@ -238,7 +215,8 @@ class ProductController extends Controller
         ->with('categories', $categories)
         ->with('total_qty', $total_qty)
         ->with('related_products', $related_products)
-        ->with('product_relationships', $product_relationships);
+        ->with('base_product', $base_product)
+        ->with('all_relationships', $all_relationships);
     }
 
     public function storeImage(Request $request)
@@ -384,6 +362,7 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->materials = $request->materials;
         $product->color = $request->color;
+        $product->hex_color = $request->hex_color;
         $product->pattern = $request->pattern;
 
         $product->in_index = $request->in_index;
@@ -601,6 +580,7 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->materials = $request->materials;
         $product->color = $request->color;
+        $product->hex_color = $request->hex_color;
         $product->pattern = $request->pattern;
 
         $product->in_index = $request->in_index;

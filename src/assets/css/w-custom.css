@@ -214,6 +214,22 @@ nav{
     color: #fff;
 }
 
+.rs-variant{
+    width: 26px;
+    height: 26px;
+    border-radius: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: #000;
+    position: relative;
+    display: block;
+    margin-right: 10px;
+    background-color: #000;
+    text-indent: 110%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .wk-variant-title{
     text-transform: uppercase;
     font-size: .8em;
@@ -225,6 +241,42 @@ nav{
     display: block;
     font-size: .8em;
     margin-bottom: 15px;
+}
+
+.rate {
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+}
+.rate:not(:checked) > input {
+    position:absolute;
+    visibility: hidden;
+}
+.rate:not(:checked) > label {
+    float:right;
+    width:1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:30px;
+    color:#ccc;
+}
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+.rate > input:checked ~ label {
+    color: #ffc700;    
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #deb217;  
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #c59b08;
 }
 
 /* ORDER CARD */
