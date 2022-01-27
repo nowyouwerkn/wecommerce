@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Authentication Views
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 // INSTALADOR 
 Route::prefix('/instalador')->group(function () {
     Route::get('/', [
@@ -132,11 +129,24 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@stockUpdate',
         'as' => 'product.stock.update',
     ]);
-    Route::resource('relationship', Nowyouwerkn\WeCommerce\Controllers\ProductRelationshipController::class);
+    
+    //Route::resource('product-relationships', Nowyouwerkn\WeCommerce\Controllers\ProductRelationshipController::class);
+
+    Route::post('/obtener-color-de-producto', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductRelationshipController@fetchColor',
+        'as' => 'fetch.color',
+    ]);
+
+    Route::post('/product-relationships/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductRelationshipController@store',
+        'as' => 'relationship.store',
+    ]);
+
     Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
     Route::resource('variants', Nowyouwerkn\WeCommerce\Controllers\VariantController::class); //
     Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
     Route::resource('size_chart', Nowyouwerkn\WeCommerce\Controllers\SizeChartController::class);
+
     Route::post('size/add', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\SizeChartController@createsize',
         'as' => 'size.add',
@@ -436,7 +446,7 @@ Route::post('/apply-cuopon', [
 ]);
 
 //Profile
-Route::group(['prefix' => 'profile', 'middleware' => 'can:customer_access'], function(){
+Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:admin_access']], function(){
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
     Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
     Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');

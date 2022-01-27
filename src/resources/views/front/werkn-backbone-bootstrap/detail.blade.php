@@ -35,75 +35,74 @@
 @push('stylesheets')
 <style type="text/css">
     .rate {
-    float: left;
-    height: 46px;
-    padding: 0 10px;
-}
-.rate:not(:checked) > input {
-    position:absolute;
-    visibility: hidden;
-}
-.rate:not(:checked) > label {
-    float:right;
-    width:1em;
-    overflow:hidden;
-    white-space:nowrap;
-    cursor:pointer;
-    font-size:30px;
-    color:#ccc;
-}
-.rate:not(:checked) > label:before {
-    content: '★ ';
-}
-.rate > input:checked ~ label {
-    color: #ffc700;    
-}
-.rate:not(:checked) > label:hover,
-.rate:not(:checked) > label:hover ~ label {
-    color: #deb217;  
-}
-.rate > input:checked + label:hover,
-.rate > input:checked + label:hover ~ label,
-.rate > input:checked ~ label:hover,
-.rate > input:checked ~ label:hover ~ label,
-.rate > label:hover ~ input:checked ~ label {
-    color: #c59b08;
-}
+        float: left;
+        height: 46px;
+        padding: 0 10px;
+    }
+    .rate:not(:checked) > input {
+        position:absolute;
+        visibility: hidden;
+    }
+    .rate:not(:checked) > label {
+        float:right;
+        width:1em;
+        overflow:hidden;
+        white-space:nowrap;
+        cursor:pointer;
+        font-size:30px;
+        color:#ccc;
+    }
+    .rate:not(:checked) > label:before {
+        content: '★ ';
+    }
+    .rate > input:checked ~ label {
+        color: #ffc700;    
+    }
+    .rate:not(:checked) > label:hover,
+    .rate:not(:checked) > label:hover ~ label {
+        color: #deb217;  
+    }
+    .rate > input:checked + label:hover,
+    .rate > input:checked + label:hover ~ label,
+    .rate > input:checked ~ label:hover,
+    .rate > input:checked ~ label:hover ~ label,
+    .rate > label:hover ~ input:checked ~ label {
+        color: #c59b08;
+    }
 </style>
 @endpush
 
 @section('content')
-<br>
 <section class="product-detail">
+    <div class="wk-product-travel-nav pt-3 pb-3 mb-5">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                @if(!empty($last_product))
+                <div class="previous-product text-start">
+                    <a href="{{ route('detail', [$last_product->category->slug, $last_product->slug]) }}" class="btn btn-link"><ion-icon name="arrow-back-outline"></ion-icon> Producto anterior</a>
+                </div>
+                @endif
+
+                <div class="breadcrumb-content text-center">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{{ route('index') }}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('catalog.all') }}">Catálogo</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('catalog.all') }}">{{ $product->category->name ?? 'Sin Categoría' }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
+                    </ol>
+                </div>
+
+                @if(!empty($next_product))
+                <div class="next-product text-end">
+                    <a href="{{ route('detail', [$next_product->category->slug, $next_product->slug]) }}" class="btn btn-link">Siguiente producto <ion-icon name="arrow-forward-outline"></ion-icon></a>
+                </div>
+                @endif
+            </div>
+        </div>    
+    </div>
+
     <div class="container">
         <div class="row">
-            <div class="col-lg-3 d-none d-lg-block">
-                @if(!empty($last_product))
-                <div class="previous-product">
-                    <a href="{{ route('detail', [$last_product->category->slug, $last_product->slug]) }}"><i class="fas fa-angle-left"></i> Producto anterior</a>
-                </div>
-                @endif
-            </div>
-            <div class="col-lg-6">
-                <div class="breadcrumb-content">
-                    <nav aria-label="breadcrumb">
-                        
-                    </nav>
-                </div>
-            </div>
-            <div class="col-lg-3 d-none d-lg-block">
-                @if(!empty($next_product))
-                <div class="next-product">
-                    <a href="{{ route('detail', [$next_product->category->slug, $next_product->slug]) }}">Siguiente producto <i class="fas fa-angle-right"></i></a>
-                </div>
-                @endif
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-          
-            </div>
-
             <div class="col-md-6">
                 <div class="shop-details-flex-wrap d-flex">
                     <div class="shop-details-nav-wrap">
@@ -138,94 +137,105 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-md-6">
-                <div class="shop-details-content">
-                          <ol class="breadcrumb mb-10 mx-2 mt-2">
-                    <li class="breadcrumb-item"><a href="{{ route('index') }}">Inicio</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('catalog.all') }}">Catálogo</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('catalog.all') }}">{{ $product->category->name ?? 'Sin Categoría' }}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
-                    </ol>
-                    <h2 class="title mx-2 mt-2">{{ $product->name }}</h2>
+                <div class="shop-details-content">                    
+                    <h2 class="title mt-2">{{ $product->name }}</h2>
 
-                    <div class="rating d-flex mx-2 mt-2">
-                                @if(round($product->approved_reviews->avg('rating'), 0) == 0)
-                                <ion-icon name="star-outline"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                @endif
-                                  @if(round($product->approved_reviews->avg('rating'), 0) == 1)
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                @endif
-                                  @if(round($product->approved_reviews->avg('rating'), 0) == 2)
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                @endif
-                                  @if(round($product->approved_reviews->avg('rating'), 0) == 3)
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                @endif
-                                  @if(round($product->approved_reviews->avg('rating'), 0) == 4)
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star-outline"></ion-icon>
-                                @endif
-                                  @if(round($product->approved_reviews->avg('rating'), 0) == 5)
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star"></ion-icon>
-                                <ion-icon name="star"></ion-icon>
-                                @endif
-                    </div>
-                    
-                    <p class="style-name mx-2 mt-2">SKU : {{ $product->sku }}</p>
-                    <p class="style-name mx-2 mt-2">Stock : {{ $product->stock }}</p>
-                    @if($product->has_discount == true && $product->discount_end > $current_date_time)
-                    <div class="price mx-2 mt-2">Precio : ${{ number_format($product->discount_price, 2) }}</div>
-                    <div class="price price-discounted mx-2 mt-2">${{ number_format($product->price, 2) }}</div>
-                    @else
-                    <div class="price mx-2 mt-2">Precio : ${{ number_format($product->price, 2) }}</div>
-                    @endif
+                    <div class="rating d-flex mt-2">
+                        @if(round($product->approved_reviews->avg('rating'), 0) == 0)
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                        @endif
 
-                    
-                    <div class="product-details-info mx-2 mt-2">
-                        @if($product->has_variants == true)
-                            @if($product->variants->count() != 0)
-                            <div class="sidebar-product-size mb-30">
-                                <h4 class="widget-title">Escoge tu variante</h4>
-                                <div class="shop-size-list">
-                                    <ul class="d-flex list-unstyled">
-                                        @foreach($product->variants as $variant)
-                                            <li>
-                                                @if($variant->pivot->stock <= 0)
-                                                <div class="no-stock-variant card"><span class="line"></span>{{ $variant->value }}</div>
-                                                @else
-                                                <a id="variant{{ $variant->id }}" data-value="{{ $variant->value }}" class="card px-4 pt-2 pb-2 mx-2" href="javascript:void(0)">{{ $variant->value }}</a>
-                                                @endif
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                            @endif
+                        @if(round($product->approved_reviews->avg('rating'), 0) == 1)
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                        
+                        @if(round($product->approved_reviews->avg('rating'), 0) == 2)
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                        @endif
+
+                        @if(round($product->approved_reviews->avg('rating'), 0) == 3)
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                        @endif
+
+                        @if(round($product->approved_reviews->avg('rating'), 0) == 4)
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star-outline"></ion-icon>
+                        @endif
+                        
+                        @if(round($product->approved_reviews->avg('rating'), 0) == 5)
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
                         @endif
                     </div>
-                    <div class="perched-info d-flex">
+                    
+                    <p class="style-name mt-2">SKU: {{ $product->sku }}</p>
+
+                    @if($product->has_discount == true && $product->discount_end > Carbon\Carbon::today())
+                        <div class="wk-price">${{ number_format($product->discount_price, 2) }}</div>
+                        <div class="wk-price wk-price-discounted">${{ number_format($product->price, 2) }}</div>
+                    @else
+                        <div class="wk-price">${{ number_format($product->price, 2) }}</div>
+                    @endif
+
+                    @if($product->has_variants == true)
+                    <div class="product-details-info mt-4">
+                        <!-- Relaciones de Producto (Variante Secundaria) -->
+                        @if($product->relationships->count() != 0)
+                        <h6 class="wk-variant-title">Colores</h6>
+
+                        <ul class="d-flex list-unstyled">
+                            @foreach($product->relationships as $relationship)
+                                <li>
+                                    <a href="javascript:void(0)" class="relationship-variant" >{{ $relationship->value }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                        @endif
+
+                        <!-- Variantes -->
+                        @if($product->variants->count() != 0)
+                        <h6 class="wk-variant-title">Escoge tu variante <span class="text-warning">Existencias totales: {{ $product->stock }} <ion-icon name="alert-circle-outline"></ion-icon></span></h6>
+     
+                        <ul class="wk-variant-list d-flex list-unstyled">
+                            @foreach($product->variants as $variant)
+                                <li>
+                                    @if($variant->pivot->stock <= 0)
+                                    <div class="no-stock-variant"><span class="line"></span>{{ $variant->value }}</div>
+                                    @else
+                                    <a id="variant{{ $variant->id }}" data-value="{{ $variant->value }}" class="stock-variant" href="javascript:void(0)">{{ $variant->value }}</a>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                        @endif
+                    </div>
+                    @endif
+
+                    <div class="product-actions d-flex align-items-center mt-5">
                         <!--
                         <div class="cart-plus-minus">
                             <form action="#" class="num-block">
@@ -239,72 +249,71 @@
                         -->
                         @if($product->has_variants == true)
                             @if($product->variants->count() == 0)
-                                <div class="mr-3">
+                                <div class="me-3">
                                     <p class="no-existance-btn mb-0"><i class="fas fa-heartbeat"></i> Sin Existencias</p>
                                     <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>
                                 </div>
                             @else
-                           <a href="{{ route('add-cart', ['id' => $product->id, 'variant' => 'unique']) }}" id="cartBtn" class="btn btn-primary mx-2 mt-2 " role="button">
-                                <i class="fas fa-cart-plus"></i> Agregar al carrito
+                            <a href="#" id="addToCartBtn" class="btn btn-primary d-flex align-items-center me-3 position-relative" role="button">
+                                <div id="size-alert" class="size-alert">Selecciona una talla.</div>
+                                <ion-icon name="bag-add-outline"></ion-icon> Agregar al carrito
                             </a>
                             @endif
                         @else
                             @if($product->stock <= 0)
-                            <div class="mr-3">
+                            <div class="me-3">
                                 <p class="no-existance-btn mb-0"><i class="fas fa-heartbeat"></i> Sin Existencias</p>
                                 <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>
                             </div>
                             @else
-                            <a href="{{ route('add-cart', ['id' => $product->id, 'variant' => 'unique']) }}" id="cartBtn" class="btn btn-primary mx-2 mt-2 " role="button">
-                                <i class="fas fa-cart-plus"></i> Agregar al carrito
+                            <a href="{{ route('add-cart', ['id' => $product->id, 'variant' => 'unique']) }}" id="addToCartBtn" class="btn btn-primary d-flex align-items-center me-3 position-relative" role="button">
+                                <ion-icon name="bag-add-outline"></ion-icon> Agregar al carrito
                             </a>
                             @endif
                         @endif
 
-                       
-                                
-                                @if(isset(Auth::user()->id) && Auth::user()->isInWishlist($product->id))
-                                    <a href="{{ route('wishlist.remove', $product->id) }}" class="mx-2 mt-2 btn btn-danger"><i class="far fa-heartbeat"></i> Quitar de tu Wishlist</a>
-                                @else
-                                    @if(Auth::guest())
-                                    <a href="{{ route('login') }}" class="mx-2 mt-2 btn btn-info d-flex align-items-center text-center p-2"><i class="far fa-heart"></i> Agregar a tu Wishlist</a>
-                                    @else
-                                    <a href="{{ route('wishlist.add', $product->id) }}" class="mx-2 mt-2 btn btn-info d-flex align-items-center text-center p-2"><i class="far fa-heart"></i> Agregar a tu Wishlist</a>
-                                    @endif
-                                @endif
-                                
-                          
+                        @if(isset(Auth::user()->id) && Auth::user()->isInWishlist($product->id))
+                            <a href="{{ route('wishlist.remove', $product->id) }}" class="btn btn-outline-secondary d-flex align-items-center"><ion-icon name="heart-dislike-outline"></ion-icon> Quitar de tu Wishlist</a>
+                        @else
+                            @guest
+                            <a href="{{ route('login') }}" class="btn btn-outline-secondary d-flex align-items-center"><ion-icon name="heart-outline"></ion-icon> Agregar a tu Wishlist</a>
+                            @else
+                            <a href="{{ route('wishlist.add', $product->id) }}" class="btn btn-outline-secondary d-flex align-items-center"><ion-icon name="heart-outline"></ion-icon> Agregar a tu Wishlist</a>
+                            @endif
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
-<br>
-        <div class="row">
+
+        <div class="row mt-5 pt-4">
             <div class="col-md-12">
                 <div class="product-desc-wrap">
                     <div class="tab-content">
-                        <ul class="nav nav-pills" id="myTab" role="tablist">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
                           <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><h5 class="title">Información adicional:</h5></button>
+                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Información adicional</button>
                           </li>
                           <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="materials-tab" data-bs-toggle="tab" data-bs-target="#materials" type="button" role="tab" aria-controls="materials" aria-selected="false"><h5 class="title">Materiales:</h5></button>
+                            <button class="nav-link" id="materials-tab" data-bs-toggle="tab" data-bs-target="#materials" type="button" role="tab" aria-controls="materials" aria-selected="false">Materiales</button>
                           </li>
                           <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false"><h5 class="title">Reseñas ({{ $product->approved_reviews->count() ?? '0' }}) :</h5></button>
+                            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reseñas ({{ $product->approved_reviews->count() ?? '0' }})</button>
                           </li>
                            <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="sizes-tab" data-bs-toggle="tab" data-bs-target="#sizes" type="button" role="tab" aria-controls="sizes" aria-selected="false"><h5 class="title">Guia de tallas</h5></button>
+                            <button class="nav-link" id="sizes-tab" data-bs-toggle="tab" data-bs-target="#sizes" type="button" role="tab" aria-controls="sizes" aria-selected="false">Guia de tallas</button>
                           </li>
                         </ul>
+
                         <div class="tab-content mt-4" id="myTabContent">
                           <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"><p>{{ $product->description }}</p></div>
                           <div class="tab-pane fade" id="materials" role="tabpanel" aria-labelledby="materials-tab"><p>{{ $product->materials }}</p></div>
-                          <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">   @if($product->approved_reviews->count() != 0)
+                          <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">   
+                            @if($product->approved_reviews->count() != 0)
                                 @foreach($product->approved_reviews as $review)
                                     <div class="media">
                                         <img class="mr-3 rounded-circle" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($review->email))) . '?404' }}" width="50" alt="{{ $review->name }}">
-                                           <div class="rating d-flex mx-2 mt-2">
+                                           <div class="rating d-flex mt-2">
                                                 @if($review->rating == 0)
                                                 <ion-icon name="star-outline"></ion-icon>
                                                 <ion-icon name="star-outline"></ion-icon>
@@ -448,11 +457,11 @@
 </section>
 
 @if($products_selected->count() != 0)
-<section class="related-products">
+<section class="related-products mt-5">
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <div class="related-product-title">
+                <div class="related-product-title mb-3">
                     <h4 class="title">También te podría gustar...</h4>
                 </div>
             </div>
@@ -468,88 +477,17 @@
     </div>
 </section>
 @endif
-
-<!-- Modal GUIA DE TALLAS -->
-<div class="modal fade" id="sizesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="exampleModalLabel">Guía de Tallas</h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body px-4 modal-tallas">
-                <table class="table table-hover">
-                    <tbody>
-                        <tr>
-                            <th scope="row" style="width: 150px;">MEX</th>
-                            <td style="text-align: center;">25</td>
-                            <td style="text-align: center;">26</td>
-                            <td style="text-align: center;">27</td>
-                            <td style="text-align: center;">28</td>
-                            <td style="text-align: center;">29</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" style="width: 150px;">US</th>
-                            <td style="text-align: center;">5</td>
-                            <td style="text-align: center;">7</td>
-                            <td style="text-align: center;">9</td>
-                            <td style="text-align: center;">10</td>
-                            <td style="text-align: center;">12</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" style="width: 150px;">EU</th>
-                            <td style="text-align: center;">38</td>
-                            <td style="text-align: center;">40</td>
-                            <td style="text-align: center;">42</td>
-                            <td style="text-align: center;">43</td>
-                            <td style="text-align: center;">45</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" style="width: 150px;">UK</th>
-                            <td style="text-align: center;">4</td>
-                            <td style="text-align: center;">6</td>
-                            <td style="text-align: center;">8</td>
-                            <td style="text-align: center;">10</td>
-                            <td style="text-align: center;">11</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table class="table table-hover mb-0">
-                    <tbody>
-                        <tr>
-                            <th scope="row" style="width: 150px;">Longitud del Pie</th>
-                            <td style="text-align: center;">24.6 cm</td>
-                            <td style="text-align: center;">25.6 cm</td>
-                            <td style="text-align: center;">26.6 cm</td>
-                            <td style="text-align: center;">27.6 cm</td>
-                            <td style="text-align: center;">28.6 cm</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p><small>(Para que el calzado te quede a la medida, es recomendable que no exceda esta equivalencia en cms, puede haber un margen de 2 a 3 cms dependiento la forma del pie)</small></p>
-
-                <hr>
-                <h4>¿Cómo medir mi pie?</h4>
-                <p>Medir del talon a la punta del pie. Si al consultar la tabla y la equivalencia en cms. respecto a la medida del pie, dudamos entre dos tallas, es recomendable escoger la talla superior.</p>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
 @push('scripts')
     <script type="text/javascript">
-        $('.shop-size-list ul li a').click(function() {
+        /* Selector de Tallas */
+        $('.wk-variant-list li a').click(function() {
             event.preventDefault();
             console.log('Seleccionado:' , $(this).attr('data-value'));
             
-            $('.shop-size-list ul li a').removeClass('active');
-            $('#cartBtn').attr('href', '');
-
+            $('.wk-variant-list li a').removeClass('active');
+            $('#addToCartBtn').attr('href', '');
 
             if($(this).hasClass('active')){
                 $(this).removeClass('active');
@@ -564,7 +502,19 @@
             var url_new = url.replace(':value', value);
             var product_new = url_new.replace(':product', product);
 
-            $('#cartBtn').attr('href', product_new);             
+            $('#addToCartBtn').attr('href', product_new);             
+        });
+
+        /* Agregar al carrito */
+        $('#addToCartBtn').on('click', function(){
+            if ($('#addToCartBtn').attr('href') === '#') {
+                event.preventDefault();
+                $('#size-alert').fadeIn();
+
+                setTimeout(function () {
+                    $('#size-alert').fadeOut();
+                }, 1500);
+            }
         });
     </script>
 @endpush

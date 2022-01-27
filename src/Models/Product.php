@@ -27,6 +27,11 @@ class Product extends Model
         return $this->belongsToMany(Variant::class, 'product_variants', 'product_id', 'variant_id')->orderBy('value', 'asc')->withPivot('stock', 'sku', 'new_price');
     }
 
+    public function relationships()
+    {
+        return $this->belongsToMany(Product::class, 'product_relationships', 'product_id', 'base_product_id')->orderBy('value', 'asc')->withPivot('type', 'value');
+    }
+
     public function variants_stock()
     {
         return $this->hasMany(ProductVariant::class, 'product_id');

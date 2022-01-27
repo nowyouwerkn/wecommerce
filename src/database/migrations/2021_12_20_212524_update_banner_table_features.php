@@ -13,14 +13,14 @@ class UpdateBannerTableFeatures extends Migration
      */
     public function up()
     {
-         Schema::table('banners', function (Blueprint $table) {
+        Schema::table('banners', function (Blueprint $table) {
             $table->string('video_background')->after('link')->nullable();
             $table->string('hex_text_title')->after('hex')->nullable();
             $table->string('hex_text_subtitle')->after('hex_text_title')->nullable();
             $table->string('hex_button')->after('hex_text_subtitle')->nullable();
             $table->string('hex_text_button')->after('hex_button')->nullable();
             $table->string('position')->after('hex_text_button')->nullable();
-            });
+        });
     }
 
     /**

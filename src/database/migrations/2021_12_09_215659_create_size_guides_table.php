@@ -18,7 +18,6 @@ class CreateSizeGuidesTable extends Migration
             $table->string('size_value')->nullable();
             $table->string('size_chart_id')->nullable();
             $table->timestamps();
-
         });
     }
 

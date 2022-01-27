@@ -9,11 +9,14 @@ use Session;
 use Purifier;
 
 use Nowyouwerkn\WeCommerce\Models\Headerband;
+use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
 use Illuminate\Http\Request;
 
 class HeaderbandController extends Controller
 {
+    private $notification;
+
     public function __construct()
     {
         $this->notification = new NotificationController;

@@ -43,12 +43,21 @@
     <div class="col-md-4">
         <div class="mb-3">
             <label class="form-label" for="phone"><ion-icon name="help-circle" class="pointer" data-bs-toggle="popover" data-bs-placement="left" title="¿Por qué necesitan mi teléfono?" data-bs-content="En casos muy raros es posible que tengamos que contactarte respecto a tu orden."></ion-icon> Teléfono <span class="text-danger">*</span></label>
-            <input type="text" class="form-control phone-input" name="phone" value="{{ $address->phone ?? old('phone') }}" required="" />
+            <input type="text" class="form-control phone-input" name="phone" maxlength="10" value="{{ $address->phone ?? old('phone') }}" required="" placeholder="(555) 555-5555" />
         </div>
     </div>
 </div>
 
 @push('scripts')
+<!-- MASCARA DE FORMULARIOS PARA INPUTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.phone').mask('(000) 000-0000');
+});
+</script>
+
 <script type="text/javascript">
 	$(document).ready(function(){
         $('#email_confirm').keyup(function(){

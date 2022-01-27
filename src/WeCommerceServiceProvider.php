@@ -145,10 +145,12 @@ class WeCommerceServiceProvider extends ServiceProvider
         ], 'config_files');
 
         // Publicar archivos de base de datos
+        /*
         $this->publishes([
             __DIR__.'/database/migrations' => database_path('migrations/'),
         ], 'migration_files');
-
+        */
+        
         $this->publishes([
             __DIR__.'/database/seeders' => database_path('seeders/'),
         ], 'seeder_files');

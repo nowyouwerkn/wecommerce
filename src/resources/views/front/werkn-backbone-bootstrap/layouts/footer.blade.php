@@ -92,7 +92,7 @@
                             @foreach($legals as $legal)
                             <li>
                                 <a href="{{ route('legal.text' , $legal->type) }}">
-                                {{$legal->title}}
+                                    {{ $legal->title }}
                                 </a>
                             </li>
                             @endforeach

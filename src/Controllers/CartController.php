@@ -22,6 +22,8 @@ class CartController extends Controller
 
     public function __construct()
     {
+        $this->middleware('web');
+        
         $this->store_config = new StoreConfig;
     }
 
@@ -41,6 +43,7 @@ class CartController extends Controller
         $cart->add($product, $product->id, $variant, $price);
 
         $request->session()->put('cart', $cart);
+        Session::put('cart', $cart);
 
         //Facebook Event
         if ($this->store_config->has_pixel() != NULL) {

@@ -181,13 +181,15 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        
         $product = Product::findOrFail($id);
         $categories = Category::where('parent_id', NULL)->orWhere('parent_id', '0')->get();
         $variant_stock = ProductVariant::where('product_id', $product->id)->get();
-        $related_products = Product::where('category_id', $product->category_id)->orWhere('brand', $product->brand)->where('id', '!=' , $product->id)->get();
-        $product_is_base = ProductRelationship::where('base_product_id', $product->id)->first();
-        $relationship_product = ProductRelationship::where('product_id', $product->id)->first();
+
+        $related_products = Product::where('id', '!=' , $id)->where('category_id', $product->category_id)->get();
+
+        //$product_is_base = ProductRelationship::where('base_product_id', $product->id)->first();
+        //$relationship_product = ProductRelationship::where('product_id', $product->id)->first();
+
         $total_qty = 0;
 
         foreach ($variant_stock as $v_stock) {
@@ -196,6 +198,9 @@ class ProductController extends Controller
 
         $total_qty;
 
+        $product_relationships = ProductRelationship::where('base_product_id', $id)->orWhere('product_id', $id)->get();
+
+        /*
         if (!empty($product_is_base)) {
             $base_product = Product::where('id', $product_is_base->base_product_id)->first();
             $base_relationship = ProductRelationship::where('base_product_id', $base_product->id)->first();
@@ -225,8 +230,7 @@ class ProductController extends Controller
                     ->with('products_in_relationship', $products_in_relationship)
                     ->with('relationship_product', $relationship_product);
         }
-
-
+        */
 
         return view('wecommerce::back.products.show')
         ->with('product', $product)
@@ -234,7 +238,7 @@ class ProductController extends Controller
         ->with('categories', $categories)
         ->with('total_qty', $total_qty)
         ->with('related_products', $related_products)
-        ->with('relationship_product', $relationship_product);
+        ->with('product_relationships', $product_relationships);
     }
 
     public function storeImage(Request $request)

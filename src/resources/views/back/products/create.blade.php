@@ -105,11 +105,18 @@
                                 <textarea name="materials" cols="10" rows="3" class="form-control">{{ old('materiales') }}</textarea>
                             </div>
                         </div>
-    
+            
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="color">Color <span class="text-danger">*</span></label>
-                                <input type="text" name="color" class="form-control" placeholder="Ej. Negro" value="{{ old('color') }}">
+                            <div class="d-flex">
+                                <div class="form-group me-2">
+                                    <label for="color">Color <span class="text-danger">*</span></label>
+                                    <input type="text" name="color" class="form-control" placeholder="Ej. Negro" value="{{ old('color') }}" required="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="hex_color"># <span class="text-danger">*</span></label>
+                                    <input type="color" name="hex_color" class="form-control" value="{{ old('color') ?? '#17A2B8' }}" style="width:50px;" required="">
+                                </div>
                             </div>
                         </div>
     
@@ -283,45 +290,6 @@
                     </div>
                 </div>
 
-                <div class="card mg-t-10 mb-4">
-                    <!-- Header -->
-                    <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                        <h5 class="mg-b-5">Características de envío</h5>
-                        <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
-                    </div>
-
-                    <!-- Form -->
-                    <div class="card-body row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="height">Alto</label>
-                                <input type="number" name="height" class="form-control" value="{{ old('height') }}">
-                            </div>
-                        </div>
-    
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="width">Ancho</label>
-                                <input type="number" name="width" class="form-control" value="{{ old('width') }}">
-                            </div>
-                        </div>
-    
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="lenght">Largo</label>
-                                <input type="number" name="lenght" class="form-control" value="{{ old('lenght') }}">
-                            </div>
-                        </div>
-    
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="weight">Peso</label>
-                                <input type="number" name="weight" class="form-control" value="{{ old('weight') }}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 {{-- @include('wecommerce::back.products.partials._variant_card') --}}
                         
             </div>
@@ -440,6 +408,45 @@
                                         <option value="newborn">Recien Nacidos</option>
                                     </select>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mg-t-10 mb-4">
+                    <!-- Header -->
+                    <div class="card-header pd-t-20 pd-b-0 bd-b-0">
+                        <h5 class="mg-b-5">Características de envío</h5>
+                        <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
+                    </div>
+
+                    <!-- Form -->
+                    <div class="card-body row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="height">Alto</label>
+                                <input type="number" name="height" class="form-control" value="{{ old('height') }}">
+                            </div>
+                        </div>
+    
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="width">Ancho</label>
+                                <input type="number" name="width" class="form-control" value="{{ old('width') }}">
+                            </div>
+                        </div>
+    
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="lenght">Largo</label>
+                                <input type="number" name="lenght" class="form-control" value="{{ old('lenght') }}">
+                            </div>
+                        </div>
+    
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="weight">Peso</label>
+                                <input type="number" name="weight" class="form-control" value="{{ old('weight') }}">
                             </div>
                         </div>
                     </div>

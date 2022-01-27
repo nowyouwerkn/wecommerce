@@ -1,36 +1,92 @@
-<div class="card mb-4 box-shadow">
-                <a href="{{ route('detail', [$product_info->category->slug, $product_info->slug]) }}">
-                <img class="card-img-top" src="{{ asset('img/products/' . $product_info->image) }}" data-holder-rendered="true">
-                </a>
-                <div class="card-body">
-                    <h5 class="card-text">{{$product_info->name}}</h5>
-                  <p class="card-text">{{$product_info->description}}</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                        @if(isset(Auth::user()->id) && Auth::user()->isInWishlist($product_info->id))
-                         <a href="{{ route('wishlist.remove', $product_info->id) }}" class="btn-sm btn btn-outline-danger"><ion-icon name="heart-dislike"></ion-icon></a>
-                        @else
-                            @if(Auth::guest())
-                            <a href="{{ route('login') }}" class="btn btn-sm btn-outline-secondary"><ion-icon name="heart"></ion-icon></a>
-                            @else
-                             <a href="{{ route('wishlist.add', $product_info->id) }}"  class="btn btn-sm btn-outline-secondary"><ion-icon name="heart"></ion-icon></a>
-                            @endif
-                        @endif
-                        @if($product_info->status == 'Publicado')
-                        <a href="{{ route('add-cart', ['id' => $product_info->id, 'variant' => 'unique']) }}"  class="btn btn-sm btn-outline-secondary"><ion-icon name="cart"></ion-icon></a>
-                        @else
-                        <a href="#" class="btn btn-sm btn-outline-secondary">Disabled</a>
-                        @endif
-                    </div>
-                         @if($product_info->has_discount == true)
-        <span class="price">${{ number_format($product_info->discount_price, 2) }}</span>
-        <span class="price price-discounted">${{ number_format($product_info->price, 2) }}</span>
-        @else
-        <span class="price">${{ number_format($product_info->price, 2) }}</span>
+<div class="card mb-4">
+    <a href="{{ route('detail', [$product_info->category->slug, $product_info->slug]) }}">
+        <img class="card-img-top" src="{{ asset('img/products/' . $product_info->image) }}" data-holder-rendered="true">
+    </a>
+
+    <div class="card-body">
+        <h5 class="card-text mb-1">{{ $product_info->name }}</h5>
+
+        <div class="rating d-flex mt-0 mb-3">
+            @if(round($product_info->approved_reviews->avg('rating'), 0) == 0)
+                <ion-icon name="star-outline"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+            @endif
+
+            @if(round($product_info->approved_reviews->avg('rating'), 0) == 1)
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+            @endif
+            
+            @if(round($product_info->approved_reviews->avg('rating'), 0) == 2)
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+            @endif
+
+            @if(round($product_info->approved_reviews->avg('rating'), 0) == 3)
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+            @endif
+
+            @if(round($product_info->approved_reviews->avg('rating'), 0) == 4)
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star-outline"></ion-icon>
+            @endif
+            
+            @if(round($product_info->approved_reviews->avg('rating'), 0) == 5)
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+            @endif
+        </div>
+
+        <p class="card-text text-truncate">{{$product_info->description}}</p>
+        
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+                <a href="{{ route('detail', [$product_info->category->slug, $product_info->slug]) }}"  class="btn btn-sm btn-outline-secondary"><ion-icon name="eye-outline"></ion-icon></a>
+
+                @if(isset(Auth::user()->id) && Auth::user()->isInWishlist($product_info->id))
+                    <a href="{{ route('wishlist.remove', $product_info->id) }}" class="btn btn-sm btn-outline-danger d-flex align-items-center"><ion-icon name="heart-dislike-outline"></ion-icon></a>
+                @else
+                    @guest
+                    <a href="{{ route('login') }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center"><ion-icon name="heart-outline"></ion-icon></a>
+                    @else
+                    <a href="{{ route('wishlist.add', $product_info->id) }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center"><ion-icon name="heart-outline"></ion-icon></a>
+                    @endif
+                @endif
+            </div>
+
+            @if($product_info->has_discount == true && $product_info->discount_end > Carbon\Carbon::today())
+                <div class="wk-price">${{ number_format($product_info->discount_price, 2) }}</div>
+                <div class="wk-price wk-price-discounted">${{ number_format($product_info->price, 2) }}</div>
+            @else
+                <div class="wk-price">${{ number_format($product_info->price, 2) }}</div>
+            @endif
+        </div>
+
+        @if(request()->is('*/wishlist'))
+        <div class="footer-card-wish">Solo quedan {{$product_info->product->stock}}</div>
         @endif
-                  </div>
-                </div>
-              </div>
+    </div>
+</div>
+
 @push('stylesheets')
 
 @endpush

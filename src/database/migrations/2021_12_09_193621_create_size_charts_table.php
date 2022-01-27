@@ -17,7 +17,6 @@ class CreateSizeChartsTable extends Migration
             $table->id();
             $table->string('category_id')->nullable();
             $table->timestamps();
-           
         });
     }
 

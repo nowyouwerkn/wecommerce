@@ -91,6 +91,8 @@ class FrontController extends Controller
 
     public function __construct()
     {
+        $this->middleware('web');
+        
         $this->notification = new NotificationController;
         $this->theme = new StoreTheme;
         $this->store_config = new StoreConfig;
@@ -246,6 +248,8 @@ class FrontController extends Controller
 
     public function detail($category_slug, $slug)
     {
+        //dd(Session::get('cart'));
+
         $catalog = Category::where('slug', $category_slug)->first();
         $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->with('category')->firstOrFail();
 

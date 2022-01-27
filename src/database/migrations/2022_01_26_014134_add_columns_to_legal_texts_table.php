@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRatingReview extends Migration
+class AddSlugToLegalTextTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddRatingReview extends Migration
      */
     public function up()
     {
-        Schema::table('reviews', function (Blueprint $table) {
-            $table->string('rating')->after('review')->nullable();
+        Schema::table('legal_texts', function (Blueprint $table) {
+            $table->string('slug')->after('title')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddRatingReview extends Migration
      */
     public function down()
     {
-        Schema::table('reviews', function (Blueprint $table) {
-            $table->dropColumn('rating');
+        Schema::table('legal_texts', function (Blueprint $table) {
+            $table->dropColumn('slug');
         });
     }
 }

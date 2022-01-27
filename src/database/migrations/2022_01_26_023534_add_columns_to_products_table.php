@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddPaymentMethodToOrdersTable extends Migration
+class AddHexColorToProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,9 @@ class AddPaymentMethodToOrdersTable extends Migration
      */
     public function up()
     {
- 
+        Schema::table('products', function (Blueprint $table) {
+            $table->string('hex_color')->after('color')->nullable();
+        });
     }
 
     /**
@@ -23,6 +25,8 @@ class AddPaymentMethodToOrdersTable extends Migration
      */
     public function down()
     {
-
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('hex_color');
+        });
     }
 }

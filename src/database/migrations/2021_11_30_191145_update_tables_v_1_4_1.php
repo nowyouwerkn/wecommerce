@@ -13,9 +13,6 @@ class UpdateTablesv141 extends Migration
      */
     public function up()
     {
-
-
-
         Schema::table('notifications', function (Blueprint $table) {
             $table->string('model_action')->after('action_by');
             $table->string('model_id')->after('model_action');

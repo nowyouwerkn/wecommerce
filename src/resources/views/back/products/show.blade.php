@@ -411,8 +411,7 @@
             @if($product->has_variants == true)
                 @include('wecommerce::back.products.partials._variant_card')
             @endif
-
-            {{-- 
+            
             <div class="card mg-t-10 mb-4">
                 <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                     <h6 class="mg-b-5">Histórico de este producto</h6>
@@ -428,8 +427,7 @@
                     <h6 class="mb-0">No hay cambios en este producto todavía.</h6>
                 </div>
                 @endif
-            </div> 
-            --}}  
+            </div>   
         </div>
 
         <!-- Second -->

@@ -29,19 +29,27 @@
             @include('front.theme.werkn-backbone-bootstrap.layouts.partials._werkn_bar')
         @endif
 
+        @include('front.theme.werkn-backbone-bootstrap.layouts.partials._headerbands')
     	@include('front.theme.werkn-backbone-bootstrap.layouts.header')
 
     	<main class="mb-5">
-       
+            @include('front.theme.werkn-backbone-bootstrap.layouts.partials._messages')
+            @include('front.theme.werkn-backbone-bootstrap.layouts.partials._modal_messages')
     		@yield('content')
-
     	</main>
 
     	@include('front.theme.werkn-backbone-bootstrap.layouts.footer')
         
+        @include('front.theme.werkn-backbone-bootstrap.layouts.partials._cookies_notice')
+        @include('front.theme.werkn-backbone-bootstrap.layouts.partials._modal_popup')
+
 		<!-- JS -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+        <!-- Owl Carousel -->
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.0.0-beta.3/owl.carousel.min.js"></script>
 
         <!-- Icon Pack -->
@@ -49,9 +57,6 @@
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
     	@stack('scripts')
-
-
-        @include('front.theme.werkn-backbone-bootstrap.layouts.partials._modal_popup')
 
         @php
             $integrations = Nowyouwerkn\WeCommerce\Models\Integration::where('is_active', true)->get(['name', 'code']);

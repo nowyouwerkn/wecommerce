@@ -34,6 +34,7 @@
             @include('front.theme.werkn-backbone-bootstrap.layouts.partials._werkn_bar')
         @endif
 
+        @include('front.theme.werkn-backbone-bootstrap.layouts.partials._headerbands')
     	@include('front.theme.werkn-backbone-bootstrap.layouts.checkout.header')
 
     	<main>
@@ -57,7 +58,10 @@
     	</main>
 
     	@include('front.theme.werkn-backbone-bootstrap.layouts.checkout.footer')
-	
+
+		@include('front.theme.werkn-backbone-bootstrap.layouts.partials._cookies_notice')
+        @include('front.theme.werkn-backbone-bootstrap.layouts.partials._modal_popup')
+
 		<!-- Bootstrap --> 
 		<script src="{{ asset('themes/werkn-backbone-bootstrap/js/vendor/jquery-3.5.0.min.js') }}"></script>       
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -74,8 +78,6 @@
         </script>
 
     	@stack('scripts')
-
-        @include('front.theme.werkn-backbone-bootstrap.layouts.partials._modal_popup')
 
         @php
             $integrations = Nowyouwerkn\WeCommerce\Models\Integration::all();
