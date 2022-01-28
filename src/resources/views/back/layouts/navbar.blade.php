@@ -120,6 +120,13 @@
                     <i data-feather="users"></i> <span>Clientes</span>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a href="{{ route('invoices.index') }}" class="nav-link">
+                    <i data-feather="file-text"></i> <span>Facturación</span>
+                </a>
+            </li>
+
             <li class="nav-item">
                 <a href="{{ route('coupons.index') }}" class="nav-link">
                     <i data-feather="percent"></i> <span>Cupones</span>

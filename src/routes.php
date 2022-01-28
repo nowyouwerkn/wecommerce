@@ -187,6 +187,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     ]);
 
     Route::resource('clients', Nowyouwerkn\WeCommerce\Controllers\ClientController::class);
+    Route::resource('invoices', Nowyouwerkn\WeCommerce\Controllers\UserInvoiceController::class);
+
+    Route::get('filter/invoices/{invoice}/{filter}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\UserInvoiceController@filter',
+        'as' => 'filter.invoices',
+    ]);
+
     Route::resource('user-rules', Nowyouwerkn\WeCommerce\Controllers\UserRuleController::class);
 
     Route::get('/user-rules/change-status/{id}',[
@@ -452,7 +459,7 @@ Route::post('/apply-cuopon', [
 ]);
 
 //Profile
-Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:admin_access']], function(){
+Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_access']], function(){
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
     Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
     Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
@@ -473,6 +480,16 @@ Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:admin_access']
     Route::delete('/address/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@destroyAddress',
         'as' => 'address.destroy',
+    ]);
+
+    Route::get('/user/change-image',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@editImage',
+        'as' => 'profile.image',
+    ]);
+    
+    Route::put('/user/change-image/{id}',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@updateImage',
+        'as' => 'profile.image.update',
     ]);
 });
 

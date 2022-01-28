@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
+use Str;
+use Carbon\Carbon;
+
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -56,6 +59,9 @@ class CreateNewUser implements CreatesNewUsers
             $coupon->usage_limit_per_user = "1";
             $coupon->qty = $coupon_rule->value;
             $coupon->is_active = true;
+
+            $coupon->start_date = Carbon::now();
+            $coupon->end_date = Carbon::now()->addMonth(3);
 
             $coupon->save();   
         }

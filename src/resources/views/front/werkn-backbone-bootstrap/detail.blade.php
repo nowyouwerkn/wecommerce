@@ -284,7 +284,13 @@
                             @if($product->approved_reviews->count() != 0)
                                 @foreach($product->approved_reviews as $review)
                                     <div class="media">
-                                        <img class="mr-3 rounded-circle" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($review->email))) . '?404' }}" width="50" alt="{{ $review->name }}">
+
+                                        @if($review->user->image == NULL)
+                                            <img class="mr-3 rounded-circle" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim( $review->email))) . '?d=retro&s=100' }}" alt="{{ $review->name }}" width="50">
+                                        @else
+                                            <img class="mr-3 rounded-circle" src="{{ asset('img/users/' . $review->user->image ) }}" alt="{{ $review->name }}" width="50">
+                                        @endif
+
                                            <div class="rating d-flex mt-2">
                                                 @if($review->rating == 0)
                                                 <ion-icon name="star-outline"></ion-icon>

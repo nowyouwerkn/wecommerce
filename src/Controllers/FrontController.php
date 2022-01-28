@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Session;
 use Auth;
+use Image;
 use Carbon\Carbon;
 
 /* Stripe Helpers */
@@ -67,6 +68,7 @@ use Nowyouwerkn\WeCommerce\Models\SizeGuide;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
+use Nowyouwerkn\WeCommerce\Models\UserInvoice;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -1001,22 +1003,22 @@ class FrontController extends Controller
                     ));
                 } catch(\Stripe\Exception\CardException $e) {
                     // Error de validaciçon de tarjeta
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 }catch (\Stripe\Exception\RateLimitException $e) {
                     // Too many requests made to the API too quickly
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 } catch (\Stripe\Exception\InvalidRequestException $e) {
                     // Invalid parameters were supplied to Stripe's API
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 } catch (\Stripe\Exception\AuthenticationException $e) {
                     // Authentication with Stripe's API failed
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 } catch (\Stripe\Exception\ApiConnectionException $e) {
                     // Network communication with Stripe failed
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 } catch (\Stripe\Exception\ApiErrorException $e) {
                     // Display a very generic error to the user
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 }
 
                 break;
@@ -1359,6 +1361,21 @@ class FrontController extends Controller
             }
         }
         
+        // Guardar solicitud de factura si es que existe
+        if (isset($request->rfc_num)) {
+            $invoice = new UserInvoice;
+
+            $invoice->invoice_request_num = Str::slug(substr($request->rfc_num,0,4)) . '_' . Str::random(10);
+            $invoice->rfc_num = $request->rfc_num;
+            $invoice->cfdi_use = $request->cfdi_use;
+            $invoice->order_id = $order->id;
+            $invoice->user_id = $user->id;
+            $invoice->email = $request->email;
+
+            $invoice->save();
+        }
+
+        // Correo de confirmación de compra
         $mail = MailConfig::first();
         $config = StoreConfig::first();
 
@@ -1805,6 +1822,40 @@ class FrontController extends Controller
 
         // Mensaje de aviso server-side
         Session::flash('success', 'Tu cuenta se actualizó exitosamente.');
+
+        return redirect()->route('profile');
+    }
+
+    public function editImage()
+    {
+        $user = Auth::user();
+
+        return view('front.theme.' . $this->theme->get_name() . '.user_profile.image')->with('user', $user);
+    }
+
+    public function updateImage(Request $request, $id)
+    {
+        $this -> validate($request, array(
+
+        ));
+
+        $user = User::find($id);
+        
+        $user->image = $request->user_imagen;
+
+        if ($request->hasFile('user_image')) {
+            $user_image = $request->file('user_image');
+            $filename = 'user_img' . time() . '.' . $user_image->getClientOriginalExtension();
+            $location = public_path('img/users/' . $filename);
+
+            Image::make($user_image)->resize(400,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $user->image = $filename;
+        }
+
+        $user->save();
+
+        Session::flash('success', 'Tu imagen de perfil se actualizó exitosamente.');
 
         return redirect()->route('profile');
     }

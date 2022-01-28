@@ -14,6 +14,11 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
     
+    public function invoices()
+    {
+        return $this->hasMany(UserInvoice::class);
+    }
+
     public function notes()
     {
     	return $this->hasMany(OrderNote::class, 'order_id');

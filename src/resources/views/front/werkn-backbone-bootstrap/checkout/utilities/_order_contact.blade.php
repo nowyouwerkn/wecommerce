@@ -43,7 +43,7 @@
     <div class="col-md-4">
         <div class="mb-3">
             <label class="form-label" for="phone"><ion-icon name="help-circle" class="pointer" data-bs-toggle="popover" data-bs-placement="left" title="¿Por qué necesitan mi teléfono?" data-bs-content="En casos muy raros es posible que tengamos que contactarte respecto a tu orden."></ion-icon> Teléfono <span class="text-danger">*</span></label>
-            <input type="text" class="form-control phone-input" name="phone" maxlength="10" value="{{ $address->phone ?? old('phone') }}" required="" placeholder="(555) 555-5555" />
+            <input type="text" class="form-control phone-input" name="phone" maxlength="10" value="{{ $address->phone ?? old('phone') }}" required="" placeholder="(***) ***-****" />
         </div>
     </div>
 </div>
