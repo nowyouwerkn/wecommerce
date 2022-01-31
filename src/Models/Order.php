@@ -14,9 +14,9 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
     
-    public function invoices()
+    public function invoice()
     {
-        return $this->hasMany(UserInvoice::class);
+        return $this->hasOne(UserInvoice::class);
     }
 
     public function notes()

@@ -36,7 +36,7 @@
 
 		@else
 		<div class="col-md-6 offset-md-3 mt-5">
-			@include('front.theme.werkn-backbone-bootstrap.layouts._order_card')
+			@include('front.theme.werkn-backbone-bootstrap.layouts.utilities._order_card')
 		</div>
 		@endif
 	</div>

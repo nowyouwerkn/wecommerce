@@ -219,7 +219,7 @@ class NotificationController extends Controller
         return redirect()->back();
     }
 
-     public function orderDelivered( $order_id) {
+     public function orderDelivered($order_id) {
         $mail = MailConfig::first();
 
         config(['mail.driver'=> $mail->mail_driver]);

@@ -58,14 +58,17 @@
                             <hr>
 
                             @if($orders->count())
-                                @foreach($orders as $order)
-                                    @include('front.theme.werkn-backbone-bootstrap.layouts.utilities._order_card')
-                                @endforeach
+                                <div class="row">
+                                    @foreach($orders as $order)
+                                        <div class="col-md-6">
+                                            @include('front.theme.werkn-backbone-bootstrap.layouts.utilities._order_card')
+                                        </div>
+                                    @endforeach
+                                </div>
 
                                 <div class="text-center">
                                     <a class="btn btn-secondary mt-3" href="{{ route('shopping') }}">Ver todos</a>
                                 </div>
-
                             @else
                                 <div class="text-center my-5">
                                     <h4 class="mb-0">No tienes compras recientes.</h4>

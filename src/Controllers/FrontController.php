@@ -1373,6 +1373,15 @@ class FrontController extends Controller
             $invoice->email = $request->email;
 
             $invoice->save();
+
+            // Notificación
+            $type = 'Invoice';
+            $by = $user;
+            $data = 'Solicitó una factura para la orden: ' . $order->id;
+            $model_action = "create";
+            $model_id = $invoice->id;
+
+            $this->notification->send($type, $by ,$data, $model_action, $model_id);
         }
 
         // Correo de confirmación de compra
@@ -1430,11 +1439,9 @@ class FrontController extends Controller
         $by = $user;
         $data = 'hizo una compra por $' . $purchase_value;
         $model_action = "create";
-        $model_id = "";
-
+        $model_id = $order->id;
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
-
 
         //Facebook Event
         if ($this->store_config->has_pixel() != NULL) {
@@ -1725,6 +1732,42 @@ class FrontController extends Controller
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.shopping')
         ->with('total_orders', $total_orders)
         ->with('orders', $orders);
+    }
+
+    public function invoiceRequest(Request $request, $order_id, $user_id)
+    {
+        //Validation
+        $this -> validate($request, array(
+            'rfc_num' => 'required|max:255',
+            'cfdi_use' => 'required|max:255',
+        ));
+
+        // Guardar solicitud de factura si es que existe
+        $invoice = new UserInvoice;
+
+        $invoice->invoice_request_num = Str::slug(substr($request->rfc_num,0,4)) . '_' . Str::random(10);
+        $invoice->rfc_num = $request->rfc_num;
+        $invoice->cfdi_use = $request->cfdi_use;
+        
+        $invoice->order_id = $order_id;
+        $invoice->user_id = $user_id;
+        $invoice->email = $request->email;
+
+        $invoice->save();
+
+        // Notificación
+        $type = 'Invoice';
+        $by = Auth::user();
+        $data = 'Solicitó una factura para la orden: ' . $invoice->order->id;
+        $model_action = "create";
+        $model_id = $invoice->id;
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
+        //Session message
+        Session::flash('success', 'Tu solicitud de factura fue guardada exitosamente. La procesaremos y te enviaremos los archivos a tu correo electrónico.');
+
+        return redirect()->back();
     }
 
     public function address ()

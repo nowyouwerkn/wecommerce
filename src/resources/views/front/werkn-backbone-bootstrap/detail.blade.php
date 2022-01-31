@@ -285,10 +285,12 @@
                                 @foreach($product->approved_reviews as $review)
                                     <div class="media">
 
-                                        @if($review->user->image == NULL)
-                                            <img class="mr-3 rounded-circle" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim( $review->email))) . '?d=retro&s=100' }}" alt="{{ $review->name }}" width="50">
-                                        @else
-                                            <img class="mr-3 rounded-circle" src="{{ asset('img/users/' . $review->user->image ) }}" alt="{{ $review->name }}" width="50">
+                                        @if($review->user != NULL)
+                                            @if($review->user->image == NULL)
+                                                <img class="mr-3 rounded-circle" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim( $review->email))) . '?d=retro&s=100' }}" alt="{{ $review->name }}" width="50">
+                                            @else
+                                                <img class="mr-3 rounded-circle" src="{{ asset('img/users/' . $review->user->image ) }}" alt="{{ $review->name }}" width="50">
+                                            @endif
                                         @endif
 
                                            <div class="rating d-flex mt-2">
@@ -410,21 +412,21 @@
                              <div class="tab-pane fade show " id="sizes" role="tabpanel" aria-labelledby="reviews-tab">
 
                                 <table class="table table-hover table-responsive mt-2 mb-4">
-                                            <tbody>
-                                                 @foreach($size_charts as $size_chart)
-                                                <tr>
-                                                    @php
-                                                    $size_values = Nowyouwerkn\WeCommerce\Models\Size_guide::where('size_chart_id', '=', $size_chart->id)->get();
-                                                    @endphp
-                                                    <th scope="row" style="width: 150px;">{{$size_chart->name}}</th>
-                                                     @foreach($size_values as $size)
-                                                    <td style="text-align: center;">{{$size->size_value}}</td>
-                                                    @endforeach
-                                                    
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                    <tbody>
+                                         @foreach($size_charts as $size_chart)
+                                        <tr>
+                                            @php
+                                            $size_values = Nowyouwerkn\WeCommerce\Models\Size_guide::where('size_chart_id', '=', $size_chart->id)->get();
+                                            @endphp
+                                            <th scope="row" style="width: 150px;">{{$size_chart->name}}</th>
+                                             @foreach($size_values as $size)
+                                            <td style="text-align: center;">{{$size->size_value}}</td>
+                                            @endforeach
+                                            
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

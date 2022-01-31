@@ -135,7 +135,7 @@
 
 						<p>Si tienes alguna pregunta, no dudes en contactarnos (Si respondes a este correo electr&oacute;nico, no podremos verlo)</p>
 						<p>&nbsp;</p>
-						<p>2021 {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
+						<p>2022 {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
 					</td>
 				</tr>
 			</tbody>

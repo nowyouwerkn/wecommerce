@@ -457,7 +457,6 @@
 
                             <a href="{{ route('order.packing.list', $order->id) }}" class="btn btn-outline-dark"><i class="fas fa-print"></i> Imprimir Lista de Empaque</a>
                         </div>
-                        
                     </div>
                 </div>
 

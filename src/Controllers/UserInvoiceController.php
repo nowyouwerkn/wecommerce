@@ -8,7 +8,11 @@ use Carbon\Carbon;
 use Auth;
 use Storage;
 use Session;
+use Mail;
 
+use Nowyouwerkn\WeCommerce\Models\StoreConfig;
+use Nowyouwerkn\WeCommerce\Models\StoreTheme;
+use Nowyouwerkn\WeCommerce\Models\MailConfig;
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\Order;
 use Nowyouwerkn\WeCommerce\Models\UserInvoice;
@@ -23,7 +27,6 @@ use Illuminate\Http\Request;
 
 class UserInvoiceController extends Controller
 {
-
     private $notification;
 
     public function __construct()
@@ -64,8 +67,17 @@ class UserInvoiceController extends Controller
             'is_active' => true
         ]);
 
+        // Notificación
+        $type = 'Invoice';
+        $by = Auth::user();
+        $data = 'Solicitó una factura para la orden: ' . $invoice->order->id;
+        $model_action = "create";
+        $model_id = $invoice->id;
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
         //Session message
-        Session::flash('success', 'El elemento fue registrado exitosamente.');
+        Session::flash('success', 'Tu solicitud de factura fue guardada exitosamente');
 
         return redirect()->route('coupons.index');
     }
@@ -73,7 +85,10 @@ class UserInvoiceController extends Controller
 
     public function show($id)
     {
-        
+        $invoice = UserInvoice::find($id);
+
+        return view('wecommerce::back.invoices.show')
+        ->with('invoice', $invoice);
     }
 
 
@@ -85,23 +100,81 @@ class UserInvoiceController extends Controller
  
     public function update(Request $request, $id)
     {
-        //Validation
-        $this -> validate($request, array(
-            'type' => 'required|max:255',
-        ));
+        $invoice = UserInvoice::find($id);
 
-        $rule = UserInvoice::find($id);
+        $invoice->file_attachment = $request->file_attachment;
+        $invoice->pdf_file = $request->pdf_file;
+        $invoice->xml_file = $request->xml_file;
 
-        $rule->update([
-            'type' => $request->type,
-            'value' => $request->value,
-            'is_active' => true,
-        ]);
+        $invoice->status = 'Completado';
+
+        $invoice->save();
+
+        // Notificación
+        $type = 'Invoice';
+        $by = Auth::user();
+        $data = 'Se agregaron archivos para la factura con identificador interno: ' . $invoice->invoice_request_num;
+        $model_action = "update";
+        $model_id = $invoice->id;
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
+        /* Enviar Correo */
+        $mail = MailConfig::first();
+
+        config(['mail.driver'=> $mail->mail_driver]);
+        config(['mail.host'=>$mail->mail_host]);
+        config(['mail.port'=>$mail->mail_port]);   
+        config(['mail.username'=>$mail->mail_username]);
+        config(['mail.password'=>$mail->mail_password]);
+        config(['mail.encryption'=>$mail->mail_encryption]);
+
+        $order = Order::find($invoice->order_id);
+        $user = User::find($invoice->user_id);
+
+        $email = $user->email;
+        $name = $user->name;
+
+        $config = StoreConfig::first();
+        $theme = StoreTheme::first();
+
+        $sender_email = $config->sender_email;
+        $store_name = $config->store_name;
+        $contact_email = $config->contact_email;
+
+        $logo = asset('themes/' . $theme->get_name() . '/img/logo.svg');
+
+        $data = array('order_id' => $order->id, 'user_id' => $user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at);
+
+        try {
+            Mail::send('wecommerce::mail.order_invoice', $data, function($message) use($name, $email, $sender_email, $store_name, $invoice, $theme) {
+                $message->to($email, $name)->subject
+                ('¡Tu factura de tu compra en línea!');
+                
+                if ($invoice->file_attachment != NULL) {
+                    $message->attach(asset('themes/' . $theme->get_name() . '/img/logo.svg'));
+                }
+
+                if ($invoice->pdf_file != NULL) {
+                    $message->attach(asset('themes/' . $theme->get_name() . '/img/logo.svg'));
+                }
+
+                if ($invoice->xml_file != NULL) {
+                    $message->attach(asset('themes/' . $theme->get_name() . '/img/logo.svg'));
+                }
+                
+                $message->from($sender_email, $store_name);
+            });
+        } catch (Exception $e) {
+            Session::flash('error', 'No se ha identificado servidor SMTP en la plataforma. Configuralo correctamente para enviar correos desde tu sistema.');
+
+            return redirect()->back();
+        }
 
         //Session message
-        Session::flash('success', 'El elemento fue registrado exitosamente.');
+        Session::flash('success', 'Se guardaron los archivos de forma exitosa. Se envió automáticamente el correo con los archivos a tu cliente y el estado de la factura pasó a completado.');
 
-        return redirect()->route('coupons.index');
+        return redirect()->back();
     }
 
     public function destroy($id)

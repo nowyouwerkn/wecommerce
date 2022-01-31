@@ -1,3 +1,7 @@
+@php
+	$legals = Nowyouwerkn\WeCommerce\Models\LegalText::all();
+@endphp
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -66,9 +70,41 @@
 			<tbody>
 				<tr>
 					<td>
+						<ul style="list-style: none;display: inline-flex;padding: 0px;">
+		                  <li style="padding:0px 5px;"><a href="">Inicio</a></li>
+		                  <li style="padding:0px 5px;"><a href="">Catálogo</a></li>
+
+		                  @foreach($legals as $legal)
+		                  <li style="padding:0px 5px;">
+		                      <a href="{{ route('legal.text' , $legal->type) }}">
+		                          @switch($legal->type)
+		                              @case('Returns')
+		                                  Política de Devoluciones
+		                                  @break
+
+		                              @case('Privacy')
+		                                  Política de Privacidad
+		                                  @break
+
+		                              @case('Terms')
+		                                  Términos y Condiciones
+		                                  @break
+
+		                              @case('Shipment')
+		                                  Política de Envíos
+		                                  @break
+
+		                              @default
+		                                  Hubo un problema, intenta después.
+		                          @endswitch 
+		                      </a>
+		                  </li>
+		                  @endforeach
+		              </ul>
+
 						<p>Si tienes alguna pregunta, no dudes en contactarnos (Si respondes a este correo electr&oacute;nico, no podremos verlo)</p>
 						<p>&nbsp;</p>
-						<p>2021 {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
+						<p>2022 {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
 					</td>
 				</tr>
 			</tbody>
