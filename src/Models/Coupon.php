@@ -20,4 +20,9 @@ class Coupon extends Model
     {
         return $this->hasMany(UserCoupon::class, 'coupon_id', 'id');
     }
+
+    public function madeForUser()
+    {
+        return $this->hasOne(User::class, 'made_for_user');
+    }
 }

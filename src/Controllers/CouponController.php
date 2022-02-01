@@ -7,6 +7,8 @@ use Session;
 use Auth;
 use Purifier;
 
+use Nowyouwerkn\WeCommerce\Models\User;
+use Nowyouwerkn\WeCommerce\Models\UserRule;
 use Nowyouwerkn\WeCommerce\Models\Coupon;
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
@@ -26,7 +28,11 @@ class CouponController extends Controller
     {
         $coupons = Coupon::paginate(10);
 
-        return view('wecommerce::back.coupons.index')->with('coupons', $coupons);
+        $user_rules = UserRule::all();
+
+        return view('wecommerce::back.coupons.index')
+        ->with('coupons', $coupons)
+        ->with('user_rules', $user_rules);
     }
 
     public function create()

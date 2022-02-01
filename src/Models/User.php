@@ -47,6 +47,11 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(UserInvoice::class);
+    }
+
     public function notifications()
     {
         return $this->hasMany(Notification::class);
@@ -65,6 +70,22 @@ class User extends Authenticatable
     public function coupons()
     {
         return $this->belongsToMany(Coupon::class, 'user_coupons', 'user_id', 'coupon_id');
+    }
+
+    public function hasCoupon()
+    {
+        $value = Coupon::where('made_for_user', $this->id)->first();
+
+        if ($value == NULL) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function coupon()
+    {
+        return $this->hasOne(Coupon::class, 'made_for_user', 'id');
     }
 
     public function isInWishlist($productId)

@@ -33,43 +33,7 @@
 @endpush
 
 @push('stylesheets')
-<style type="text/css">
-    .rate {
-        float: left;
-        height: 46px;
-        padding: 0 10px;
-    }
-    .rate:not(:checked) > input {
-        position:absolute;
-        visibility: hidden;
-    }
-    .rate:not(:checked) > label {
-        float:right;
-        width:1em;
-        overflow:hidden;
-        white-space:nowrap;
-        cursor:pointer;
-        font-size:30px;
-        color:#ccc;
-    }
-    .rate:not(:checked) > label:before {
-        content: '★ ';
-    }
-    .rate > input:checked ~ label {
-        color: #ffc700;    
-    }
-    .rate:not(:checked) > label:hover,
-    .rate:not(:checked) > label:hover ~ label {
-        color: #deb217;  
-    }
-    .rate > input:checked + label:hover,
-    .rate > input:checked + label:hover ~ label,
-    .rate > input:checked ~ label:hover,
-    .rate > input:checked ~ label:hover ~ label,
-    .rate > label:hover ~ input:checked ~ label {
-        color: #c59b08;
-    }
-</style>
+
 @endpush
 
 @section('content')
@@ -200,23 +164,31 @@
                     @else
                         <div class="wk-price">${{ number_format($product->price, 2) }}</div>
                     @endif
+                    
+                    @if(!empty($all_relationships))
+                    <div class="product-details-info mt-4">
+                        <!-- Relaciones de Producto (Variante Secundaria) -->
+                        <h6 class="wk-variant-title">Colores</h6>
+
+                        <ul class="d-flex list-unstyled mb-4">
+                            <li>
+                                <a href="{{ route('detail', [$base_product->base_product->category->slug, $base_product->base_product->slug]) }}" style="background-color: {{ $base_product->base_product->hex_color  }}; border-color:{{ $base_product->base_product->hex_color  }};" class="rs-variant" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $base_product->base_product->color }}">{{ $base_product->base_product->color }}</a>
+                            </li>
+
+                            @foreach($all_relationships as $rs_variant)
+                                @if($rs_variant->product->status != 'Borrador')
+                                <li>
+                                    <a href="{{ route('detail', [$rs_variant->product->category->slug, $rs_variant->product->slug]) }}" style="background-color: {{ $rs_variant->product->hex_color  }};" class="rs-variant" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $rs_variant->value }}">{{ $rs_variant->value }}</a>
+                                </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
 
                     @if($product->has_variants == true)
                     <div class="product-details-info mt-4">
-                        <!-- Relaciones de Producto (Variante Secundaria) -->
-                        @if($product->relationships->count() != 0)
-                        <h6 class="wk-variant-title">Colores</h6>
-
-                        <ul class="d-flex list-unstyled">
-                            @foreach($product->relationships as $relationship)
-                                <li>
-                                    <a href="javascript:void(0)" class="relationship-variant" >{{ $relationship->value }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
-                        @endif
-
-                        <!-- Variantes -->
+                        <!-- Variantes Principales -->
                         @if($product->variants->count() != 0)
                         <h6 class="wk-variant-title">Escoge tu variante <span class="text-warning">Existencias totales: {{ $product->stock }} <ion-icon name="alert-circle-outline"></ion-icon></span></h6>
      
@@ -312,7 +284,15 @@
                             @if($product->approved_reviews->count() != 0)
                                 @foreach($product->approved_reviews as $review)
                                     <div class="media">
-                                        <img class="mr-3 rounded-circle" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($review->email))) . '?404' }}" width="50" alt="{{ $review->name }}">
+
+                                        @if($review->user != NULL)
+                                            @if($review->user->image == NULL)
+                                                <img class="mr-3 rounded-circle" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim( $review->email))) . '?d=retro&s=100' }}" alt="{{ $review->name }}" width="50">
+                                            @else
+                                                <img class="mr-3 rounded-circle" src="{{ asset('img/users/' . $review->user->image ) }}" alt="{{ $review->name }}" width="50">
+                                            @endif
+                                        @endif
+
                                            <div class="rating d-flex mt-2">
                                                 @if($review->rating == 0)
                                                 <ion-icon name="star-outline"></ion-icon>
@@ -432,21 +412,21 @@
                              <div class="tab-pane fade show " id="sizes" role="tabpanel" aria-labelledby="reviews-tab">
 
                                 <table class="table table-hover table-responsive mt-2 mb-4">
-                                            <tbody>
-                                                 @foreach($size_charts as $size_chart)
-                                                <tr>
-                                                    @php
-                                                    $size_values = Nowyouwerkn\WeCommerce\Models\Size_guide::where('size_chart_id', '=', $size_chart->id)->get();
-                                                    @endphp
-                                                    <th scope="row" style="width: 150px;">{{$size_chart->name}}</th>
-                                                     @foreach($size_values as $size)
-                                                    <td style="text-align: center;">{{$size->size_value}}</td>
-                                                    @endforeach
-                                                    
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                    <tbody>
+                                         @foreach($size_charts as $size_chart)
+                                        <tr>
+                                            @php
+                                            $size_values = Nowyouwerkn\WeCommerce\Models\Size_guide::where('size_chart_id', '=', $size_chart->id)->get();
+                                            @endphp
+                                            <th scope="row" style="width: 150px;">{{$size_chart->name}}</th>
+                                             @foreach($size_values as $size)
+                                            <td style="text-align: center;">{{$size->size_value}}</td>
+                                            @endforeach
+                                            
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -516,6 +496,12 @@
                 }, 1500);
             }
         });
+
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+
     </script>
 @endpush
 

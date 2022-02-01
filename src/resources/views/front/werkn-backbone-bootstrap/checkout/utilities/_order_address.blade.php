@@ -200,7 +200,7 @@
                 
                <label>
                 <input type="hidden" name="save_address" value="false">
-                <input type="checkbox" name="save_address" value="true">  Guardar dirección para despues</label>
+                <input type="checkbox" name="save_address" value="true">  Guardar esta dirección para después</label>
             </div>
             <div class="card-body card-body-new-add" id="new_address_body">
                 <div class="row">

@@ -187,7 +187,20 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     ]);
 
     Route::resource('clients', Nowyouwerkn\WeCommerce\Controllers\ClientController::class);
-    Route::resource('user-rules', Nowyouwerkn\WeCommerce\Controllers\UserRuleController::class);  //
+    Route::resource('invoices', Nowyouwerkn\WeCommerce\Controllers\UserInvoiceController::class);
+
+    Route::get('filter/invoices/{invoice}/{filter}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\UserInvoiceController@filter',
+        'as' => 'filter.invoices',
+    ]);
+
+    Route::resource('user-rules', Nowyouwerkn\WeCommerce\Controllers\UserRuleController::class);
+
+    Route::get('/user-rules/change-status/{id}',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\UserRuleController@changeStatus',
+        'as' => 'user-rules.status',
+    ]);
+
     Route::get('exportar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@export')->name('export.clients');
     Route::post('importar-clientes', 'Nowyouwerkn\WeCommerce\Controllers\ClientController@import')->name('import.clients');
     Route::get('filter/clients/{order}/{filter}', [
@@ -317,9 +330,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     /* Rutas de Correo */
     Route::get('send_order_email','Nowyouwerkn\WeCommerce\Controllers\NotificationController@order_email');
 
-    Route::post('/resend-mail/{order_id}', [
+    Route::post('/resend-order-mail/{order_id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\NotificationController@resendOrder',
         'as' => 'resend.order.mail',
+    ]);
+
+    Route::post('/resend-invoice-mail/{invoice_id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\NotificationController@resendInvoice',
+        'as' => 'resend.invoice.mail',
     ]);
 
     // Búsqueda
@@ -446,10 +464,16 @@ Route::post('/apply-cuopon', [
 ]);
 
 //Profile
-Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:admin_access']], function(){
+Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_access']], function(){
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
     Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
     Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
+    
+    Route::post('orders/{order_id}/request-invoice/{user_id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@invoiceRequest',
+        'as' => 'invoice.request',
+    ]);
+
     Route::get('address', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@address')->name('address');
     Route::get('address/{id}/edit', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@editAddress')->name('address.edit');
     Route::get('account', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@account')->name('account');
@@ -467,6 +491,16 @@ Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:admin_access']
     Route::delete('/address/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@destroyAddress',
         'as' => 'address.destroy',
+    ]);
+
+    Route::get('/user/change-image',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@editImage',
+        'as' => 'profile.image',
+    ]);
+    
+    Route::put('/user/change-image/{id}',[
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@updateImage',
+        'as' => 'profile.image.update',
     ]);
 });
 

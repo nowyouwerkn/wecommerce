@@ -29,7 +29,7 @@ class Product extends Model
 
     public function relationships()
     {
-        return $this->belongsToMany(Product::class, 'product_relationships', 'product_id', 'base_product_id')->orderBy('value', 'asc')->withPivot('type', 'value');
+        return $this->belongsToMany(Product::class, 'product_relationships', 'base_product_id', 'product_id')->orderBy('value', 'asc')->withPivot('type', 'value');
     }
 
     public function variants_stock()

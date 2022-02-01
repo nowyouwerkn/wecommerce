@@ -52,7 +52,6 @@
                         <div class="col-md-12">
                             {{ $orders->links() }}
                         </div>
-                        
                     </div>
                     @else
                         <div class="text-center my-5">

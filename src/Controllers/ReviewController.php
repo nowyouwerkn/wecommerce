@@ -9,6 +9,7 @@ use Auth;
 use Storage;
 use Session;
 
+use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Review;
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
@@ -48,7 +49,13 @@ class ReviewController extends Controller
         ));
 
         $product = Product::find($id);
+        $user = User::where('email', $request->email)->first();
+
         $review = new Review();
+
+        if (!empty($user)) {
+            $review->user_id = $user->id;
+        }
 
         $review->name = $request->name;
         $review->email = $request->email;
@@ -65,8 +72,6 @@ class ReviewController extends Controller
         $data = 'Un usuario dejó una reseña para: ' . $product->name;
         $model_action = "create";
         $model_id = $product->id;
-
-
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
 

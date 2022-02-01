@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Session;
 use Auth;
+use Image;
 use Carbon\Carbon;
 
 /* Stripe Helpers */
@@ -49,6 +50,7 @@ use Nowyouwerkn\WeCommerce\Models\MailConfig;
 use Nowyouwerkn\WeCommerce\Models\Banner;
 use Nowyouwerkn\WeCommerce\Models\Cart;
 use Nowyouwerkn\WeCommerce\Models\Product;
+use Nowyouwerkn\WeCommerce\Models\ProductRelationship;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 use Nowyouwerkn\WeCommerce\Models\Variant;
 use Nowyouwerkn\WeCommerce\Models\Category;
@@ -66,6 +68,7 @@ use Nowyouwerkn\WeCommerce\Models\SizeGuide;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
+use Nowyouwerkn\WeCommerce\Models\UserInvoice;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -92,7 +95,7 @@ class FrontController extends Controller
     public function __construct()
     {
         $this->middleware('web');
-        
+
         $this->notification = new NotificationController;
         $this->theme = new StoreTheme;
         $this->store_config = new StoreConfig;
@@ -257,7 +260,6 @@ class FrontController extends Controller
 
         $products_selected = Product::with('category')->where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->inRandomOrder()->take(6)->get();
 
-
         $next_product = Product::where('id', '>' , $product->id)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
         if ($next_product == null) {
              $next_product = Product::where('id', '<' , $product->id)->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
@@ -268,10 +270,19 @@ class FrontController extends Controller
               $last_product = Product::where('id', '>' , $product->id)->orderBy('id','desc')->where('category_id', $catalog->id)->where('status', 'Publicado')->with('category')->first();
         }
 
-        $current_date_time = Carbon::now()->toDateTimeString();
-        $size_charts = SizeChart::where('category_id', $catalog->id)->get();
-        $categories = Category::all();
+        /* Double Variant System */
+        $product_relationships = ProductRelationship::where('base_product_id', $product->id)->orWhere('product_id', $product->id)->get();
 
+        if ($product_relationships->count() == NULL) {
+            $base_product = NULL;
+            $all_relationships = NULL;
+        }else{
+            $base_product = $product_relationships->take(1)->first();
+            $all_relationships = ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
+        }
+
+        /* Recommendation System */
+        $size_charts = SizeChart::where('category_id', $catalog->id)->get();
 
         $recomendations = Session::get('watch_history');
         $randomItems = Arr::random($recomendations, 1);
@@ -289,10 +300,11 @@ class FrontController extends Controller
             ->with('products_selected', $products_selected)
             ->with('store_config', $store_config)
             ->with('next_product', $next_product)
-            ->with('current_date_time', $current_date_time)
             ->with('size_charts', $size_charts)
             ->with('recomendation_products', $recomendation_products)
-            ->with('last_product', $last_product);
+            ->with('last_product', $last_product)
+            ->with('base_product', $base_product)
+            ->with('all_relationships', $all_relationships);
         }
     }
 
@@ -991,22 +1003,22 @@ class FrontController extends Controller
                     ));
                 } catch(\Stripe\Exception\CardException $e) {
                     // Error de validaciçon de tarjeta
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 }catch (\Stripe\Exception\RateLimitException $e) {
                     // Too many requests made to the API too quickly
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 } catch (\Stripe\Exception\InvalidRequestException $e) {
                     // Invalid parameters were supplied to Stripe's API
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 } catch (\Stripe\Exception\AuthenticationException $e) {
                     // Authentication with Stripe's API failed
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 } catch (\Stripe\Exception\ApiConnectionException $e) {
                     // Network communication with Stripe failed
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 } catch (\Stripe\Exception\ApiErrorException $e) {
                     // Display a very generic error to the user
-                    return redirect()->route('checkout')->with('error', $e->getError()->message);
+                    return redirect()->route('checkout')->with('error', $e->getError());
                 }
 
                 break;
@@ -1349,6 +1361,30 @@ class FrontController extends Controller
             }
         }
         
+        // Guardar solicitud de factura si es que existe
+        if (isset($request->rfc_num)) {
+            $invoice = new UserInvoice;
+
+            $invoice->invoice_request_num = Str::slug(substr($request->rfc_num,0,4)) . '_' . Str::random(10);
+            $invoice->rfc_num = $request->rfc_num;
+            $invoice->cfdi_use = $request->cfdi_use;
+            $invoice->order_id = $order->id;
+            $invoice->user_id = $user->id;
+            $invoice->email = $request->email;
+
+            $invoice->save();
+
+            // Notificación
+            $type = 'Invoice';
+            $by = $user;
+            $data = 'Solicitó una factura para la orden: ' . $order->id;
+            $model_action = "create";
+            $model_id = $invoice->id;
+
+            $this->notification->send($type, $by ,$data, $model_action, $model_id);
+        }
+
+        // Correo de confirmación de compra
         $mail = MailConfig::first();
         $config = StoreConfig::first();
 
@@ -1403,11 +1439,9 @@ class FrontController extends Controller
         $by = $user;
         $data = 'hizo una compra por $' . $purchase_value;
         $model_action = "create";
-        $model_id = "";
-
+        $model_id = $order->id;
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
-
 
         //Facebook Event
         if ($this->store_config->has_pixel() != NULL) {
@@ -1700,6 +1734,42 @@ class FrontController extends Controller
         ->with('orders', $orders);
     }
 
+    public function invoiceRequest(Request $request, $order_id, $user_id)
+    {
+        //Validation
+        $this -> validate($request, array(
+            'rfc_num' => 'required|max:255',
+            'cfdi_use' => 'required|max:255',
+        ));
+
+        // Guardar solicitud de factura si es que existe
+        $invoice = new UserInvoice;
+
+        $invoice->invoice_request_num = Str::slug(substr($request->rfc_num,0,4)) . '_' . Str::random(10);
+        $invoice->rfc_num = $request->rfc_num;
+        $invoice->cfdi_use = $request->cfdi_use;
+
+        $invoice->order_id = $order_id;
+        $invoice->user_id = $user_id;
+        $invoice->email = $request->email;
+
+        $invoice->save();
+
+        // Notificación
+        $type = 'Invoice';
+        $by = Auth::user();
+        $data = 'Solicitó una factura para la orden: ' . $invoice->order->id;
+        $model_action = "create";
+        $model_id = $invoice->id;
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
+        //Session message
+        Session::flash('success', 'Tu solicitud de factura fue guardada exitosamente. La procesaremos y te enviaremos los archivos a tu correo electrónico.');
+
+        return redirect()->back();
+    }
+
     public function address ()
     {
         $addresses = UserAddress::where('user_id', Auth::user()->id)->where('is_billing', false)->paginate(10);
@@ -1799,6 +1869,40 @@ class FrontController extends Controller
         return redirect()->route('profile');
     }
 
+    public function editImage()
+    {
+        $user = Auth::user();
+
+        return view('front.theme.' . $this->theme->get_name() . '.user_profile.image')->with('user', $user);
+    }
+
+    public function updateImage(Request $request, $id)
+    {
+        $this -> validate($request, array(
+
+        ));
+
+        $user = User::find($id);
+        
+        $user->image = $request->user_imagen;
+
+        if ($request->hasFile('user_image')) {
+            $user_image = $request->file('user_image');
+            $filename = 'user_img' . time() . '.' . $user_image->getClientOriginalExtension();
+            $location = public_path('img/users/' . $filename);
+
+            Image::make($user_image)->resize(400,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $user->image = $filename;
+        }
+
+        $user->save();
+
+        Session::flash('success', 'Tu imagen de perfil se actualizó exitosamente.');
+
+        return redirect()->route('profile');
+    }
+
     /*
     * Extras Front
     * Lógica de cupones
@@ -1818,6 +1922,7 @@ class FrontController extends Controller
 
             // Obteniendo datos desde el Request enviado por Ajax a esta ruta
             $coupon = Coupon::where('code', $cuopon_code)->first();
+
             if (empty($coupon)) {
                 // Regresar Respuesta a la Vista
                 return response()->json(['mensaje' => 'Ese cupón no existe o ya no está disponible. Intenta con otro o contacta con nosotros.', 'type' => 'exception'], 200);
@@ -1948,7 +2053,7 @@ class FrontController extends Controller
                             break;
 
                         case 'free_shipping':
-                            $qty = 0;
+                            $qty = 0; 
                             $discount = 0;
 
                             break;
@@ -1958,16 +2063,7 @@ class FrontController extends Controller
                             return response()->json(['mensaje' => 'Este tipo de cupón no existe, revisa con administración.', 'type' => 'exception'], 200);
                             break;
                     }
-
-                    // Si cantidad menor al minimo requerido mandar response de error.
-                    if ($shipping_rules->condition == 'Cantidad Comprada' && $shipping_rules->comparison_operator == '>') {
-
-                          if ($discount <= $shipping_rules->value) {
-                        return response()->json(['mensaje' => 'Este cupon no puede ser aplicado debido a que el cupon reduce ', 'type' => 'exception'], 200);
-                        }
-                    }
                     
-
                     if ($coupon->is_free_shipping == true) {
                         $free_shipping = $shipping * 0;
                     }else{
@@ -1981,11 +2077,11 @@ class FrontController extends Controller
                         $mp_preference = NULL;
                         $mp_preference_id =  NULL;
                     }else{
-                           if ($mercado_payment->sandbox_mode == '1') {
-                                $private_key_mercadopago = $mercado_payment->sandbox_private_key;
-                            }elseif ($mercado_payment->sandbox_mode == '0') {
-                                $private_key_mercadopago = $mercado_payment->private_key;
-                            }
+                        if ($mercado_payment->sandbox_mode == '1') {
+                            $private_key_mercadopago = $mercado_payment->sandbox_private_key;
+                        }elseif ($mercado_payment->sandbox_mode == '0') {
+                            $private_key_mercadopago = $mercado_payment->private_key;
+                        }
                         MercadoPago\SDK::setAccessToken($private_key_mercadopago);
 
                         // Create a Item to Pay

@@ -49,13 +49,12 @@ class ClientController extends Controller
 
         $wishlists_today = Wishlist::where('created_at', '<=', $today)
         ->count();
-        $user_rules = UserRule::all(); 
+
         return view('wecommerce::back.clients.index')
         ->with('clients', $clients)
         ->with('new_clients', $new_clients)
         ->with('clients_today', $clients_today)
         ->with('wishlists', $wishlists)
-        ->with('user_rules', $user_rules)
         ->with('wishlists_today', $wishlists_today);
     }
 
