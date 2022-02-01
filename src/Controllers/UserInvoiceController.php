@@ -5,10 +5,12 @@ use App\Http\Controllers\Controller;
 
 use Carbon\Carbon;
 
+use Str;
 use Auth;
 use Storage;
 use Session;
 use Mail;
+use Image;
 
 use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 use Nowyouwerkn\WeCommerce\Models\StoreTheme;
@@ -102,9 +104,41 @@ class UserInvoiceController extends Controller
     {
         $invoice = UserInvoice::find($id);
 
-        $invoice->file_attachment = $request->file_attachment;
-        $invoice->pdf_file = $request->pdf_file;
-        $invoice->xml_file = $request->xml_file;
+        //$invoice->file_attachment = $request->file_attachment;
+        //$invoice->pdf_file = $request->pdf_file;
+        //$invoice->xml_file = $request->xml_file;
+
+        $user = User::find($invoice->user_id);
+
+        if ($request->hasFile('file_attachment')) {
+            $archivo = $request->file('file_attachment');
+            $filename = 'factura_' . Str::slug($user->name, '_') . '_' . Carbon::now()->format('d_m_y') . '_orden_' . $invoice->order_id .'.' . $archivo->getClientOriginalExtension();
+            
+            $location = public_path('files/invoices/');
+            $archivo->move($location, $filename);
+
+            $invoice->file_attachment = $filename;
+        }
+
+        if ($request->hasFile('pdf_file')) {
+            $archivo = $request->file('pdf_file');
+            $filename_pdf = 'factura_' . Str::slug($user->name, '_') . Carbon::now()->format('d_m_y') . 'order_' . $invoice->order_id .'.' . $archivo->getClientOriginalExtension();
+            
+            $location = public_path('files/invoices/');
+            $archivo->move($location, $filename_pdf);
+
+            $invoice->pdf_file = $filename_pdf;
+        }
+
+        if ($request->hasFile('xml_file')) {
+            $archivo = $request->file('xml_file');
+            $filename_xml = 'factura_' . Str::slug($user->name, '_') . Carbon::now()->format('d_m_y') . 'order_' . $invoice->order_id .'.' . $archivo->getClientOriginalExtension();
+            
+            $location = public_path('files/invoices/');
+            $archivo->move($location, $filename_xml);
+
+            $invoice->xml_file = $filename_xml;
+        }
 
         $invoice->status = 'Completado';
 
@@ -152,15 +186,15 @@ class UserInvoiceController extends Controller
                 ('¡Tu factura de tu compra en línea!');
                 
                 if ($invoice->file_attachment != NULL) {
-                    $message->attach(asset('themes/' . $theme->get_name() . '/img/logo.svg'));
+                    $message->attach(asset('files/invoices/' . $invoice->file_attachment ));
                 }
 
                 if ($invoice->pdf_file != NULL) {
-                    $message->attach(asset('themes/' . $theme->get_name() . '/img/logo.svg'));
+                    $message->attach(asset('files/invoices/' . $invoice->pdf_file ));
                 }
 
                 if ($invoice->xml_file != NULL) {
-                    $message->attach(asset('themes/' . $theme->get_name() . '/img/logo.svg'));
+                    $message->attach(asset('files/invoices/' . $invoice->xml_file ));
                 }
                 
                 $message->from($sender_email, $store_name);

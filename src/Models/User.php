@@ -72,6 +72,22 @@ class User extends Authenticatable
         return $this->belongsToMany(Coupon::class, 'user_coupons', 'user_id', 'coupon_id');
     }
 
+    public function hasCoupon()
+    {
+        $value = Coupon::where('made_for_user', $this->id)->first();
+
+        if ($value == NULL) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function coupon()
+    {
+        return $this->hasOne(Coupon::class, 'made_for_user', 'id');
+    }
+
     public function isInWishlist($productId)
     {
         $wishList = Wishlist::where('user_id', '=', $this->attributes['id'])

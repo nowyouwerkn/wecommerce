@@ -299,7 +299,7 @@ nav{
 .progress-meter {
     min-height: 15px;
     border-bottom: 2px solid rgb(160, 160, 160);
-    margin-bottom: 50px;
+    margin-bottom: 25px;
     margin-top: 10px;
 }
 
@@ -344,9 +344,8 @@ nav{
     z-index: 2;
 }
 
-
 .card-order-status{
-    width: 70%;
+    width: 100%;
 }
 
 .box-icon-order{
@@ -358,47 +357,16 @@ nav{
     background-size: contain;
 }
 
-.tracking-type{
-    position: absolute;
-    height: auto;
-    border: 2px solid #e6646e;
-    background: #e6646e;
-    color: #000;
-    padding: 5px 10px;
-    box-sizing: border-box;
-    top: -80px;
-    right: -72px;
-}
-
-.tracking-type:after{
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border-top: 0px solid #e6646e;
-    border-right: 2px solid #e6646e;
-    border-bottom: 2px solid #e6646e;
-    border-left: 0px solid #e6646e;
-    top: 100%;
-    left: 50%;
-    margin-left: -10px;
-    content: '';
-    transform: rotate(45deg);
-    margin-top: -10px;
-    background: #e6646e;
-}
-
-.tracking-type h5{
-    position: relative;
-    z-index: 1;
-    margin-bottom: 5px; 
+.order-card-product{
     font-size: .8em;
-    text-transform: uppercase;
 }
 
-.tracking-type p{
-    position: relative;
-    z-index: 1;
-    font-size: 1.2em;
+.order-card-info{
+    font-size: .8em;
+}
+
+.order-card-info h6{
+    font-size: 12px;
 }
 
 /* POP-UP */

@@ -61,7 +61,9 @@ class CreateNewUser implements CreatesNewUsers
             $coupon->is_active = true;
 
             $coupon->start_date = Carbon::now();
-            $coupon->end_date = Carbon::now()->addMonth(3);
+            $coupon->end_date = Carbon::now()->addDays(15);
+
+            $coupon->made_for_user = $user->id;
 
             $coupon->save();   
         }

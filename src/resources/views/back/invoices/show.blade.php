@@ -334,7 +334,7 @@
 							</div>
 
 							<h5>Factura</h5>
-							<p class="filename"><a target="_blank" href="{{ asset('img/clients/files/' . $invoice->pdf_file ) }}">{{ $invoice->pdf_file }}</a></p>
+							<p class="filename"><a target="_blank" href="{{ asset('files/invoices/' . $invoice->pdf_file ) }}">{{ $invoice->pdf_file }}</a></p>
 							<hr>
 							<p class="upload-time">Subido: {{ $invoice->updated_at }}</p>
 						</div>
@@ -362,7 +362,7 @@
 							</div>
 
 							<h5>Factura</h5>
-							<p class="filename"><a target="_blank" href="{{ asset('img/clients/files/' . $invoice->xml_file ) }}">{{ $invoice->xml_file }}</a></p>
+							<p class="filename"><a target="_blank" href="{{ asset('files/invoices/' . $invoice->xml_file ) }}">{{ $invoice->xml_file }}</a></p>
 							<hr>
 							<p class="upload-time">Subido: {{ $invoice->updated_at }}</p>
 						</div>
@@ -390,7 +390,7 @@
 							</div>
 
 							<h5>Factura</h5>
-							<p class="filename"><a target="_blank" href="{{ asset('img/clients/files/' . $invoice->file_attachment ) }}">{{ $invoice->file_attachment }}</a></p>
+							<p class="filename"><a target="_blank" href="{{ asset('files/invoices/' . $invoice->file_attachment ) }}">{{ $invoice->file_attachment }}</a></p>
 							<hr>
 							<p class="upload-time">Subido: {{ $invoice->updated_at }}</p>
 						</div>

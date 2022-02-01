@@ -182,15 +182,15 @@
             <div class="d-flex order-card-info mt-2">
                 <ul class="list-inline">
                     @if($order->invoice->pdf_file != NULL)
-                    <li class="list-inline-item"><a href=""><ion-icon name="document-outline"></ion-icon> PDF</a></li>
+                    <li class="list-inline-item"><a href="{{ asset('files/invoices/' . $order->invoice->pdf_file ) }}" target="_blank"><ion-icon name="document-outline"></ion-icon> PDF</a></li>
                     @endif
 
                     @if($order->invoice->xml_file != NULL)
-                    <li class="list-inline-item"><a href=""><ion-icon name="document-outline"></ion-icon> XML</a></li>
+                    <li class="list-inline-item"><a href="{{ asset('files/invoices/' . $order->invoice->xml_file ) }}" target="_blank"><ion-icon name="document-outline"></ion-icon> XML</a></li>
                     @endif
 
                     @if($order->invoice->file_attachment != NULL)
-                    <li class="list-inline-item"><a href=""><ion-icon name="folder-outline"></ion-icon> .ZIP</a></li>
+                    <li class="list-inline-item"><a href="{{ asset('files/invoices/' . $order->invoice->file_attachment ) }}" target="_blank"><ion-icon name="folder-outline"></ion-icon> .ZIP</a></li>
                     @endif
                 </ul>
             </div>

@@ -1748,7 +1748,7 @@ class FrontController extends Controller
         $invoice->invoice_request_num = Str::slug(substr($request->rfc_num,0,4)) . '_' . Str::random(10);
         $invoice->rfc_num = $request->rfc_num;
         $invoice->cfdi_use = $request->cfdi_use;
-        
+
         $invoice->order_id = $order_id;
         $invoice->user_id = $user_id;
         $invoice->email = $request->email;
@@ -1922,6 +1922,7 @@ class FrontController extends Controller
 
             // Obteniendo datos desde el Request enviado por Ajax a esta ruta
             $coupon = Coupon::where('code', $cuopon_code)->first();
+
             if (empty($coupon)) {
                 // Regresar Respuesta a la Vista
                 return response()->json(['mensaje' => 'Ese cupón no existe o ya no está disponible. Intenta con otro o contacta con nosotros.', 'type' => 'exception'], 200);
@@ -2052,7 +2053,7 @@ class FrontController extends Controller
                             break;
 
                         case 'free_shipping':
-                            $qty = 0;
+                            $qty = 0; 
                             $discount = 0;
 
                             break;
@@ -2062,16 +2063,7 @@ class FrontController extends Controller
                             return response()->json(['mensaje' => 'Este tipo de cupón no existe, revisa con administración.', 'type' => 'exception'], 200);
                             break;
                     }
-
-                    // Si cantidad menor al minimo requerido mandar response de error.
-                    if ($shipping_rules->condition == 'Cantidad Comprada' && $shipping_rules->comparison_operator == '>') {
-
-                          if ($discount <= $shipping_rules->value) {
-                        return response()->json(['mensaje' => 'Este cupon no puede ser aplicado debido a que el cupon reduce ', 'type' => 'exception'], 200);
-                        }
-                    }
                     
-
                     if ($coupon->is_free_shipping == true) {
                         $free_shipping = $shipping * 0;
                     }else{
@@ -2085,11 +2077,11 @@ class FrontController extends Controller
                         $mp_preference = NULL;
                         $mp_preference_id =  NULL;
                     }else{
-                           if ($mercado_payment->sandbox_mode == '1') {
-                                $private_key_mercadopago = $mercado_payment->sandbox_private_key;
-                            }elseif ($mercado_payment->sandbox_mode == '0') {
-                                $private_key_mercadopago = $mercado_payment->private_key;
-                            }
+                        if ($mercado_payment->sandbox_mode == '1') {
+                            $private_key_mercadopago = $mercado_payment->sandbox_private_key;
+                        }elseif ($mercado_payment->sandbox_mode == '0') {
+                            $private_key_mercadopago = $mercado_payment->private_key;
+                        }
                         MercadoPago\SDK::setAccessToken($private_key_mercadopago);
 
                         // Create a Item to Pay
