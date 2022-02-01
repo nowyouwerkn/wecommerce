@@ -413,16 +413,10 @@
 
                                 <table class="table table-hover table-responsive mt-2 mb-4">
                                     <tbody>
-                                         @foreach($size_charts as $size_chart)
+                                        @foreach($size_charts as $size_chart)
                                         <tr>
-                                            @php
-                                            $size_values = Nowyouwerkn\WeCommerce\Models\Size_guide::where('size_chart_id', '=', $size_chart->id)->get();
-                                            @endphp
-                                            <th scope="row" style="width: 150px;">{{$size_chart->name}}</th>
-                                             @foreach($size_values as $size)
-                                            <td style="text-align: center;">{{$size->size_value}}</td>
-                                            @endforeach
-                                            
+                                            <th scope="row" style="width: 150px;">{{ $size_chart->name }}</th>
+                                            <td style="text-align: center;">{{$size_chart->value}}</td>s
                                         </tr>
                                         @endforeach
                                     </tbody>
