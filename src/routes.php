@@ -488,6 +488,11 @@ Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_acces
         'as' => 'address.update',
     ]);
 
+    Route::post('/address-store', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@storeAddress',
+        'as' => 'address.store',
+    ]);
+
     Route::delete('/address/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@destroyAddress',
         'as' => 'address.destroy',
