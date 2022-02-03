@@ -111,7 +111,7 @@
                     <th>Usuario</th>
                     <th>Producto</th>
                     <th>Reseña</th>
-                    <th>Calificacion</th>
+                    <th>Calificación</th>
                     <th>Acciones</th>
                     
                 </tr>
