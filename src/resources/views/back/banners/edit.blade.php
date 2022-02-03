@@ -132,23 +132,21 @@
                         <div class="form-group col-md-6">
                             <label for="link">Prioridad</label>
                             <select class="form-control" name="priority">
-                                  <option value="{{$banner->priority}}">{{$banner->priority}}</option>
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                  <option value="4">4</option>
-                                  <option value="5">5</option>
-                                  <option value="6">6</option>
-                                  <option value="7">7</option>
+                                  <option {{ ($banner->priority == '1') ? 'selected' : '' }} value="1">1</option>
+                                  <option {{ ($banner->priority == '2') ? 'selected' : '' }} value="2">2</option>
+                                  <option {{ ($banner->priority == '3') ? 'selected' : '' }} value="3">3</option>
+                                  <option {{ ($banner->priority == '4') ? 'selected' : '' }} value="4">4</option>
+                                  <option {{ ($banner->priority == '5') ? 'selected' : '' }} value="5">5</option>
+                                  <option {{ ($banner->priority == '6') ? 'selected' : '' }} value="6">6</option>
+                                  <option {{ ($banner->priority == '7') ? 'selected' : '' }} value="7">7</option>
                             </select>
                         </div>
                           <div class="form-group col-md-6">
                             <label for="link">Posición</label>
                             <select class="form-control" name="position">
-                                <option value="{{$banner->position}}">{{$banner->position}}</option>
-                                  <option value="Left">Left</option>
-                                  <option value="Right">Right</option>
-                                  <option value="Center">Center</option>
+                                <option {{ ($banner->position == 'Left') ? 'selected' : '' }}  value="Left">Izquierda</option>
+                                  <option {{ ($banner->position == 'Center') ? 'selected' : '' }} value="Center">Centro</option>
+                                  <option {{ ($banner->position == 'Right') ? 'selected' : '' }} value="Right">Derecha</option>
                             </select>
                         </div>
                     </div>

@@ -143,9 +143,9 @@
                             <div class="form-group col-md-6">
                             <label for="link">Posición</label>
                             <select class="form-control" name="position">
-                                  <option value="left">Izquierda</option>
-                                  <option value="right">Derecha</option>
+                                  <option value="Left">Izquierda</option>
                                   <option value="Center">Centro</option>
+                                  <option value="Right">Derecha</option>
                             </select>
                         </div>
                     </div>
