@@ -64,14 +64,13 @@
                         <input type="text" name="title" value="{{ $legal->title }}" required="" />
                         Prioridad    
                         <select class="form-group" name="priority">
-                              <option value="{{ $legal->priority }}">{{ $legal->priority }}</option>
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                              <option value="4">4</option>
-                              <option value="5">5</option>
-                              <option value="6">6</option>
-                              <option value="7">7</option>
+                              <option {{ ($legal->priority == '1') ? 'selected' : '' }} value="1">1</option>
+                              <option {{ ($legal->priority == '2') ? 'selected' : '' }} value="2">2</option>
+                              <option {{ ($legal->priority == '3') ? 'selected' : '' }} value="3">3</option>
+                              <option {{ ($legal->priority == '4') ? 'selected' : '' }} value="4">4</option>
+                              <option {{ ($legal->priority == '5') ? 'selected' : '' }} value="5">5</option>
+                              <option {{ ($legal->priority == '6') ? 'selected' : '' }} value="6">6</option>
+                              <option {{ ($legal->priority == '7') ? 'selected' : '' }} value="7">7</option>
                         </select>
                         </h4>
 
