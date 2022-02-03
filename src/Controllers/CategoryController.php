@@ -206,9 +206,11 @@ class CategoryController extends Controller
         // Notificación
         $type = 'Colección';
         $by = Auth::user();
-        $data = 'eliminó la colección:' . $category->name;
+        $data = 'Eliminó una colección con el nombre:' . $category->name;
+        $model_action = "delete";
+        $model_id = $category->id;
 
-        $this->notification->send($type, $by ,$data);
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         $category->delete();
 
