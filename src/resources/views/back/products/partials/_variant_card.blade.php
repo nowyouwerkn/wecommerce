@@ -50,8 +50,10 @@
 
     <!-- Variant Header -->
     <div id="collapsedVariants" class="table-responsive hidden mt-3 mb-4">
-    	<form method="POST" action="{{ route('stock.store', $product->id ?? '0') }}" enctype="multipart/form-data">
+    	<form></form>
+    	<form method="POST" id="variantForm" action="{{ route('stock.store', $product->id) }}" enctype="multipart/form-data">
             {{ csrf_field() }}
+
 	        <table class="table table-dashboard mg-b-0">
 	            <thead>
 	                <tr>
@@ -88,7 +90,7 @@
 	        </table>
 
 	        <div class="col-md-12 my-3">
-	            <button type="submit" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
+	            <button type="button" id="saveVariant" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
 	                Guardar Variante
 	           	</button>
 	        </div>
@@ -179,6 +181,11 @@
 			$('#collapsedVariants').removeClass('hidden');
 			$('#btnContainer').hide();
 			$(this).toggle();
+		});
+
+		$('#saveVariant').on('click', function(){
+			event.preventDefault();
+			$('#variantForm').submit();
 		});
 
 		$('#variant').keyup(function(){
