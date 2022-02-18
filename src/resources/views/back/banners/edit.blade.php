@@ -67,7 +67,7 @@
                             <label for="subtitle">Subtítulo <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="subtitle" name="subtitle" value="{{ $banner->subtitle }}" required="" />
                         </div>
-
+                        
                         <div class="form-group col-md-4">
                             <label for="link">Color Subtítulo <span class="text-info">(Opcional)</span></label>
                             <input type="color" class="form-control" name="hex_text_subtitle"  value="{{ $banner->hex_text_subtitle }}" />

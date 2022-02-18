@@ -80,7 +80,7 @@
                                 </select>
                             </div>
                         </div>
-                    
+
                         <input type="hidden" name="type" value="{{ $legal->type }}">
                         <!--<textarea name="description" id="" class="form-control" cols="30" rows="10">{!! $legal->description ?? '' !!}</textarea>-->
                         <div id="editor-container-{{ $legal->id }}" class="ht-350 mb-4">

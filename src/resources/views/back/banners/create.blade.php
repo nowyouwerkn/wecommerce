@@ -51,7 +51,6 @@
                                   <option value="7">7</option>
                             </select>
                         </div>
-
                         <div class="form-group col-md-8">
                             <label for="title">Título <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" required="" />
