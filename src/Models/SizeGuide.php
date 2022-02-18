@@ -11,6 +11,6 @@ class SizeGuide extends Model
 
  	public function size_chart()
     {
-    	return $this->belongsTo(Size_chart::class);
+    	return $this->belongsTo(SizeChart::class);
 	}
 }

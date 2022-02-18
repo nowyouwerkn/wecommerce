@@ -17,9 +17,9 @@ class FAQController extends Controller
 
     public function index()
     {
-        $faq = FAQ::all();
+        $faqs = FAQ::all();
 
-        return view('wecommerce::back.faq.index')->with('faq', $faq);
+        return view('wecommerce::back.faqs.index')->with('faqs', $faqs);
     }
 
     public function create()
@@ -41,7 +41,6 @@ class FAQController extends Controller
         $faq->question = Purifier::clean($request->question);
         $faq->answer = Purifier::clean($request->answer);
 
-
         $faq->save();
 
         // Mensaje de session
@@ -60,7 +59,7 @@ class FAQController extends Controller
     {
         $faq = FAQ::find($id);
 
-        return view('wecommerce::back.faq.index')->with('faq', $faq);
+        return view('wecommerce::back.faqs.index')->with('faq', $faq);
     }
 
 
@@ -75,8 +74,8 @@ class FAQController extends Controller
         // Guardar datos en la base de datos
         $faq = FAQ::find($id);
 
-        $faq->question = Purifier::clean($request->title);
-        $faq->answer = Purifier::clean($request->description);
+        $faq->question = Purifier::clean($request->question);
+        $faq->answer = Purifier::clean($request->answer);
 
         $faq->save();
 
@@ -90,10 +89,9 @@ class FAQController extends Controller
     public function destroy($id)
     {
         $faq = FAQ::find($id);
-
         $faq->delete();
 
-        Session::flash('success', 'The FAQ was succesfully deleted.');
+        Session::flash('success', 'La pregunta frecuente fue eliminada exitosamente.');
 
         return redirect()->back();
     }

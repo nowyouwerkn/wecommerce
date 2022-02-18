@@ -94,6 +94,23 @@
         .filter-btn:hover{
             color: #000;
         }
+
+        .btn-stock{
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 16px;
+            border-radius: 100%;
+            margin: 0 5px;
+            border: 1px solid #c0ccda;
+            text-align: center;
+            color: #000;
+        }
+
+        .btn-stock:hover{
+            background-color: #c0ccda;
+            color: #000;
+        }
     </style>
 @endsection
 
@@ -157,6 +174,7 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
+                        
                         <tbody>
                             @foreach($products as $product)
                             <tr class="parent" id="row{{ $product->id }}" title="Click to expand/collapse" style="cursor: pointer; position: relative;">
@@ -205,15 +223,40 @@
                                     @endphp
                                     {{ $total_qty }}
                                 </td>
-                                <td></td>
+                                <td>
+                                    @php
+                                        $total_value = 0;
+
+                                        foreach ($product->variants_stock as $v_price) {
+                                            $total_value += ($v_price->stock * $v_price->new_price);
+                                        };
+
+                                        $total_value;
+                                    @endphp
+                                    ${{ number_format($total_value, 2) }}
+                                </td>
                                 <td></td>
                                 @else
-                                <td>
-                                    <input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $product->stock }}" id="productStockVariant{{ $product->id }}" style="width:80px;">
+                                <td class="stock-incrementer">
+                                    <div class="d-flex align-items-center">
+                                        <a class="btn-stock stock-minus" href="javascript:void(0)">
+                                            -
+                                        </a>
+                                        <span class="value">
+                                            {{ $product->stock }}
+                                        </span>
+                                        <a class="btn-stock stock-plus" href="javascript:void(0)">
+                                            +
+                                        </a>
+
+                                        <input type="hidden" name="stock_variant" class="variant-form-control" value="{{ $product->stock }}" id="productStockVariant{{ $product->id }}">
+                                    </div>
                                 </td>
-                                    <td>
-                                      {{$product->stock * $product->price}}
-                                    </td>
+
+                                <td>
+                                    ${{ number_format($product->stock * $product->price, 2) }}
+                                </td>
+
                                 <td>
                                     <button id="productUpdateForm{{ $product->id }}" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
                                         <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
@@ -268,7 +311,6 @@
                                     @endpush
                                 </td>
                                 @endif
-
                             </tr>
                                 @foreach($product->variants_stock as $variant)
                                 <tr class="bg-light child-row child-row{{ $product->id }}" style="display: none;">
@@ -303,11 +345,24 @@
                                             </div>
                                         </td>
 
-                                        <td>
-                                            <input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $variant->stock }}" id="stockVariant{{ $variant->id }}" style="width:80px;">
+                                        <td class="stock-incrementer">
+
+                                            <div class="d-flex align-items-center">
+                                                <a class="btn-stock stock-minus" href="javascript:void(0)">
+                                                    -
+                                                </a>
+                                                <span class="value">
+                                                    {{ $variant->stock }}
+                                                </span>
+                                                <a class="btn-stock stock-plus" href="javascript:void(0)">
+                                                    +
+                                                </a>
+
+                                                <input type="hidden" name="stock_variant" class="variant-form-control" value="{{ $variant->stock }}" id="stockVariant{{ $variant->id }}">
+                                            </div>
                                         </td>
                                         <td>
-                                            {{$variant->stock * $variant->price}}
+                                            ${{ number_format($variant->stock * $variant->new_price, 2) }}
                                         </td>
                                         <td>
                                             <button id="updateForm{{ $variant->id }}" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
@@ -365,9 +420,36 @@
                                         </td>
                                     </form>
                                 </tr>
-                            
                                 @endforeach
                             @endforeach
+
+                            @php
+                                $size_total = 0;
+
+                                foreach ($products as $pr) {
+                                    if($pr->variants_stock->count() == 0){
+                                        $size_total += $pr->stock;
+                                    }else{
+                                        foreach($pr->variants_stock as $sz){
+                                            $size_total += $sz->stock;
+                                        }
+                                    }  
+                                };
+
+                                $size_total;
+                            @endphp
+
+                            <tr style="background-color: #f1f5f7; color: #323a46;">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Total Stock</strong></td>
+                                <td>{{ $size_total }}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -394,5 +476,25 @@
 
         //$('tr[@class^=child-]').hide().children('td');  
     });  
+
+    $('.stock-incrementer .stock-minus').on('click', function(e){
+        var value = parseInt($(this).siblings('.value').text());
+
+        if (value == 0) return;
+        
+        value--;
+        
+        $(this).siblings('.variant-form-control').val(value);
+        $(this).siblings('.value').text(value);
+    });
+
+    $('.stock-incrementer .stock-plus').on('click', function(e){
+        var value = parseInt($(this).siblings('.value').text());
+
+        value++;
+
+        $(this).siblings('.variant-form-control').val(value);
+        $(this).siblings('.value').text(value);
+    });
 </script>  
 @endpush

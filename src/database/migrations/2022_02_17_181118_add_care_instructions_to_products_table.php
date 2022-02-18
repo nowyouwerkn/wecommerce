@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVariantsTable extends Migration
+class AddCareInstructionsToProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,8 @@ class CreateVariantsTable extends Migration
      */
     public function up()
     {
-        Schema::create('variants', function (Blueprint $table) {
-            $table->id();
-
-            $table->enum('type', ['Talla', 'Color', 'Material', 'Estilo', 'Nombre']);
-            $table->string('value');
-            
-            $table->timestamps();
+        Schema::table('products', function (Blueprint $table) {
+            $table->longText('care_instructions')->after('materials')->nullable();
         });
     }
 
@@ -30,6 +25,8 @@ class CreateVariantsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('variants');
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('care_instructions');
+        });
     }
 }

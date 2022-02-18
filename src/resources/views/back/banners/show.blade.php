@@ -95,95 +95,95 @@
 
 @section('content')
 <div class="row mb-4">
-	    <div class="col-md-6 text-left">
-	        <a href="{{ route('banners.index') }}" class="btn btn-info mr-2"><i class="simple-icon-arrow-left" aria-hidden="true"></i> Regresar</a>
-	    </div>
+        <div class="col-md-6 text-left">
+            <a href="{{ route('banners.index') }}" class="btn btn-info mr-2"><i class="simple-icon-arrow-left" aria-hidden="true"></i> Regresar</a>
+        </div>
 
-	    <div class="col-md-6 text-right">
-	        <a href="{{ route('banners.edit', $banner->id ) }}" class="btn btn-primary mr-2"><i class="simple-icon-pencil"></i> Editar</a>
+        <div class="col-md-6 text-right">
+            <a href="{{ route('banners.edit', $banner->id ) }}" class="btn btn-primary mr-2"><i class="simple-icon-pencil"></i> Editar</a>
 
-	        <form method="POST" action="{{ route('banners.destroy', $banner->id) }}" style="display: inline-block;">
+            <form method="POST" action="{{ route('banners.destroy', $banner->id) }}" style="display: inline-block;">
                 <button type="submit" class="btn btn-outline-danger" data-toggle="tooltip" data-original-title="Borrar">
                     <i class="simple-icon-trash"></i> Eliminar
                 </button>
                 {{ csrf_field() }}
                 {{ method_field('DELETE') }}
             </form>
-	    </div>
-	</div>
+        </div>
+    </div>
 
-	<div class="row">
-		<div class="col-md-8">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="card mb-4">
-						<div class="card-body">
-							<h4 class="mb-0">
-								Información del Banner 
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4 class="mb-0">
+                                Información del Banner 
 
-								@if($banner->is_active == true)
-									<span class="badge badge-success">Activo</span>
-								@else
-									<span class="badge badge-danger">Desactivado</span>
-								@endif
-							</h4>
-							<hr>
-							
-							<div class="row mt-5">
-								
-								<div class="col">
-									<h5>Título</h5>
-									<p>{{ $banner->title }}</p>
+                                @if($banner->is_active == true)
+                                    <span class="badge badge-success">Activo</span>
+                                @else
+                                    <span class="badge badge-danger">Desactivado</span>
+                                @endif
+                            </h4>
+                            <hr>
+                            
+                            <div class="row mt-5">
+                                
+                                <div class="col">
+                                    <h5>Título</h5>
+                                    <p>{{ $banner->title }}</p>
 
                                     <h5>Subtítulo</h5>
-									<p>{{ $banner->subtitle}}</p>
+                                    <p>{{ $banner->subtitle}}</p>
 
                                     <h5>Prioridad</h5>
                                     <p>{{$banner->priority}}</p>
 
                                     <h5>Texto de botón</h5>
-									<p>{{ $banner->text_button}}</p>
+                                    <p>{{ $banner->text_button}}</p>
 
                                     <h5>Color</h5>
-									<p>{{ $banner->hex}}</p>
-								</div>
-								<div class="col">
-									<h5>Imagen</h5>
-									<div class="card">
+                                    <p>{{ $banner->hex}}</p>
+                                </div>
+                                <div class="col">
+                                    <h5>Imagen</h5>
+                                    <div class="card">
                                         <p class="badge badge-primary">Identificador de base de datos: {{ $banner->id }}</p>
                                         
                                         <div class="card-body">
                                             <img class="img-fluid mb-4" src="{{ asset('img/banners/' . $banner->image ) }}">
                                         </div>
                                     </div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<!-- Preview -->
-		<div class="col-md-4">
-			<div class="card">
-				<div class="card-body">
-					<h4>Vista Previa</h4>
-					<hr>
-					<div class="d-flex">
-						<div class="card-banner d-flex justify-content-center align-items-center" id="hex_" style="background: {{ $banner->hex }}">
-							<div class="card-banner-content">
-								<h5 id="title_">{{ $banner->title }}</h5>
-								<p id="subtitle_">{{ $banner->subtitle}}</p>
-								<a href="#" class="btn btn-light rounded" id="text_button_">{{ $banner->text_button }}</a>
-							</div>
-							<img src="{{ asset('img/banners/' . $banner->image ) }}" id="output" class="card-banner-image" width="100">
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+        <!-- Preview -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Vista Previa</h4>
+                    <hr>
+                    <div class="d-flex">
+                        <div class="card-banner d-flex justify-content-center align-items-center" id="hex_" style="background: {{ $banner->hex }}">
+                            <div class="card-banner-content">
+                                <h5 id="title_">{{ $banner->title }}</h5>
+                                <p id="subtitle_">{{ $banner->subtitle}}</p>
+                                <a href="#" class="btn btn-light rounded" id="text_button_">{{ $banner->text_button }}</a>
+                            </div>
+                            <img src="{{ asset('img/banners/' . $banner->image ) }}" id="output" class="card-banner-image" width="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 

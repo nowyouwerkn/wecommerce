@@ -17,9 +17,9 @@ class Category extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function size_chart()
+    public function sizeCharts()
     {
-        return $this->hasMany(Size_chart::class);
+        return $this->hasMany(SizeChart::class);
     }
 
     public function productsIndex()

@@ -9,6 +9,7 @@
 @endpush
 
 @section('content')
+
 <!-- Checkout -->
 <section class="mt-5 mb-5 container we-co--checkout-container">
     <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" data-parsley-validate="">
@@ -44,17 +45,17 @@
                         <h4><span class="we-co--progress-indicator"></span> Direccion de Envío</h4>
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')                    
+                    
                     @if($shipment_options->count() >0)
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Metodos de Envío</h4>
                     </div>
-                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
-                     @else
+                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
                     @endif
+
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>
-
-                        <p class="mb-0"><ion-icon name="lock-closed"></ion-icon> Sitio seguro con encriptación de 256-bits</p>
+                        <p class="mb-0"><ion-icon name="lock-closed"></ion-icon> Encriptación de 256-bits</p>
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_payment')
                 </div>
@@ -66,7 +67,6 @@
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4>Resúmen de Pedido</h4>
                     </div>
-
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_summary')
                 </div>
             </div>
@@ -156,8 +156,8 @@
         else
             $(".card-body-new-add").fadeOut(500);
     }
-
 </script>
+
 <script type="text/javascript">
        $(document).ready(function(){
                  $('.shipping-options a').click(function() {
@@ -186,6 +186,7 @@
         });
     });
 </script>
+
 <script type="text/javascript">
     // ParsleyConfig definition if not already set
     // Validation errors messages for Parsley
@@ -462,9 +463,6 @@
     @if($cash_payment->supplier == 'Conekta')
     <script type="text/javascript">
         $form.submit(function(event){
-
-            
-
             if($('input[name=method]').val() === 'Pago con Oxxo') {
                 // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
                 $form.find('button').prop('disabled', true);

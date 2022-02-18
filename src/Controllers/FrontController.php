@@ -57,6 +57,7 @@ use Nowyouwerkn\WeCommerce\Models\Category;
 use Nowyouwerkn\WeCommerce\Models\Order;
 use Nowyouwerkn\WeCommerce\Models\Wishlist;
 use Nowyouwerkn\WeCommerce\Models\LegalText;
+use Nowyouwerkn\WeCommerce\Models\FAQ;
 
 use Nowyouwerkn\WeCommerce\Models\StoreTax;
 use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
@@ -106,8 +107,8 @@ class FrontController extends Controller
         $banners = Banner::where('is_active', true)->get();
         $main_categories = Category::where('parent_id', '0')->orWhere('parent_id', NULL)->get(['name', 'slug', 'image'])->take(4);
 
-        $products = Product::where('in_index', true)->where('status', 'Publicado')->with('category')->get()->take(6);
-        $products_favorites = Product::where('in_index', true)->where('is_favorite', true)->where('status', 'Publicado')->with('category')->get()->take(6);
+        $products = Product::where('in_index', true)->where('status', 'Publicado')->with('category')->get()->take(8);
+        $products_favorites = Product::where('in_index', true)->where('is_favorite', true)->where('status', 'Publicado')->with('category')->get()->take(8);
 
         return view('front.theme.' . $this->theme->get_name() . '.index')
         ->with('products', $products)
@@ -812,21 +813,33 @@ class FrontController extends Controller
         ));
 
         if ($request->method == 'Pago con Tarjeta') {
-            $this -> validate($request, array(
-                'card_number' => 'required|max:255',
-                'card-name' => 'required',
-                'card-month' => 'required|max:2',
-                'card-year' => 'required|max:4',
-                'card-cvc' => 'required|max:4',
 
-                'street_billing' => 'required',
-                'street_num_billing' => 'required',
-                'suburb_billing' => 'required',
-                'postal_code_billing' => 'required',
-                'country_billing' => 'required',
-                'state_billing' => 'required',
-                'city_billing' => 'required',
-            ));
+            if (isset($request->street_billing)) {
+                $this -> validate($request, array(
+                    'card_number' => 'required|max:255',
+                    'card-name' => 'required',
+                    'card-month' => 'required|max:2',
+                    'card-year' => 'required|max:4',
+                    'card-cvc' => 'required|max:4',
+
+                    'street_billing' => 'required',
+                    'street_num_billing' => 'required',
+                    'suburb_billing' => 'required',
+                    'postal_code_billing' => 'required',
+                    'country_billing' => 'required',
+                    'state_billing' => 'required',
+                    'city_billing' => 'required',
+                ));
+            }else{
+                $this -> validate($request, array(
+                    'card_number' => 'required|max:255',
+                    'card-name' => 'required',
+                    'card-month' => 'required|max:2',
+                    'card-year' => 'required|max:4',
+                    'card-cvc' => 'required|max:4',
+                ));
+            }
+
         }
 
         if ($payment_method->supplier == 'Conekta') {
@@ -1269,6 +1282,7 @@ class FrontController extends Controller
         }
 
         // GUARDAR LA DIRECCIÓN DE FACTURACIÓN
+        /*
         if ($request->billing_shipping == 'true') {
             $address = new UserAddress;
             $address->name = 'Compra_tajeta_' . Str::substr($request->card_number, 15);
@@ -1301,6 +1315,7 @@ class FrontController extends Controller
             $address_billing->save();
             $billing_shipping_id = UserAddress::where('street', $request->street_billing)->where('is_billing', true)->where('user_id', $user->id)->first();
         }
+        */
 
         // GUARDAR LA ORDEN
         $order = new Order();
@@ -2167,6 +2182,12 @@ class FrontController extends Controller
         $text = LegalText::where('type', $type)->first();
 
         return view('front.theme.' . $this->theme->get_name() . '.legal')->with('text', $text);
+    }
+
+    public function faqs()
+    {
+        $faqs = FAQ::all();
+        return view('front.theme.' . $this->theme->get_name() . '.faqs')->with('faqs', $faqs);
     }
 
     public function purchaseComplete(Request $request)

@@ -2,7 +2,7 @@
   Theme Name: Werkn Backbone
   Support: hey@werkn.mx
   Description: Werkn Backbone
-  Version: 1.0
+  Version: 2.0
 */
 
 /* Your CSS Styles Here
@@ -561,6 +561,22 @@ body.toggled .sidebar-overlay {
     object-fit: cover;
 }
 
+/* CART */
+
+.wk-cart-wrapper{
+    margin-top: 40px;
+}
+
+.wk-cart-title{
+
+}
+
+.wk-cart-info{
+
+}
+
+
+
 /* collapse */
 .collapse-item {
     position: absolute;
@@ -582,12 +598,54 @@ body.toggled .sidebar-overlay {
     right: 0% !important;
     transition: right 0.35s !important;
 }
-@media (max-width: 760px) {
+
+@media (max-width: 576px) {
+
+}
+
+@media (max-width: 768px) {
     .navbar-desktop {
-    display: none;
+        display: none;
     }
 
     .navbar-responsive {
-    display: block;
+        display: block;
+    }   
+
+    /* SERVICES */
+    .promo-services-item{
+        margin-bottom: 30px;
+        padding: 0px 20px;
     }
+
+    /* CART */
+    .wk-cart-title{
+
+    }
+
+    .navbar-responsive .logo{
+        width: 150px !important;
+    }
+
+    .wk-cart-table{
+        border-bottom: 2px solid #000;
+        padding: 5px 0px;
+        margin-bottom: 15px;
+    }
+
+    .wk-cart-table p{
+        font-weight: bold;
+    }
+}
+
+@media (max-width: 992px) {
+
+}
+
+@media (max-width: 1200px) {
+
+}
+
+@media (max-width: 1400px) {
+
 }
