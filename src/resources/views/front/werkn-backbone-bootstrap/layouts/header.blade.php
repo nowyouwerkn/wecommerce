@@ -76,7 +76,15 @@
 
             <div class="col-5 text-end">
                 <ul class="list-inline mb-0">
-                    <li class="list-inline-item"><a href="#" class="btn btn-link px-1" data-toggle="modal" data-target="#search-modal"><ion-icon name="search"></ion-icon></a></li>
+                    <li class="list-inline-item">
+                        <a href="javascript:void(0)" class="btn btn-link px-1 openSearch">
+                            <div class="d-flex align-items-center">
+                                <ion-icon name="search-outline" class="me-2"></ion-icon>
+                                <p class="mb-0">Encuentra tu favorito</p>
+                            </div>
+                        </a>
+                    </li>
+
                     <li class="list-inline-item"><a href="{{ route('utilities.tracking.index') }}" class="btn btn-link px-1"><ion-icon name="compass-outline"></ion-icon></a></li>
 
                     @guest
@@ -123,29 +131,25 @@
     </div>
 
     <div class="container navbar-responsive">
-        <div class="row justify-content-between align-items-center">
-            <div class="col-5">
-               <div class="nav-mobile-icon col-3" onclick="toggleMenu()">
-                    <a><ion-icon name="menu-outline"></ion-icon></a>
-                </div>
-            </div>
+        <div class="d-flex justify-content-between align-items-center">
+           <button class="btn btn-secondary" class="nav-mobile-icon" onclick="toggleMenu()">
+                <ion-icon name="menu-outline"></ion-icon>
+            </button>
 
-            <div class="col-2">
-                <a href="{{ route('index') }}">
-                    @if(!empty($store_config))
-                        @if($store_config->store_logo == NULL)
-                        <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="img-fluid" width="200">
-                        @else
-                        <img src="{{ asset('assets/img/' . $store_config->store_logo) }}" alt="Logo" class="img-fluid" width="200">
-                        @endif
-                    @else
+            <a class="logo" href="{{ route('index') }}">
+                @if(!empty($store_config))
+                    @if($store_config->store_logo == NULL)
                     <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="img-fluid" width="200">
+                    @else
+                    <img src="{{ asset('assets/img/' . $store_config->store_logo) }}" alt="Logo" class="img-fluid" width="200">
                     @endif
-                </a>    
-            </div>
-            <div class="col-5 text-end">
-                <ul class="list-inline mb-0">
+                @else
+                <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="img-fluid" width="200">
+                @endif
+            </a>   
 
+            <div class="text-end">
+                <ul class="list-inline mb-0">
                     @if(request()->is('checkout'))
 
                     @else
@@ -155,65 +159,11 @@
                         <span>{{ Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
                       </a>
 
-                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="min-width: 20rem; padding: 10px;">
-                        @if(Session::has('cart'))
-                            @php
-                                $oldCart = Session::get('cart');
-                                $cart = new Nowyouwerkn\WeCommerce\Models\Cart($oldCart);
-
-                                $products = $cart->items;
-                                $totalPrice = $cart->totalPrice;
-                            @endphp
-                            
-                            @foreach($products as $product)
-                            @php
-                                $item_img = $product['item']['image'];
-                                $variant = $product['variant'];
-                            @endphp
-                            <li>
-                                <div class="card flex-md-row mb-4 box-shadow h-md-250">
-                                    <div class="card-body d-flex flex-column align-items-start">
-                                      <strong class="d-inline-block mb-2 text-primary">{{ $product['item']['category']['name'] }}</strong>
-                                      <h3 class="mb-0">
-                                        <a class="text-dark" href="#">{{ $product['item']['name'] }}</a>
-                                      </h3>
-                                      <p class="card-text mb-auto">{{ $product['item']['description'] }}</p>
-                                      <p class="card-text mb-auto">{{ $variant}}</p>
-                                        @if($product['item']['has_discount'] == true)
-                                                <span class="new">${{ number_format($product['item']['discount_price'],2) }}</span>
-                                                <span><del>${{ number_format($product['item']['price'],2) }}</del></span>
-                                                @else 
-                                                <span class="new">${{ number_format($product['item']['price'],2) }}</span>
-                                                @endif
-                                    </div>
-                                    <img class="card-img-right flex-auto d-none d-md-block" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="{{ asset('img/products/' . $item_img ) }}" data-holder-rendered="true">
-                                  </div>
-                                    <div class="mx-2 d-flex mb-2">
-                                        <span class="f-left">Subtotal:</span>
-                                        <span class="f-right">${{ number_format($totalPrice, 2) }}</span> 
-                                    </div>
-                             
-                           
-                                        <div class="d-flex">
-
-                                            <a class="btn btn-primary mx-2 mb-2" href="{{ route('cart') }}">Ver tu carrito</a>
-
-                                            <a class="btn btn-secondary mx-2 mb-2" href="{{ route('checkout') }}">Completar tu compra</a>
-                                        </div>
-                                        </li>@endforeach
-                                        @guest
-                                        <p class="alert alert-warning" style="display: inline-block;">
-                                            <ion-icon name="alert-circle-outline" class="mr-1"></ion-icon> Estas comprando como <strong>invitado.</strong> Compra más rápido creando una cuenta <a href="{{ route('register') }}">Regístrate</a>
-                                        </p>
-                                        @endguest
-                                    </li>
-                                @else
-                                    <p class="mb-0 d-flex align-items-center">
-                                        No hay productos en tu carrito. 
-                                        <ion-icon name="sad-outline"></ion-icon>
-                                    </p>
-                                @endif
-                      </ul>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="min-width: 20rem; padding: 10px;">
+                            @if(Session::has('cart'))
+                                @include('front.theme.werkn-backbone-bootstrap.layouts.utilities._cart_item')
+                            @endif
+                        </ul>
                     </div>
 
                     @endif

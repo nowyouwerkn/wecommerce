@@ -60,26 +60,29 @@
                 {{ method_field('PUT') }}
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h4 class="mb-3">
-                        <input type="text" name="title" value="{{ $legal->title }}" required="" />
-                        Prioridad    
-                        <select class="form-group" name="priority">
-                              <option value="{{ $legal->priority }}">{{ $legal->priority }}</option>
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                              <option value="4">4</option>
-                              <option value="5">5</option>
-                              <option value="6">6</option>
-                              <option value="7">7</option>
-                        </select>
-                        </h4>
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label>Nombre del texto <span class="text-dange">*</span></label>
+                                <input type="text" name="title" value="{{ $legal->title }}" required="" class="form-control" />
+                            </div>
+                            <div class="col-md-4">
+                                <label>Prioridad <span class="text-info">(Opcional)</span></label>
+                                <select class="form-control" name="priority">
 
+                                      <option {{ ($legal->priority == '1') ? 'selected' : '' }} value="1">1</option>
+                                      <option {{ ($legal->priority == '2') ? 'selected' : '' }} value="2">2</option>
+                                      <option {{ ($legal->priority == '3') ? 'selected' : '' }} value="3">3</option>
+                                      <option {{ ($legal->priority == '4') ? 'selected' : '' }} value="4">4</option>
+                                      <option {{ ($legal->priority == '5') ? 'selected' : '' }} value="5">5</option>
+                                      <option {{ ($legal->priority == '6') ? 'selected' : '' }} value="6">6</option>
+                                      <option {{ ($legal->priority == '7') ? 'selected' : '' }} value="7">7</option>
+                                      
+                                </select>
+                            </div>
+                        </div>
                     
-                            <input type="hidden" name="type" value="{{ $legal->type }}">
-                            <!--<textarea name="description" id="" class="form-control" cols="30" rows="10">{!! $legal->description ?? '' !!}</textarea>-->
-
-
+                        <input type="hidden" name="type" value="{{ $legal->type }}">
+                        <!--<textarea name="description" id="" class="form-control" cols="30" rows="10">{!! $legal->description ?? '' !!}</textarea>-->
                         <div id="editor-container-{{ $legal->id }}" class="ht-350 mb-4">
                             {!! $legal->description ?? '' !!}
                         </div>
@@ -107,19 +110,34 @@
 
             <form method="POST" action="{{ route('legals.store') }}" enctype="multipart/form-data">
             {{ csrf_field() }}
-                   <div class="modal-body pd-25">
-                        <div class="form-group mt-2">
-                            <label>Titulo</label>
-                            <input type="text" class="form-control" name="title" />
+                <div class="modal-body pd-25">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group mb-3">
+                                <label>Titulo <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="title" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Prioridad <span class="text-info">(Opcional)</span></label>
+                            <select class="form-control" name="priority">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                            </select>
+                        </div>
+                    </div>
 
-                        <div class="form-group mt-2">
-                            <label>Descripcion</label>
-                             <div id="editor-container-create" class="ht-350 mb-4">
-                            
+                    <div class="form-group mb-3">
+                        <label>Descripcion</label>
+                        <div id="editor-container-create" class="ht-350 mb-4">
                         </div>
-                        
+                    
                         <textarea id="justHtml_create" name="description" required="" style="display:none;"></textarea>
-                        </div>
                     </div>
                 </div>
 

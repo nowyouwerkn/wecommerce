@@ -4,54 +4,49 @@ namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Session;
+use Auth;
+use Image;
+use Str;
+
 use Nowyouwerkn\WeCommerce\Models\Category;
 use Nowyouwerkn\WeCommerce\Models\SizeChart;
-use Nowyouwerkn\WeCommerce\Models\SizeGuide;
 
 class SizeChartController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-         $size_chart = sizeChart::get();
+         $size_chart = SizeChart::get();
          $categories = Category::all();
-         return view('wecommerce::back.size_chart.index')->with('size_chart', $size_chart)->with('categories', $categories);
+
+         return view('wecommerce::back.size_charts.index')->with('size_chart', $size_chart)->with('categories', $categories);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $categories = Category::all();
-        return view('wecommerce::back.size_chart.create')->with('categories', $categories);
+        return view('wecommerce::back.size_charts.create')->with('categories', $categories);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $size_chart = new SizeChart;
 
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = 'size_chart' . time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('img/products/' . $filename);
+
+            Image::make($image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $size_chart->image = $filename;
+        }
+
         $size_chart->name = $request->name;
         $size_chart->category_id = $request->category_id;
         $size_chart->save();
-        $size_chart_id = SizeChart::where('name', $request->name)->where('category_id', $request->category_id)->first();
 
-
-        $size_chart = SizeChart::get();
-        $categories = Category::all();
-        return view('wecommerce::back.size_chart.index')->with('size_chart', $size_chart)->with('categories', $categories);
+        return redirect()->back();
     }
 
      public function createsize(Request $request)
@@ -71,50 +66,25 @@ class SizeChartController extends Controller
         return redirect()->back();
     }
 
-
     public function show($id)
     {
-        return view('wecommerce::back.size_chart.show');
+        return view('wecommerce::back.size_charts.show');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\size_chart  $size_chart
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $size_chart = SizeChart::find($id);
-        $size_guide = SizeGuide::where('size_chart_id', $id)->get();
-        $categories = Category::all();
-        return view('wecommerce::back.size_chart.edit')->with('size_chart', $size_chart)->with('size_guide', $size_guide)->with('categories', $categories);
+
+        return view('wecommerce::back.size_charts.edit')->with('size_chart', $size_chart);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\size_chart  $size_chart
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request,  $id)
     {
         $size_chart = SizeChart::find($id);
-        $size_chart->name = $request->name;
-        $size_chart->category_id = $request->category_id;
-        $size_chart->save();
-        $size_chart = SizeChart::get();
-        $categories = Category::all();
+        
         return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\size_chart  $size_chart
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $size_chart = SizeChart::find($id);

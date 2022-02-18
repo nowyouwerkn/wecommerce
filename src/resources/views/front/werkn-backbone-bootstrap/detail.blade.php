@@ -226,7 +226,7 @@
                                     <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>
                                 </div>
                             @else
-                            <a href="#" id="addToCartBtn" class="btn btn-primary d-flex align-items-center me-3 position-relative" role="button">
+                            <a href="#" id="addToCartBtn" class="btn btn-primary d-flex align-items-center me-3" role="button">
                                 <div id="size-alert" class="size-alert">Selecciona una talla.</div>
                                 <ion-icon name="bag-add-outline"></ion-icon> Agregar al carrito
                             </a>
@@ -238,7 +238,7 @@
                                 <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>
                             </div>
                             @else
-                            <a href="{{ route('add-cart', ['id' => $product->id, 'variant' => 'unique']) }}" id="addToCartBtn" class="btn btn-primary d-flex align-items-center me-3 position-relative" role="button">
+                            <a href="{{ route('add-cart', ['id' => $product->id, 'variant' => 'unique']) }}" id="addToCartBtn" class="btn btn-primary d-flex align-items-center me-3" role="button">
                                 <ion-icon name="bag-add-outline"></ion-icon> Agregar al carrito
                             </a>
                             @endif

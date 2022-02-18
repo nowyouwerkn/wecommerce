@@ -47,4 +47,17 @@ class SearchController extends Controller
         ->with('categories', $categories)
         ->with('variants', $variants);
     }
+
+    public function search(Request $request)
+    {
+        $results = Product::with('category')
+        ->where('status', 'Publicado')
+        ->where('category_id', '!=', NULL)
+        ->where('name', 'LIKE', "%{$request->search}%")
+        ->orWhere('search_tags', 'LIKE', "%{$request->search}%")
+        ->where('status', 'Publicado')->get()->take(6);
+
+        return view('front.theme.' . $this->theme->get_name() . '.search.query', compact('results'))
+        ->with(['search' => $request->search])->render();
+    }
 }

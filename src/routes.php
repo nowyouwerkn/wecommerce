@@ -504,7 +504,8 @@ Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_acces
     ]);
 });
 
-Route::get('legals/{type}', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@legalText')->name('legal.text');
+Route::get('legales/{type}', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@legalText')->name('legal.text');
+Route::get('preguntas_frecuentes', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@faqs')->name('faqs.text');
 
 // Orden Completa
 Route::get('/compra-exitosa', [

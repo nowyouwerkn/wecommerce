@@ -22,6 +22,11 @@ class Product extends Model
         return $this->hasMany(ProductImage::class);
     }
 
+    public function secondary_image()
+    {
+        return ProductImage::where('product_id', $this->id)->orderBy('priority', 'asc')->orderBy('created_at', 'asc')->first();
+    }
+
     public function variants()
     {
         return $this->belongsToMany(Variant::class, 'product_variants', 'product_id', 'variant_id')->orderBy('value', 'asc')->withPivot('stock', 'sku', 'new_price');
@@ -29,7 +34,20 @@ class Product extends Model
 
     public function relationships()
     {
-        return $this->belongsToMany(Product::class, 'product_relationships', 'base_product_id', 'product_id')->orderBy('value', 'asc')->withPivot('type', 'value');
+        /* Double Variant System */
+        $product_relationships = ProductRelationship::where('base_product_id', $this->id)->orWhere('product_id', $this->id)->get();
+
+        if ($product_relationships->count() == NULL) {
+            $base_product = NULL;
+            $relationships = NULL;
+        }else{
+            $base_product = $product_relationships->take(1)->first();
+            $relationships = ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
+        }
+
+        return $relationships;
+
+        //return $this->belongsToMany(Product::class, 'product_relationships', 'base_product_id', 'product_id')->orderBy('value', 'asc')->withPivot('type', 'value');
     }
 
     public function variants_stock()

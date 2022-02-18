@@ -12,7 +12,7 @@ class SizeChart extends Model
 
     public function sizeguide()
     {
-        return $this->hasMany(Size_guide::class);
+        return $this->hasMany(SizeGuide::class);
         return $this->belongsTo(Category::class);
     }
 

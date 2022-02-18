@@ -1,49 +1,53 @@
-<div class="row">
-	@guest
-    <div class="col-md-6">
-        <div class="mb-3">
-            <label class="form-label" for="email">Correo <span class="text-danger">*</span></label>
-            <input type="email" class="form-control" id="email" name="email" value="" required="" />
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            @guest
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label" for="email">Correo <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control" id="email" name="email" value="" required="" />
 
-            <small>Te enviaremos tu resumen de compra y la guía a este correo, asegúrate que sea real.</small>
-        </div>
-    </div>
+                    <small>Te enviaremos tu resumen de compra y la guía a este correo, asegúrate que sea real.</small>
+                </div>
+            </div>
 
-    <div class="col-md-6">
-        <div class="mb-3">
-            <label class="form-label" for="email">Confirma tu Correo <span class="text-danger">*</span></label>
-            <input type="email" id="email_confirm" class="form-control" autocomplete="off" name="email_confirm" value="" required="" />
-        </div>
-    </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label" for="email">Confirma tu Correo <span class="text-danger">*</span></label>
+                    <input type="email" id="email_confirm" class="form-control" autocomplete="off" name="email_confirm" value="" required="" />
+                </div>
+            </div>
 
-    <div class="col-md-4">
-        <div class="mb-3">
-            <label class="form-label" for="name">Nombre(s) <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" name="name" value="" required="" />
-        </div>
-    </div>
-    @else
-    <input type="hidden" class="form-control" name="email" value="{{ Auth::user()->email ?? old('email')}}" required="" />
+            <div class="col-6 col-md-4">
+                <div class="mb-3">
+                    <label class="form-label" for="name">Nombre(s) <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="name" value="" required="" />
+                </div>
+            </div>
+            @else
+            <input type="hidden" class="form-control" name="email" value="{{ Auth::user()->email ?? old('email')}}" required="" />
 
-    <div class="col-md-4">
-        <div class="mb-3">
-            <label class="form-label" for="name">Nombre(s) <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" name="name" value="{{ Auth::user()->name  ?? old('name') }}" required="" />
-        </div>
-    </div>
-    @endguest
-	
-    <div class="col-md-4">
-        <div class="mb-3">
-            <label class="form-label" for="last-name">Apellidos <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" name="last_name" value="{{ Auth::user()->last_name ?? old('last_name') }}" required="" />
-        </div>
-    </div>
-    
-    <div class="col-md-4">
-        <div class="mb-3">
-            <label class="form-label" for="phone"><ion-icon name="help-circle" class="pointer" data-bs-toggle="popover" data-bs-placement="left" title="¿Por qué necesitan mi teléfono?" data-bs-content="En casos muy raros es posible que tengamos que contactarte respecto a tu orden."></ion-icon> Teléfono <span class="text-danger">*</span></label>
-            <input type="text" class="form-control phone-input" name="phone" maxlength="10" value="{{ $address->phone ?? old('phone') }}" required="" placeholder="(***) ***-****" />
+            <div class="col-6 col-md-4">
+                <div class="mb-3">
+                    <label class="form-label" for="name">Nombre(s) <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="name" value="{{ Auth::user()->name  ?? old('name') }}" required="" />
+                </div>
+            </div>
+            @endguest
+            
+            <div class="col-6 col-md-4">
+                <div class="mb-3">
+                    <label class="form-label" for="last-name">Apellidos <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="last_name" value="{{ Auth::user()->last_name ?? old('last_name') }}" required="" />
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label class="form-label" for="phone"><ion-icon name="help-circle" class="pointer" data-bs-toggle="popover" data-bs-placement="left" title="¿Por qué necesitan mi teléfono?" data-bs-content="En casos muy raros es posible que tengamos que contactarte respecto a tu orden."></ion-icon> Teléfono <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control phone-input" name="phone" maxlength="10" value="{{ $address->phone ?? old('phone') }}" required="" placeholder="(***) ***-****" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -59,7 +63,7 @@ $(document).ready(function(){
 </script>
 
 <script type="text/javascript">
-	$(document).ready(function(){
+    $(document).ready(function(){
         $('#email_confirm').keyup(function(){
             event.preventDefault();
 

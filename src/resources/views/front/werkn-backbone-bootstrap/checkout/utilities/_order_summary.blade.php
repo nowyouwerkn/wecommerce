@@ -98,35 +98,6 @@
         {{ csrf_field() }}
     </div>
 </div>
-    
-<div class="card mt-4">
-    <div class="card-body">
-        <div class="mb-0">
-            <input type="hidden" name="user_invoice" value="false">
-            <label><input class="user_invoice" type="checkbox" name="user_invoice" value="true"> Quiero recibir la factura electrónica de mi compra online con número de identificación fiscal / RFC</label>
-        </div>
-
-        <div id="userInvoiceForm" class="row mt-3" style="display:none;">
-            <div class="col-md-7">
-                <div class="mb-3">
-                    <label class="form-label" for="rfc_num">RFC <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="rfc_num" name="rfc_num" value="" required="" />
-                </div>
-            </div>
-
-            <div class="col-md-5">
-                <div class="mb-3">
-                    <label class="form-label" for="cfdi_use">Uso de CFDI <span class="text-danger">*</span></label>
-                    <select class="form-control form-control" id="cfdi_use" name="cfdi_use">
-                        <option value="P01 Por Definir">P01 Por Definir</option>
-                        <option value="G01 Adquisición de mercancías">G01 Adquisición de mercancías</option>
-                        <option value="G03 Gastos en General" selected="">G03 Gastos en General</option>
-                    </select>
-                </div>
-            </div> 
-        </div>
-    </div>
-</div>
 
 <div class="alert alert-danger pay-error" style="display: none;" role="alert"></div>
 <input type="hidden" class="form-control" id="coupon_buy" name="coupon_id" value="null">

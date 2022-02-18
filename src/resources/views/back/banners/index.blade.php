@@ -36,7 +36,7 @@
     <div class="col-md-12">
         <div class="card mg-b-10">
             <div class="table-responsive">
-                <table class="table table-dashboard">
+                <table class="table">
                     <thead>
                         <tr>
                             <th>Imagen</th>
@@ -57,7 +57,7 @@
                             </td>
                             <td style="width: 250px;">
                                 <strong>{{ $banner->title }}</strong><br>
-                                {{ $banner->subtitle }}
+                                <p>{{ $banner->subtitle }}</p>
                             </td>
                             <td> {{$banner->priority}}</td>
                             <td>{{ $banner->text_button }}</td>

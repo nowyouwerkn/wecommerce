@@ -127,6 +127,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-center">
+                        {{ $coupons->links() }}
+                    </div>
                 </div>
             </div>
         </div>

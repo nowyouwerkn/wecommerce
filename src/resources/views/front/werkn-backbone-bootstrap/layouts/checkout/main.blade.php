@@ -70,11 +70,11 @@
 		<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
         <script type="text/javascript">
-        	var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-				var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-				  return new bootstrap.Popover(popoverTriggerEl)
-				})
+        	var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
 
+			var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+			  return new bootstrap.Popover(popoverTriggerEl)
+			});
         </script>
 
     	@stack('scripts')
@@ -94,10 +94,9 @@
 
 	    @if($store_config->has_pixel() == NULL)
 	    <script type="text/javascript">
-	            fbq('track', 'InitiateCheckout');
+	    	fbq('track', 'InitiateCheckout');
 	    </script>
 	    @endif
-
 
         <script type="text/javascript">
             $('.contact_action').on('click', function(){

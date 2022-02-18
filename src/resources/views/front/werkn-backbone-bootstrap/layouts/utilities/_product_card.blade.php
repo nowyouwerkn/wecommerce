@@ -81,6 +81,35 @@
             @endif
         </div>
 
+        @php
+            /* Double Variant System */
+            $product_relationships = \Nowyouwerkn\WeCommerce\Models\ProductRelationship::where('base_product_id', $product_info->id)->orWhere('product_id', $product_info->id)->get();
+
+            if ($product_relationships->count() == NULL) {
+                $base_product = NULL;
+                $all_relationships = NULL;
+            }else{
+                $base_product = $product_relationships->take(1)->first();
+                $all_relationships = \Nowyouwerkn\WeCommerce\Models\ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
+            }
+        @endphp
+
+        @if(!empty($all_relationships))
+        <ul class="d-flex align-items-center justify-content-end product-card-colors list-unstyled mb-2">
+            <li>
+                <a href="{{ route('detail', [$base_product->base_product->category->slug, $base_product->base_product->slug]) }}" style="background-color: {{ $base_product->base_product->hex_color  }}; border-color:{{ $base_product->base_product->hex_color  }};" class="product-card-color-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $base_product->base_product->color }}">{{ $base_product->base_product->color }}</a>
+            </li>
+
+            @foreach($all_relationships as $rs_variant)
+                @if($rs_variant->product->status != 'Borrador')
+                <li>
+                    <a href="{{ route('detail', [$rs_variant->product->category->slug, $rs_variant->product->slug]) }}" style="background-color: {{ $rs_variant->product->hex_color  }};" class="product-card-color-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $rs_variant->value }}">{{ $rs_variant->value }}</a>
+                </li>
+                @endif
+            @endforeach
+        </ul>
+        @endif
+
         @if(request()->is('*/wishlist'))
         <div class="footer-card-wish">Solo quedan {{$product_info->product->stock}}</div>
         @endif

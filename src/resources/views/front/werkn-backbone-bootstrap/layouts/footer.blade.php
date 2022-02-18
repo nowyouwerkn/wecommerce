@@ -1,5 +1,7 @@
 @php
-    $legals = Nowyouwerkn\WeCommerce\Models\LegalText::get();
+    $legals = Nowyouwerkn\WeCommerce\Models\LegalText::orderBy('priority', 'asc')->orderBy('created_at', 'asc')->get();
+    $faq = Nowyouwerkn\WeCommerce\Models\FAQ::first();
+
     $card_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', '!=','Paypal')->where('type', 'card')->where('is_active', true)->first();
     $cash_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
     $paypal_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
@@ -55,22 +57,23 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                    <a href="{{ route('index') }}">
+                <a href="{{ route('index') }}">
                     @if(!empty($store_config))
                         @if($store_config->store_logo == NULL)
-                        <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="img-fluid" width="300">
+                        <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="img-fluid mb-5" width="300">
                         @else
-                        <img src="{{ asset('assets/img/' . $store_config->store_logo) }}" alt="Logo" class="img-fluid" width="300">
+                        <img src="{{ asset('assets/img/' . $store_config->store_logo) }}" alt="Logo" class="img-fluid mb-5" width="300">
                         @endif
                     @else
-                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="img-fluid" width="300">
+                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="img-fluid mb-5" width="300">
                     @endif
                 </a>   
             </div>
+
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-4">
-                        
+
                     </div>
 
                     <div class="col-md-4">
@@ -88,7 +91,7 @@
 
                     <div class="col-md-4">
                         <ul class="list-unstyled">
-                            <li class="mb-3"><strong>Información Legal</strong></li>
+                            <li class="mb-3"><strong>Soporte y Ayuda</strong></li>
                             @foreach($legals as $legal)
                             <li>
                                 <a href="{{ route('legal.text' , $legal->type) }}">
@@ -96,6 +99,10 @@
                                 </a>
                             </li>
                             @endforeach
+                            
+                            @if(!empty($faq))
+                            <li><a  href="{{ route('faqs.text') }}">Preguntas Frecuentes</a></li>
+                            @endif
                         </ul>
                     </div>
                 </div>

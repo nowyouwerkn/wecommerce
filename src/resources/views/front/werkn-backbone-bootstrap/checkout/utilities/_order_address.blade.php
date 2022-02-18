@@ -12,42 +12,35 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-7">
+                    <div class="col-12 col-md-7">
                         <div class="mb-3">
                             <label class="form-label" for="last-name">Calle <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="street" name="street" value="{{ $address->street ?? '' }}" required="" />
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-6 col-md-3">
                         <div class="mb-3">
                             <label class="form-label" for="last-name">Num <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="street_num" name="street_num" value="{{ $address->street_num ?? '' }}" required="" />
                         </div>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-2">
                         <div class="mb-3">
                             <label class="form-label" for="last-name">Int </label>
                             <input type="text" class="form-control" id="int_num" name="int_num" value="{{ $address->int_num ?? '' }}" />
                         </div>
                     </div>
                     
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label" for="zip">Colonia / Fraccionamiento <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="suburb" name="suburb" value="{{ $address->suburb ?? '' }}" required="" />
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
+                    <div class="col-6 col-md-6">
                         <div class="mb-3">
                             <label class="form-label" for="zip">Código Postal <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="postal_code" name="postal_code" value="{{ $address->postal_code ?? '' }}" required="" />
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-4">
                         <div class="mb-3">
                             <label class="form-label" for="country">País <span class="text-danger">*</span></label>
                             <select class="form-control form-control" id="country" name="country">
@@ -55,8 +48,8 @@
                             </select>
                         </div>
                     </div> 
-                    
-                    <div class="col-md-4">
+
+                    <div class="col-12 col-md-4">
                         <div class="mb-3">
                             <label class="form-label" for="state">Estado <span class="text-danger">*</span></label>
                             @php
@@ -77,17 +70,25 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-12 col-md-4">
                         <div class="mb-3">
                             <label class="form-label" for="city">Ciudad / Municipio <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="city" name="city" value="{{ $address->city ?? '' }}" required="" />
                         </div>
                     </div>
 
+                    <div class="col-12 col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="zip">Colonia / Fraccionamiento <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="suburb" name="suburb" value="{{ $address->suburb ?? '' }}" required="" />
+                        </div>
+                    </div>
+
+                
                     <div class="col-md-12">
                         <div class="mb-3">
                             <label class="form-label" for="zip">Referencias <span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="references" required="" name="references" rows="3"></textarea>
+                            <textarea class="form-control" id="references" required="" name="references" rows="2"></textarea>
                         </div>
                     </div>
                 </div>

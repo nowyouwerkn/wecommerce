@@ -78,7 +78,7 @@
                                         </div>
                                     </div>                      
                                 @endforeach
-                                      <form action="{{ route('address.store') }}" method="POST">
+                            <form action="{{ route('address.store') }}" method="POST">
                             {{ csrf_field() }}                                    
                                 <div class="row">
                                     <div class="col-md-12 mt-3">

@@ -24,7 +24,7 @@
 			</div>
 		</div>
 	    <div class="col-md-12">
-	    	<a href="javascript:void(0)" id="openRelationships" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
+	    	<a href="{{ route('products.show', $base_product->base_product->id) }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
 	            Ir al producto base
 	       	</a>
 	    </div>
@@ -33,7 +33,8 @@
 
 	<!-- Variant Header -->
 	<div id="collapsedRelationships" class="table-responsive hidden mt-3 mb-4">
-		<form method="POST" action="{{ route('relationship.store', $product->id ?? '0') }}" enctype="multipart/form-data">
+		<form></form>
+		<form method="POST" id="relationshipForm" action="{{ route('relationship.store', $product->id ?? '0') }}" enctype="multipart/form-data">
 	        {{ csrf_field() }}
 
 	        <table class="table table-dashboard mg-b-0">
@@ -70,7 +71,7 @@
 	        </table>
 
 	        <div class="col-md-12 my-3">
-	            <button type="submit" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
+	            <button type="button" id="saveRelationship" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
 	                Guardar Relación
 	           	</button>
 	        </div>
@@ -140,6 +141,11 @@
 			$('#collapsedRelationships').removeClass('hidden');
 			$('#btnContainerRelationships').hide();
 			$(this).toggle();
+		});
+
+		$('#saveRelationship').on('click', function(){
+			event.preventDefault();
+			$('#relationshipForm').submit();
 		});
 
 	    $('#productRelationshipId').on('change', function(){

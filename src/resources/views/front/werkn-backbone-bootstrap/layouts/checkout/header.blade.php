@@ -1,6 +1,10 @@
 <div class="we-co--header container">
 	<div class="row align-items-center">
-		<div class="col-4">
+		<div class="col-12 show-hidden text-center">
+			<p class="mb-2 mt-4"><ion-icon name="lock-closed"></ion-icon> Compra Segura</p>
+		</div>
+
+		<div class="col-12 col-md-4">
 			<div class="d-flex align-items-center">
 				@if(!empty($store_config))
 	                @if($store_config->store_logo == NULL)
@@ -9,20 +13,20 @@
 	                <img src="{{ asset('assets/img/' . $store_config->store_logo) }}" class="we-co--logo" alt="Logo">
 	                @endif
 	            @else
-	            <img src="{{ asset('assets/img/logo.png') }}" class="we-co--logo" alt="Logo">
+	            	<img src="{{ asset('assets/img/logo.png') }}" class="we-co--logo" alt="Logo">
 	            @endif
 
 	            <a href="{{ route('catalog.all') }}" class="we-co--return-btn"><ion-icon name="return-down-back"></ion-icon> Volver a la tienda</a>
 			</div>
 		</div>
 
-		<div class="col-4">
+		<div class="col-4 res-hidden">
 			<div class="text-center">
 				<h2 class="mb-0">Checkout</h2>
 			</div>
 		</div>
 
-		<div class="col-4 d-flex justify-content-end">
+		<div class="col-4 d-flex justify-content-end res-hidden">
 			<div class="we-co--trust-logo">
 				<div class="d-flex align-items-center">
 					<script type="text/javascript"> //<![CDATA[
@@ -47,6 +51,7 @@
 	</div>
 </div>
 
+{{-- 
 <div class="we-co--header-responsive container">
 	<div class="row align-items-center">
 		<div class="col-12" style="text-align: center; margin-top: 20px;">
@@ -60,8 +65,6 @@
 	            @else
 	            <img src="{{ asset('assets/img/logo.png') }}" class="we-co--logo" alt="Logo">
 	            @endif
-
-	       
 			</div>
 		</div>
 
@@ -89,3 +92,4 @@
 		</div>
 	</div>
 </div>
+--}}
