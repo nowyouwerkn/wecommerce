@@ -53,30 +53,30 @@
 
         <a href="{{ route('configuration') }}" class="nav-link ml-4"><i data-feather="settings"></i></a>
 
-        <a href="https://github.com/nowyouwerkn/wecommerce/blob/main/CHANGELOG.md" target="_blank" class="badge badge-info ml-3" style="line-height: 14px;">v. 1.4.3</a>
+        <a href="https://github.com/nowyouwerkn/wecommerce/blob/main/CHANGELOG.md" target="_blank" class="badge badge-info ml-3" style="line-height: 14px;">v. 1.5</a>
     </nav>
 </div>
 
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/es.min.js" integrity="sha512-DekU3EtZYK7QnqJh6Y+0LSL4w48zh6ZP/f52wTKiRa7uTlS8Eecw9aBVPwT4pR17B3dxiZBJwo/+XH8FPehgkQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-     <script type="text/javascript">
-                    $('#bell-notification').on('click', function(){
-                        event.preventDefault();
+<script type="text/javascript">
+    $('#bell-notification').on('click', function(){
+        event.preventDefault();
 
-                        $.ajax({
-                            method: 'GET',
-                            url: "{{ route('notifications.mark.read') }}",
-                            data:{
-                                _token: "{{ Session::token() }}"
-                            },
-                            success: function(msg){
-                                $('#notification-number').text('0');
-                            },
-                            error: function(msg){
+        $.ajax({
+            method: 'GET',
+            url: "{{ route('notifications.mark.read') }}",
+            data:{
+                _token: "{{ Session::token() }}"
+            },
+            success: function(msg){
+                $('#notification-number').text('0');
+            },
+            error: function(msg){
 
-                            }
-                        });
-                    });
-                </script>
+            }
+        });
+    });
+</script>
 @endpush

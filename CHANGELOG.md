@@ -2,7 +2,14 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
-## 1.4.3 - 2022-01-4
+## 1.5 - 2022-02-22
+- Funcionalidad de solicitud de factura
+- Cambios en responsivo para el checkout
+- Nueva función de "Historial de Recomendaciones" que ofrece sugerencias de producto de acuerdo a lo que el usuario ha visto en la página
+- Completado automático en el checkout para las direcciones de acuerdo al código postal.
+- Funcionalidad de relaciones y colores para los productos
+
+## 1.4.3 - 2022-01-04
 - Ya está disponible la opción de activar y desactivar los métodos de pago de Mercado Pago. 
 - Se Agrega la funcionalidad de activar y desactivar el modo sandbox para las pasarelas de pago.
 - Se añade un botón para activar y desactivar el  método de pago.
