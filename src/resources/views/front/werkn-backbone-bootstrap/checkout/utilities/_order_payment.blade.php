@@ -4,7 +4,7 @@
         <div class="card mb-2">
             <div class="card-header d-flex align-items-center justify-content-between">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="paymentRadio" id="paymentRadio_card" checked="" data-option="tarjeta">
+                    <input class="form-check-input" type="radio" name="paymentRadio" id="paymentRadio_card" data-option="tarjeta">
                     <label class="form-check-label" for="paymentRadio_card">
                         Tarjeta de Crédito o Débito
                     </label>
@@ -12,36 +12,37 @@
 
                 <img src="{{ asset('img/icons/card-info.png') }}" style="height: 25px; width: auto !important;">
             </div>
-            <div id="cardInfo" class="card-body">
+
+            <div id="cardInfo" class="card-body" style="display:none;">
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-12 mb-3">
                                 <label class="form-label" for="card-number">Número de Tarjeta <span class="text-danger">*</span></label>
-                                <input type="text" id="card-number" name="card_number" class="card-input form-control form-control" data-parsley-trigger="change" value="{{ old('card_number') }}" required="">
+                                <input type="text" id="card-number" name="card_number" class="card-input form-control form-control" data-parsley-trigger="change" value="{{ old('card_number') }}" required="" disabled="true">
                             </div>
 
                             <div class="col-12 mb-3">
                                 <label class="form-label" for="card-name">Nombre en la Tarjeta <span class="text-danger">*</span> </label>
-                                <input type="text" id="card-name" name="card-name" class="form-control form-control" value="{{ old('card-name') }}" data-parsley-trigger="change" required="">
+                                <input type="text" id="card-name" name="card-name" class="form-control form-control" value="{{ old('card-name') }}" data-parsley-trigger="change" required="" disabled="true">
                             </div>
 
                             <div class="col-4 col-md-4">
                                 <div class="mb-3">
                                     <label class="form-label" for="card-month">Mes <span class="text-danger">*</span></label>
-                                    <input type="text" id="card-month" name="card-month" maxlenght="2" class="form-control form-control" data-parsley-trigger="change" value="{{ old('card-month') }}" required="">
+                                    <input type="text" id="card-month" name="card-month" maxlenght="2" class="form-control form-control" data-parsley-trigger="change" value="{{ old('card-month') }}" required="" disabled="true">
                                 </div>
                             </div>
                             <div class="col-4 col-md-4">
                                 <div class="mb-3">
                                     <label class="form-label" for="card-year">Año <span class="text-danger">*</span></label>
-                                    <input type="text" id="card-year" name="card-year" maxlenght="2" class="form-control form-control" data-parsley-trigger="change" value="{{ old('card-year') }}" required="">
+                                    <input type="text" id="card-year" name="card-year" maxlenght="2" class="form-control form-control" data-parsley-trigger="change" value="{{ old('card-year') }}" required="" disabled="true">
                                 </div>
                             </div>
                             <div class="col-4 col-md-4">
                                 <div class="mb-3">
                                     <label class="form-label" for="card-ccv">CCV <span class="text-danger">*</span></label>
-                                    <input type="text" id="card-cvc" name="card-cvc" class="form-control form-control" data-parsley-trigger="change" required="" value="{{ old('card-cvc') }}" maxlength="4">
+                                    <input type="text" id="card-cvc" name="card-cvc" class="form-control form-control" data-parsley-trigger="change" required="" disabled="true" value="{{ old('card-cvc') }}" maxlength="4">
                                 </div>
                             </div>
                         </div>
@@ -229,6 +230,62 @@
 </div>
 
 @push('scripts')
+<!-- SELECTOR DE MÉTODOS DE PAGO -->
+<script type="text/javascript">
+    var $form = $('#checkout-form');
+
+    $(document).ready(function() {
+        $('input[name=paymentRadio]').on('click', function(){
+            $('input[name=method]').prop('disabled', false);
+
+            var selected = $(this).attr('data-option');
+
+            switch(selected){
+                case "tarjeta":
+                    console.log('Pago con Tarjeta');
+                    $('#cardInfo').fadeIn();
+                    $('#cardInfo').find('input').prop('disabled', false);
+                    $('input[name=method]').val('Pago con Tarjeta');
+
+                    $('#paymentMethod').text('{{ $card_payment->supplier }}');
+
+                    break;
+
+                case "paypal":
+                    console.log('Pago con Paypal');
+                    $('#cardInfo').fadeOut();
+                    $('#cardInfo').find('input').prop('disabled', true);
+                    $('input[name=method]').val('Pago con Paypal');
+                    
+                    $('#paymentMethod').text('Paypal');
+
+                    break;
+
+                case "mercadopago":
+                    console.log('Pago con MercadoPago');
+                    $('#cardInfo').fadeOut();
+                    $('#cardInfo').find('input').prop('disabled', true);
+                    $('input[name=method]').val('Pago con MercadoPago');
+                    
+                    $('#paymentMethod').text('MercadoPago');
+
+                    break;
+
+                case "efectivo":
+                    console.log('Pago con Oxxo');
+                    $('#cardInfo').fadeOut();
+                    $('#cardInfo').find('input').prop('disabled', true);
+                    $('input[name=method]').val('Pago con Oxxo');
+
+                    $('#paymentMethod').text('OxxoPay');
+
+                    break;
+            }
+        });
+    });
+</script>
+<!-- // SELECTOR DE MÉTODOS DE PAGO -->
+
 <script type="text/javascript">
     $('.billing_check').on('click', function(){
         if($('.billing_check').is(":checked")){

@@ -5,7 +5,7 @@
 		</div>
 
 		<div class="col-12 col-md-4">
-			<div class="d-flex align-items-center">
+			<div class="d-flex align-items-center justify-content-between">
 				@if(!empty($store_config))
 	                @if($store_config->store_logo == NULL)
 	                <img src="{{ asset('assets/img/logo.png') }}" class="we-co--logo" alt="Logo">

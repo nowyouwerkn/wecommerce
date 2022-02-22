@@ -16,7 +16,7 @@
 
         <!-- FAVICON -->
 
-		<!-- CSS -->
+        <!-- CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
         <link rel="stylesheet" href="{{ asset('css/w-custom.css') }}">
@@ -30,20 +30,64 @@
         @endif
 
         @include('front.theme.werkn-backbone-bootstrap.layouts.partials._headerbands')
-    	@include('front.theme.werkn-backbone-bootstrap.layouts.header')
+        @include('front.theme.werkn-backbone-bootstrap.layouts.header')
 
-    	<main class="mb-5">
+        <main class="mb-5">
             @include('front.theme.werkn-backbone-bootstrap.layouts.partials._messages')
             @include('front.theme.werkn-backbone-bootstrap.layouts.partials._modal_messages')
-    		@yield('content')
-    	</main>
+            @yield('content')
+        </main>
 
-    	@include('front.theme.werkn-backbone-bootstrap.layouts.footer')
+        
+        @if(Session::has('watch_history'))
+        <div class="container mt-5 mb-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 class="mb-2">Podrían gustarte...</h3>
+                    <p class="pe-5">Recomendaciones basadas en los productos que has visitado</p>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        @php
+                            $oldRecommend = Session::get('watch_history');
+                            $recommendations = new Nowyouwerkn\WeCommerce\Models\WatchHistory($oldRecommend);
+
+                            foreach($recommendations->items as $r){
+                                $categories = $r['category'];
+                            }
+
+                            $recommeded_products = Nowyouwerkn\WeCommerce\Models\Product::whereIn('category_id', [$categories])->take(4)->inRandomOrder()->get();
+                        @endphp
+
+                        @foreach($recommeded_products as $rec_products)
+                        <div class="col-md-3">
+                            <a class="small-product-card" href="{{ route('detail', [$rec_products->category->slug, $rec_products->slug]) }}">
+                                <img alt="{{ $rec_products->name }}" style="width: 100px;" src="{{ asset('img/products/' . $rec_products->image ) }}">
+
+                                <div class="small-product-card-info">
+                                    <h5 class="fs-6 mb-1">{{ $rec_products->name }}</h5>
+                                    @if($rec_products->has_discount == true && $rec_products->discount_end > Carbon\Carbon::today())
+                                        <div class="wk-price" style="font-size:.8em;">${{ number_format($rec_products->discount_price, 2) }}</div>
+                                        <div class="wk-price wk-price-discounted" style="font-size:.7em !important; ">${{ number_format($rec_products->price, 2) }}</div>
+                                    @else
+                                        <div class="wk-price" style="font-size:.8em;">${{ number_format($rec_products->price, 2) }}</div>
+                                    @endif
+                                </div>
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+        
+        @include('front.theme.werkn-backbone-bootstrap.layouts.footer')
         
         @include('front.theme.werkn-backbone-bootstrap.layouts.partials._cookies_notice')
         @include('front.theme.werkn-backbone-bootstrap.layouts.partials._modal_popup')
 
-		<!-- JS -->
+        <!-- JS -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 
@@ -58,7 +102,7 @@
 
         <script src="{{ asset('js/w-scripts.js') }}"></script>
 
-    	@stack('scripts')
+        @stack('scripts')
 
         @php
             $integrations = Nowyouwerkn\WeCommerce\Models\Integration::where('is_active', true)->get(['name', 'code']);
@@ -78,5 +122,5 @@
                 fbq('track', 'Contact');
             });
         </script>
-	</body>
+    </body>
 </html>

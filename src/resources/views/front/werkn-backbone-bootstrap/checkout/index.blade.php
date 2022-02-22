@@ -76,62 +76,6 @@
 @endsection
 
 @push('scripts')
-<!-- SELECTOR DE MÉTODOS DE PAGO -->
-<script type="text/javascript">
-    var $form = $('#checkout-form');
-
-    $(document).ready(function() {
-        $('input[name=paymentRadio]').on('click', function(){
-            $('input[name=method]').prop('disabled', false);
-
-            var selected = $(this).attr('data-option');
-
-            switch(selected){
-                case "tarjeta":
-                    console.log('Pago con Tarjeta');
-                    $('#cardInfo').fadeIn();
-                    $('#cardInfo').find('input').prop('disabled', false);
-                    $('input[name=method]').val('Pago con Tarjeta');
-
-                    $('#paymentMethod').text('{{ $card_payment->supplier }}');
-
-                    break;
-
-                case "paypal":
-                    console.log('Pago con Paypal');
-                    $('#cardInfo').fadeOut();
-                    $('#cardInfo').find('input').prop('disabled', true);
-                    $('input[name=method]').val('Pago con Paypal');
-                    
-                    $('#paymentMethod').text('Paypal');
-
-                    break;
-
-                case "mercadopago":
-                    console.log('Pago con MercadoPago');
-                    $('#cardInfo').fadeOut();
-                    $('#cardInfo').find('input').prop('disabled', true);
-                    $('input[name=method]').val('Pago con MercadoPago');
-                    
-                    $('#paymentMethod').text('MercadoPago');
-
-                    break;
-
-                case "efectivo":
-                    console.log('Pago con Oxxo');
-                    $('#cardInfo').fadeOut();
-                    $('#cardInfo').find('input').prop('disabled', true);
-                    $('input[name=method]').val('Pago con Oxxo');
-
-                    $('#paymentMethod').text('OxxoPay');
-
-                    break;
-            }
-        });
-    });
-</script>
-<!-- // SELECTOR DE MÉTODOS DE PAGO -->
-
 <!-- PARSLEY VALIDATION -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.8.1/parsley.min.js"></script>
 <script type="text/javascript">
@@ -160,29 +104,30 @@
 
 <script type="text/javascript">
        $(document).ready(function(){
-                 $('.shipping-options a').click(function() {
-            event.preventDefault();
-            console.log('Seleccionado:' , $(this).attr('data-value'));
-            
-            $('.shipping-options a').removeClass('active');
+             $('.shipping-options a').click(function() {
+        event.preventDefault();
+        console.log('Seleccionado:' , $(this).attr('data-value'));
+        
+        $('.shipping-options a').removeClass('active');
 
 
-            if($(this).hasClass('active')){
-                $(this).removeClass('active');
-            }else{
-                $(this).addClass('active');
-            }
-            
-            document.getElementById("shippingRate").textContent = $(this).attr('price-value');  
-            document.getElementById("shippingInput").value = $(this).attr('price-value');
-            document.getElementById("shippingOptions").value = $(this).attr('data-value');
-                    var subtotal =  parseFloat($('#subtotalInput').val());
-                    var shipping = parseFloat($('#shippingInput').val());  
-                     var total_count = subtotal + parseFloat(shipping);
-                    var total = total_count.toString()
-                    $('#totalPayment').text(total);
-            document.getElementById("finalTotal").value = total;   
-                    
+        if($(this).hasClass('active')){
+            $(this).removeClass('active');
+        }else{
+            $(this).addClass('active');
+        }
+        
+        document.getElementById("shippingRate").textContent = $(this).attr('price-value');  
+        document.getElementById("shippingInput").value = $(this).attr('price-value');
+        document.getElementById("shippingOptions").value = $(this).attr('data-value');
+                var subtotal =  parseFloat($('#subtotalInput').val());
+                var shipping = parseFloat($('#shippingInput').val());  
+                 var total_count = subtotal + parseFloat(shipping);
+                var total = total_count.toString()
+                $('#totalPayment').text(total);
+
+        document.getElementById("finalTotal").value = total;   
+     
         });
     });
 </script>

@@ -278,7 +278,20 @@
                         </ul>
 
                         <div class="tab-content mt-4" id="myTabContent">
-                          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"><p>{{ $product->description }}</p></div>
+                          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Descripción</h6>
+                                        <hr>
+                                        <p>{{ $product->description }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Consejos de cuidado</h6>
+                                        <hr>
+                                        <p>{{ $product->care_instructions }}</p>
+                                    </div>
+                                </div>
+                            </div>
                           <div class="tab-pane fade" id="materials" role="tabpanel" aria-labelledby="materials-tab"><p>{{ $product->materials }}</p></div>
                           <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">   
                             @if($product->approved_reviews->count() != 0)
@@ -436,7 +449,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="related-product-title mb-3">
-                    <h4 class="title">También te podría gustar...</h4>
+                    <h4 class="title">Productos similares...</h4>
                 </div>
             </div>
         </div>

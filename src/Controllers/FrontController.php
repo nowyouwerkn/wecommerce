@@ -58,6 +58,8 @@ use Nowyouwerkn\WeCommerce\Models\Order;
 use Nowyouwerkn\WeCommerce\Models\Wishlist;
 use Nowyouwerkn\WeCommerce\Models\LegalText;
 use Nowyouwerkn\WeCommerce\Models\FAQ;
+use Nowyouwerkn\WeCommerce\Models\ZipCode;
+use Nowyouwerkn\WeCommerce\Models\WatchHistory;
 
 use Nowyouwerkn\WeCommerce\Models\StoreTax;
 use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
@@ -252,12 +254,8 @@ class FrontController extends Controller
 
     public function detail($category_slug, $slug)
     {
-        //dd(Session::get('cart'));
-
         $catalog = Category::where('slug', $category_slug)->first();
         $product = Product::where('slug', '=', $slug)->where('status', 'Publicado')->with('category')->firstOrFail();
-
-        Session::push('watch_history', $product);
 
         $products_selected = Product::with('category')->where('category_id', $catalog->id)->where('slug', '!=' , $product->slug)->where('status', 'Publicado')->inRandomOrder()->take(6)->get();
 
@@ -282,14 +280,13 @@ class FrontController extends Controller
             $all_relationships = ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
         }
 
-        /* Recommendation System */
         $size_charts = SizeChart::where('category_id', $catalog->id)->get();
 
-        $recomendations = Session::get('watch_history');
-        $randomItems = Arr::random($recomendations, 1);
-
-        $recomendation_category = Category::where('id', $randomItems[0]->category_id)->first();
-        $recomendation_products = Product::where('category_id', $recomendation_category->id)->inRandomOrder()->take(10)->get();
+        /* Watch History */
+        $oldRecommend = Session::has('watch_history') ? Session::get('watch_history') : null;
+        $recomendation = new WatchHistory($oldRecommend);
+        $recomendation->add($product);
+        Session::put('watch_history', $recomendation);
 
         $store_config = $this->store_config;
 
@@ -302,7 +299,6 @@ class FrontController extends Controller
             ->with('store_config', $store_config)
             ->with('next_product', $next_product)
             ->with('size_charts', $size_charts)
-            ->with('recomendation_products', $recomendation_products)
             ->with('last_product', $last_product)
             ->with('base_product', $base_product)
             ->with('all_relationships', $all_relationships);
@@ -2158,7 +2154,13 @@ class FrontController extends Controller
            
             return response()->json(['mensaje' => 'La promoción actual de "' . $rule->type . ' cuando ' . $rule->condition . ' ' . $rule->comparison_operator . ' ' .  number_format($rule->value) . '" en la tienda no admite el uso de cupones.', 'type' => 'exception'], 200);
         }
+    }
 
+    public function zipCodeGet(Request $request)
+    {
+        $value = $request->get('value');
+
+        return response()->json(ZipCode::where('zip_code', $value)->get());
     }
 
     public function fetchStates(Request $request)

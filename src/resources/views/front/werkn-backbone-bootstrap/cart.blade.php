@@ -55,7 +55,7 @@
                                     <div class="wk-price" style="font-size:.8em;">${{ number_format($cart_product['item']['price'], 2) }}</div>
                                 @endif
 
-                                <div class="mt-1" style="font-size:.8em !important;">
+                                <div class="wk-desc-list mt-1" style="font-size:.8em !important;">
                                     @if($cart_product['item']['color'] != NULL)
                                     <p class="mb-0">Color: {{ $cart_product['item']['color'] }}</p>
                                     @endif
@@ -63,18 +63,18 @@
                                     <p class="mb-0">Talla: {{ $variant }}</p>
                                 </div>
 
-                                <div class="btn-group">
+                                <div class="btn-group align-items-center">
                                     @if($cart_product['qty'] == 1)
                                     @else
-                                    <a href="{{ route( 'cart.substract', [ 'id' => $cart_product['item']['id'], 'variant' => $cart_product['variant'] ] ) }}" class="btn btn_custom--purple d-flex align-items-center">-</a>
+                                    <a href="{{ route( 'cart.substract', [ 'id' => $cart_product['item']['id'], 'variant' => $cart_product['variant'] ] ) }}" class="btn btn-qty">-</a>
                                     @endif
-                                    <p class="btn d-flex align-items-center h-100">{{ $cart_product['qty'] }}</p>
-                                    <a href="{{ route( 'cart.add-more', [ 'id' => $cart_product['item']['id'], 'variant' => $cart_product['variant'], 'qty' => $cart_product['qty'] ] ) }}" class="btn btn_custom--purple d-flex align-items-center">+</a>
+                                    <p class="h-100 mb-0 px-2">{{ $cart_product['qty'] }}</p>
+                                    <a href="{{ route( 'cart.add-more', [ 'id' => $cart_product['item']['id'], 'variant' => $cart_product['variant'], 'qty' => $cart_product['qty'] ] ) }}" class="btn btn-qty">+</a>
                                 </div>
                             </div>
 
-                            <div>
-                                <a href="{{ route( 'cart.delete', ['id' => $cart_product['item']['id'], 'variant' => $variant ] ) }}" class="btn">
+                            <div class="wk-total-list text-end">
+                                <a href="{{ route( 'cart.delete', ['id' => $cart_product['item']['id'], 'variant' => $variant ] ) }}" class="btn btn-danger btn-sm">
                                     <ion-icon name="trash-outline"></ion-icon>
                                 </a>
 
@@ -125,10 +125,10 @@
                                     <div class="btn-group">
                                           @if($product['qty'] == 1)
                                         @else
-                                        <a href="{{ route( 'cart.substract', [ 'id' => $product['item']['id'], 'variant' => $product['variant'] ] ) }}" class="btn btn_custom--purple d-flex align-items-center">-</a>
+                                        <a href="{{ route( 'cart.substract', [ 'id' => $product['item']['id'], 'variant' => $product['variant'] ] ) }}" class="btn d-flex align-items-center">-</a>
                                          @endif
                                         <p class="btn d-flex align-items-center h-100">{{ $product['qty'] }}</p>
-                                        <a href="{{ route( 'cart.add-more', [ 'id' => $product['item']['id'], 'variant' => $product['variant'], 'qty' => $product['qty'] ] ) }}" class="btn btn_custom--purple d-flex align-items-center">+</a>
+                                        <a href="{{ route( 'cart.add-more', [ 'id' => $product['item']['id'], 'variant' => $product['variant'], 'qty' => $product['qty'] ] ) }}" class="btn d-flex align-items-center">+</a>
                                     </div>
                                 </td>
                                 <td><span>$ {{ number_format($product['price'], 2) }} </span></td>
@@ -317,7 +317,7 @@
                 <div class="col-md-6 offset-md-3 mt-5 text-center">
                     <p class="filter__title">No hay productos en el carrito</p>
                     <p class="filter__info">
-                        <a href="{{ route('catalog.all') }}" class="btn btn_custom btn_custom--purple">¡Empieza a llenarlo!</a>
+                        <a href="{{ route('catalog.all') }}" class="btn btn_custom">¡Empieza a llenarlo!</a>
                     </p>
                 </div>
             @endif

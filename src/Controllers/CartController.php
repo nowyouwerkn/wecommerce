@@ -42,7 +42,7 @@ class CartController extends Controller
 
         $cart->add($product, $product->id, $variant, $price);
 
-        $request->session()->put('cart', $cart);
+        //$request->session()->put('cart', $cart);
         Session::put('cart', $cart);
 
         //Facebook Event

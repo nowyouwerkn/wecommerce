@@ -412,9 +412,10 @@ Route::get('/xml-feed', [
  *
 */
 Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@index')->name('index');
+
 Route::get('catalog', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalogAll')->name('catalog.all');
 Route::get('catalog_promo', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalogPromo')->name('catalog.promo');
-Route::post('catalog/order', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalog_order')->name('catalog.orderby');
+Route::post('catalog_order', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalog_order')->name('catalog.orderby');
 
 Route::get('/catalog/{category_slug}', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@catalog',
@@ -443,13 +444,19 @@ Route::get('/busqueda-general', [
     'as' => 'search.query',
 ]);
 
+/* Carrito */
 Route::get('cart', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@cart')->name('cart');
 
+/* Checkout */
 Route::get('/checkout', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkout')->name('checkout');
-
 Route::post('/checkout',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckout',
     'as' => 'checkout.store',
+]);
+
+Route::get('/zip_codes/get',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@zipCodeGet',
+    'as' => 'zipcode.get',
 ]);
 
 Route::get('/paypal/status',[
