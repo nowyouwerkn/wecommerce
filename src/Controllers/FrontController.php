@@ -106,8 +106,9 @@ class FrontController extends Controller
     
     public function index ()
     {
-        $banners = Banner::where('is_active', true)->get();
-        $main_categories = Category::where('parent_id', '0')->orWhere('parent_id', NULL)->get(['name', 'slug', 'image'])->take(4);
+        $banners = Banner::where('is_active', true)->where('is_promotional', false)->orderBy('priority', 'asc')->orderBy('created_at', 'asc')->get();
+        
+        $main_categories = Category::where('parent_id', '0')->orWhere('parent_id', NULL)->orderBy('priority', 'asc')->orderBy('created_at', 'asc')->get(['name', 'slug', 'image'])->take(6);
 
         $products = Product::where('in_index', true)->where('status', 'Publicado')->with('category')->get()->take(8);
         $products_favorites = Product::where('in_index', true)->where('is_favorite', true)->where('status', 'Publicado')->with('category')->get()->take(8);
