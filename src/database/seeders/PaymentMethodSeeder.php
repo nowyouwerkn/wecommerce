@@ -50,7 +50,7 @@ class PaymentMethodSeeder extends Seeder
              'is_active' => false
         ]);
 
-          PaymentMethod::create([
+        PaymentMethod::create([
             'type' => 'card',
             'supplier' => 'MercadoPago',
             'is_active' => false,

@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(LegalTextSeeder::class);
         $this->call(MailConfigSeeder::class);
         $this->call(StoreThemeSeeder::class);
+        $this->call(StoreConfigSeeder::class);
     }
 }
