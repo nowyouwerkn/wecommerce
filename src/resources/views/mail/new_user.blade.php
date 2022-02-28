@@ -44,7 +44,7 @@
 				<tr>
 					<td>
 						<h1 style="margin-bottom:0px; text-transform: uppercase;">GRACIAS {{ $user->name }}, POR REGISTRARTE CON NOSTROS</h1>
-						<p style="margin-top: 10px; line-height: 1.8;">¡Comienza tu colección con nosotros!.</p>
+						<p style="margin-top: 10px; line-height: 1.8;">¡Comienza tu colección con nosotros!</p>
 
 						<a href="{{ route('profile') }}" style="background: #fff; border:2px solid #2f3542; border-radius: 13px; padding:15px 20px; text-decoration: none; margin: 20px 0; display:block; text-align: center; width:50%; color: #2f3542;">Ver tu usuario en la plataforma.</a>
 					</td>

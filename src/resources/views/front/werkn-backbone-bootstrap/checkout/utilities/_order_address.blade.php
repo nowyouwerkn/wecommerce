@@ -327,11 +327,18 @@
             $('#city').val('Procesando...');
             $('#state').val('Procesando...');
 
+
+            if ($(this).val().charAt(0) == '0') {
+                var zip = $(this).val().slice(1);
+            }else{
+                var zip = $(this).val();
+            }
+
             $.ajax({
                 method: 'GET',
                 url: "{{ route('zipcode.get') }}",
                 data:{ 
-                    value: $(this).val(),
+                    value: zip,
                     _token: '{{ Session::token() }}', 
                 },
                 success: function(response){
