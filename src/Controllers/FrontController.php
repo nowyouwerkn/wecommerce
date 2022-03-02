@@ -2076,6 +2076,16 @@ class FrontController extends Controller
                             break;
                     }
                     
+                    // Si cantidad menor al minimo requerido mandar response de error.
+                    
+                    if ($shipping_rules != NULL) {
+                        if ($shipping_rules->condition == 'Cantidad Comprada' && $shipping_rules->comparison_operator == '>') {
+                            if ($discount <= $shipping_rules->value) {
+                                return response()->json(['mensaje' => 'Este cupon no puede ser aplicado debido a que el cupon reduce ', 'type' => 'exception'], 200);
+                            }
+                        }
+                    }
+
                     if ($coupon->is_free_shipping == true) {
                         $free_shipping = $shipping * 0;
                     }else{
