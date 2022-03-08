@@ -6,27 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Twitter -->
-    <meta name="twitter:site" content="@themepixels">
-    <meta name="twitter:creator" content="@themepixels">
+    <meta name="twitter:site" content="@nowyouwerkn">
+    <meta name="twitter:creator" content="@nowyouwerkn">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="DashForge">
-    <meta name="twitter:description" content="Responsive Bootstrap 4 Dashboard Template">
-    <meta name="twitter:image" content="http://themepixels.me/dashforge/img/dashforge-social.png">
+    <meta name="twitter:title" content="Werkn">
+    <meta name="twitter:description" content="Werkn WeCommerce">
+    <meta name="twitter:image" content="">
 
     <!-- Facebook -->
-    <meta property="og:url" content="http://themepixels.me/dashforge">
-    <meta property="og:title" content="DashForge">
-    <meta property="og:description" content="Responsive Bootstrap 4 Dashboard Template">
+    <meta property="og:url" content="http://www.werkn.mx">
+    <meta property="og:title" content="Werkn">
+    <meta property="og:description" content="Werkn WeCommerce">
 
-    <meta property="og:image" content="http://themepixels.me/dashforge/img/dashforge-social.png">
-    <meta property="og:image:secure_url" content="http://themepixels.me/dashforge/img/dashforge-social.png">
+    <meta property="og:image" content="">
+    <meta property="og:image:secure_url" content="">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="600">
 
     <!-- Meta -->
-    <meta name="description" content="Responsive Bootstrap 4 Dashboard Template">
-    <meta name="author" content="ThemePixels">
+    <meta name="description" content="Werkn WeCommerce">
+    <meta name="author" content="Werkn">
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="../../assets/img/favicon.png">
@@ -40,28 +40,15 @@
 
     <!-- DashForge CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/dashforge.css') }}">
-
     @if(Auth::user()->color_mode == true)
     <link rel="stylesheet" href="{{ asset('assets/css/skin.dark.css') }}">
     @endif
-
     <link rel="stylesheet" href="{{ asset('assets/css/dashforge.dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/wk.custom.css') }}">
 
     @php
         $store_config = Nowyouwerkn\WeCommerce\Models\StoreConfig::first();
     @endphp
-
-    <style>
-        .image-table {
-            width: 120px;
-        }
-
-        .image-table img{
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
 
     @if($store_config->store_logo == NULL)
         <style>
@@ -70,83 +57,6 @@
                 background-position: center center;
                 background-size: contain;
                 background-repeat: no-repeat;
-                width: 50%;
-                margin: 0;
-                position: relative;
-                display: inline-block;
-
-                text-indent: 110%;
-                white-space: nowrap;
-                overflow: hidden;
-            }
-
-            .p-tienda-desk{
-                margin-bottom: 0;   
-            }
-
-            .p-tienda-responsive{
-                margin-bottom: 0;
-                display: none;
-            }
-
-            .responsive-add{
-                display: none;
-                margin-bottom: 0;
-            }
-
-            .desktop-add{
-                display: block;
-                margin-bottom: 0;
-            }
-
-            .bg-teal{
-                margin-left: 40% !important ;
-            }
-
-            @media only screen and (max-width: 1200px) {
-                .p-tienda-desk{
-                    margin-bottom: 0; 
-                    display: none;  
-                }
-
-                .p-tienda-responsive{
-                    margin-bottom: 0;
-                    display: block;
-                }
-
-                .responsive-add{
-                    display: block;
-                    padding:0;
-                    margin-bottom: 0;
-                }
-
-                .desktop-add{
-                    display: none;
-                    margin-bottom: 0;
-                }
-            }
-
-            @media only screen and (max-width: 900px) {
-                .p-tienda-desk{
-                    margin-bottom: 0; 
-                    display: block;  
-                }
-
-                .p-tienda-responsive{
-                    margin-bottom: 0;
-                    display: none;
-                }
-
-                .responsive-add{
-                    display: none;
-                    padding:0;
-                    margin-bottom: 0;
-                }
-
-                .desktop-add{
-                    display: block;
-                    margin-bottom: 0;
-                }
             }
         </style>
     @else
@@ -156,84 +66,6 @@
                 background-position: center center;
                 background-size: contain;
                 background-repeat: no-repeat;
-                width: 50%;
-                margin: 0;
-                position: relative;
-                display: inline-block;
-
-                text-indent: 110%;
-                white-space: nowrap;
-                overflow: hidden;
-            }
-
-            .p-tienda-desk{
-                margin-bottom: 0;   
-            }
-
-            .p-tienda-responsive{
-                margin-bottom: 0;
-                display: none;
-            }
-
-            .responsive-add{
-                display: none;
-                margin-bottom: 0;
-            }
-
-            .desktop-add{
-                display: block;
-                margin-bottom: 0;
-            }
-
-            .bg-teal{
-                margin-left: 40% !important ;
-            }
-
-            @media only screen and (max-width: 1200px) {
-                .p-tienda-desk{
-                    margin-bottom: 0; 
-                    display: none;  
-                }
-
-                .p-tienda-responsive{
-                    margin-bottom: 0;
-                    display: block;
-                }
-
-                .responsive-add{
-                    display: block;
-                    padding:0;
-                    margin-bottom: 0;
-                }
-
-                .desktop-add{
-                    display: none;
-                    margin-bottom: 0;
-                }
-
-            }
-            
-            @media only screen and (max-width: 900px) {
-                .p-tienda-desk{
-                    margin-bottom: 0; 
-                    display: block;  
-                }
-
-                .p-tienda-responsive{
-                    margin-bottom: 0;
-                    display: none;
-                }
-
-                .responsive-add{
-                    display: none;
-                    padding:0;
-                    margin-bottom: 0;
-                }
-
-                .desktop-add{
-                    display: block;
-                    margin-bottom: 0;
-                }
             }
         </style>
     @endif
@@ -241,19 +73,15 @@
     @stack('stylesheets')
 </head>
 <body>
-    <!-- Aside Navbar -->
     @include('wecommerce::back.layouts.navbar')
-
     <div class="content ht-100v pd-0">
-        <!-- Header -->
         @include('wecommerce::back.layouts.header')
 
         <div class="content-body">
             <div class="container pd-x-0">
-                <!-- Title -->
                 @yield('title')
                 @include('wecommerce::back.layouts.partials._messages')
-                <!-- Content -->
+
                 @yield('content')
             </div>
         </div>
@@ -295,12 +123,10 @@
                         
                         <a href="javascript:void()" class="btn btn-outline-secondary disabled btn-block">Solicita una integración</a>
                     </div>
-
                 </div>
             </div>
         </div><!-- modal-dialog -->
     </div><!-- modal -->
-
 
     <script src="{{ asset('lib/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('lib/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

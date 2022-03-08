@@ -4,7 +4,6 @@ namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
 use Auth;
-use Str;
 use Session;
 use Purifier;
 

@@ -14,6 +14,11 @@ use Illuminate\Http\Request;
 
 class WishlistController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('web');
+    }
+
     public function wishlist()
     {
         $product = Product::all();
@@ -25,7 +30,7 @@ class WishlistController extends Controller
     public function add($id)
     {
         $product = Product::getProductById($id);
-
+        
         Wishlist::create([
             'user_id' => Auth::user()->id,
             'product_id' => $product->id,

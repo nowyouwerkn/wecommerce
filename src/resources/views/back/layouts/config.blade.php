@@ -41,19 +41,6 @@
     <!-- DashForge CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/dashforge.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/dashforge.dashboard.css') }}">
-
-    <style>
-        .image-table {
-            width: 120px;
-        }
-
-        .image-table img{
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
-
     @yield('stylesheets')
 </head>
 <body>

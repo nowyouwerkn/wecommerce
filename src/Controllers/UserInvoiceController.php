@@ -7,10 +7,8 @@ use Carbon\Carbon;
 
 use Str;
 use Auth;
-use Storage;
 use Session;
 use Mail;
-use Image;
 
 use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 use Nowyouwerkn\WeCommerce\Models\StoreTheme;
@@ -21,9 +19,6 @@ use Nowyouwerkn\WeCommerce\Models\UserInvoice;
 
 /* Notificaciones */
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
-
-/* Exportar Info */
-use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Http\Request;
 

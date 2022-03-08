@@ -15,6 +15,7 @@ class CreateHeaderbandsTable extends Migration
     {
         Schema::create('headerbands', function (Blueprint $table) {
             $table->id();
+            
             $table->string('title');
             $table->string('text');
             $table->string('button_text')->nullable();
@@ -25,6 +26,7 @@ class CreateHeaderbandsTable extends Migration
             $table->string('hex_button_text')->nullable();
             $table->string('hex_background')->nullable();
             $table->boolean('is_active')->default(true);
+
             $table->timestamps();
         });
     }

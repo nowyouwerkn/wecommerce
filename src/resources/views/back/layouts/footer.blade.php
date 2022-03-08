@@ -1,1 +1,1 @@
-<h2>Todos los derechos reservados. 2021 &copy; Werkn S.A de C.V</h2>
+<h2>Todos los derechos reservados. {{ Carbon\Carbon::now()->format('Y') }} &copy; Werkn S.A de C.V</h2>

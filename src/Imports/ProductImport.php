@@ -2,6 +2,8 @@
 
 namespace  Nowyouwerkn\WeCommerce\Imports;
 
+use Str;
+
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Facades\Hash;

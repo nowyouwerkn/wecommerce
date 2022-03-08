@@ -3,12 +3,8 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
-use Carbon\Carbon;
-
 use Image;
 use Session;
-use Auth;
-use Str;
 
 /* Notificaciones */
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;

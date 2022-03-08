@@ -1,0 +1,378 @@
+/*
+* WK Custom v1.0.0
+* Copyright 2022 Werkn
+*/
+
+/* Buttons */
+.btn-pagado {
+    color: #fff;
+    background-color: #10b759;
+    border-color: #10b759;
+}
+
+.btn-empaquetado {
+    color: #1c273c;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.btn-pendiente,
+.btn-pago-pendiente {
+    color: #fff;
+    background-color: #fa983a;
+    border-color: #fa983a;
+}
+
+.btn-enviado {
+    color: #fff;
+    background-color: #00b8d4;
+    border-color: #00b8d4;
+}
+
+.btn-entregado {
+    color: #fff;
+    background-color: #7987a1;
+    border-color: #7987a1;
+}
+
+.btn-cancelado {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-expirado {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-sin-completar {
+    color: #fff;
+    background-color: #0a3d62;
+    border-color: #0a3d62;
+}
+
+/* Layout Index */
+.image-table {
+    width: 120px;
+}
+
+.image-table img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.p-tienda-desk{
+    margin-bottom: 0;   
+}
+
+.p-tienda-responsive{
+    margin-bottom: 0;
+    display: none;
+}
+
+.responsive-add{
+    display: none;
+    margin-bottom: 0;
+}
+
+.desktop-add{
+    display: block;
+    margin-bottom: 0;
+}
+
+.bg-teal{
+    margin-left: 40% !important ;
+}
+
+.aside-logo{
+    width: 50%;
+    margin: 0;
+    position: relative;
+    display: inline-block;
+
+    text-indent: 110%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Order Page */
+.order-status .btn{
+    font-size: 10px;
+    display: flex;
+}
+
+.dropdown-toggle::after {
+    margin-left: 0.5em;
+    margin-top: 4px;
+}
+
+.order-status .load-step{
+    display: none;
+}
+
+.order-status .step-style {
+    width: 15px;
+    height: 15px;
+    position: relative;
+    font-size: 8px;
+    text-align: center;
+    border: 2px solid black;
+    border-radius: 100%;
+    display: inline-block;
+    position: relative;
+    top: -3px;
+    margin-right: 5px;
+}
+
+.order-status  .step-style::after{
+    content: "";
+    width: 2px;
+    height: 21px;
+    background-color: black;
+    position: absolute;
+    top: 11px;
+    left: 4.5px;
+}
+
+.step-style i{
+    position: relative;
+}
+
+.text-danger .step-style{
+    border: 2px solid #a71d2a;
+}
+
+.text-danger .step-style::after,
+.last-step::after{
+    display: none !important;
+}
+
+.disabled .step-style{
+    border: 2px solid #7987a1;
+}
+
+.disabled .step-style::after{
+    background-color: #7987a1;
+}
+
+.order-status .spinner-border-sm{
+    width: .7rem;
+    height: .7rem;
+    border-width: 0.2em;
+    margin-right: 4px;
+}
+
+.order-status .spinner-text{
+    position: relative;
+    top: 2px;
+}
+
+.type-td{
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+.tooltip-custom{
+    position: relative;
+}
+
+.tooltip-custom:after{
+    content: 'Imprimir lista de empaque';
+    position: absolute;
+    width: 165px;
+    padding: 5px 15px;
+    display: block;
+    background-color: #7987a1;
+    top: -30px;
+    left: -75px;
+    text-align: center;
+    border-radius: 10px;
+    word-wrap: normal;
+    color: #fff;
+    font-size: .8em;
+    opacity: 0;
+    box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, .4);
+}
+
+.tooltip-custom:hover:after{
+    opacity: 1;
+}
+
+.filter-btn{
+    border: none;
+    background-color: transparent;
+    color: rgba(27, 46, 75, 0.7);
+    font-size: 12px;
+    padding: 0px 2px;
+}
+
+.table .table-title{
+    margin-right: 6px;
+}
+
+.filter-btn:hover{
+    color: #000;
+}
+
+.table-dashboard thead th, .table-dashboard tbody td{
+    white-space: initial;
+}
+
+/* Order Show */
+.payment_id{
+    width: 100%;
+    line-height: 1.3em;
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #C4B795 !important;
+}
+
+.note-row{
+    margin-bottom: 30px;
+}
+
+.speech-bubble {
+    position: relative;
+    background: #c8d6e5;
+    border-radius: .4em;
+    color: #222f3e;
+    padding: 20px 30px;
+}
+
+.speech-bubble:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 22px solid transparent;
+    border-right-color: #c8d6e5;
+    border-left: 0;
+    border-top: 0;
+    margin-top: -11px;
+    margin-left: -22px;
+}
+
+.just-one-image{
+    width: 85px;
+    height: 85px;
+    overflow: hidden;
+    position: relative;
+}
+
+.just-one-image img{
+    position: absolute;
+    top: 0px;
+}
+
+.icon-cards-row .card-text{
+    height: 20px;
+}
+
+.icon-cards-row small{
+    text-transform: uppercase;
+    opacity: .8;
+    color: #8f8f8f;
+    margin-bottom: 10px;
+    font-size: .6em;
+    display: block;
+}
+
+.icon-cards-row .card-body {
+    padding: 1.3rem 0.5rem;
+}
+
+.well{
+    border-radius: 15px;
+    border: 1px solid rgba(0,0,0,.2);
+    padding: 20px 30px;
+}
+
+.status-row{
+    width: 100%;
+}
+
+.status-row .status-box{
+    width: 100%;
+    padding: 13px 20px;
+    line-height: 1;
+}
+
+.tracking-card .badge{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.tracking-card .tracking-number{
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 8px 20px;
+    border-radius: 15px;
+    border: 3px solid #7987a1;
+}
+
+.tracking-number h4{
+    line-height: 1;
+    color: #7987a1;
+}
+
+.tracking-card .small-title{
+    margin-bottom: 15px;
+    margin-top: 3px;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: .9em;
+}
+
+
+@media only screen and (max-width: 1200px) {
+    .p-tienda-desk{
+        margin-bottom: 0; 
+        display: none;  
+    }
+
+    .p-tienda-responsive{
+        margin-bottom: 0;
+        display: block;
+    }
+
+    .responsive-add{
+        display: block;
+        padding:0;
+        margin-bottom: 0;
+    }
+
+    .desktop-add{
+        display: none;
+        margin-bottom: 0;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .p-tienda-desk{
+        margin-bottom: 0; 
+        display: block;  
+    }
+
+    .p-tienda-responsive{
+        margin-bottom: 0;
+        display: none;
+    }
+
+    .responsive-add{
+        display: none;
+        padding:0;
+        margin-bottom: 0;
+    }
+
+    .desktop-add{
+        display: block;
+        margin-bottom: 0;
+    }
+}

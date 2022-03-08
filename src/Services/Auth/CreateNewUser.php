@@ -49,7 +49,7 @@ class CreateNewUser implements CreatesNewUsers
 
         $coupon_rule = UserRule::where('type', 'Cupón de Registro')->where('is_active', true)->first();
 
-        if ($coupon_rule->count() != 0) {
+        if (!empty($coupon_rule)) {
             $coupon = new Coupon;
 
             $coupon->code = Str::slug($input['name']) . '_' . rand();

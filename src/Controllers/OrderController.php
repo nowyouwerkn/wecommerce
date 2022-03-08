@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 
 use Auth;
-use Storage;
-use Session;
 
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\Order;
@@ -122,15 +120,12 @@ class OrderController extends Controller
             }
         }
 
-    
         // Notificación
-        
         $type = 'Orden';
         $by = Auth::user();
         $data = 'cambió el estado de la orden #0' . $order->id . ' a ' . $request->value;
         $model_action = "update";
         $model_id = $order->id;
-
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
 

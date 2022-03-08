@@ -15,19 +15,12 @@
             <div class="d-flex align-items-center justify-content-start">
                 <a href="" class="avatar">
                     <img src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim( Auth::user()->email ?? 'N/A'))) . '?d=retro&s=150' }}" alt="user" class="rounded-circle">     
-                    <!--<img src="https://via.placeholder.com/500" class="rounded-circle" alt="">-->
                 </a>
                 <div class="aside-alert-link">
                     <a href="{{ route('update.messages') }}" class="new" data-toggle="tooltip" title="Nuevas actualizaciones en tu plataforma de WeCommerce">
                         <i data-feather="message-square"></i>
                     </a>
 
-                    <!--
-                    <a href="{{ route('notifications.index') }}" class="new" data-toggle="tooltip" title="Tienes 4 notificaciones nuevas">
-                        <i data-feather="bell"></i>
-                    </a>
-                    -->
-                    
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-1').submit();" data-toggle="tooltip" title="Cerrar Sesión">
                         <i data-feather="log-out"></i>
                         <form id="logout-form-1" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -141,15 +134,6 @@
                     <i data-feather="edit-3"></i><span>Reseñas</span> <span class="badge text-white bg-teal" data-toggle="tooltip" data-placement="right" title="Por aprobar">{{ $new_reviews_kpi }}</span>
                 </a>
             </li>
-
-            <!--
-            <li class="nav-label mg-t-25">Blog</li>
-            <li class="nav-item">
-                <a href="{{ route('configuration') }}" class="nav-link">
-                    <i data-feather="align-left"></i> <span>Blog</span>
-                </a>
-            </li>
-            -->
 
             <li class="nav-label mg-t-25">Canales de Venta</li>
             <li class="nav-item">

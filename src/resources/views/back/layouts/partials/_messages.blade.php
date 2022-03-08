@@ -20,7 +20,6 @@
 @endif
 
 @if (count($errors) > 0)
-    
 <div class="alert alert-danger fade show alert-dismissable">
     <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
     <strong>¡Error!</strong>
@@ -30,5 +29,4 @@
     @endforeach
     </ul>
 </div>
-
 @endif

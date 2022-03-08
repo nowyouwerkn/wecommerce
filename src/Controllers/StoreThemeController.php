@@ -4,7 +4,6 @@ namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
 use Session;
-use Auth;
 use Image;
 use Str;
 
