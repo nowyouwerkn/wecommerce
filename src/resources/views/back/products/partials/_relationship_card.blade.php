@@ -33,7 +33,6 @@
 
 	<!-- Variant Header -->
 	<div id="collapsedRelationships" class="table-responsive hidden mt-3 mb-4">
-		<form></form>
 		<form method="POST" id="relationshipForm" action="{{ route('relationship.store', $product->id ?? '0') }}" enctype="multipart/form-data">
 	        {{ csrf_field() }}
 

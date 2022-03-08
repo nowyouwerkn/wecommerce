@@ -552,7 +552,6 @@
                     </div>
                 </div>
                 
-
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -597,180 +596,140 @@
                     </div>
                 </div>
 
-                 @php
-
-                $notifications = Nowyouwerkn\WeCommerce\Models\Notification::with('user')->orderBy('created_at', 'desc')->where('type', 'Orden')->where('model_id', $order->id)->get();
-            @endphp
-
-             <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h4 class="mb-0">Listado de cambios realizados</h4>
-                            </div>
-                        </div>
-                        <hr>
-
-                        @if($notifications->count() != 0)
-
-                            @foreach($notifications as $notification)
-                            <div class="note-row row align-items-center mb-3">
-                                <div class="col-2">
-                                    <div class="user-image text-center mr-3">
-                                        @if($notification->model_action == 'update')
-                                        <ion-icon style = "font-size: 2rem;" name="create-outline"></ion-icon>
-                                        @endif
-                                        @if($notification->model_action == 'create')
-                                        <ion-icon name="add-circle-outline"></ion-icon>
-                                         @endif
-                                        <p class="mb-0" style="font-size: 0.8rem;">{{ $notification->model_action}}</p>
-                                    </div>
-                                </div>
-                                <div class="col-10">
-                                    <div class="speech-wrap">
-                                        <div class="">
-                                            <p>{{ $notification->data }}</p>
-                                               @php
-
-                                                $user = Nowyouwerkn\WeCommerce\Models\User::where('id' , $notification->action_by)->first();
-                                            @endphp
-                                            <p class="mb-0"><small>{{ $user->name }}</small></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        @else
-                        <div class="text-center my-5">
-
-                            <h4 class="mb-0">No hay cambios en esta orden todavía.</h4>
-                        </div>
-                        @endif
+                <div class="card mg-t-10 mb-4">
+                    <div class="card-header pd-t-20 pd-b-0 bd-b-0">
+                        <h6 class="mg-b-5">Histórico de este producto</h6>
+                        @php
+                            $logs = Nowyouwerkn\WeCommerce\Models\Notification::where('type', 'Producto')->where('model_id', $product->id)->get();
+                        @endphp
                     </div>
-                </div>
-                <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-                <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
+                    @if($logs->count() != 0)
+                        @include('wecommerce::back.layouts.partials._notification_table')
+                    @else
+                    <div class="card-body">
+                        <h6 class="mb-0">No hay cambios en este producto todavía.</h6>
+                    </div>
+                    @endif
+                </div>
             </div>
         </div>
     </span>
 
-    <!--
     <div class="row">
         <div class="col-md-4 mt-3">
             <button id="print" class="btn btn-default btn-primary btn-block btn-lg mt-4" type="button"> <span><i class="fa fa-print"></i> Imprimir Orden</span></button>
         </div> 
     </div> 
--->
 
-<div class="modal fade" id="trackingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Guía de Envío</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="modal fade" id="trackingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Guía de Envío</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{{ route('tracking.store') }}" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Servicio / Proveedor</label>
+                                    <input type="text" class="form-control" name="service_name" placeholder="" required="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Número de Guía</label>
+                                    <input type="text" class="form-control" name="tracking_number" placeholder="" required="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Nota de Guía / Productos en Envío</label>
+                                    <textarea class="form-control" name="products_on_order" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="order_id" value="{{ $order->id }}">
+                        <input type="hidden" name="user_id" value="{{ $order->user->id }}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
             </div>
-            <form method="POST" action="{{ route('tracking.store') }}" enctype="multipart/form-data">
-            {{ csrf_field() }}
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Servicio / Proveedor</label>
-                                <input type="text" class="form-control" name="service_name" placeholder="" required="">
+        </div>
+    </div>
+
+    <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Nueva Nota</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{{ route('notes.store') }}" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Comentario</label>
+                                    <textarea class="form-control" name="note" rows="5"></textarea>
+                                </div>
                             </div>
                         </div>
+                        <input type="hidden" name="order_id" value="{{ $order->id }}">
+                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Nota</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Número de Guía</label>
-                                <input type="text" class="form-control" name="tracking_number" placeholder="" required="">
+    <div class="modal fade" id="resendMail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Reenviar Confirmación por Correo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{{ route('resend.order.mail', $order->id) }}" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Reenviar a:</label>
+                                    <input type="email" name="email" class="form-control" value="{{ $order->user->email }}">
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Nota de Guía / Productos en Envío</label>
-                                <textarea class="form-control" name="products_on_order" rows="5"></textarea>
+                            <div class="col-md-12 text-right">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Reenviar Ahora</button>
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" name="order_id" value="{{ $order->id }}">
-                    <input type="hidden" name="user_id" value="{{ $order->user->id }}">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Nueva Nota</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                </form>
             </div>
-            <form method="POST" action="{{ route('notes.store') }}" enctype="multipart/form-data">
-            {{ csrf_field() }}
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Comentario</label>
-                                <textarea class="form-control" name="note" rows="5"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <input type="hidden" name="order_id" value="{{ $order->id }}">
-                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Nota</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
-
-<div class="modal fade" id="resendMail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Reenviar Confirmación por Correo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="POST" action="{{ route('resend.order.mail', $order->id) }}" enctype="multipart/form-data">
-            {{ csrf_field() }}
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Reenviar a:</label>
-                                <input type="email" name="email" class="form-control" value="{{ $order->user->email }}">
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 text-right">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Reenviar Ahora</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
  
 @endsection
 

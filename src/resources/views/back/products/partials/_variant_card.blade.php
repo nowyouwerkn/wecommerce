@@ -1,5 +1,5 @@
 @push('stylesheets')
-	<style type="text/css">
+	<style>
 		.size-box{
 			display: inline-block;
 			padding: 5px 10px;
@@ -42,7 +42,7 @@
     <!-- Form -->
     <div id="btnContainer" class="card-body row">
         <div class="col-md-12">
-        	<a href="javascript:void(0)" id="openVariants"class="btn btn-sm pd-x-15 btn-white btn-uppercase">
+        	<a href="javascript:void(0)" id="openVariants" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
                 Agregar Variantes
            	</a>
         </div>
@@ -50,7 +50,6 @@
 
     <!-- Variant Header -->
     <div id="collapsedVariants" class="table-responsive hidden mt-3 mb-4">
-    	<form></form>
     	<form method="POST" id="variantForm" action="{{ route('stock.store', $product->id) }}" enctype="multipart/form-data">
             {{ csrf_field() }}
 
@@ -98,60 +97,60 @@
     </div>
 
 	@if($product->variants->count() != 0)
-	<table class="table table-dashboard mg-b-0">
-        <thead>
-            <tr>
-                <th>Tipo</th>
-                <th class="text-right">Valor</th>
-                <th class="text-right">Precio</th>
-                <th class="text-right">Cantidad</th>
-                <th class="text-right">Código SKU</th>
-                <th class="text-right">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($variant_stock as $variant)
-            <form method="POST" action="{{ route('stock.update', $variant->id) }}" style="display: inline-block;">
-                {{ csrf_field() }}
-                {{ method_field('PUT') }}
-            
+		<table class="table table-dashboard mg-b-0">
+	        <thead>
 	            <tr>
-	                <td>{{ $variant->variants->type ?? 'Talla'}}</td>
-	                <td class="text-right">{{ $variant->variants->value }}</td>
-	                <td class="text-right">
-	                	<div class="input-group" style="min-width: 80px;">
-	                		<div class="input-group-prepend">
-							    <span class="input-group-text" id="basic-addon1" style="height:36px">$</span>
-							 </div>
-		                
-		                    @if($variant->new_price == NULL)
-		                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $product->price }}" style="width:50px;">
-		                    @else
-		                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $variant->new_price }}" style="width:50px;">
-		                    @endif
-	                    </div>
-	                </td>
-	                <td class="text-right">
-	                	<input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $variant->stock }}" style="width:80px;">
-	                </td>
-	                <td class="text-right">
-	                	<input type="text" name="sku_variant" class="form-control variant-form-control" value="{{ $variant->sku }}">
-	                </td>
-
-	                <td class="text-nowrap text-right">
-	                	<button type="submit" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
-	                        <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
-	                    </button>
-
-	                    <button type="button" id="deleteVariant_{{ $variant->id }}" class="btn btn-sm pd-x-15 btn-outline-danger btn-uppercase mg-l-5">
-	                        <i class="fas fa-trash" aria-hidden="true"></i>
-	                    </button>
-	                </td>
+	                <th>Tipo</th>
+	                <th class="text-right">Valor</th>
+	                <th class="text-right">Precio</th>
+	                <th class="text-right">Cantidad</th>
+	                <th class="text-right">Código SKU</th>
+	                <th class="text-right">Acciones</th>
 	            </tr>
-            </form>
-            @endforeach
-        </tbody>
-    </table>
+	        </thead>
+	        <tbody>
+	            @foreach($variant_stock as $variant)
+	            <form method="POST" action="{{ route('stock.update', $variant->id) }}" style="display: inline-block;">
+	                {{ csrf_field() }}
+	                {{ method_field('PUT') }}
+	            
+		            <tr>
+		                <td>{{ $variant->variants->type ?? 'Talla'}}</td>
+		                <td class="text-right">{{ $variant->variants->value }}</td>
+		                <td class="text-right">
+		                	<div class="input-group" style="min-width: 80px;">
+		                		<div class="input-group-prepend">
+								    <span class="input-group-text" id="basic-addon1" style="height:36px">$</span>
+								 </div>
+			                
+			                    @if($variant->new_price == NULL)
+			                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $product->price }}" style="width:50px;">
+			                    @else
+			                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $variant->new_price }}" style="width:50px;">
+			                    @endif
+		                    </div>
+		                </td>
+		                <td class="text-right">
+		                	<input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $variant->stock }}" style="width:80px;">
+		                </td>
+		                <td class="text-right">
+		                	<input type="text" name="sku_variant" class="form-control variant-form-control" value="{{ $variant->sku }}">
+		                </td>
+
+		                <td class="text-nowrap text-right">
+		                	<button type="submit" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
+		                        <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
+		                    </button>
+
+		                    <button type="button" id="deleteVariant_{{ $variant->id }}" class="btn btn-sm pd-x-15 btn-outline-danger btn-uppercase mg-l-5">
+		                        <i class="fas fa-trash" aria-hidden="true"></i>
+		                    </button>
+		                </td>
+		            </tr>
+	            </form>
+	            @endforeach
+	        </tbody>
+	    </table>
     @else
         <div class="text-center my-5">
             <h4 class="mb-0">¡No has determinado variantes para este producto!</h4>

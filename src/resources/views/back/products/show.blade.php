@@ -4,7 +4,7 @@
 <link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
 <link href="{{ asset('lib/spectrum-colorpicker/spectrum.css') }}" rel="stylesheet"> 
 
-<style type="text/css">
+<style>
     .save-bar{
         position: fixed;
         width: calc(100% - 240px);
@@ -60,7 +60,7 @@
         font-size: 3em;
     }
 
-    .image-btn: hover{
+    .image-btn:hover{
         border: 3px dotted rgba(72, 94, 144, 0.3);
         background-color: rgba(72, 94, 144, 0.3);
     }
@@ -129,23 +129,21 @@
     {{ csrf_field() }}
     {{ method_field('PUT') }}
 
+    {{-- 
     <div class="save-bar bg-success text-white d-flex align-items-center justify-content-between">
         <p class="mb-0">El sistema guarda como borrador ocasionalmente. Para hacerlo manual da click en el botón.</p>
         <button id="save-form" type="submit" class="btn-save-big btn btn-outline-light btn-sm text-white">Guardar cambios</button>
     </div>
+    --}}
     
     <div class="row">
         <!-- Firts Column -->
         <div class="col-md-8">
-            <!-- Infomation General -->
             <div class="card mg-t-10 mb-4">
-                <!-- Header -->
                 <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                     <h5 class="mg-b-5">Datos generales</h5>
-                    <!--<p class="tx-12 tx-color-03 mg-b-0">Datos generales.</p>-->
                 </div>
 
-                <!-- Form -->
                 <div class="card-body row">
                     <div class="col-md-12">
                         <div class="form-group">
@@ -184,15 +182,15 @@
 
                     <div class="col-md-4">
                         <label for="pattern">Patrón</label>
-                        <input type="text" name="pattern"class="form-control" placeholder="Ej. Liso, Lunares" value="{{ $product->pattern }}">
+                        <input type="text" name="pattern" class="form-control" placeholder="Ej. Liso, Lunares" value="{{ $product->pattern }}">
                     </div>
 
                     <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="brand">Marca <span class="text-success tx-12">Recomendado</span></label>
-                                <input type="text" name="brand" class="form-control" placeholder="" value="{{ $product->brand }}">
-                            </div>
+                        <div class="form-group">
+                            <label for="brand">Marca <span class="text-success tx-12">Recomendado</span></label>
+                            <input type="text" name="brand" class="form-control" placeholder="" value="{{ $product->brand }}">
                         </div>
+                    </div>
 
                     <div class="col-md-6">
                         <div class="custom-control custom-checkbox">
@@ -215,7 +213,6 @@
                 <!-- Header -->
                 <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                     <h5 class="mg-b-5">Archivos multimedia</h5>
-                    <!--<p class="tx-12 tx-color-03 mg-b-0">Archivos multimedia.</p>-->
                 </div>
 
                 <!-- Form -->
@@ -225,46 +222,45 @@
                             <div class="col-12 justify-content-center">
                                 <h5>Imagen principal</h5>
                             </div>
-                            <div class="col-4"></div>
-                            <div class="col-4">
-                                <a href="javascript:void(0)" data-target="#modalChangeImage" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imágen"><i class="fas fa-edit" aria-hidden="true"></i></a>
-                                <img  class="img-fluid mb-4" src="{{ asset('img/products/' . $product->image ) }}">
-                            </div>
 
+                            <div class="col-md-4 offset-md-4">
+                                <a href="javascript:void(0)" data-target="#modalChangeImage" data-toggle="modal" class="btn btn-rounded btn-icon btn-info"><i class="fas fa-edit" aria-hidden="true"></i></a>
+                                <img class="img-fluid mb-4" src="{{ asset('img/products/' . $product->image ) }}" alt="Imagen principal">
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-12">
                         <h5>Imagenes extras</h5>
                     </div>
+
                     @foreach($product->images as $image)
-                        <div class="col-md-4">
-                            <div class="thumbnail-wrap">
-                                <button type="button" id="deleteImage_{{ $image->id }}" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
-                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                    </button>
+                    <div class="col-md-4">
+                        <div class="thumbnail-wrap">
+                            <button type="button" id="deleteImage_{{ $image->id }}" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                            </button>
 
-                                @push('scripts')
+                            @push('scripts')
 
-                                <form method="POST" id="deleteImageForm_{{ $image->id }}" action="{{ route('image.destroy', $image->id) }}" style="display: none;">
-                                    {{ csrf_field() }}
-                                    {{ method_field('DELETE') }}
-                                </form>
+                            <form method="POST" id="deleteImageForm_{{ $image->id }}" action="{{ route('image.destroy', $image->id) }}" style="display: none;">
+                                {{ csrf_field() }}
+                                {{ method_field('DELETE') }}
+                            </form>
 
-                                <script type="text/javascript">
-                                    $('#deleteImage_{{ $image->id }}').on('click', function(){
-                                        event.preventDefault();
-                                        $('#deleteImageForm_{{ $image->id }}').submit();
-                                    });
-                                </script>
-                                @endpush
-                                
-                                
-                                <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}">
-                                <p class="priority-badge" >{{$image->priority}}</p>
-                                <a style="right: 30px;" href="javascript:void(0)" data-target="#modalEditImage_{{$image->id}}" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imágen"><i class="fas fa-edit" aria-hidden="true"></i></a>
-                            </div>
+                            <script type="text/javascript">
+                                $('#deleteImage_{{ $image->id }}').on('click', function(){
+                                    event.preventDefault();
+                                    $('#deleteImageForm_{{ $image->id }}').submit();
+                                });
+                            </script>
+                            @endpush
+                            
+                            <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}" alt="Imagen secundaria">
+                            <p class="priority-badge" >{{$image->priority}}</p>
+                            <a style="right: 30px;" href="javascript:void(0)" data-target="#modalEditImage_{{$image->id}}" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imagen"><i class="fas fa-edit" aria-hidden="true"></i></a>
                         </div>
+                    </div>
                     @endforeach
 
                     <div class="col-md-4">
@@ -275,39 +271,37 @@
 
             <!-- Price -->
             <div class="card mg-t-10 mb-4">
-                <!-- Header -->
                 <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                     <h5 class="mg-b-5">Precios</h5>
-                    <!--<p class="tx-12 tx-color-03 mg-b-0">Precios.</p>-->
                 </div>
 
-                <!-- Form -->
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="discount_price">Precio <span class="text-danger">*</span></label>
                             <div class="input-group mg-b-10">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">MX$</span>
-                              </div>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">MX$</span>
+                                </div>
                                 <input type="number" id="price" name="price" class="form-control" value="{{ $product->price }}">
                             </div>
                         </div>
     
                         <div class="col-md-6">
                             <label for="discount_price">Precio en Descuento</label>
-                                <div class="input-group mg-b-10">
+                            <div class="input-group mg-b-10">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">MX$</span>
+                                    <span class="input-group-text">MX$</span>
                                 </div>
+
                                 <input type="number" id="discount_price" name="discount_price" class="form-control" value="{{ $product->discount_price }}">
                             </div>
                         </div>
 
                         <div class="col-md-6 offset-md-6">
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" name="has_discount" id="customCheck1" value="1" {{ ($product->has_discount == '1') ? 'checked' : '' }}>
-                              <label class="custom-control-label" for="customCheck1">Activar descuento</label><br>
+                                <input type="checkbox" class="custom-control-input" name="has_discount" id="customCheck1" value="1" {{ ($product->has_discount == '1') ? 'checked' : '' }}>
+                                <label class="custom-control-label" for="customCheck1">Activar descuento</label><br>
                             </div>
 
                             <div class="form-group mt-3">
@@ -316,7 +310,6 @@
                             </div>
                         </div>
                     </div>
-                    
                 </div>
 
                 <div class="card-footer">
@@ -324,11 +317,12 @@
                         <div class="col-md-6">
                             <label for="production_cost">Costo de Producción</label>
                             <div class="input-group mg-b-10">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">MX$</span>
-                              </div>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">MX$</span>
+                                </div>
                                 <input type="number" id="production_cost" name="production_cost" class="form-control value-checker" value="{{ $product->production_cost }}">
                             </div>
+
                             <span class="tx-13 tx-color-03 d-block">Tus clientes no verán esto.</span>
                         </div>
 
@@ -347,9 +341,9 @@
 
                         <div class="col-md-12 mt-3">
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="has_tax" name="has_tax" value="1" {{ ($product->has_tax == '1') ? 'checked' : '' }}>
-                              <label class="custom-control-label" for="has_tax">Este producto tiene impuestos (I.V.A 16%)</label>
-                              <span class="tx-13 tx-color-03 d-block wd-60p">Aparecerá un anuncio informativo en el detalle de producto indicando los impuestos de acuerdo a tu configuración de cuenta.</span>
+                                <input type="checkbox" class="custom-control-input" id="has_tax" name="has_tax" value="1" {{ ($product->has_tax == '1') ? 'checked' : '' }}>
+                                <label class="custom-control-label" for="has_tax">Este producto tiene impuestos (I.V.A 16%)</label>
+                                <span class="tx-13 tx-color-03 d-block wd-60p">Aparecerá un anuncio informativo en el detalle de producto indicando los impuestos de acuerdo a tu configuración de cuenta.</span>
                             </div>
                         </div>
                     </div>
@@ -358,10 +352,8 @@
 
             <!-- Inventory -->
             <div class="card mg-t-10 mb-4">
-                <!-- Header -->
                 <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                     <h5 class="mg-b-5">Inventario</h5>
-                    <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
                 </div>
 
                 <!-- Form -->
@@ -434,12 +426,9 @@
 
         <!-- Second -->
         <div class="col-md-4">
-            <!-- Estatus product -->
             <div class="card mg-t-10 mb-4">
-                <!-- Header -->
                 <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                     <h5 class="mg-b-5">Estatus</h5>
-                    <!--<p class="tx-12 tx-color-03 mg-b-0">estatus.</p>-->
                 </div>
 
                 <!-- Form -->
@@ -463,7 +452,6 @@
                 <!-- Header -->
                 <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                     <h5 class="mg-b-5">Categorización</h5>
-                    <!--<p class="tx-12 tx-color-03 mg-b-0">Categoria.</p>-->
                 </div>
 
                 <!-- Form -->

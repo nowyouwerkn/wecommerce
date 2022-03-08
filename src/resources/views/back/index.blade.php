@@ -1,7 +1,6 @@
 @extends('wecommerce::back.layouts.main')
-
-<style type="text/css">
-  .btn-pagado {
+<style>
+    .btn-pagado {
         color: #fff;
         background-color: #10b759;
         border-color: #10b759;
