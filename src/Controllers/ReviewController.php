@@ -3,10 +3,7 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
-use Carbon\Carbon;
-
 use Auth;
-use Storage;
 use Session;
 
 use Nowyouwerkn\WeCommerce\Models\User;

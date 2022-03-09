@@ -1,5 +1,7 @@
 <?php
 
+namespace Nowyouwerkn\WeCommerce\Services;
+
 /* Regular Laravel */
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;

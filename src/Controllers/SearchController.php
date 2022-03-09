@@ -3,8 +3,6 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
-use DB;
-
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Category;
 use Nowyouwerkn\WeCommerce\Models\Variant;

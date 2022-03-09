@@ -4,10 +4,6 @@ namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
 use Session;
-use Auth;
-use Image;
-use Str;
-
 use Nowyouwerkn\WeCommerce\Models\SEO;
 use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 use Illuminate\Http\Request;

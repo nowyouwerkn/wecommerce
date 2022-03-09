@@ -5,9 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Session;
-use Auth;
 use Image;
-use Str;
 
 use Nowyouwerkn\WeCommerce\Models\Category;
 use Nowyouwerkn\WeCommerce\Models\SizeChart;
@@ -45,6 +43,8 @@ class SizeChartController extends Controller
         $size_chart->name = $request->name;
         $size_chart->category_id = $request->category_id;
         $size_chart->save();
+
+        Session::flash('success', 'Guardada información de guía de tallas..');
 
         return redirect()->back();
     }

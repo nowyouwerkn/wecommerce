@@ -7,7 +7,6 @@ use Carbon\Carbon;
 
 use Session;
 use Auth;
-use Str;
 
 use Nowyouwerkn\WeCommerce\Models\StoreConfig;
 use Nowyouwerkn\WeCommerce\Models\Product;

@@ -30,9 +30,7 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\CategoryController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\CityController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\ClientController');
-        $this->app->make('Nowyouwerkn\WeCommerce\Controllers\CountryController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\CouponController');
-        $this->app->make('Nowyouwerkn\WeCommerce\Controllers\CurrencyController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\DashboardController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\ExampleController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\FrontController');
@@ -44,7 +42,6 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\OrderNoteController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\ProductController');       
-        $this->app->make('Nowyouwerkn\WeCommerce\Controllers\ProductVariantController'); 
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\ReviewController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\SearchController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\SEOController');
@@ -116,10 +113,12 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/resources/views', 'wecommerce');
 
         // Primera ruta es de donde viene el recurso a publicar y la segunda ruta en que parte se instalará.
+        /*
         $this->publishes([
             __DIR__.'/resources/views/front/werkn-backbone' => resource_path('views/front/theme/werkn-backbone/'),
         ], 'werkn-theme');
-
+        */
+        
         $this->publishes([
             __DIR__.'/resources/views/front/werkn-backbone-bootstrap' => resource_path('views/front/theme/werkn-backbone-bootstrap/'),
         ], 'werkn-bootstrap');

@@ -29,7 +29,6 @@ class VariantController extends Controller
     public function index()
     {
         $variants = Variant::all();
-
         return view('wecommerce::back.variants.index')->with('variants', $variants);
     }
 
@@ -46,7 +45,6 @@ class VariantController extends Controller
     public function show($id)
     {
         $variant = Variant::findOrFail($id);
-
         $products = $variant->products;
 
         return view('wecommerce::back.variants.show')->with('variant', $variant)->with('products', $products);
@@ -72,16 +70,10 @@ class VariantController extends Controller
         $data = 'eliminó la variante "' . $variant->value . '" del sistema.';
         $model_action = "delete";
         $model_id = $variant->id;
-
-
-
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
-        //
         $variant->delete();
-
         Session::flash('success', 'Se eliminó la variante correctamente.');
-
         return redirect()->back();
     }
 }

@@ -44,7 +44,6 @@ class UserRuleController extends Controller
 
         //Session message
         Session::flash('success', 'El elemento fue registrado exitosamente.');
-
         return redirect()->route('coupons.index');
     }
 
@@ -78,7 +77,6 @@ class UserRuleController extends Controller
 
         //Session message
         Session::flash('success', 'El elemento fue registrado exitosamente.');
-
         return redirect()->route('coupons.index');
     }
 

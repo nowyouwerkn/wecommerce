@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Auth;
 use Session;
 
-use Carbon\Carbon;
 use Nowyouwerkn\WeCommerce\Models\User;
 
 use Spatie\Permission\Models\Role;

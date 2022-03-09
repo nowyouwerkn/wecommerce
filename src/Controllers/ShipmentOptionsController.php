@@ -4,7 +4,6 @@ namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
 use Session;
-use Auth;
 
 use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
 use Illuminate\Http\Request;
@@ -42,8 +41,6 @@ class ShipmentOptionsController extends Controller
         $shipping->is_active = $request->is_active;
         $shipping->icon = $request->icon;
         $shipping->price = $request->price;
-
-
         $shipping->save();
 
         // Mensaje de session

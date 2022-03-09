@@ -3,14 +3,7 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
-use Session;
-use Auth;
-use Carbon\Carbon;
-
-use Purifier;
 use Mail;
-
-use Illuminate\Http\Request;
 
 class WebhookController extends Controller
 {
