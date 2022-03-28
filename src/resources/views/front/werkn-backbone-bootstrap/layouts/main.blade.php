@@ -46,7 +46,7 @@
                     <h3 class="mb-2">Podrían gustarte...</h3>
                     <p class="pe-5">Recomendaciones basadas en los productos que has visitado</p>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-12">
                     <div class="row">
                         @php
                             $oldRecommend = Session::get('watch_history');
@@ -60,7 +60,7 @@
                         @endphp
 
                         @foreach($recommeded_products as $rec_products)
-                        <div class="col-md-3">
+                        <div class="col-6 col-md-3">
                             <a class="small-product-card" href="{{ route('detail', [$rec_products->category->slug, $rec_products->slug]) }}">
                                 <img alt="{{ $rec_products->name }}" style="width: 100px;" src="{{ asset('img/products/' . $rec_products->image ) }}">
 

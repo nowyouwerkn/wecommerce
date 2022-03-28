@@ -33,18 +33,21 @@
                 <!-- Form Container -->
                 <div class="we-co--form-wrap">
                     <div class="we-co--title d-flex align-items-center justify-content-between">
-                        <h4><span class="we-co--progress-indicator"></span> Información de Contacto <span class="ms-2"><span class="text-danger">*</span> Campo requerido</span></h4>
+                        <h4 class="responsive-one"><span class="we-co--progress-indicator responsive-one"></span> Información de Contacto <span class="ms-2"><span class="text-danger">*</span> Campo requerido</span></h4>
                         @guest
                         <p class="we-co--guest-notice mb-0"><ion-icon name="warning"></ion-icon> ¿Ya tienes cuenta? <a href="{{ route('login') }}">Inicia Sesión aquí</a></p>
                         @endguest
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_contact')
 
+                    <hr class="responsive-two">
                     
                     <div class="we-co--title d-flex align-items-center justify-content-between">
-                        <h4><span class="we-co--progress-indicator"></span> Direccion de Envío</h4>
+                        <h4 class="responsive-one"><span class="we-co--progress-indicator"></span> Direccion de Envío</h4>
                     </div>
-                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')                    
+                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')  
+                    
+                    <hr class="responsive-two">
                     
                     @if($shipment_options->count() >0)
                     <div class="we-co--title d-flex align-items-center justify-content-between">
@@ -53,6 +56,7 @@
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
                     @endif
 
+                    <hr class="responsive-two">
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>
                         <p class="mb-0"><ion-icon name="lock-closed"></ion-icon> Encriptación de 256-bits</p>
@@ -60,6 +64,7 @@
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_payment')
                 </div>
             </div>
+            <hr class="responsive-two">
 
             <!-- Confirm Order -->
             <div class="col-md-4" id="confirmation_step">
@@ -87,18 +92,28 @@
             $(".billing_form").fadeIn(500);
     }
 
-     function newAdress()
+    function newAdress()
     {
         if($('.option-address').is(":checked"))   
             $(".card-body-new-add").fadeOut(500);
-        else
-            $(".card-body-new-add").fadeOut(500);
+            $(".form-check-input").checked;
+       
 
 
         if($('.new-address').is(":checked"))   
             $(".card-body-new-add").fadeIn(500);
-        else
-            $(".card-body-new-add").fadeOut(500);
+        
+    }
+
+    function newAdressGuest()
+    {
+        if($('.new-address').is(":checked"))   
+            $(".guest-address").fadeOut(500);
+       
+
+        if($('.new-address').is(":checked"))   
+            $(".guest-address").fadeIn(500);
+        
     }
 </script>
 

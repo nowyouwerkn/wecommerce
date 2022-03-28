@@ -73,28 +73,31 @@
 
                         <ul class=" list-group px-4" id="myTab" role="tablist">
                             <li class="nav-item list-group-item" role="presentation">
-                                <a class="nav-link" id="item-one-tab" data-toggle="tab" href="#item-one" role="tab" aria-controls="item-one" aria-selected="true"><img width="80" height="80" src="{{ asset('img/products/' . $product->image) }}" alt="" class="img-fluid"></a>
+                                <a class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">
+                                    <img width="80" height="80" src="{{ asset('img/products/' . $product->image) }}" alt="" class="img-fluid">
+                                </a>
                             </li>
                             @foreach($product->images as $image)
                             <li class="nav-item list-group-item" role="presentation">
-                                <a class="nav-link" id="item-two-{{ $image->id }}" data-toggle="tab" href="#item-{{ $image->id }}" role="tab" aria-controls="item-{{ $image->id }}" aria-selected="false"><img width="80" height="80"src="{{ asset('img/products/' . $image->image) }}" alt="" class="img-fluid"></a>
+                                <a class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile_{{ $image->id }}" type="button" role="tab" aria-controls="profile" aria-selected="false">
+                                    <img width="80" height="80"src="{{ asset('img/products/' . $image->image) }}" alt="" class="img-fluid">
+                                </a>
                             </li>
                             @endforeach
                         </ul>
+                        
                     </div>
 
                     <div class="shop-details-img-wrap ">
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="item-one" role="tabpanel" aria-labelledby="item-one-tab">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                 <div class="shop-details-img">
-                                    <img height="400" width="400" src="{{ asset('img/products/' . $product->image) }}" alt="" class="img-fluid">
+                                    <img height="400" width="400" src="{{ asset('img/products/' . $product->image) }}">
                                 </div>
                             </div>
                             @foreach($product->images as $image)
-                            <div class="tab-pane fade" id="item-{{ $image->id }}" role="tabpanel" aria-labelledby="item-two-{{ $image->id }}">
-                                <div class="shop-details-img">
-                                    <img src="{{ asset('img/products/' . $image->image) }}">
-                                </div>
+                            <div class="tab-pane fade" id="profile_{{ $image->id }}" role="tabpanel" aria-labelledby="profile-tab">
+                                <img width="400" height="400"src="{{ asset('img/products/' . $image->image) }}" alt="" class="img-fluid">
                             </div>
                             @endforeach
                         </div>

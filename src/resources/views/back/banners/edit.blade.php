@@ -32,7 +32,7 @@
                     <div class="row">
                         <div class="form-group col-md-8">
                             <label for="link">Tipo de banner <span class="text-danger">*</span></label>
-                            <select class="form-control" name="promotional" required>
+                            <select class="form-control" name="is_promotional" required>
                                   <option value="0" {{ ($banner->is_promotional == '0') ? 'selected' : '' }}>Principal</option>
                                   <option value="1" {{ ($banner->is_promotional == '1') ? 'selected' : '' }}>Promocional</option>
                             </select>

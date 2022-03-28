@@ -317,7 +317,7 @@
                 <div class="col-md-6 offset-md-3 mt-5 text-center">
                     <p class="filter__title">No hay productos en el carrito</p>
                     <p class="filter__info">
-                        <a href="{{ route('catalog.all') }}" class="btn btn_custom">¡Empieza a llenarlo!</a>
+                        <a href="{{ route('catalog.all') }}" class="btn btn-secondary">¡Empieza a llenarlo!</a>
                     </p>
                 </div>
             @endif
