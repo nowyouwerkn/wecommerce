@@ -89,6 +89,49 @@
     </div>
 </section>
 
+<!-- PROMO BANNER -->
+
+@php
+    $banner_promo = Nowyouwerkn\WeCommerce\Models\Banner::where('is_promotional', true)->where('priority', 1)->first();
+@endphp
+
+
+<section class="banner-main" style="background:#f9f8f5;">
+    @if(empty($banner_promo))
+    <h2 class="text-center p-5">No se ha configurado un banner promocional</h2>
+    @else
+        <div class="banner-wrap" style="position: relative;">
+            @if(empty($banner_promo->video_background))
+            @else
+                <iframe frameborder="0" height="100%" width="100%" src="https://youtube.com/{{$banner_promo->video_background}}?autoplay=1&controls=0&showinfo=0&autohide=1" style="z-index: 2; position: absolute;"></iframe>
+                @endif
+            <div class="container">
+                <div class="row">
+                    <div class="col-12" style="position: relative;"> 
+                     
+                        <div style="z-index: 3; position: relative;" class="banner-content">
+                            <h3 style="color: {{ $banner_promo->hex_text_title }}">{{ $banner_promo->subtitle }}</h3>
+                            <h2 style="color: {{$banner_promo->hex_text_subtitle}}">{{ $banner_promo->title }}</h2>
+                            <p style="color: {{$banner_promo->hex_text_subtitle}}">{{ $banner_promo->text }}</p>
+
+                            @if($banner_promo->has_button == true)
+                            <a style="color: {{$banner_promo->hex_text_button}}; background-color: {{$banner_promo->hex_button}}; border: none;" href="{{ $banner_promo->link }}" class="btn btn-primary">{{ $banner_promo->text_button }}</a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="banner-img">
+                @if($banner_promo->image == NULL)
+                @else
+                    <img style="z-index: 1; position: relative;" src="{{ asset('img/banners/' . $banner_promo->image ) }}" alt="" class="main-img">
+                @endif
+            </div>
+        </div>
+    @endif
+</section>
+
 <!-- best-selling-area -->
 <section class="pt-5 pb-5">
     <div class="container">

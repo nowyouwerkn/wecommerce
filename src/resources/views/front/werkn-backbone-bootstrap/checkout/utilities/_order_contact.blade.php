@@ -2,6 +2,8 @@
     <div class="card-body">
         <div class="row">
             @guest
+            <h4 class="responsive-two"><span class="responsive-two"></span>Información de Contacto</h4>
+            <p class="responsive-two"><span class="ms-2"><span class="text-danger">*</span> Campo requerido</span></p>
             <div class="col-md-6">
                 <div class="mb-3">
                     <label class="form-label" for="email">Correo <span class="text-danger">*</span></label>
@@ -25,6 +27,8 @@
                 </div>
             </div>
             @else
+            <h4 class="responsive-two"><span class="responsive-two"></span>Información de Contacto</h4>
+            <p class="responsive-two"><span class="ms-2"><span class="text-danger">*</span> Campo requerido</span></p>
             <input type="hidden" class="form-control" name="email" value="{{ Auth::user()->email ?? old('email')}}" required="" />
 
             <div class="col-6 col-md-4">

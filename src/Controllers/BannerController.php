@@ -47,6 +47,7 @@ class BannerController extends Controller
         $banner->has_button = true;
         $banner->is_active = true;
         $banner->hex = $request->hex;
+        $banner->is_promotional = $request->is_promotional;
         $banner->hex_text_title = $request->hex_text_title;
         $banner->hex_text_subtitle = $request->hex_text_subtitle;
         $banner->hex_button = $request->hex_button;
@@ -109,6 +110,7 @@ class BannerController extends Controller
         $banner->hex_text_button = $request->hex_text_button;
         $banner->position = $request->position;
         $banner->priority = $request->priority;
+        $banner->is_promotional = $request->is_promotional;
 
         $img2 = 'model';
 

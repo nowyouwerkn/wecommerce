@@ -17,6 +17,8 @@
                 </ul>
             </div>
 
+            <!--desactivado-->
+            <!--IDIOMA Y MONEDA->
             <div class="col-md-6 text-end">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">
@@ -34,6 +36,7 @@
                     </li>
                 </ul>
             </div>
+            <--END-->
         </div>
     </div>
 </header>
@@ -77,12 +80,26 @@
             <div class="col-5 text-end">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-                        <a href="javascript:void(0)" class="btn btn-link px-1 openSearch">
+
+                        <!--Botón->
+                        <a class="openSearch" href="javascript:void(0)">
                             <div class="d-flex align-items-center">
                                 <ion-icon name="search-outline" class="me-2"></ion-icon>
                                 <p class="mb-0">Encuentra tu favorito</p>
                             </div>
                         </a>
+                        <--Botón-->
+                        <form role="search" action="{{ route('search.query') }}" class="catalog-search ">
+                            <div class="input-group input-group-search d-flex align-items-center">
+                                <div class="input-group-prepend">
+                                    <button type="submit" class="btn" type="button" id="button-search">
+                                        <ion-icon name="search-outline"></ion-icon>
+                                    </button>
+                                </div>
+                                <input type="search" class="form-control" name="query" placeholder="Encuentra tu favorito"
+                                    aria-describedby="button-search" style="width: 190px">
+                            </div>
+                        </form>
                     </li>
 
                     <li class="list-inline-item"><a href="{{ route('utilities.tracking.index') }}" class="btn btn-link px-1"><ion-icon name="compass-outline"></ion-icon></a></li>
@@ -284,5 +301,31 @@
     function toggleMenu() {
       $("body").addClass("toggled");
     }
+</script>
+<script>
+    $(function () {
+    $('.openSearch').on('click', function(event) {
+        event.preventDefault();
+        $('#search').addClass('open');
+        $('#search > form > input[type="search"]').focus();
+    });
+    
+    $('#search, #search button.close').on('click keyup', function(event) {
+        if (event.target == this || event.target.className == 'close' || event.keyCode == 27) {
+            $(this).removeClass('open');
+        }
+    });
+
+    $(window).ready(function() {
+      $("#search > form").on("keypress", function (event) {
+          var keyPressed = event.keyCode || event.which;
+
+          if (keyPressed === 13) {
+              return false;
+          }
+      });
+    });
+
+    });
 </script>
 @endpush

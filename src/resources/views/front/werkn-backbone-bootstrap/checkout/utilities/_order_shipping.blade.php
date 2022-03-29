@@ -1,7 +1,7 @@
 @if(!empty($shipment_options))
 <div class="shipping-options row">
     @foreach($shipment_options as $options)
-        <div class="col-md-6">
+        <div class="col-6 mb-3">
             <a href="javascript:void(0)" data-value="{{ $options->id }}" price-value="{{ $options->price }}" id="option{{ $options->id }}" class="card card-body shipping-card">
                 <div class="row align-items-between">
                     <div class="col-5 text-center"> 

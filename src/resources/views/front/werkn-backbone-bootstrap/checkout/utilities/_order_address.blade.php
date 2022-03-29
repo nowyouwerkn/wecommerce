@@ -2,15 +2,17 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex align-items-center justify-content-between">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="addressRadio" id="addressRadio" checked="">
-                    <label class="form-check-label" for="addressRadio">
-                        Nueva Dirección
+                    <input class="form-check-input new-address responsive-one" type="radio" name="addressRadio" id="addressRadio_new" checked="" onchange="newAdress()" checked>
+                    <input class="form-check-input new-address responsive-two" type="radio" name="addressRadio" id="addressRadio_new"  onchange="newAdress()">
+                    <label class="form-check-label" for="addressRadio_new">
+                        <span class="responsive-one">Nueva Dirección</span> <span class="responsive-two">Dirección de Envío</span>
                     </label>
                 </div>
+
             </div>
-            <div class="card-body">
+            <div class="card-body card-body-new-add" id="new_address_body">
                 <div class="row">
                     <div class="col-12 col-md-7">
                         <div class="mb-3">
@@ -208,9 +210,10 @@
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between">
                 <div class="form-check">
-                    <input class="form-check-input new-address" type="radio" name="addressRadio" id="addressRadio_new" checked="" onchange="newAdress()" checked>
+                    <input class="form-check-input new-address responsive-one" type="radio" name="addressRadio" id="addressRadio_new" checked="" onchange="newAdress()" checked>
+                    <input class="form-check-input new-address responsive-two" type="radio" name="addressRadio" id="addressRadio_new"  onchange="newAdress()">
                     <label class="form-check-label" for="addressRadio_new">
-                        Nueva Dirección
+                        <span class="responsive-one">Nueva Dirección</span> <span class="responsive-two">Dirección de Envío</span>
                     </label>
                 </div>
                 
