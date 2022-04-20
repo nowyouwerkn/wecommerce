@@ -195,7 +195,11 @@ class FrontController extends Controller
 
     public function catalogPromo()
     {
-        $products = Product::with('category')->orderBy('created_at', 'desc')->where('status', 'Publicado')->where('has_discount', '1')->paginate(15);
+        
+        $today_date = Carbon::today();
+
+        $products = Product::with('category')->orderBy('created_at', 'desc')->where('status', 'Publicado')->where('has_discount', '1')
+        ->where('discount_end', '>', $today_date)->paginate(15);
 
         /* Opciones para Filtro */
         $popular_products = Product::with('category')->where('is_favorite', true)->where('status', 'Publicado')->get();
@@ -237,19 +241,39 @@ class FrontController extends Controller
    public function catalog_order(Request $request)
     {
         /* Opciones para Filtro */
-        $filter = $request->filter;
-        $order = $request->order;
-        $products = Product::with('category')->orderBy($filter, $order)->where('status', 'Publicado')->paginate(15);
+        $catalog = 'Lo más vendido';
 
-        $popular_products = Product::with('category')->where('is_favorite', true)->where('status', 'Publicado')->get();
+        $filter = $request->filter;
+
+        switch ($request->filter) {
+            case 'new':
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('created_at', 'desc')->paginate(15);
+                $catalog = 'Lo más nuevo';
+                break;
+                
+            case 'price_desc':
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('price', 'asc')->paginate(15);
+                $catalog = 'Precio menor a mayor';
+                break;
+
+            case 'price_asc':
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('price', 'desc')->paginate(15);
+                $catalog = 'Precio mayor a menor';
+                break;
+
+            default:
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('created_at', 'desc')->paginate(15);
+                break;
+        }
+        
         $categories = Category::with('productsIndex')->where('parent_id', 0)->orWhere('parent_id', NULL)->get();
         $variants = Variant::orderBy('value', 'asc')->get(['value']);
 
-        return view('front.theme.' . $this->theme->get_name() . '.catalog')
+        return view('front.theme.' . $this->theme->get_name() . '.catalog_filter')
         ->with('products', $products)
-        ->with('popular_products', $popular_products)
         ->with('categories', $categories)
-        ->with('variants', $variants);
+        ->with('variants', $variants)
+        ->with('catalog', $catalog);
 
     }
 
