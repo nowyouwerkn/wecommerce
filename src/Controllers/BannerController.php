@@ -45,13 +45,13 @@ class BannerController extends Controller
         $banner->has_button = true;
         $banner->is_active = true;
         $banner->hex = $request->hex;
-        $banner->is_promotional = $request->is_promotional;
         $banner->hex_text_title = $request->hex_text_title;
         $banner->hex_text_subtitle = $request->hex_text_subtitle;
         $banner->hex_button = $request->hex_button;
         $banner->hex_text_button = $request->hex_text_button;
         $banner->position = $request->position;
         $banner->priority = $request->priority;
+        $banner->is_promotional = $request->is_promotional;
 
         // Video en Banner
         $banner->video_background = $request->video_background;
@@ -127,6 +127,13 @@ class BannerController extends Controller
         $banner->priority = $request->priority;
         $banner->is_promotional = $request->is_promotional;
 
+        // Video en Banner
+        $banner->video_background = $request->video_background;
+
+        $banner->video_autoplay = $request->video_autoplay;
+        $banner->video_controls = $request->video_controls;
+        $banner->video_loop = $request->video_loop;
+        
         $img2 = 'model';
 
         if ($request->hasFile('image')) {
@@ -137,6 +144,16 @@ class BannerController extends Controller
             Image::make($image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
 
             $banner->image_desktop = $filename;
+        }
+
+        // Imagen responsiva en Banner
+        if ($request->hasFile('image_responsive')) {
+            $image = $request->file('image_responsive');
+            $filename = $img2 . time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('img/banners/' . $filename);
+
+            Image::make($image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+            $banner->image_responsive = $filename;
         }
 
         $banner->save();
