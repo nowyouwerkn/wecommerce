@@ -14,8 +14,10 @@ class ChangeImageColumnsOnBannersTable extends Migration
     public function up()
     {
         Schema::table('banners', function (Blueprint $table) {
-            $table->dropColumn('imagen');
+            $table->dropColumn('image');
+        });
 
+        Schema::table('banners', function (Blueprint $table) {
             $table->string('image_desktop')->after('position')->nullable();
         });
     }
@@ -29,7 +31,10 @@ class ChangeImageColumnsOnBannersTable extends Migration
     {
         Schema::table('banners', function (Blueprint $table) {
             $table->dropColumn('image_desktop');
-            $table->string('imagen')->after('position');
+        });
+
+        Schema::table('banners', function (Blueprint $table) {
+            $table->string('image')->after('position');
         });
     }
 }
