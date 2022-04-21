@@ -42,7 +42,6 @@ class BannerController extends Controller
         $banner->subtitle = $request->subtitle;
         $banner->text_button = $request->text_button;
         $banner->link = $request->link;
-        //$banner->image = $request->image;
         $banner->has_button = true;
         $banner->is_active = true;
         $banner->hex = $request->hex;
@@ -70,7 +69,7 @@ class BannerController extends Controller
 
             Image::make($image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
 
-            $banner->image = $filename;
+            $banner->image_desktop = $filename;
         }
 
         // Imagen responsiva en Banner
@@ -117,7 +116,6 @@ class BannerController extends Controller
         $banner->subtitle = $request->subtitle;
         $banner->text_button = $request->text_button;
         $banner->link = $request->link;
-        //$banner->image = $request->image;
         $banner->has_button = true;
         $banner->is_active = true;
         $banner->hex = $request->hex;
@@ -138,7 +136,7 @@ class BannerController extends Controller
 
             Image::make($image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
 
-            $banner->image = $filename;
+            $banner->image_desktop = $filename;
         }
 
         $banner->save();
