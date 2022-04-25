@@ -768,7 +768,6 @@ class FrontController extends Controller
 
     public function postCheckout(Request $request)
     {
-        
         $currency_value = $this->store_config->get_currency_code();
         if($currency_value == '1'){
             $currency_value = 'USD';
@@ -794,6 +793,42 @@ class FrontController extends Controller
             return redirect()->view('checkout.cart');
         }
 
+        // Validar existencias y estado de producto del carrito
+        $oldCart = Session::get('cart');
+        $cart = new Cart($oldCart);
+
+        foreach ($cart->items as $pr) {
+            $product = Product::find($pr['item']['id']);
+
+            if($product->status == 'Borrador'){
+                $cart->deleteItem($pr['item']['id'], $pr['variant']);
+
+                if(count($cart->items) > 0){
+                    Session::put('cart', $cart);    
+                }else{
+                    Session::forget('cart');
+                }
+
+                Session::flash('info', 'Disculpa, uno de los productos que querías comprar ya no se encuentra disponible en nuestro sistema. ¡Contacta con nosotros para ayudarte!');
+                
+                return redirect()->route('index');
+            }
+            
+            if($product->stock == 0){
+                $cart->deleteItem($pr['item']['id'], $pr['variant']);
+
+                if(count($cart->items) > 0){
+                    Session::put('cart', $cart);    
+                }else{
+                    Session::forget('cart');
+                }
+                
+                Session::flash('info', 'Disculpa, uno de los productos que querías comprar ya no se encuentra disponible en nuestro sistema. ¡Contacta con nosotros para ayudarte!');
+                return redirect()->route('index');
+            }
+        }
+
+        // Selector de métodos de pago
         switch ($request->method) {
             case 'Pago con Oxxo':
                 $payment_method = PaymentMethod::where('is_active', true)->where('type', 'cash')->first();
