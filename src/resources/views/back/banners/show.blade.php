@@ -153,7 +153,7 @@
                                         <p class="badge badge-primary">Identificador de base de datos: {{ $banner->id }}</p>
                                         
                                         <div class="card-body">
-                                            <img class="img-fluid mb-4" src="{{ asset('img/banners/' . $banner->image ) }}">
+                                            <img class="img-fluid mb-4" src="{{ asset('img/banners/' . $banner->image_desktop ) }}">
                                         </div>
                                     </div>
                                 </div>

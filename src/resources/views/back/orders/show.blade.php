@@ -441,9 +441,9 @@
 
                 <div class="card mg-t-10 mb-4">
                     <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                        <h6 class="mg-b-5">Histórico de este producto</h6>
+                        <h6 class="mg-b-5">Histórico de esta Órden</h6>
                         @php
-                            $logs = Nowyouwerkn\WeCommerce\Models\Notification::where('type', 'Producto')->where('model_id', $product->id)->get();
+                            $logs = Nowyouwerkn\WeCommerce\Models\Notification::where('type', 'Orden')->where('model_id', $order->id)->get();
                         @endphp
                     </div>
 
@@ -451,7 +451,7 @@
                         @include('wecommerce::back.layouts.partials._notification_table')
                     @else
                     <div class="card-body">
-                        <h6 class="mb-0">No hay cambios en este producto todavía.</h6>
+                        <h6 class="mb-0">No hay cambios en esta orden de compra todavía.</h6>
                     </div>
                     @endif
                 </div>
