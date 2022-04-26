@@ -484,24 +484,6 @@
 
 @push('scripts')
 <script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
-   <script src="{{ asset('lib/cleave.js/cleave.min.js') }}"></script>
-<script type="text/javascript">
-    var cleaveA = new Cleave('#price', {
-      numeral: true,
-      numeralThousandsGroupStyle: 'thousand'
-    });
-
-       var cleaveB = new Cleave('#discount_price', {
-          numeral: true,
-          numeralThousandsGroupStyle: 'thousand'
-        });
-
-        var cleaveC = new Cleave('#production_cost', {
-          numeral: true,
-          numeralThousandsGroupStyle: 'thousand'
-        });
-       
-</script>
 
 <script type="text/javascript">
     $(document).ready(function() {
