@@ -351,7 +351,7 @@
             </div>
 
             <!-- Inventory -->
-            <div class="card mg-t-10 mb-4">
+            <div class="card mg-t-10 mb-3">
                 <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                     <h5 class="mg-b-5">Inventario</h5>
                 </div>
@@ -398,30 +398,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Inventory -->
-            @if($product->has_variants == true)
-                @include('wecommerce::back.products.partials._variant_card')
-            @endif
-
-            @include('wecommerce::back.products.partials._relationship_card')
-
-            <div class="card mg-t-10 mb-4">
-                <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                    <h6 class="mg-b-5">Histórico de este producto</h6>
-                    @php
-                        $logs = Nowyouwerkn\WeCommerce\Models\Notification::where('type', 'Producto')->where('model_id', $product->id)->get();
-                    @endphp
-                </div>
-
-                @if($logs->count() != 0)
-                    @include('wecommerce::back.layouts.partials._notification_table')
-                @else
-                <div class="card-body">
-                    <h6 class="mb-0">No hay cambios en este producto todavía.</h6>
-                </div>
-                @endif
-            </div>   
         </div>
 
         <!-- Second -->
@@ -581,27 +557,6 @@
                 </div>
             </div>
 
-            {{-- 
-            <!-- Disponibility -->
-            <div class="card mg-t-10 mb-4">
-                <!-- Header -->
-                <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                    <h5 class="mg-b-5">Disponibilidad</h5>
-                    <p class="tx-12 tx-color-03 mg-b-0">Disponibilidad.</p>
-                </div>
-
-                <!-- Form -->
-                <div class="card-body row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="available_date_start">Disponibilidad</label>
-                            <input type="date" name="available_date_start" class="form-control" value="{{ $product->available_date_start }}">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            --}}
-
             <div class="text-center">
                 <button type="submit" class="btn btn-block btn-big pd-x-15 btn-primary btn-uppercase mg-l-5">
                     <i class="fas fa-save mr-1"></i> Guardar Producto
@@ -611,6 +566,35 @@
         <!-- Button -->
     </div>
 </form>
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- Inventory -->
+        @if($product->has_variants == true)
+            @include('wecommerce::back.products.partials._variant_card')
+        @endif
+
+        @include('wecommerce::back.products.partials._relationship_card')
+
+        <div class="card mg-t-10 mb-4">
+        <div class="card-header pd-t-20 pd-b-0 bd-b-0">
+            <h6 class="mg-b-5">Histórico de este producto</h6>
+            @php
+                $logs = Nowyouwerkn\WeCommerce\Models\Notification::where('type', 'Producto')->where('model_id', $product->id)->get();
+            @endphp
+        </div>
+
+        @if($logs->count() != 0)
+            @include('wecommerce::back.layouts.partials._notification_table')
+        @else
+        <div class="card-body">
+            <h6 class="mb-0">No hay cambios en este producto todavía.</h6>
+        </div>
+        @endif
+        </div>
+    </div>
+    
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="modalNewImage" tabindex="-1" role="dialog" aria-hidden="true">

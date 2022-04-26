@@ -515,7 +515,7 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-        public function search(Request $request)
+    public function search(Request $request)
     {
         $search_query = $request->input('query');
          $products = Product::where('name', 'LIKE', "%{$search_query}%")
