@@ -64,8 +64,6 @@
                         <input type="text" name="title" value="{{ $faqs->question }}" required="" />
                         </h4>
 
-
-
                         <div id="editor-container-{{ $faqs->id }}" class="ht-350 mb-4">
                             {!! $faqs->answer ?? '' !!}
                         </div>

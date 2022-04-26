@@ -31,12 +31,16 @@ class WishlistController extends Controller
     {
         $product = Product::getProductById($id);
         
-        Wishlist::create([
-            'user_id' => Auth::user()->id,
-            'product_id' => $product->id,
-        ]);
+        $check_wishlist = Wishlist::where('user_id', Auth::user()->id)->where('product_id', $product->id)->first();
 
-        Session::flash('product_added_whislist', 'Producto guardado en el wishlist.');
+        if(empty($check_wishlist)){
+            Wishlist::create([
+                'user_id' => Auth::user()->id,
+                'product_id' => $product->id,
+            ]);
+
+            Session::flash('product_added_whislist', 'Producto guardado en el wishlist.');
+        }
 
         return redirect()->back();
     }

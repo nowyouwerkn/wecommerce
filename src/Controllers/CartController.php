@@ -23,7 +23,6 @@ class CartController extends Controller
     public function __construct()
     {
         $this->middleware('web');
-        
         $this->store_config = new StoreConfig;
     }
 

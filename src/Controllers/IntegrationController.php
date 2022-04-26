@@ -84,12 +84,36 @@ class IntegrationController extends Controller
 
     public function edit($id)
     {
-        //
+        $config = Integration::find($id);
+
+        if($config->is_active == true){
+            $config->is_active = false;
+        }else{
+            $config->is_active = true;
+        }
+
+        $config->save();
+
+        //Session message
+        Session::flash('success', 'Cambio en el estado de la integración exitoso.');
+
+        return redirect()->back();
     }
 
     public function update(Request $request, $id)
     {
-        //
+        $config = Integration::find($id);
+
+        $config->update([
+            'name' => $request->name,
+            'code' => $request->code,
+            'is_active' => $config->is_active,
+        ]);
+
+        //Session message
+        Session::flash('success', 'Editado exitoso, se integró correctamente en tu sitio web.');
+
+        return redirect()->back();
     }
 
     public function destroy($id)
@@ -102,8 +126,6 @@ class IntegrationController extends Controller
         $data = 'eliminó la integración "' . $config->name . '" de la página web.';
         $model_action = "delete";
         $model_id = $config->id;
-
-
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
 

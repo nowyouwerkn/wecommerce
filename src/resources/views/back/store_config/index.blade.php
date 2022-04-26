@@ -119,7 +119,11 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="" class="btn btn-outline-primary btn-sm btn-icon" data-toggle="tooltip" data-original-title="Editar">
+                                <a href="{{ route('integrations.edit', $integration->id) }}" class="btn btn-outline-primary btn-sm btn-icon" data-toggle="tooltip" data-original-title="Cambiar Estado">
+                                    <i class="fas fa-sync-alt"></i>
+                                </a>
+
+                                <a href="javascript:void(0)" data-toggle="modal" data-target="#editModal_{{ $integration->id }}" class="btn btn-outline-primary btn-sm btn-icon" data-toggle="tooltip" data-original-title="Editar">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </a>
 
@@ -132,6 +136,43 @@
                                 </form>
                             </td>
                         </tr>
+
+                        <div class="modal fade" id="editModal_{{ $integration->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Editar Elemento</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form method="POST" action="{{ route('integrations.update', $integration->id) }}" enctype="multipart/form-data">
+                                    {{ csrf_field() }}
+                                    {{ method_field('PUT') }}
+                                        <div class="modal-body pd-25">
+                                            <div class="form-group mt-2">
+                                                <label>Nombre <span class="text-danger">*</span></label>
+                                                <select class="custom-select tx-13" id="main_category"  name="name" required="">
+                                                    <option {{ ($integration->name == 'Google Analytics') ? 'selected' : '' }} value="Google Analytics">Google Analytics</option>
+                                                    <option {{ ($integration->name == 'Facebook Pixel') ? 'selected' : '' }} value="Facebook Pixel">Facebook Pixel</option>
+                                                    <option {{ ($integration->name == 'Jivo Chat') ? 'selected' : '' }} value="Jivo Chat">Jivo Chat</option>
+                                                    <option {{ ($integration->name == 'Otro') ? 'selected' : '' }} value="Otro">Otro</option>
+                                                </select>
+                                            </div>
+                        
+                                            <div class="form-group mt-2">
+                                                <label>Código <span class="text-danger">*</span></label>
+                                                <textarea class="form-control" name="code" rows="10">{{ $integration->code }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-primary">Guardar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         @endforeach
                     </tbody>
                 </table>

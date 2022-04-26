@@ -20,7 +20,7 @@
 			<div class="alert alert-info d-flex align-items-center" role="alert">
 				<p class="mb-0 mr-3"><i data-feather="alert-circle"></i></p>
 
-				<p class="mb-0">Solamente puedes relacionar nuevos productos desde el primero que configuraste en la relación. Accede a él con el botón de "Ir al producto base" o dando click en su tarjeta.</p>
+				<p class="mb-0">Solamente puedes relacionar o eliminar productos desde el primero que configuraste en la relación. Accede a él con el botón de "Ir al producto base" o dando click en su tarjeta.</p>
 			</div>
 		</div>
 	    <div class="col-md-12">
@@ -77,6 +77,20 @@
 	    </form>
 	</div>
 
+	<style>
+		.btn-danger{
+			position: absolute;
+			top: 15px;
+			right: 15px;
+			width: 20px;
+			height: 20px;
+			border-radius: 100%;
+			padding: 0px;
+			text-align: center;
+			line-height: 20px;
+		}
+	</style>
+
 	<div class="card-body">
 		@if(!empty($all_relationships))
 		<div class="row">
@@ -111,6 +125,15 @@
 		        			<p class="mb-0 mr-2"><i data-feather="eye" style="width:15px; position: relative; top: -2px;"></i></p> <p class="mb-0"> Viendo</p>
 		        		</div>
 		        		@endif
+						
+						<form method="POST" action="{{ route('relationship.destroy', $rs_variant->id) }}">
+                            <button type="submit" class="btn btn-danger btn-delete" data-toggle="tooltip" data-original-title="Eliminar">
+                                <i data-feather="x"></i>
+                            </button>
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+                        </form>
+
 		        		<img  class="img-fluid" src="{{ asset('img/products/' . $rs_variant->product->image ) }}">
 
 		        		<div class="card-body">

@@ -142,6 +142,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'relationship.store',
     ]);
 
+    Route::delete('/product-relationships/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductRelationshipController@destroy',
+        'as' => 'relationship.destroy',
+    ]);
+
     Route::resource('stocks', Nowyouwerkn\WeCommerce\Controllers\StockController::class); //
     Route::resource('variants', Nowyouwerkn\WeCommerce\Controllers\VariantController::class); //
     Route::resource('categories', Nowyouwerkn\WeCommerce\Controllers\CategoryController::class); //
