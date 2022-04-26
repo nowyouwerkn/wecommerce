@@ -88,8 +88,7 @@ class ProductRelationshipController extends Controller
 
     public function destroy($id)
     {
-            
-        $relationship = ProductRelationship::where('id',$id)->first();
+        $relationship = ProductRelationship::find($id);
 
         // Notificación
         $type = 'Relacion';
@@ -97,8 +96,6 @@ class ProductRelationshipController extends Controller
         $data = 'eliminó permanentemente la relacion con el id ' . $relationship->id;
         $model_action = "delete";
         $model_id = $relationship->id;
-
-
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
         //
