@@ -110,7 +110,7 @@ class FrontController extends Controller
         
         $main_categories = Category::where('parent_id', '0')->orWhere('parent_id', NULL)->orderBy('priority', 'asc')->orderBy('created_at', 'asc')->get(['name', 'slug', 'image'])->take(6);
 
-        $products = Product::where('in_index', true)->where('status', 'Publicado')->with('category')->get()->take(8);
+        $products = Product::where('in_index', true)->where('is_favorite', false)->where('status', 'Publicado')->with('category')->get()->take(8);
         $products_favorites = Product::where('in_index', true)->where('is_favorite', true)->where('status', 'Publicado')->with('category')->get()->take(8);
 
         return view('front.theme.' . $this->theme->get_name() . '.index')
