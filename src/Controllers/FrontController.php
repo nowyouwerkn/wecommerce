@@ -133,7 +133,11 @@ class FrontController extends Controller
         $selected_category = $request->category;
         $selected_variant = $request->variant;
 
-        $query = Product::select('*')->where('in_index', true)->where('status', 'Publicado');
+        $selected_gender = $request->gender;
+        $selected_brand = $request->brand;
+        $selected_materials = $request->materials;
+
+        $query = Product::select('*')->where('status', 'Publicado');
 
         if (isset($selected_category)) {
             $query->whereHas('category', function ($query) use ($selected_category) {
@@ -146,6 +150,21 @@ class FrontController extends Controller
                 $query->whereIn('value', $selected_variant);
             });
         }
+
+        if (isset($selected_gender)) {
+                $query->whereIn('gender', $selected_gender);
+        }
+
+        if (isset($selected_brand)) {
+                $query->whereIn('brand', $selected_brand);
+        }
+
+        if (isset($selected_materials)) {
+                $query->whereIn('materials', $selected_materials);
+        }
+
+
+
 
         $products = $query->with('category')->paginate(30)->withQueryString();
 
@@ -226,7 +245,7 @@ class FrontController extends Controller
         $products = $products_merge->paginate(15);
 
         /* Opciones para Filtro */
-        $popular_products = Product::with('category')->where('is_favorite', true)->where('status', 'Publicado')->get();
+        $popular_products = Product::with('category')->where('is_favorite', true)->where('status', 'Publicado')->get()->take(9);
         $categories = Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
         $variants = Variant::orderBy('value', 'asc')->get(['value']);
 

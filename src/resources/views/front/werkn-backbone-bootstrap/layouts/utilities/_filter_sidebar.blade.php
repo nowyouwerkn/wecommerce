@@ -1,6 +1,6 @@
 @push('stylesheets')
 
-@endpush 
+@endpush
 
 <div id="sidebar" class="sidebar-filter px-4">
     <form method="get" action="{{ route('dynamic.filter.front') }}" id="product_filter_form">
@@ -8,6 +8,15 @@
             $popular_products = Nowyouwerkn\WeCommerce\Models\Product::where('is_favorite', true)->where('status', 'Publicado')->get();
             $categories = \Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
             $variants = \Nowyouwerkn\WeCommerce\Models\Variant::orderBy('value', 'asc')->get();
+
+            $brands = \Nowyouwerkn\WeCommerce\Models\Product::where('brand', '!=', 'NULL')->get();
+            $variants_styles = $brands->unique('brand');
+
+            $genders = \Nowyouwerkn\WeCommerce\Models\Product::where('gender', '!=', 'NULL')->get();
+            $variants_genders = $genders->unique('gender');
+
+            $materials = \Nowyouwerkn\WeCommerce\Models\Product::where('materials', '!=', 'NULL')->get();
+            $variants_materials = $materials->unique('materials');
         @endphp
 
         <div class="filter">
@@ -22,7 +31,7 @@
                         <h4 class="accordion-button accordion_button collapsed" data-bs-toggle="collapse" data-bs-target="#category" aria-expanded="false" aria-controls="category">
                             Categorías
                         </h4>
-                       
+
                     </div>
                     <div id="category" class="accordion-collapse collapse">
                         <div class="accordion-body accordion_body">
@@ -31,7 +40,7 @@
                                     <input class="form-check-input" type="checkbox" value="{{ $category->slug }}" id="{{ $category->slug }}" name="category[]" @if(isset($selected_category)) @if (in_array($category->slug, $selected_category)) checked="checked" @endif  @endif>
                                     <label class="form-check-label d-flex justify-content-between" for="{{ $category->slug }}">
                                         {{ $category->name }}
-                                        <span class="badge badge_custom">{{ $category->productsIndex->count() ?? '0' }}</span>
+                                        <span class="badge bg-danger">{{ $category->productsIndex->count() ?? '0' }}</span>
                                     </label>
                                 </div>
                             @endforeach
@@ -53,13 +62,126 @@
                                     <input class="form-check-input" type="checkbox" value="{{ $variant->value }}" id="variant_{{ $variant->id }}" name="variant[]" @if(isset($selected_variant)) @if (in_array($variant->value, $selected_variant)) checked="checked" @endif  @endif>
                                     <label class="form-check-label d-flex justify-content-between" for="{{ $variant->slug }}">
                                         {{ $variant->value }}
-                                        <span class="badge badge_custom">{{ $variant->count() ?? '0' }}</span>
                                     </label>
                                 </div>
                             @endforeach
                         </div>
                     </div>
                 </div>
+
+                <div style="width: 100%;" class="accordion-item accordion_item">
+                    <div class="accordion-header">
+                        <h4 class="accordion-button accordion_button collapsed" data-bs-toggle="collapse" data-bs-target="#gender" aria-expanded="false" aria-controls="category">
+                            Género
+                        </h4>
+                    </div>
+
+                    <div id="gender" class="accordion-collapse collapse">
+                        <div class="accordion-body accordion_body">
+                            @foreach($variants_genders as $product)
+                                <div class="form-check">
+                                        <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        id="variant_{{ $product->gender }}"
+                                        name="gender[]"
+                                        value="{{ $product->gender }}"
+                                        @if(isset($selected_variant))
+                                            @if (in_array($product->gender, $selected_variant))
+                                                checked="checked"
+                                            @endif
+                                        @endif
+                                        >
+                                    <label for="variant_{{ $product->gender }}" class="form-check-label d-flex align-items-center">
+                                        <span class="d-none d-md-inline-block">
+                                            @switch($product->gender)
+                                                @case('unisex')
+                                                Unisex
+                                                @break
+
+                                                @case('male')
+                                                Hombres
+                                                @break
+
+                                                @case('female')
+                                                Mujeres
+                                                @break
+
+                                                @default
+                                            @endswitch
+                                        </span>
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <div style="width: 100%;" class="accordion-item accordion_item">
+                    <div class="accordion-header">
+                        <h4 class="accordion-button accordion_button collapsed" data-bs-toggle="collapse" data-bs-target="#brand" aria-expanded="false" aria-controls="category">
+                            Marcas
+                        </h4>
+                    </div>
+
+                    <div id="brand" class="accordion-collapse collapse">
+                        <div class="accordion-body accordion_body">
+                            @foreach($variants_styles as $product)
+                                <div class="form-check">
+                                    <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="variant_{{ Str::slug($product->brand) }}"
+                                    name="brand[]"
+                                    value="{{ $product->brand }}"
+                                    @if(isset($selected_variant))
+                                        @if (in_array($product->brand, $selected_variant))
+                                            checked="checked"
+                                        @endif
+                                    @endif
+                                    >
+                                    <label for="variant_{{ Str::slug($product->brand) }}" class="form-check-label d-flex align-items-center">
+                                        <span class="d-none d-md-inline-block">{{ $product->brand }}</span>
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <div style="width: 100%;" class="accordion-item accordion_item">
+                    <div class="accordion-header">
+                        <h4 class="accordion-button accordion_button collapsed" data-bs-toggle="collapse" data-bs-target="#material" aria-expanded="false" aria-controls="category">
+                            Materiales
+                        </h4>
+                    </div>
+
+                    <div id="material" class="accordion-collapse collapse">
+                        <div class="accordion-body accordion_body">
+                            @foreach($variants_styles as $product)
+                                <div class="form-check">
+                                    <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="variant_{{ Str::slug($product->materials) }}"
+                                    name="materials[]"
+                                    value="{{ $product->materials }}"
+                                    @if(isset($selected_variant))
+                                        @if (in_array($product->materials, $selected_variant))
+                                            checked="checked"
+                                        @endif
+                                    @endif
+                                    >
+                                    <label for="variant_{{ Str::slug($product->materials) }}" class="form-check-label d-flex align-items-center">
+                                        <span class="d-none d-md-inline-block">{{ $product->materials }}</span>
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
             <br>
             <button type="submit" class="btn btn-primary w-100">
@@ -71,5 +193,5 @@
 </div>
 
 @push('scripts')
-   
+
 @endpush
