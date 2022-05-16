@@ -29,7 +29,7 @@
 <div class="row">
     <div class="col-md-3">
         <div class="card card-body">
-            <h5 class="card-title display-4 mb-1">{{ $variant->value }}</h5>               
+            <h5 class="card-title display-4 mb-1">{{ $variant->value }}</h5>
             <p>Productos con esta variante: {{ $variant->products->count() }}</p>
             <p class="card-text mb-0 mt-3">
                 <small class="text-muted">Actualizado por última vez: <br>{{ $variant->updated_at }}</small>
@@ -58,7 +58,7 @@
                             @foreach($products as $v)
                             <tr>
                                 <td style="width: 150px; position: relative;">
-                                    <img style="width: 100%;" src="{{ asset('img/products/' . $v->product->image ) }}" alt="{{ $v->product->name }}">
+                                    <img style="width: 100%;" src="{{ asset('img/products/' . $v->product->image ?? '') }}" alt="{{ $v->product->name }}">
                                     <div class="text-center margin-top-10">
 
                                         <small>
@@ -71,7 +71,7 @@
                                             Imagen
                                             @endif
                                             </p>
-                                        </small>    
+                                        </small>
                                     </div>
                                 </td>
                                 <td style="width: 250px;">
@@ -133,7 +133,7 @@
                                     @endif
                                 </td>
                                 <td class="text-nowrap">
-                                    {{-- 
+                                    {{--
                                     <a href="{{ route('products.show', $v->product->id) }}" class="btn btn-outline-primary btn-sm btn-icon" data-toggle="tooltip" data-original-title="Ver Detalle">
                                         <i class="fas fa-eye"></i>
                                     </a>

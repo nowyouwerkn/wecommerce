@@ -44,31 +44,31 @@
             <p>Tus preguntas serán guardadas y vinculadas a su propia página dentro de tu sitio.</p>
             <!--<p>Al usar estas plantillas, aceptas que has leído y aceptado el descargo de responsabilidad.</p>-->
         </div>
-        
+
     </div>
     <div class="col-md-8">
-        @if($faq->count() == 0)
+        @if($faqs->count() == 0)
         <div class="card card-body text-center" style="padding:50px 0px 50px 0px;">
             <img src="{{ asset('assets/img/group.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
             <h4>¡No hay textos preguntas frecuentes en la base de datos!</h4>
             <a href="" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto mt-4">Reparar</a>
         </div>
         @else
-            @foreach($faq as $faqs)
-            <form method="POST" action="{{ route('faq.update', $faqs->id) }}" enctype="multipart/form-data">
+            @foreach($faqs as $faq)
+            <form method="POST" action="{{ route('faq.update', $faq->id) }}" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}
                 <div class="card mb-4">
                     <div class="card-body">
                         <h4 class="mb-3">
-                        <input type="text" name="title" value="{{ $faqs->question }}" required="" />
+                        <input type="text" name="title" value="{{ $faq->question }}" required="" />
                         </h4>
 
-                        <div id="editor-container-{{ $faqs->id }}" class="ht-350 mb-4">
-                            {!! $faqs->answer ?? '' !!}
+                        <div id="editor-container-{{ $faq->id }}" class="ht-350 mb-4">
+                            {!! $faq->answer ?? '' !!}
                         </div>
-                        
-                        <textarea id="justHtml_{{ $faqs->id }}" name="description" required="" style="display:none;">{!! $faqs->answer ?? '' !!}</textarea>
+
+                        <textarea id="justHtml_{{ $faq->id }}" name="description" required="" style="display:none;">{!! $faq->answer ?? '' !!}</textarea>
 
                         <button type="submit" class="btn btn-outline-success"><i class="far fa-save"></i> Guardar información</a>
                     </div>
@@ -99,9 +99,9 @@
                         <div class="form-group mt-2">
                             <label>Respuesta</label>
                              <div id="editor-container-create" class="ht-350 mb-4">
-                            
+
                         </div>
-                        
+
                         <textarea id="justHtml_create" name="answer" required="" style="display:none;"></textarea>
                         </div>
                     </div>
@@ -120,10 +120,10 @@
 @push('scripts')
 <script src="{{ asset('lib/quill/quill.min.js') }}"></script>
 
-@foreach($faq as $faqs)
+@foreach($faqs as $faq)
 <script type="text/javascript">
-    
-    var options_{{ $faqs->id }} = {
+
+    var options_{{ $faq->id }} = {
         modules: {
             toolbar: [
                 [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -136,14 +136,14 @@
         theme: 'snow'
     };
 
-    var editor_{{ $faqs->id }} = new Quill('#editor-container-{{ $faqs->id }}', options_{{ $faqs->id }});
-    var justHtmlContent_{{ $faqs->id }} = document.getElementById('justHtml_{{ $faqs->id }}');
+    var editor_{{ $faq->id }} = new Quill('#editor-container-{{ $faq->id }}', options_{{ $faq->id }});
+    var justHtmlContent_{{ $faq->id }} = document.getElementById('justHtml_{{ $faq->id }}');
 
-    editor_{{ $faqs->id }}.on('text-change', function() {
-      var justHtml_{{ $faqs->id }} = editor_{{ $faqs->id }}.root.innerHTML;
-      justHtmlContent_{{ $faqs->id }}.innerHTML = justHtml_{{ $faqs->id }};
+    editor_{{ $faq->id }}.on('text-change', function() {
+      var justHtml_{{ $faq->id }} = editor_{{ $faq->id }}.root.innerHTML;
+      justHtmlContent_{{ $faq->id }}.innerHTML = justHtml_{{ $faq->id }};
     });
-   
+
 </script>
 @endforeach
 <script type="text/javascript">

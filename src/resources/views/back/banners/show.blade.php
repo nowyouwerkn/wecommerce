@@ -119,7 +119,7 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <h4 class="mb-0">
-                                Información del Banner 
+                                Información del Banner
 
                                 @if($banner->is_active == true)
                                     <span class="badge badge-success">Activo</span>
@@ -128,9 +128,9 @@
                                 @endif
                             </h4>
                             <hr>
-                            
+
                             <div class="row mt-5">
-                                
+
                                 <div class="col">
                                     <h5>Título</h5>
                                     <p>{{ $banner->title }}</p>
@@ -151,7 +151,7 @@
                                     <h5>Imagen</h5>
                                     <div class="card">
                                         <p class="badge badge-primary">Identificador de base de datos: {{ $banner->id }}</p>
-                                        
+
                                         <div class="card-body">
                                             <img class="img-fluid mb-4" src="{{ asset('img/banners/' . $banner->image_desktop ) }}">
                                         </div>
@@ -177,7 +177,7 @@
                                 <p id="subtitle_">{{ $banner->subtitle}}</p>
                                 <a href="#" class="btn btn-light rounded" id="text_button_">{{ $banner->text_button }}</a>
                             </div>
-                            <img src="{{ asset('img/banners/' . $banner->image ) }}" id="output" class="card-banner-image" width="100">
+                            <img src="{{ asset('img/banners/' . $banner->image_desktop ) }}" id="output" class="card-banner-image" width="100">
                         </div>
                     </div>
                 </div>
