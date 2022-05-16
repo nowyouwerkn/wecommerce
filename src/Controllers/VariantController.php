@@ -57,7 +57,13 @@ class VariantController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        $variant = Variant::find($id);
+
+        $variant->value = $request->value;
+
+        $variant->save();
+
+        return redirect()->back();
     }
 
     public function destroy($id)
