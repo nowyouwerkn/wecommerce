@@ -118,31 +118,33 @@
 </script>
 
 <script type="text/javascript">
-       $(document).ready(function(){
-             $('.shipping-options a').click(function() {
-        event.preventDefault();
-        console.log('Seleccionado:' , $(this).attr('data-value'));
-        
-        $('.shipping-options a').removeClass('active');
+    $(document).ready(function(){
+        $('.shipping-options a').click(function() {
+            event.preventDefault();
+            console.log('Seleccionado:' , $(this).attr('data-value'));
+            
+            $('.shipping-options a').removeClass('active');
 
+            if($(this).hasClass('active')){
+                $(this).removeClass('active');
+            }else{
+                $(this).addClass('active');
+            }
+            
+            document.getElementById("shippingRate").textContent = $(this).attr('price-value');  
+            document.getElementById("shippingInput").value = $(this).attr('price-value');
+            document.getElementById("shippingOptions").value = $(this).attr('data-value');
+            var subtotal =  parseFloat($('#subtotalInput').val());
+            var shipping = parseFloat($('#shippingInput').val());  
+            var total_count = subtotal + parseFloat(shipping);
+            var total = total_count.toString();
 
-        if($(this).hasClass('active')){
-            $(this).removeClass('active');
-        }else{
-            $(this).addClass('active');
-        }
-        
-        document.getElementById("shippingRate").textContent = $(this).attr('price-value');  
-        document.getElementById("shippingInput").value = $(this).attr('price-value');
-        document.getElementById("shippingOptions").value = $(this).attr('data-value');
-                var subtotal =  parseFloat($('#subtotalInput').val());
-                var shipping = parseFloat($('#shippingInput').val());  
-                 var total_count = subtotal + parseFloat(shipping);
-                var total = total_count.toString()
-                $('#totalPayment').text(total);
+            $('#totalPayment').text(total);
+            document.getElementById("finalTotal").value = total;
 
-        document.getElementById("finalTotal").value = total;   
-     
+            if($('#apply_cuopon').hasClass('select-shipment-first')){
+                $('#apply_cuopon').removeClass('select-shipment-first');
+            }
         });
     });
 </script>

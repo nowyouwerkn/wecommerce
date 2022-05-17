@@ -87,9 +87,13 @@
 
             <div class="col-md-12">
                 <div class="input-group input-cuopon mb-3">
-                    <input type="text" class="form-control" id="cuopon_code" placeholder="Código de descuento">
+                    <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Código de descuento">
                     <div class="form-group-append">
+                        @if(!empty($shipment_options))
+                        <button class="we-co--btn-coupon select-shipment-first" id="apply_cuopon" type="button">Usar Código</button>
+                        @else
                         <button class="we-co--btn-coupon" id="apply_cuopon" type="button">Usar Código</button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -100,7 +104,6 @@
 </div>
 
 <div class="alert alert-danger pay-error" style="display: none;" role="alert"></div>
-<input type="hidden" class="form-control" id="coupon_buy" name="coupon_id" value="null">
 <button type="submit" id="btnBuy" class="btn btn-primary btn-lg mt-4 w-100 pt-3 pb-3"><ion-icon name="checkmark"></ion-icon> Confirmar Compra</button>
 
 <p class="we-co--method">Tu pago será procesado por <span id="paymentMethod">-</span></p>
@@ -156,91 +159,101 @@
     /* Información de Cupón */
     $('#apply_cuopon').on('click', function(){
         event.preventDefault();
+        if($(this).hasClass('select-shipment-first')){
+            $('.cp-error').text('Selecciona un método de envío primero.');
+            $('.cp-error').fadeIn();
 
-        var cuopon_code = $('#cuopon_code').val();
-        var subtotal =  parseFloat($('#subtotalInput').val());
-        var shipping = parseFloat($('#shippingInput').val());
-        $('#cp_spinner').fadeIn(500);
-        document.getElementById("coupon_buy").value = cuopon_code;
+            setTimeout(function () {
+                $('.cp-error').fadeOut();
+            }, 3000);
+        }else{
+            var coupon_code = $('#coupon_code').val();
+            var subtotal =  parseFloat($('#subtotalInput').val());
+            var shipping = parseFloat($('#shippingInput').val());
+            var user_email = $('#email').val();
 
-        $.ajax({
-            method: 'POST',
-            url: "{{ route('apply.cuopon') }}",
-            data:{ 
-                cuopon_code: cuopon_code,
-                subtotal: subtotal,
-                shipping: shipping,
-                _token: '{{ Session::token() }}', 
-            },
-            success: function(msg){
-                if (msg['type'] == 'exception') {
+            $('#cp_spinner').fadeIn(500);
+
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('apply.cuopon') }}",
+                data:{ 
+                    coupon_code: coupon_code,
+                    subtotal: subtotal,
+                    shipping: shipping,
+                    user_email: user_email,
+                    _token: '{{ Session::token() }}', 
+                },
+                success: function(msg){
+                    if (msg['type'] == 'exception') {
+                        $('.cp-success').hide();
+                        $('#cp_spinner').fadeOut(200);
+
+                        console.log(msg);
+                        
+                        $('.cp-error').text(msg['mensaje']);
+                        $('.cp-error').fadeIn();
+
+                        setTimeout(function () {
+                            $('.cp-error').fadeOut();
+                        }, 3000);
+                    }else{
+                        $('#cp_spinner').fadeOut(200);
+                        console.log(msg['mensaje']);
+                        $('.cp-error').hide();
+                        $('.cp-success').fadeIn();
+                        $('.cp-success').text(msg['mensaje']);
+
+                        // Definiendo Referencia de MercadoPago
+                        var mp_preference = msg['mp_preference'];
+                        var mp_preference_id = msg['mp_preference_id'];
+                        $('#mp_preference').val(mp_preference);
+                        $('#mp_preference_id').val(mp_preference_id);
+
+                        /* Calculate Discount */
+                        var discount = msg['discount'];
+                        console.log(discount);
+                        $('#discountValue').text(parseFloat(discount.toString().replace(/,/g, '')).toFixed(2));
+                        $('#discount').val(discount);
+                        //var subtotal = parseFloat($('#subtotalInput').val());
+
+                        var shipping = msg['free_shipping'];
+                        $('#shippingRate').text(shipping.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+
+                        var total_count = subtotal - parseFloat(discount.toString().replace(/,/g, '')) + parseFloat(shipping.toString().replace(/,/g, ''));
+
+                        var total = total_count.toString().replace(/,/g, '');
+                        $('#totalPayment').text(total);
+
+                        /* Calculate Tax */
+                        var tax_rate = 0;
+                        var tax = parseFloat(total_count*tax_rate).toFixed(2);
+                        /* Print Tax on Screen */
+                        $('#taxValue').text(tax);
+
+                        // Clean Numbers
+                        var total = total_count.toString().replace(/,/g, '');
+                        var total = parseFloat(total);
+                        var tax = parseFloat(tax);
+                        var finaltotal = parseFloat(total + tax).toFixed(2);
+
+                        $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                        $('#finalTotal').val(parseFloat(finaltotal));
+                    }
+                },
+                error: function(msg){
                     $('.cp-success').hide();
                     $('#cp_spinner').fadeOut(200);
 
-                    console.log(msg);
-                    
                     $('.cp-error').text(msg['mensaje']);
                     $('.cp-error').fadeIn();
 
                     setTimeout(function () {
                         $('.cp-error').fadeOut();
                     }, 3000);
-                }else{
-                    $('#cp_spinner').fadeOut(200);
-                    console.log(msg['mensaje']);
-                    $('.cp-error').hide();
-                    $('.cp-success').fadeIn();
-                    $('.cp-success').text(msg['mensaje']);
-
-                    // Definiendo Referencia de MercadoPago
-                    var mp_preference = msg['mp_preference'];
-                    var mp_preference_id = msg['mp_preference_id'];
-                    $('#mp_preference').val(mp_preference);
-                    $('#mp_preference_id').val(mp_preference_id);
-
-                    /* Calculate Discount */
-                    var discount = msg['discount'];
-                    console.log(discount);
-                    $('#discountValue').text(parseFloat(discount.toString().replace(/,/g, '')).toFixed(2));
-                    $('#discount').val(discount);
-                    //var subtotal = parseFloat($('#subtotalInput').val());
-
-                    var shipping = msg['free_shipping'];
-                    $('#shippingRate').text(shipping.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-
-                    var total_count = subtotal - parseFloat(discount.toString().replace(/,/g, '')) + parseFloat(shipping.toString().replace(/,/g, ''));
-
-                    var total = total_count.toString().replace(/,/g, '');
-                    $('#totalPayment').text(total);
-
-                    /* Calculate Tax */
-                    var tax_rate = 0;
-                    var tax = parseFloat(total_count*tax_rate).toFixed(2);
-                    /* Print Tax on Screen */
-                    $('#taxValue').text(tax);
-
-                    // Clean Numbers
-                    var total = total_count.toString().replace(/,/g, '');
-                    var total = parseFloat(total);
-                    var tax = parseFloat(tax);
-                    var finaltotal = parseFloat(total + tax).toFixed(2);
-
-                    $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                    $('#finalTotal').val(parseFloat(finaltotal));
                 }
-            },
-            error: function(msg){
-                $('.cp-success').hide();
-                $('#cp_spinner').fadeOut(200);
-
-                $('.cp-error').text(msg['mensaje']);
-                $('.cp-error').fadeIn();
-
-                setTimeout(function () {
-                    $('.cp-error').fadeOut();
-                }, 3000);
-            }
-        });
+            });
+        }
     });
 </script>
 @endpush
