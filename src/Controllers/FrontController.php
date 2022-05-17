@@ -75,7 +75,7 @@ use Nowyouwerkn\WeCommerce\Models\UserInvoice;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-/* Cuopon Models */
+/* Coupon Models */
 use Nowyouwerkn\WeCommerce\Models\Coupon;
 use Nowyouwerkn\WeCommerce\Models\UserCoupon;
 
@@ -107,9 +107,7 @@ class FrontController extends Controller
     public function index ()
     {
         $banners = Banner::where('is_active', true)->where('is_promotional', false)->orderBy('priority', 'asc')->orderBy('created_at', 'asc')->get();
-
         $main_categories = Category::where('parent_id', '0')->orWhere('parent_id', NULL)->orderBy('priority', 'asc')->orderBy('created_at', 'asc')->get(['name', 'slug', 'image'])->take(6);
-
         $products = Product::where('in_index', true)->where('is_favorite', null)->where('status', 'Publicado')->with('category')->get()->take(8);
         $products_favorites = Product::where('in_index', true)->where('is_favorite', true)->where('status', 'Publicado')->with('category')->get()->take(8);
 
@@ -162,9 +160,6 @@ class FrontController extends Controller
         if (isset($selected_materials)) {
                 $query->whereIn('materials', $selected_materials);
         }
-
-
-
 
         $products = $query->with('category')->paginate(30)->withQueryString();
 
@@ -1418,19 +1413,27 @@ class FrontController extends Controller
         $order->sub_total = $request->sub_total;
         $order->tax_rate = $request->tax_rate;
         $order->discounts = $request->discounts;
-        $order->coupon_id = $request->coupon_id;
+        $order->coupon_id = null;
         $order->total = $request->final_total;
         $order->payment_total = $request->final_total;
-
         /*------------*/
         $order->card_digits = Str::substr($request->card_number, 15);
         $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
-
         $order->payment_id = $charge->id;
         $order->is_completed = true;
         $order->status = 'Pagado';
-
         $order->payment_method = $payment_method->supplier;
+
+        if(isset($request->coupon_code)){
+            $coupon = Coupon::where('code', $request->coupon_code)->where('is_active', true)->orderBy('created_at', 'desc')->first();
+            $order->coupon_id = $coupon->id;
+
+            // Guardar Uso de cupón para el usuario
+            $used = new UserCoupon;
+            $used->user_id = $user->id;
+            $used->coupon_id = $coupon->id;
+            $used->save();
+        }
 
         // Identificar al usuario para guardar sus datos.
         $user->orders()->save($order);
@@ -1473,6 +1476,7 @@ class FrontController extends Controller
 
             $this->notification->send($type, $by ,$data, $model_action, $model_id);
         }
+
 
         // Correo de confirmación de compra
         $mail = MailConfig::first();
@@ -1558,7 +1562,8 @@ class FrontController extends Controller
         return redirect()->route('purchase.complete')->with('purchase_value', $purchase_value);
     }
 
-    public function getOpenPayInstance(){
+    public function getOpenPayInstance()
+    {
         $openpay_config = PaymentMethod::where('is_active', true)->where('supplier', 'OpenPay')->first();
 
         $openpayId = $openpay_config->merchant_id;
@@ -1607,7 +1612,8 @@ class FrontController extends Controller
         return null;
     }
 
-    public function getPaypalInstance(){
+    public function getPaypalInstance()
+    {
         $paypal_config = PaymentMethod::where('is_active', true)->where('supplier', 'Paypal')->first();
         $config = Config::get('werkn-commerce');
 
@@ -1767,7 +1773,6 @@ class FrontController extends Controller
         return redirect()->route('checkout.paypal')->with(compact('status'));
     }
 
-
     /*
     * Autenticación
     * Esta vista maneja el LOGIN/REGISTRO
@@ -1781,13 +1786,10 @@ class FrontController extends Controller
     * Información de Usuario
     * Estas son las vistas del perfil de cliente
     */
-
     public function profile ()
     {
         $total_orders = Order::where('user_id', Auth::user()->id)->get();
-
-        $orders = Order::where('user_id', Auth::user()->id)->paginate(3);
-
+        $orders = Order::where('user_id', Auth::user()->id)->paginate(4);
         $orders->transform(function($order, $key){
             $order->cart = unserialize($order->cart);
             return $order;
@@ -1811,9 +1813,7 @@ class FrontController extends Controller
     public function shopping ()
     {
         $total_orders = Order::where('user_id', Auth::user()->id)->get();
-
         $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
-
         $orders->transform(function($order, $key){
             $order->cart = unserialize($order->cart);
             return $order;
@@ -1997,105 +1997,45 @@ class FrontController extends Controller
     * Extras Front
     * Lógica de cupones
     */
-
-    public function applyCuopon(Request $request){
-
+    public function applyCuopon(Request $request)
+    {
         $shipping_rules = ShipmentMethodRule::where('is_active', true)->where('allow_coupons', true)->first();
 
         if (!empty($shipping_rules) || $shipping_rules == NULL) {
             // Recuperar codigo del cupon enviado por AJAX
-            $cuopon_code = $request->get('cuopon_code');
+            $coupon_code = $request->get('coupon_code');
 
             // Recuperar el resto de los datos enviados por AJAX
             $subtotal = $request->get('subtotal');
             $shipping = $request->get('shipping');
 
             // Obteniendo datos desde el Request enviado por Ajax a esta ruta
-            $coupon = Coupon::where('code', $cuopon_code)->first();
+            $coupon = Coupon::where('code', $coupon_code)->first();
 
             if (empty($coupon)) {
                 // Regresar Respuesta a la Vista
                 return response()->json(['mensaje' => 'Ese cupón no existe o ya no está disponible. Intenta con otro o contacta con nosotros.', 'type' => 'exception'], 200);
             }else{
-                /* Definir Usuario usando el sistema
-                $user = Auth::user();
-                /* Contar cuopones usados que compartan el codigo
-                $count_coupons = UserCoupon::where('coupon_id', $coupon->id)->count();
-                /* Contar los cupones con el codigo que el usuario haya usado anteriormente
-                $count_user_coupons = UserCoupon::where('user_id', $user->id)->where('coupon_id', $coupon->id)->count();
+                /* Definir Usuario usando el sistema */
+                $user = User::where('email', $request->user_email)->first();
 
-                /* Revisar si el coupon no ha sobrepasado su limite de uso
-                if ($count_user_coupons < $coupon->usage_limit_per_code) {
-                    /* Si no se ha alcanzado el limite de uso de cuopon ejecutar el codigo
-                    if ($count_user_coupons < $coupon->usage_limit_per_user) {
-                        // Verificar que el cupon es solo de FREE SHIPPING
-                        if ($coupon->qty == 0) {
-                            if ($coupon->free_shipping == true) {
-                                $free_shipping = $shipping * 0;
-                                $discount = 0;
+                if(!empty($user)){
+                    /* Contar cuopones usados que compartan el codigo */
+                    $count_coupons = UserCoupon::where('coupon_id', $coupon->id)->count();
 
-                                // Guardar el uso del cupon por el usuario
-                                $used = new UserCoupon;
-                                $used->user_id = Auth::user()->id;
-                                $used->coupon_id = $coupon->id;
-                                $used->save();
+                    /* Contar los cupones con el codigo que el usuario haya usado anteriormente */
+                    $count_user_coupons = UserCoupon::where('user_id', $user->id)->where('coupon_id', $coupon->id)->count();
 
-                                return response()->json(['mensaje' => 'Aplicado el descuento correctamente... disfruta', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
-                            }
-                        }
+                    /* Revisar si el coupon ha sobrepasado su limite de uso */
+                    if ($count_coupons >= $coupon->usage_limit_per_code) {
+                        return response()->json(['mensaje' => "Ya no quedan existencias de este cupón. Intenta con otro.", 'type' => 'exception'], 200);
+                    }
 
-                        /* Recuperar el tipo de cupon
-                        $coupon_type = $coupon->type;
-
-                        switch($coupon_type){
-                            case 'percentage_amount':
-                                // Este cupon resta un porcentaje del subtotal en el checkout
-                                $qty = $coupon->qty / 100;
-                                $discount = $subtotal * $qty;
-
-                                break;
-
-                            case 'fixed_amount':
-                                // Este cupon le resta un valor fijo al subtotal en el checkout
-                                $qty = $coupon->qty;
-                                $discount = $subtotal - $qty;
-
-                                break;
-
-                            case 'free_shipping':
-
-                                break;
-
-                            default:
-                                /* EJECUTAR EXCEPCIÓN SI EL CUPÓN NO TIENE UN TIPO DEFINIDO
-                                return response()->json(['mensaje' => 'Este tipo de cupón no existe, revisa con administración.', 'type' => 'exception'], 200);
-                                break;
-                        }
-
-                        if ($coupon->is_free_shipping == true) {
-                            $free_shipping = $shipping * 0;
-                        }else{
-                            $free_shipping = $shipping;
-                        }
-
-                        // Guardar el uso del cupon por el usuario
-                        $used = new UserCoupon;
-                        $used->user_id = Auth::user()->id;
-                        $used->coupon_id = $coupon->id;
-                        $used->save();
-                        // Regresar Respuesta a la Vista
-                        return response()->json(['mensaje' => 'Aplicado el descuento correctamente... disfruta', 'discount' => $discount, 'free_shipping' => $free_shipping], 200);
-
-                    /* EJECUTAR EXCEPCIÓN SI EL USUARIO YA ALCANZÓ EL LIMITE
-                    }else{
+                    if ($count_user_coupons >= $coupon->usage_limit_per_user) {
                         return response()->json(['mensaje' => "Alcanzaste el limite de uso para este cupón. Intenta con otro.", 'type' => 'exception'], 200);
                     }
-                /* EJECUTAR EXCEPCIÓN SI EL CUPÓN YA ALCANZÓ EL LIMITE
-                }else{
-                    return response()->json(['mensaje' => "Ya no quedan existencias de este cupón. Intenta con otro.", 'type' => 'exception'], 200);
                 }
-                */
-
+            
                 // Revisión de caducidad
                 $end_date = Carbon::parse($coupon->end_date);
                 $today = Carbon::today();

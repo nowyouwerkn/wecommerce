@@ -29,7 +29,7 @@
             @else
             <h4 class="responsive-two"><span class="responsive-two"></span>Información de Contacto</h4>
             <p class="responsive-two"><span class="ms-2"><span class="text-danger">*</span> Campo requerido</span></p>
-            <input type="hidden" class="form-control" name="email" value="{{ Auth::user()->email ?? old('email')}}" required="" />
+            <input type="hidden" class="form-control" name="email" id="email" value="{{ Auth::user()->email ?? old('email')}}" required="" />
 
             <div class="col-6 col-md-4">
                 <div class="mb-3">
