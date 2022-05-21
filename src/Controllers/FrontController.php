@@ -69,6 +69,9 @@ use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
 use Nowyouwerkn\WeCommerce\Models\SizeChart;
 use Nowyouwerkn\WeCommerce\Models\SizeGuide;
 
+/*Newsletter*/
+use Nowyouwerkn\WeCommerce\Models\Newsletter;
+
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
 use Nowyouwerkn\WeCommerce\Models\UserInvoice;
@@ -2035,7 +2038,7 @@ class FrontController extends Controller
                         return response()->json(['mensaje' => "Alcanzaste el limite de uso para este cupón. Intenta con otro.", 'type' => 'exception'], 200);
                     }
                 }
-            
+
                 // Revisión de caducidad
                 $end_date = Carbon::parse($coupon->end_date);
                 $today = Carbon::today();
@@ -2394,6 +2397,16 @@ class FrontController extends Controller
 
                 return view('front.theme.' . $this->theme->get_name() . '.order_tracking');
         }
+
+    }
+
+    //NEWSLETTER
+
+    public function newsletter(Request $request)
+    {
+        $newsletter = new Newsletter;
+        $newsletter->e_mail = $request->email;
+        $newsletter->save();
 
     }
 }
