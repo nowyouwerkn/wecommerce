@@ -84,7 +84,7 @@
 			<g:price>{{ number_format($product->price, 2) }} @if($config->currency_id == 2)MXN @else USD @endif</g:price>
 			<g:sale_price>{{ number_format($product->discount_price, 2) }} @if($config->currency_id == 2)MXN @else USD @endif</g:sale_price>
 
-			<g:sale_price_effective_date>{{ Carbon\Carbon::parse($product->discount_start)->format('Y-m-d') }}T08:00-06:00/{{ Carbon\Carbon::parse($product->discount_end)->format('Y-m-d') }}T08:00-06:00</g:sale_price_effective_date>
+			<g:sale_price_effective_date>{{ Carbon\Carbon::parse($product->discount_start)->subDay()->format('Y-m-d') }}T08:00-06:00/{{ Carbon\Carbon::parse($product->discount_end)->format('Y-m-d') }}T08:00-06:00</g:sale_price_effective_date>
 
 			<g:product_type>Apparel &amp; Accessories &gt; Shoes</g:product_type>
 			

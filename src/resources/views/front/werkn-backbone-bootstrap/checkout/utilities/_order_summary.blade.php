@@ -89,7 +89,7 @@
                 <div class="input-group input-cuopon mb-3">
                     <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Código de descuento">
                     <div class="form-group-append">
-                        @if(!empty($shipment_options))
+                        @if($shipment_options->count() != 0)
                         <button class="we-co--btn-coupon select-shipment-first" id="apply_cuopon" type="button">Usar Código</button>
                         @else
                         <button class="we-co--btn-coupon" id="apply_cuopon" type="button">Usar Código</button>
