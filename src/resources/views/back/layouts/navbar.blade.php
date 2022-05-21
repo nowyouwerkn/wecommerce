@@ -14,7 +14,7 @@
         <div class="aside-loggedin">
             <div class="d-flex align-items-center justify-content-start">
                 <a href="" class="avatar">
-                    <img src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim( Auth::user()->email ?? 'N/A'))) . '?d=retro&s=150' }}" alt="user" class="rounded-circle">     
+                    <img src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim( Auth::user()->email ?? 'N/A'))) . '?d=retro&s=150' }}" alt="user" class="rounded-circle">
                 </a>
                 <div class="aside-alert-link">
                     <a href="{{ route('update.messages') }}" class="new" data-toggle="tooltip" title="Nuevas actualizaciones en tu plataforma de WeCommerce">
@@ -117,6 +117,12 @@
             <li class="nav-item">
                 <a href="{{ route('invoices.index') }}" class="nav-link">
                     <i data-feather="file-text"></i> <span>Facturación</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('newsletter.index') }}" class="nav-link">
+                    <i data-feather="file-text"></i> <span>Newsletter</span>
                 </a>
             </li>
 

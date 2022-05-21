@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-// INSTALADOR 
+// INSTALADOR
 Route::prefix('/instalador')->group(function () {
     Route::get('/', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\InstallController@index',
@@ -129,7 +129,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@stockUpdate',
         'as' => 'product.stock.update',
     ]);
-    
+
     //Route::resource('product-relationships', Nowyouwerkn\WeCommerce\Controllers\ProductRelationshipController::class);
 
     Route::post('/obtener-color-de-producto', [
@@ -180,7 +180,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@storeDynamic',
         'as' => 'stock.store.dynamic',
     ]);
-    
+
     Route::put('/variants/update-stock/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StockController@update',
         'as' => 'stock.update',
@@ -217,6 +217,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'clients.search',
     ]);
 
+    Route::resource('newsletter', Nowyouwerkn\WeCommerce\Controllers\NewsletterController::class); //
+
 
     Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
     Route::get('exportar-ordenes', 'Nowyouwerkn\WeCommerce\Controllers\OrderController@export')->name('export.orders');
@@ -234,7 +236,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('orders/notes', Nowyouwerkn\WeCommerce\Controllers\OrderNoteController::class); //
 
     Route::resource('/orders/tracking',  Nowyouwerkn\WeCommerce\Controllers\OrderTrackingController::class);
-    
+
     Route::get('/orders/tracking/complete/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderTrackingController@updateComplete',
         'as' => 'tracking.complete',
@@ -250,7 +252,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     ]);
 
     Route::resource('coupons', Nowyouwerkn\WeCommerce\Controllers\CouponController::class); //
-    Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class)->except(['store']); //  
+    Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class)->except(['store']); //
 
     Route::get('/reviews/aprobar/{id}',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ReviewController@approve',
@@ -302,17 +304,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     ]);
 
     //Country
-    Route::resource('countries', Nowyouwerkn\WeCommerce\Controllers\CountryController::class); 
-    Route::resource('states', Nowyouwerkn\WeCommerce\Controllers\StateController::class); 
-    Route::resource('cities', Nowyouwerkn\WeCommerce\Controllers\CityController::class); 
-    Route::resource('config', Nowyouwerkn\WeCommerce\Controllers\StoreConfigController::class); 
+    Route::resource('countries', Nowyouwerkn\WeCommerce\Controllers\CountryController::class);
+    Route::resource('states', Nowyouwerkn\WeCommerce\Controllers\StateController::class);
+    Route::resource('cities', Nowyouwerkn\WeCommerce\Controllers\CityController::class);
+    Route::resource('config', Nowyouwerkn\WeCommerce\Controllers\StoreConfigController::class);
 
     Route::post('config-api-token',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StoreConfigController@apiToken',
         'as' => 'api.token.store',
     ]);
 
-    Route::resource('integrations', Nowyouwerkn\WeCommerce\Controllers\IntegrationController::class); 
+    Route::resource('integrations', Nowyouwerkn\WeCommerce\Controllers\IntegrationController::class);
     Route::get('general-preferences',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\IntegrationController@index',
         'as' => 'general.config',
@@ -322,7 +324,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::get('/themes/{id}/cambiar-estado', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StoreThemeController@changeStatus',
         'as' => 'themes.status',
-    ]); 
+    ]);
 
     Route::post('store-logo',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\IntegrationController@storeLogo',
@@ -410,9 +412,9 @@ Route::get('/xml-feed', [
 *
 */
 
-/* 
+/*
  * FRONT VIEWS
- * 
+ *
  *
  *
 */
@@ -442,6 +444,9 @@ Route::post('/catalog/{id}/review', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ReviewController@store',
     'as' => 'reviews.store',
 ]);
+
+/* Newsletter */
+Route::post('registro-newsletter', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@newsletter')->name('newsletter_front.store');
 
 /* Search Functions */
 Route::get('/busqueda-general', [
@@ -480,7 +485,7 @@ Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_acces
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
     Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
     Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
-    
+
     Route::post('orders/{order_id}/request-invoice/{user_id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@invoiceRequest',
         'as' => 'invoice.request',
@@ -514,7 +519,7 @@ Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_acces
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@editImage',
         'as' => 'profile.image',
     ]);
-    
+
     Route::put('/user/change-image/{id}',[
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@updateImage',
         'as' => 'profile.image.update',
@@ -544,7 +549,7 @@ Route::post('/order-tracking', [
 Route::get('reducir-stock', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@reduceStock',
     'as' => 'reduce.stock.test',
-]); 
+]);
 
 /* Webhooks */
 Route::get('/webhook',[
