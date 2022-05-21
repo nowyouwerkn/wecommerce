@@ -17,7 +17,7 @@ class CreateNewslettersTable extends Migration
             $table->id();
             $table->integer('user_id')->nullable();
             $table->string('name')->nullable();
-            $table->string('e_mail')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }

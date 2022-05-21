@@ -2405,7 +2405,7 @@ class FrontController extends Controller
     public function newsletter(Request $request)
     {
         $newsletter = new Newsletter;
-        $newsletter->e_mail = $request->email;
+        $newsletter->email = $request->email;
         $newsletter->save();
 
     }
