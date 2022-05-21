@@ -78,7 +78,7 @@
                             @foreach($newsletter as $new)
                             <tr>
                                 <td>{{ $new->name }}</td>
-                                <td>{{ $new->e_mail }}</td>
+                                <td>{{ $new->email }}</td>
                                 <td>
                                     <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($new->created_at)->format('d M Y - H:i') }}</span>
                                 </td>
@@ -122,7 +122,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="e_mail">Correo <span class="tx-danger">*</span></label>
-                                <input type="text" name="e_mail" class="form-control" value="{{$new->e_mail}}">
+                                <input type="text" name="email" class="form-control" value="{{$new->email}}">
                             </div>
                         </div>
                     </div>

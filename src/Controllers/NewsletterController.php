@@ -31,8 +31,10 @@ class NewsletterController extends Controller
     {
         $newsletter = new Newsletter;
         $newsletter->name = $request->name;
-        $newsletter->e_mail = $request->e_mail;
+        $newsletter->email = $request->email;
         $newsletter->save();
+
+
     }
 
     public function show(Newsletter $newsletter)
@@ -49,7 +51,7 @@ class NewsletterController extends Controller
     {
         $newsletter = Newsletter::find($id);
         $newsletter->name = $request->name;
-        $newsletter->e_mail = $request->e_mail;
+        $newsletter->email = $request->email;
         $newsletter->save();
 
         return redirect()->back();
