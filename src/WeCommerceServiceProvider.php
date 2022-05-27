@@ -5,7 +5,7 @@ namespace Nowyouwerkn\WeCommerce;
 use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Collection;
-use Illuminate\Pagination\Paginator; 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 use Nowyouwerkn\WeCommerce\Models\StoreTheme;
@@ -41,7 +41,7 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\OrderController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\OrderNoteController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController');
-        $this->app->make('Nowyouwerkn\WeCommerce\Controllers\ProductController');       
+        $this->app->make('Nowyouwerkn\WeCommerce\Controllers\ProductController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\ReviewController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\SearchController');
         $this->app->make('Nowyouwerkn\WeCommerce\Controllers\SEOController');
@@ -61,11 +61,11 @@ class WeCommerceServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {   
+    {
         // Permitir paginación para Colecciones (se utiliza en FrontController)
         if (!Collection::hasMacro('paginate')) {
 
-            Collection::macro('paginate', 
+            Collection::macro('paginate',
                 function ($perPage = 15, $page = null, $options = []) {
                 $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
                 return (new LengthAwarePaginator(
@@ -95,14 +95,14 @@ class WeCommerceServiceProvider extends ServiceProvider
             return view('front.theme.' . $this->theme->get_name() . '.authforget');
         });
 
-         Fortify::resetPasswordView(function () {
+         Fortify::resetPasswordView(function ($request) {
             return view('front.theme.' . $this->theme->get_name() . '.authreset', ['request' => $request]);
         });
 
         // Redirección personalizada en Fortify
         $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
 
-        /* 
+        /*
         if ($this->app->runningInConsole()) {
             $this->publishResources();
         }
@@ -118,7 +118,7 @@ class WeCommerceServiceProvider extends ServiceProvider
             __DIR__.'/resources/views/front/werkn-backbone' => resource_path('views/front/theme/werkn-backbone/'),
         ], 'werkn-theme');
         */
-        
+
         $this->publishes([
             __DIR__.'/resources/views/front/werkn-backbone-bootstrap' => resource_path('views/front/theme/werkn-backbone-bootstrap/'),
         ], 'werkn-bootstrap');
@@ -149,7 +149,7 @@ class WeCommerceServiceProvider extends ServiceProvider
             __DIR__.'/database/migrations' => database_path('migrations/'),
         ], 'migration_files');
         */
-        
+
         $this->publishes([
             __DIR__.'/database/seeders' => database_path('seeders/'),
         ], 'seeder_files');
