@@ -11,7 +11,7 @@ use Laravel\Fortify\Contracts\ResetsUserPasswords;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-class ChagngePassword implements ResetsUserPasswords
+class ChangePassword implements ResetsUserPasswords
 {
     use PasswordValidationRules;
 
