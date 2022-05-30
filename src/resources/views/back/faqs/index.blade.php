@@ -51,30 +51,85 @@
         <div class="card card-body text-center" style="padding:50px 0px 50px 0px;">
             <img src="{{ asset('assets/img/group.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
             <h4>¡No hay textos preguntas frecuentes en la base de datos!</h4>
-            <a href="" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto mt-4">Reparar</a>
+            <a href="" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto mt-4">Agregar pregunta frecuente</a>
         </div>
         @else
-            @foreach($faqs as $faq)
-            <form method="POST" action="{{ route('faq.update', $faq->id) }}" enctype="multipart/form-data">
-                {{ csrf_field() }}
-                {{ method_field('PUT') }}
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h4 class="mb-3">
-                        <input type="text" name="title" value="{{ $faq->question }}" required="" />
-                        </h4>
 
-                        <div id="editor-container-{{ $faq->id }}" class="ht-350 mb-4">
-                            {!! $faq->answer ?? '' !!}
-                        </div>
+            <table class="table table-dashboard">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Pregunta</th>
+                        <th>Respuesta</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($faqs as $faq)
+                    <tr>
+                        <td>{{ $faq->id }}</td>
+                        <td>
+                            {{ $faq->question }}
+                        </td>
+                        <td>
+                            {{ $faq->answer }}
+                        </td>
+                        <td class="text-nowrap">
+                            <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm btn-icon" href="javascript:void(0)" data-toggle="modal" data-target="#editFAQ_{{ $faq->id }}">
+                                <i class="fas fa-edit" aria-hidden="true"></i>
+                            </a>
 
-                        <textarea id="justHtml_{{ $faq->id }}" name="description" required="" style="display:none;">{!! $faq->answer ?? '' !!}</textarea>
+                            <form method="POST" action="{{ route('faq.destroy', $faq->id) }}" style="display: inline-block;">
+                                <button type="submit" class="btn btn-outline-danger btn-sm btn-icon" data-toggle="tooltip" data-original-title="Borrar">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                </button>
+                                {{ csrf_field() }}
+                                {{ method_field('DELETE') }}
+                            </form>
+                        </td>
+                    </tr>
 
-                        <button type="submit" class="btn btn-outline-success"><i class="far fa-save"></i> Guardar información</a>
-                    </div>
-                </div>
-            </form>
-            @endforeach
+                    <div id="editFAQ_{{ $faq->id }}" class="modal fade">
+                        <div class="modal-dialog modal-dialog-vertical-center" role="document">
+                            <div class="modal-content bd-0 tx-14">
+                                <div class="modal-header">
+                                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Editar Pregunta Frecuente</h6>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+                                <form method="POST" action="{{ route('faq.update', $faq->id) }}" enctype="multipart/form-data">
+                                {{ csrf_field() }}
+                                {{ method_field('PUT') }}
+                                    <div class="modal-body pd-25">
+                                            <div class="form-group mt-2">
+                                                <label>Pregunta</label>
+                                                <input type="text" class="form-control" name="question" value="{{ $faq->question }}"/>
+
+                                            <div class="form-group mt-2">
+                                                <label>Respuesta</label>
+                                                <div id="editor-container-create" class="ht-350 mb-4">
+
+                                            </div>
+
+                                            <textarea id="justHtml_create" name="answer" required="" style="display:none;" value="{{ $faq->answer }}"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary">Guardar Información</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div><!-- modal-dialog -->
+                    </div><!-- modal -->
+
+                    @endforeach
+                </tbody>
+            </table>
         @endif
     </div>
 </div>

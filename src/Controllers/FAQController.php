@@ -67,8 +67,8 @@ class FAQController extends Controller
     {
         //Validar
         $this -> validate($request, array(
-            'description' => 'required',
-            'title' => 'required'
+            'question' => 'required',
+            'answer' => 'required'
         ));
 
         // Guardar datos en la base de datos
