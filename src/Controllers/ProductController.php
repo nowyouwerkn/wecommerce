@@ -91,7 +91,7 @@ class ProductController extends Controller
 
         $product->in_index = $request->in_index;
         $product->is_favorite = $request->is_favorite;
-        
+
         $product->price = $request->price;
           if ($request->discount_price != NULL) {
              $product->discount_price =  $request->discount_price;
@@ -127,7 +127,7 @@ class ProductController extends Controller
         }else{
             $product->category_id = $request->category_id;
         }
-        
+
         $product->status = $request->status;
         $product->search_tags = $request->search_tags;
 
@@ -180,9 +180,9 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::findOrFail($id);
-        
+
         $categories = Category::where('parent_id', NULL)->orWhere('parent_id', '0')->get();
-        
+
         $variant_stock = ProductVariant::where('product_id', $product->id)->get();
 
         $related_products = Product::where('id', '!=' , $id)->where('category_id', $product->category_id)->get();
@@ -204,7 +204,7 @@ class ProductController extends Controller
             $base_product = $product_relationships->take(1)->first();
             $all_relationships = ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
         }
-        
+
 
         return view('wecommerce::back.products.show')
         ->with('product', $product)
@@ -364,7 +364,7 @@ class ProductController extends Controller
 
         $product->in_index = $request->in_index;
         $product->is_favorite = $request->is_favorite;
-        
+
         $product->price = $request->price;
         $product->discount_price =  $request->discount_price;
         $product->production_cost = $request->production_cost;
@@ -388,7 +388,7 @@ class ProductController extends Controller
         $product->weight = $request->weight;
 
         $product->category_id = $request->category_id;
-        
+
         $product->status = $request->status;
         $product->search_tags = $request->search_tags;
 
@@ -440,6 +440,19 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
 
+
+
+        $vars = ProductVariant::where('product_id', $product->id)->get();
+
+        foreach($vars as $var){
+            $var->delete();
+        }
+
+        $relations = ProductRelationship::where('product_id', $product->id)->orWhere('base_product_id', $product->id)->get();
+        foreach($relations as $rel){
+            $rel->delete();
+        }
+
         // Notificación
         $type = 'Producto';
         $by = Auth::user();
@@ -465,20 +478,20 @@ class ProductController extends Controller
         return response()->json(Category::where('parent_id', $value)->get());
     }
 
-    public function export() 
+    public function export()
     {
         return Excel::download(new ProductExport, 'productos.xlsx');
     }
 
-      public function export_inventory_changes() 
+      public function export_inventory_changes()
     {
         return Excel::download(new InventoryExport, 'inventario.xlsx');
     }
 
-    public function import(Request $request) 
+    public function import(Request $request)
     {
         Excel::import(new ProductImport, $request->import_file);
-        
+
         return redirect()->back()->with('success', 'Documento importado correctamente.');
     }
 
@@ -491,8 +504,8 @@ class ProductController extends Controller
              $values = array('action_by' => $by->id,'initial_value' => $product->stock, 'final_value' => $request->stock_variant, 'product_id' => $id);
             DB::table('inventory_record')->insert($values);
         }
-       
-        
+
+
         $product->stock = $request->stock_variant;
         //$stock->sku = $request->sku_variant;
 
@@ -532,8 +545,8 @@ class ProductController extends Controller
       public function filter($order , $filter)
     {
 
-        $products = Product::orderBy($filter, $order)->paginate(15); 
-        
+        $products = Product::orderBy($filter, $order)->paginate(15);
+
         if ($filter == 'sku' && $order == 'desc') {
             $products = Product::orderByRaw('sku * 1 desc')->paginate(15);
         }
@@ -552,7 +565,7 @@ class ProductController extends Controller
         if($filter == 'discount_price'&& $order == 'asc'){
             $products = Product::orderByRaw('discount_price * 1 asc')->paginate(15);
         }
-       
+
         return view('wecommerce::back.products.index')->with('products', $products);
 
     }
@@ -582,7 +595,7 @@ class ProductController extends Controller
 
         $product->in_index = $request->in_index;
         $product->is_favorite = $request->is_favorite;
-        
+
         $product->price = $request->price;
         $product->discount_price = $request->discount_price;
         $product->production_cost = $request->production_cost;
@@ -603,7 +616,7 @@ class ProductController extends Controller
         $product->weight = $request->weight;
 
         $product->category_id = $request->category_id;
-        
+
         $product->status = $request->status;
         $product->search_tags = $request->search_tags;
         $product->available_date_start = $request->available_date_start;
@@ -630,7 +643,7 @@ class ProductController extends Controller
         $this->notification->send($type, $by ,$data);
 
         return response()->json([
-            'mensaje' => 'Gran Mensaje', 
+            'mensaje' => 'Gran Mensaje',
             'product_id' => $product->id
         ], 200);
     }

@@ -552,8 +552,9 @@ class FrontController extends Controller
         if (empty($store_tax)) {
             $tax_rate = 0;
         }else{
-            $tax_rate = ($store_tax->tax_rate)/100;
+            $tax_rate = ($store_tax->tax_rate)/100 + 1;
         }
+
 
         // Reglas de Envios
         if (empty($store_shipping)) {
@@ -695,9 +696,49 @@ class FrontController extends Controller
             }
         }
 
-        $tax = ($cart->totalPrice) * ($tax_rate);
-        $subtotal = ($cart->totalPrice) / ($tax_rate + 1);
-        $total = ($subtotal + $shipping);
+        $subtotal_inc_iva = 0;
+        $subtotal_no_iva = 0;
+        $tax_inc_iva = 0;
+        $tax_no_iva = 0;
+
+        $total_inc_iva = 0;
+        $total_no_iva = 0;
+
+        foreach ($cart->items as $product) {
+            $has_tax = $product['item']['has_tax'];
+
+            if ($product['item']['has_discount'] == true && $product['item']['discount_end'] > Carbon::today()){
+                $product_price = $product['item']['discount_price'];
+            }else{
+                $product_price = $product['item']['price'];
+            }
+
+
+            // Iva Incluido
+            if($has_tax == true){
+                $subtotal_inc_iva += $product_price / ($tax_rate);
+                $specific_subtotal = $product_price / ($tax_rate);
+
+                $tax_inc_iva += $product_price - $specific_subtotal;
+                $specific_tax = $product_price - $specific_subtotal;
+
+                $total_inc_iva += $specific_subtotal + $shipping + $specific_tax;
+            }else{
+                // Sin iIva
+                $subtotal_no_iva += $product_price * ($tax_rate);
+                $specific_subtotal = $product_price * ($tax_rate);
+
+                $tax_no_iva += $specific_subtotal - $product_price;
+
+                $total_no_iva += $specific_subtotal + $shipping;
+            }
+        }
+
+
+        // Totales
+        $subtotal = $subtotal_inc_iva + $subtotal_no_iva;
+        $tax = $tax_inc_iva + $tax_no_iva;
+        $total = $total_inc_iva + $total_no_iva;
 
         $store_config = $this->store_config;
         $legals = LegalText::all();
