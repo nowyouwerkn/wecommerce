@@ -18,10 +18,14 @@
 @endsection
 
 @section('content')
-<form method="POST" action="{{ route('seo.update', $seo->id) }}" enctype="multipart/form-data">
-    {{ csrf_field() }}
-    {{ method_field('PUT') }}
 
+@if($seo == NULL)
+<form method="POST" action="{{ route('seo.store') }}" enctype="multipart/form-data">
+@else
+<form method="POST" action="{{ route('seo.update', $seo->id) }}" enctype="multipart/form-data">
+{{ method_field('PUT') }}
+@endif
+    {{ csrf_field() }}
     <div class="row">
         <div class="col-md-4">
             <div class="pr-5 pt-1 pl-3">
@@ -38,10 +42,10 @@
             </div>
         </div>
         <div class="col-md-8">
-            
+
             <div class="card mb-4">
                 <div class="card-body">
-                
+
                 <h6 class="text-uppercase mb-3">Información General</h6>
 
                     <div class="row">
@@ -62,13 +66,13 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="page_description">Descripción</label>
-                                <textarea class="form-control" id="page_description" name="page_description" rows="5">{{ $seo->page_description }}</textarea>
+                                <textarea class="form-control" id="page_description" name="page_description" rows="5">{{ $seo->page_description ?? '' }}</textarea>
                             </div>
                         </div>
 
                         <div class="col-md-12">
                             <label for="page_keywords">Palabras Clave</label>
-                            <input type="text" class="form-control" id="page_keywords" name="page_keywords" value="{{ $seo->page_keywords ?? '' }}"/>
+                            <input type="text" class="form-control" id="page_keywords" name="page_keywords" {{ $seo->page_keywords ?? '' }}"/>
                             <small class="form-text text-muted">Separa cada elemento con una coma o los robots de busqueda no podrán identificar las palabras.</small>
                         </div>
 
@@ -119,9 +123,8 @@
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
-
 </form>
+
 @endsection
