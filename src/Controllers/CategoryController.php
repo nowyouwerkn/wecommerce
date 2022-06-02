@@ -45,6 +45,7 @@ class CategoryController extends Controller
         //Validar
         $this -> validate($request, array(
             'name' => 'required|max:255',
+            'image' => 'sometimes|min:10|max:2100'
         ));
 
         // Guardar datos en la base de datos
@@ -69,9 +70,9 @@ class CategoryController extends Controller
 
                 $category->slug = Str::slug(($parent_name->name . ' ' . $request->name), '-');
             }
-            
+
         }
-        
+
         $category->parent_id = $request->parent_id;
         $category->priority = $request->priority;
 
@@ -127,13 +128,14 @@ class CategoryController extends Controller
         //Validar
         $this -> validate($request, array(
             'name' => 'required|max:255',
+            'image' => 'sometimes|min:10|max:2100'
         ));
 
         // Guardar datos en la base de datos
         $category = Category::find($id);
-        
+
         $category->name = $request->name;
-        
+
         if (empty($check_if_exists)) {
             $category->slug = Str::slug($request->name, '-');
         }else{
@@ -149,9 +151,9 @@ class CategoryController extends Controller
 
                 $category->slug = Str::slug(($parent_name->name . ' ' . $request->name), '-');
             }
-            
+
         }
-        
+
         $category->parent_id = $request->parent_id;
         $category->priority = $request->priority;
 
@@ -198,7 +200,7 @@ class CategoryController extends Controller
 
             $product->save();
         }
-            
+
         foreach($category->children as $sub){
             $sub->delete();
         }
@@ -217,6 +219,6 @@ class CategoryController extends Controller
         Session::flash('success', 'Elemento eliminado correctamente de la base de datos.');
 
         return redirect()->route('categories.index');
-        
+
     }
 }
