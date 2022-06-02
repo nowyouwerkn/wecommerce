@@ -40,7 +40,7 @@ class PopupController extends Controller
         $this -> validate($request, array(
             'title' => 'required|max:255',
             'subtitle' => 'nullable',
-            'image' => 'sometimes',
+            'image' => 'sometimes|min:10|max:2100'
         ));
 
         // Guardar datos en la base de datos
@@ -100,6 +100,11 @@ class PopupController extends Controller
 
     public function update(Request $request, $id)
     {
+        //Validar
+        $this -> validate($request, array(
+            'image' => 'sometimes|min:10|max:2100'
+        ));
+
         // Guardar datos en la base de datos
         $popup = Popup::find($id);
 

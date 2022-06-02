@@ -64,7 +64,7 @@ class ProductController extends Controller
             'name' => 'unique:products|required|max:255',
             'description' => 'required',
             'price' => 'required',
-            'model_image' => 'sometimes|image',
+            'model_image' => 'sometimes|min:10|max:2100',
             'sku' => 'required',
         ));
 
@@ -347,7 +347,7 @@ class ProductController extends Controller
         $this -> validate($request, array(
             'description' => 'required',
             'price' => 'required',
-            'model_image' => 'sometimes|image',
+            'model_image' => 'sometimes|min:10|max:2100',
             'sku' => 'nullable',
         ));
 

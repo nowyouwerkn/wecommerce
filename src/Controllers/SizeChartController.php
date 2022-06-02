@@ -28,6 +28,11 @@ class SizeChartController extends Controller
 
     public function store(Request $request)
     {
+        //Validar
+        $this -> validate($request, array(
+            'image' => 'sometimes|min:10|max:2100'
+        ));
+
         $size_chart = new SizeChart;
 
         if ($request->hasFile('image')) {
@@ -80,8 +85,23 @@ class SizeChartController extends Controller
 
     public function update(Request $request,  $id)
     {
+        //Validar
+        $this -> validate($request, array(
+            'image' => 'sometimes|min:10|max:2100'
+        ));
+
         $size_chart = SizeChart::find($id);
-        
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = 'size_chart' . time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('img/products/' . $filename);
+
+            Image::make($image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $size_chart->image = $filename;
+        }
+
         return redirect()->back();
     }
 
