@@ -716,17 +716,17 @@ class FrontController extends Controller
 
             // Iva Incluido
             if($has_tax == true){
-                $subtotal_inc_iva += $product_price / ($tax_rate);
-                $specific_subtotal = $product_price / ($tax_rate);
+                $subtotal_inc_iva += ($product_price * $product['qty']) / ($tax_rate);
+                $specific_subtotal = ($product_price * $product['qty']) / ($tax_rate);
 
-                $tax_inc_iva += $product_price - $specific_subtotal;
-                $specific_tax = $product_price - $specific_subtotal;
+                $tax_inc_iva += ($product_price * $product['qty']) - $specific_subtotal;
+                $specific_tax = ($product_price * $product['qty']) - $specific_subtotal;
 
                 $total_inc_iva += $specific_subtotal + $shipping + $specific_tax;
             }else{
                 // Sin iIva
-                $subtotal_no_iva += $product_price * ($tax_rate);
-                $specific_subtotal = $product_price * ($tax_rate);
+                $subtotal_no_iva += ($product_price * $product['qty']) * ($tax_rate);
+                $specific_subtotal = ($product_price * $product['qty']) * ($tax_rate);
 
                 $tax_no_iva += $specific_subtotal - $product_price;
 
