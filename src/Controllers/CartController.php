@@ -33,9 +33,9 @@ class CartController extends Controller
 
         $cart = new Cart($oldCart);
 
-        if ($product->has_discount == false) {
+        if ($product->has_discount == false or $product->discount_end < Carbon::today()){
             $price = $product->price;
-        }else{
+        }elseif($product->has_discount ==true && $product->discount_end > Carbon::today()) {
             $price = $product->discount_price;
         }
 
@@ -75,7 +75,7 @@ class CartController extends Controller
         // Validador de Existencias
         $current_stock = $product->stock;
         $qty_on_cart = $qty;
-        
+
         if ($qty_on_cart < $current_stock) {
             // Proceso regular
             if ($product->has_discount == false) {
@@ -98,7 +98,7 @@ class CartController extends Controller
                 $event = new FacebookEvents;
                 $event->addToCart($value, $product_name, $product_sku);
             }
-            
+
             Session::put('cart', $cart);
 
             $item_merged = ($id . ',' . $variant);
@@ -116,7 +116,7 @@ class CartController extends Controller
             //return response()->json(['mensaje' => 'Sumado 1 producto al carrito.', 'qty' => $qty, 'price' => $price , 'totalQty' => $totalQty, 'totalPrice' => $totalPrice], 200);
         }
 
-        
+
     }
 
     public function substractOne($id, $variant)
@@ -161,7 +161,7 @@ class CartController extends Controller
         $cart->deleteItem($id, $variant);
 
         if(count($cart->items) > 0){
-            Session::put('cart', $cart);    
+            Session::put('cart', $cart);
         }else{
             Session::forget('cart');
         }
