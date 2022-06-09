@@ -41,17 +41,17 @@
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_contact')
 
                     <hr class="responsive-two">
-                    
+
                     <div class="we-co--title d-flex align-items-center justify-content-between">
-                        <h4 class="responsive-one"><span class="we-co--progress-indicator"></span> Direccion de Envío</h4>
+                        <h4 class="responsive-one"><span class="we-co--progress-indicator"></span> Dirección de Envío</h4>
                     </div>
-                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')  
-                    
+                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')
+
                     <hr class="responsive-two">
-                    
+
                     @if($shipment_options->count() >0)
                     <div class="we-co--title d-flex align-items-center justify-content-between">
-                        <h4><span class="we-co--progress-indicator"></span> Metodos de Envío</h4>
+                        <h4><span class="we-co--progress-indicator"></span> Métodos de Envío</h4>
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
                     @endif
@@ -70,7 +70,7 @@
             <div class="col-md-4" id="confirmation_step">
                 <div class="sticky-top">
                     <div class="we-co--title d-flex align-items-center justify-content-between">
-                        <h4>Resúmen de Pedido</h4>
+                        <h4>Resumen de Pedido</h4>
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_summary')
                 </div>
@@ -86,7 +86,7 @@
 <script type="text/javascript">
     function valueChanged()
     {
-        if($('.billing_check').is(":checked"))   
+        if($('.billing_check').is(":checked"))
             $(".billing_form").fadeOut(500);
         else
             $(".billing_form").fadeIn(500);
@@ -94,26 +94,26 @@
 
     function newAdress()
     {
-        if($('.option-address').is(":checked"))   
+        if($('.option-address').is(":checked"))
             $(".card-body-new-add").fadeOut(500);
             $(".form-check-input").checked;
-       
 
 
-        if($('.new-address').is(":checked"))   
+
+        if($('.new-address').is(":checked"))
             $(".card-body-new-add").fadeIn(500);
-        
+
     }
 
     function newAdressGuest()
     {
-        if($('.new-address').is(":checked"))   
+        if($('.new-address').is(":checked"))
             $(".guest-address").fadeOut(500);
-       
 
-        if($('.new-address').is(":checked"))   
+
+        if($('.new-address').is(":checked"))
             $(".guest-address").fadeIn(500);
-        
+
     }
 </script>
 
@@ -122,7 +122,7 @@
         $('.shipping-options a').click(function() {
             event.preventDefault();
             console.log('Seleccionado:' , $(this).attr('data-value'));
-            
+
             $('.shipping-options a').removeClass('active');
 
             if($(this).hasClass('active')){
@@ -130,12 +130,12 @@
             }else{
                 $(this).addClass('active');
             }
-            
-            document.getElementById("shippingRate").textContent = $(this).attr('price-value');  
+
+            document.getElementById("shippingRate").textContent = $(this).attr('price-value');
             document.getElementById("shippingInput").value = $(this).attr('price-value');
             document.getElementById("shippingOptions").value = $(this).attr('data-value');
             var subtotal =  parseFloat($('#subtotalInput').val());
-            var shipping = parseFloat($('#shippingInput').val());  
+            var shipping = parseFloat($('#shippingInput').val());
             var total_count = subtotal + parseFloat(shipping);
             var total = total_count.toString();
 
@@ -218,7 +218,7 @@
 
             function onSuccess(response) {
                 //alert('Successful operation');
-                
+
                 $('.loader-standby').removeClass('loader-hidden');
                 //console.log(response.id);
 
@@ -228,7 +228,7 @@
 
                 $form.get(0).submit();
             }
-         
+
             function onError(response) {
                 $('.loader-standby').addClass('loader-hidden');
 
@@ -305,13 +305,13 @@
                 OpenPay.setId('{{ $card_payment->merchant_id }}');
                 OpenPay.setApiKey('{{ $card_payment->public_key }}');
                 OpenPay.setSandboxMode('{{ env("OPENPAY_PRODUCTION_MODE", false) }}');
-                
+
                 var deviceSessionId = OpenPay.deviceData.setup('checkout-form', "device_hidden");
                 //console.log(deviceSessionId);
 
                 // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
                 $form.find('button').prop('disabled', true);
-                    
+
                 $('.loader-standby').removeClass('loader-hidden');
 
                 OpenPay.token.create({
@@ -331,7 +331,7 @@
                 $form.find('button').prop('disabled', true);
 
                 $form.append($('<input type="hidden" name="openPayToken" />').val(response.data.id));
-                
+
                 $form.get(0).submit()
             }
 
@@ -358,7 +358,7 @@
             container: '.card-wrapper',
 
             formSelectors: {
-                numberInput: 'input[name="card_number"]', 
+                numberInput: 'input[name="card_number"]',
                 expiryInput: 'input[name="card-month"], input[name="card-year"]',
                 cvcInput: 'input[name="card-cvc"]',
                 nameInput: 'input[name="card-name"]'
@@ -396,7 +396,7 @@
             $form.get(0).submit();
         }
     });
-</script>  
+</script>
 @endif
 
 @if(!empty($mercado_payment))
@@ -412,12 +412,12 @@
             $('.loader-standby').removeClass('loader-hidden');
             //console.log(response.id);
 
-            setTimeout(function() { 
+            setTimeout(function() {
                 $form.get(0).submit();
             }, 2000);
         }
     });
-</script> 
+</script>
 @endif
 
 @if(!empty($cash_payment))
@@ -435,7 +435,7 @@
                 $form.get(0).submit();
             }
         });
-    </script>  
+    </script>
     @endif
 
     @if($cash_payment->supplier == 'OpenPay')
