@@ -68,12 +68,63 @@
 <div class=" row">
     @foreach($size_chart as $size)
         <div class=" col-4 m-0 p-1">
-            <div class="card">            
+            <div class="card">
                 <div class="action-btns">
                 <ul class="list-inline">
-                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalDelete_{{ $size->id }}" class="btn btn-rounded btn-icon btn-danger"><i class="fas fa-times" aria-hidden="true"></i></a></li> 
+                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalEdit_{{ $size->id }}" class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-edit"></i></a></li>
+                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalDelete_{{ $size->id }}" class="btn btn-rounded btn-icon btn-danger"><i class="fas fa-times" aria-hidden="true"></i></a></li>
                 </ul>
 
+                <!--MODAL EDIT-->
+                <div id="modalEdit_{{ $size->id }}" class="modal fade">
+                    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+                        <div class="modal-content bd-0 tx-14">
+                            <div class="modal-header">
+                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Editar Elemento</h6>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form method="POST" action="{{ route('size_chart.update', $size->id) }}" enctype="multipart/form-data">
+                            {{ csrf_field() }}
+                            {{ method_field('PUT') }}
+                                <div class="modal-body pd-25">
+                                    <div class="form-group mt-2">
+                                        <label>Nombre de Guía de Talla</label>
+                                        <input type="text" class="form-control" id="name" name="name" value="{{ $size->name }}"/>
+                                    </div>
+
+                                    <div class="form-group mt-2">
+                                        <label>Imágen <span class="text-danger">*</span></label>
+                                        <input type="file" class="form-control" id="image" name="image" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Asignarla a categoría <span class="text-danger">*</span></label>
+                                        <select class="form-control" id="category_id" name="category_id">
+                                            <option value="0" selected="">Selecciona una opción..</option>
+                                            @foreach($categories as $cat)
+                                                @if($cat->parent_id == NULL || 0)
+                                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                                @else
+
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!--MODAL DELETE-->
                 <div id="modalDelete_{{ $size->id }}" class="modal fade">
                     <div class="modal-dialog modal-dialog-vertical-center" role="document">
                         <div class="modal-content bd-0 tx-14">
@@ -106,7 +157,7 @@
             <img class="card-img-top img-fluid" src="{{ asset('img/products/' . $size->image) }}" alt="">
 
             <div class="card-body pb-0">
-                <h5 class="card-title display-4 mb-1">{{ $size->name }}</h5> 
+                <h5 class="card-title display-4 mb-1">{{ $size->name }}</h5>
             </div>
 
             <div class="card-body">
@@ -123,6 +174,8 @@
 </div>
 @endif
 
+
+<!--MODAL CREATE-->
 <div id="modalCreate" class="modal fade">
     <div class="modal-dialog modal-dialog-vertical-center" role="document">
         <div class="modal-content bd-0 tx-14">
@@ -153,7 +206,7 @@
                                 @if($cat->parent_id == NULL || 0)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                                 @else
-                                
+
                                 @endif
                             @endforeach
                         </select>

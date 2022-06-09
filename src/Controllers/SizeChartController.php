@@ -102,6 +102,10 @@ class SizeChartController extends Controller
             $size_chart->image = $filename;
         }
 
+        $size_chart->name = $request->name;
+        $size_chart->category_id = $request->category_id;
+        $size_chart->save();
+
         return redirect()->back();
     }
 
