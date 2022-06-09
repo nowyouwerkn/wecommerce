@@ -44,7 +44,7 @@
             <p>Tus políticas guardadas se vincularán al pie de página de tu tienda.</p>
             <!--<p>Al usar estas plantillas, aceptas que has leído y aceptado el descargo de responsabilidad.</p>-->
         </div>
-        
+
     </div>
     <div class="col-md-8">
         @if($legals->count() == 0)
@@ -76,7 +76,7 @@
                                       <option {{ ($legal->priority == '5') ? 'selected' : '' }} value="5">5</option>
                                       <option {{ ($legal->priority == '6') ? 'selected' : '' }} value="6">6</option>
                                       <option {{ ($legal->priority == '7') ? 'selected' : '' }} value="7">7</option>
-                                      
+
                                 </select>
                             </div>
                         </div>
@@ -86,13 +86,23 @@
                         <div id="editor-container-{{ $legal->id }}" class="ht-350 mb-4">
                             {!! $legal->description ?? '' !!}
                         </div>
-                        
+
                         <textarea id="justHtml_{{ $legal->id }}" name="description" required="" style="display:none;">{!! $legal->description ?? '' !!}</textarea>
 
-                        <button type="submit" class="btn btn-outline-success"><i class="far fa-save"></i> Guardar información</a>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-outline-success"><i class="far fa-save"></i> Guardar información</a></button>
+                            </form>
+                            <form method="POST" action="{{ route('legals.destroy', $legal->id) }}">
+                                <button type="submit" class="btn btn-outline-danger btn-sm btn-icon" data-toggle="tooltip" data-original-title="Borrar">
+                                    <i class="fas fa-trash" aria-hidden="true"></i> Eliminar
+                                </button>
+                                {{ csrf_field() }}
+                                {{ method_field('DELETE') }}
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </form>
+
             @endforeach
         @endif
     </div>
@@ -136,7 +146,7 @@
                         <label>Descripcion</label>
                         <div id="editor-container-create" class="ht-350 mb-4">
                         </div>
-                    
+
                         <textarea id="justHtml_create" name="description" required="" style="display:none;"></textarea>
                     </div>
                 </div>
@@ -156,7 +166,7 @@
 
 @foreach($legals as $legal)
 <script type="text/javascript">
-    
+
     var options_{{ $legal->id }} = {
         modules: {
             toolbar: [

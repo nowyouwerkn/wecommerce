@@ -23,7 +23,7 @@
 
                     <div class="col-6 col-md-3">
                         <div class="mb-3">
-                            <label class="form-label" for="last-name">Num <span class="text-danger">*</span></label>
+                            <label class="form-label" for="last-name">Núm. <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="street_num" name="street_num" value="{{ $address->street_num ?? '' }}" required="" />
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                             <input type="text" class="form-control" id="int_num" name="int_num" value="{{ $address->int_num ?? '' }}" />
                         </div>
                     </div>
-                    
+
                     <div class="col-6 col-md-4">
                         <div class="mb-3">
                             <label class="form-label" for="zip">Código Postal <span class="text-danger">*</span></label>
@@ -48,19 +48,19 @@
                         <div class="mb-3">
                             <label class="form-label" for="country">País <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="country" name="country" value="México" required="" readonly />
-                            {{-- 
+                            {{--
                             <select class="form-control" id="country" name="country">
                                 <option value="México" selected="">México</option>
                             </select>
                             --}}
                         </div>
-                    </div> 
+                    </div>
 
                     <div class="col-12 col-md-4">
                         <div class="mb-3">
                             <label class="form-label" for="state">Estado <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="state" name="state" value="" required="" readonly />
-  
+
                             {{--
                             @php
                                 $states = Nowyouwerkn\WeCommerce\Models\State::all();
@@ -142,7 +142,7 @@
                             <input type="text" class="form-control" id="int_num" name="int_num" value="{{ $address->int_num ?? '' }}" />
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label" for="zip">Colonia / Fraccionamiento <span class="text-danger">*</span></label>
@@ -166,12 +166,12 @@
                                 <option value="México" selected="">México</option>
                             </select>
                         </div>
-                    </div> 
-                    
+                    </div>
+
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label class="form-label" for="state">Estado <span class="text-danger">*</span></label>
-                            
+
                             <input type="text" class="form-control" id="state" name="state" value="{{ $address->state ?? '' }}" required="" />
                             {{--
                             @php
@@ -216,7 +216,7 @@
                         <span class="responsive-one">Nueva Dirección</span> <span class="responsive-two">Dirección de Envío</span>
                     </label>
                 </div>
-                
+
                <label>
                 <input type="hidden" name="save_address" value="false">
                 <input type="checkbox" name="save_address" value="true">  Guardar esta dirección para después</label>
@@ -243,7 +243,7 @@
                             <input type="text" class="form-control" id="int_num" name="int_num" value="{{ $address->int_num ?? '' }}" />
                         </div>
                     </div>
-                    
+
                     <div class="col-6 col-md-4">
                         <div class="mb-3">
                             <label class="form-label" for="zip">Código Postal <span class="text-danger">*</span></label>
@@ -257,19 +257,19 @@
                         <div class="mb-3">
                             <label class="form-label" for="country">País <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="country" name="country" value="México" required="" readonly />
-                            {{-- 
+                            {{--
                             <select class="form-control" id="country" name="country">
                                 <option value="México" selected="">México</option>
                             </select>
                             --}}
                         </div>
-                    </div> 
+                    </div>
 
                     <div class="col-12 col-md-4">
                         <div class="mb-3">
                             <label class="form-label" for="state">Estado <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="state" name="state" value="" required="" readonly />
-  
+
                             {{--
                             @php
                                 $states = Nowyouwerkn\WeCommerce\Models\State::all();
@@ -340,9 +340,9 @@
             $.ajax({
                 method: 'GET',
                 url: "{{ route('zipcode.get') }}",
-                data:{ 
+                data:{
                     value: zip,
-                    _token: '{{ Session::token() }}', 
+                    _token: '{{ Session::token() }}',
                 },
                 success: function(response){
                     if (response.length == 0) {
