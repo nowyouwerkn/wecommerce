@@ -2,7 +2,7 @@
 <div class="werkn-admin-bar">
     <ul>
        <li>{{ $config->store_name ?? 'Sin Configurar' }}</li>
-       <li><a href="{{ route('dashboard') }}">Ir a tu Panel</a></li>
+       <li><a class="ms-3" href="{{ route('dashboard') }}">Ir a tu Panel</a></li>
     </ul>
 
     <ul style="padding-right:2em">

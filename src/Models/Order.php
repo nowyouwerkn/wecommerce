@@ -13,6 +13,11 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function shipment()
+    {
+        return $this->belongsTo(ShipmentOption::class, 'shipping_option');
+    }
     
     public function invoice()
     {

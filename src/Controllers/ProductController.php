@@ -439,9 +439,6 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::find($id);
-
-
-
         $vars = ProductVariant::where('product_id', $product->id)->get();
 
         foreach($vars as $var){
@@ -505,16 +502,13 @@ class ProductController extends Controller
             DB::table('inventory_record')->insert($values);
         }
 
-
         $product->stock = $request->stock_variant;
-        //$stock->sku = $request->sku_variant;
 
           // Notificación
         $type = 'Producto';
         $data = 'Actualizó el inventario del producto:' . $product->name;
         $model_action = "update";
         $model_id = $product->id;
-
 
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
@@ -569,83 +563,4 @@ class ProductController extends Controller
         return view('wecommerce::back.products.index')->with('products', $products);
 
     }
-
-    /*
-    public function storeDynamic(Request $request)
-    {
-        //Validar
-        $this -> validate($request, array(
-            'name' => 'unique:products|required|max:255',
-            'description' => 'required',
-            'price' => 'required',
-            'model_image' => 'sometimes|image',
-            'sku' => 'nullable',
-        ));
-
-        // Guardar datos en la base de datos
-        $product = new Product;
-
-        $product->name = $request->name;
-        $product->slug = Str::slug($request->name);
-        $product->description = $request->description;
-        $product->materials = $request->materials;
-        $product->color = $request->color;
-        $product->hex_color = $request->hex_color;
-        $product->pattern = $request->pattern;
-
-        $product->in_index = $request->in_index;
-        $product->is_favorite = $request->is_favorite;
-
-        $product->price = $request->price;
-        $product->discount_price = $request->discount_price;
-        $product->production_cost = $request->production_cost;
-
-        $product->has_discount = $request->has_discount;
-        $product->has_tax = $request->has_tax;
-
-        $product->sku = $request->sku;
-        $product->barcode = $request->barcode;
-        $product->stock = $request->stock;
-
-        $product->has_variants = $request->has_variants;
-
-        $product->size_chart_file = $request->size_chart_file;
-        $product->height = $request->height;
-        $product->width = $request->width;
-        $product->lenght = $request->lenght;
-        $product->weight = $request->weight;
-
-        $product->category_id = $request->category_id;
-
-        $product->status = $request->status;
-        $product->search_tags = $request->search_tags;
-        $product->available_date_start = $request->available_date_start;
-
-        if ($request->hasFile('model_image')) {
-            $model_image = $request->file('model_image');
-            $filename = 'model' . time() . '.' . $model_image->getClientOriginalExtension();
-            $location = public_path('img/products/' . $filename);
-
-            Image::make($model_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
-
-            $product->image = $filename;
-        }
-
-        $product->save();
-
-        $product->subCategory()->sync($request->subcategory);
-
-        // Notificación
-        $type = 'Producto';
-        $by = Auth::user();
-        $data = 'creó el nuevo producto con nombre: ' . $product->name;
-
-        $this->notification->send($type, $by ,$data);
-
-        return response()->json([
-            'mensaje' => 'Gran Mensaje',
-            'product_id' => $product->id
-        ], 200);
-    }
-    */
 }

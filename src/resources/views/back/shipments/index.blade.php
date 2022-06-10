@@ -48,49 +48,133 @@
     </div>
 
     <div class="col-md-8">
-        <div class="card mb-4 payment-methods">
+        <div class="card mb-4">
             <div class="card-body">
-                <h4>Configuración Manual</h4>
-                <p class="mb-0">Guarda tu configuración de envíos en tu plataforma. El valor predeterminado es $0.00</p>
-            </div>
-            
-            <div class="card-header" style="border-bottom: none;">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="mb-0">
-                        <i class="fas fa-shipping-fast"></i>
-                        Tarifa Regular
-                    </h4>
-                    <div class="d-flex align-items-center">
-                        @if(!empty($manual_method))
-                            <span class="badge badge-success">Activado</span>
-                        @else
-                            <span class="badge badge-primary">Sin Configurar</span>
-                        @endif
-
-                        <form method="POST" action="{{ route('shipments.store') }}" enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="type" value="manual">
-                        <input type="hidden" name="supplier" value="WeCommerce">
-                            <div class="d-flex">
-                                <div class="input-group wd-150">
-                                    <input type="text" class="form-control" id="manual_method_cost" name="cost" placeholder="0.00" value="{{ $manual_method->cost ?? '' }}">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">
-                                           @if($config->currency_id=='2')
-                                            MXN
-                                            @else
-                                            USD
-                                            @endif
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <button class="btn btn-sm pd-x-15 btn-white btn-uppercase ml-1" type="submit"><i class="fas fa-save"></i> Guardar</button>
-                            </div>
-                        </form>
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div style="width: 50%">
+                        <h6 class="text-uppercase mb-2">Configuración Manual</h6>
+                        <p class="mb-0" ">Guarda tu configuración de envíos en tu plataforma. El valor predeterminado es $0.00</p>
                     </div>
+
+                    <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateOption" class="btn btn-sm pd-x-15 btn-outline-primary btn-uppercase mg-l-5"><i class="fas fa-plus"></i> Crear nueva opción de envío</a>
                 </div>
             </div>
+
+            @if($shipment_options->count() == 0)
+                <div class="card-header" style="border-bottom: none;">
+                    <div class="d-flex align-items-top justify-content-between">
+                        <div style="position: relative; top:-14px;">
+                            @if(!empty($manual_method))
+                                <span class="badge badge-success">Activado</span>
+                            @else
+                                <span class="badge badge-primary">Sin Configurar</span>
+                            @endif
+
+                            <h4 class="mb-0 mt-2">
+                                <i class="fas fa-shipping-fast"></i>
+                                Tarifa Regular
+                            </h4>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <form method="POST" action="{{ route('shipments.store') }}" enctype="multipart/form-data">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="type" value="manual">
+                            <input type="hidden" name="supplier" value="WeCommerce">
+                                <div class="d-flex">
+                                    <div class="input-group wd-150">
+                                        <input type="text" class="form-control" id="manual_method_cost" name="cost" placeholder="0.00" value="{{ $manual_method->cost ?? '' }}">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                @if($config->currency_id=='2')
+                                                MXN
+                                                @else
+                                                USD
+                                                @endif
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-sm pd-x-15 btn-white btn-uppercase ml-1" type="submit"><i class="fas fa-save"></i> Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="d-flex align-items-center">
+                    
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th class="text-center">Imagen</th>
+                                    <th>Descripción</th>
+                                    <th>Precio</th>
+                                    <th>Estado</th>
+                                    <th class="text-right">Acciones</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach($shipment_options as $option)
+                                <tr>
+                                    <td>
+                                        @switch($option->type)
+                                            @case('delivery')
+                                            Envío a Domicilio
+                                            @break
+
+                                            @case('pickup')
+                                            Recolección en tienda
+                                            @break
+
+                                            @default
+                                        @endswitch
+
+                                    </td>
+                                    <td class="text-center">
+                                        @if($option->icon != NULL)
+                                        <img src="{{ asset('img/' . $option->icon) }}" alt="{{ Str::slug($option->name) }}" width="40">
+                                        @else
+                                        <img src="{{ asset('assets/img/package.png') }}" alt="{{ Str::slug($option->name) }}" width="40">
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <strong>{{ $option->name }}</strong><br>
+                                        <small>{{ $option->location ?? '' }}</small>
+                                    </td>
+                                    <td>
+                                        ${{ number_format($option->price, 2) }}
+                                    </td>
+
+                                    <td>
+                                        @if($option->is_active == true)
+                                        <span class="badge badge-success">Activado</span>
+                                        @else
+                                        <span class="badge badge-danger">Desactivado</span>
+                                        @endif 
+                                    </td>
+                                
+                                    <td class="d-flex justify-content-end">
+                                        <a href="javascript:void(0)" data-toggle="modal" data-target="#modalEditOption{{$option->id}}" class="btn btn-outline-primary btn-sm mr-2">Editar</a>
+                                        <form method="POST" action="{{ route('shipping-options.destroy', $option->id) }}" style="display: inline-block;">
+                                            <button type="submit" class="btn btn-sm btn-light" data-toggle="tooltip" data-original-title="Borrar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            {{ csrf_field() }}
+                                            {{ method_field('DELETE') }}
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                
+                </div>
+            @endif
         </div>
 
         <div class="card mb-4">
@@ -98,170 +182,108 @@
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <h6 class="text-uppercase mb-0">Reglas Especiales de Envíos</h6>
 
-                    <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateRule" class="btn btn-outline-primary btn-sm">Crear nueva Regla</a>
-                </div>
-
-                @if($shipment_rules->count() == 0)
-                <div class="text-center">
-                    <p class="mb-0"><em>Sin reglas especiales en la tienda.</em></p>
-                </div>
-                @else
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Regla</th>
-                                <th>Permite cupones</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($shipment_rules as $rule)
-                            <tr>
-                                <td>
-                                <span style="margin-right: 2px"><strong>{{ $rule->type }}</strong></span>
-                                <span style="margin-right: 2px">cuando <strong>{{ $rule->condition }}</strong> sea</span>
-                                <span style="margin-right: 2px">
-                                <strong>
-                                @switch($rule->comparison_operator)
-                                    @case('==')
-                                        igual a
-                                        @break
-
-                                    @case('!=')
-                                        no igual a
-                                        @break
-
-                                    @case('<')
-                                        menor que
-                                        @break
-
-                                    @case('<=')
-                                        menor que o igual a
-                                        @break
-
-                                    @case('>')
-                                        mayor que
-                                        @break
-
-                                    @case('>=')
-                                        mayor que o igual a
-                                        @break
-
-                                    @default
-                                        Error. Elimina esta regla.
-                                @endswitch
-                                </strong>
-                                </span>
-
-                                <span style="margin-right: 2px"><strong>{{ number_format($rule->value) }}</strong></span>
-                                </td>
-
-                                <td>
-                                    @if($rule->allow_coupons == true)
-                                    <span class="badge badge-success">Si</span>
-                                    @else
-                                    <span class="badge badge-info">No</span>
-                                    @endif 
-                                </td>
-                                <td>
-                                    @if($rule->is_active == true)
-                                    <span class="badge badge-success">Activado</span>
-                                    @else
-                                    <span class="badge badge-danger">Desactivado</span>
-                                    @endif 
-                                </td>
-                            
-                                <td class="d-flex">
-                                    <a href="{{ route('shipments-rules.status', $rule->id) }}" class=" btn btn-info btn-sm mr-2 px-2" data-toggle="tooltip" data-original-title="Cambiar Estado"><i class="fas fa-sync"></i></a>
-                                    <form method="POST" action="{{ route('shipments-rules.destroy', $rule->id) }}" style="display: inline-block;">
-                                        <button type="submit" class="btn btn-sm btn-light" data-toggle="tooltip" data-original-title="Borrar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="card mb-4 payment-methods">
-            <div class="card-body d-flex justify-content-between">
-                <h4>Opciones de Envío</h4>
-
-                <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateOption" class="btn btn-outline-primary btn-sm">Crear nueva opcion de envío</a>
-
-            </div>
-            
-            <div class="card-header" style="border-bottom: none;">
-                <div class="d-flex align-items-center justify-content-between">
-                 
-                    <div class="d-flex align-items-between w-100">
-                        @if($shipment_options->count() == 0)
-                        No tienes configurado métodos de envío para tu tienda.
-                        @else
-                       <div class="table-responsive">
-                            <table class="table ">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Precio</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach($shipment_options as $options)
-                                    <tr>
-                                        
-                                        <td>
-                                        <span style="margin-right: 2px"><strong>{{ $options->name }}</strong></span>
-                                        </td>
-                                        <td>
-                                            <span style="margin-right: 2px">${{ $options->price }}</span>
-                                        </td>
-
-                                        <td>
-                                            @if($options->is_active == true)
-                                            <span class="btn badge-success">Activado</span>
-                                            @else
-                                            <span class="btn badge-danger">Desactivado</span>
-                                            @endif 
-                                        </td>
-                                    
-                                        <td class="d-flex">
-                                          <a href="javascript:void(0)" data-toggle="modal" data-target="#modalEditOption{{$options->id}}" class="btn btn-outline-primary btn-sm">Editar</a>
-                                            <form method="POST" action="{{ route('shipping-options.destroy', $options->id) }}" style="display: inline-block;">
-                                                <button type="submit" class="btn btn-sm btn-light" data-toggle="tooltip" data-original-title="Borrar">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                                {{ csrf_field() }}
-                                                {{ method_field('DELETE') }}
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        @endif
-                    </div>
+                    <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateRule" class="btn btn-sm pd-x-15 btn-outline-primary btn-uppercase mg-l-5">Crear nueva Regla</a>
                 </div>
             </div>
+
+            @if($shipment_rules->count() == 0)
+            <div class="text-center">
+                <p class="mb-0"><em>Sin reglas especiales en la tienda.</em></p>
+            </div>
+            @else
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Regla</th>
+                            <th>Permite cupones</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($shipment_rules as $rule)
+                        <tr>
+                            <td>
+                            <span style="margin-right: 2px"><strong>{{ $rule->type }}</strong></span>
+                            <span style="margin-right: 2px">cuando <strong>{{ $rule->condition }}</strong> sea</span>
+                            <span style="margin-right: 2px">
+                            <strong>
+                            @switch($rule->comparison_operator)
+                                @case('==')
+                                    igual a
+                                    @break
+
+                                @case('!=')
+                                    no igual a
+                                    @break
+
+                                @case('<')
+                                    menor que
+                                    @break
+
+                                @case('<=')
+                                    menor que o igual a
+                                    @break
+
+                                @case('>')
+                                    mayor que
+                                    @break
+
+                                @case('>=')
+                                    mayor que o igual a
+                                    @break
+
+                                @default
+                                    Error. Elimina esta regla.
+                            @endswitch
+                            </strong>
+                            </span>
+
+                            <span style="margin-right: 2px"><strong>{{ number_format($rule->value) }}</strong></span>
+                            </td>
+
+                            <td>
+                                @if($rule->allow_coupons == true)
+                                <span class="badge badge-success">Si</span>
+                                @else
+                                <span class="badge badge-info">No</span>
+                                @endif 
+                            </td>
+                            <td>
+                                @if($rule->is_active == true)
+                                <span class="badge badge-success">Activado</span>
+                                @else
+                                <span class="badge badge-danger">Desactivado</span>
+                                @endif 
+                            </td>
+                        
+                            <td class="d-flex">
+                                <a href="{{ route('shipments-rules.status', $rule->id) }}" class=" btn btn-info btn-sm mr-2 px-2" data-toggle="tooltip" data-original-title="Cambiar Estado"><i class="fas fa-sync"></i></a>
+                                <form method="POST" action="{{ route('shipments-rules.destroy', $rule->id) }}" style="display: inline-block;">
+                                    <button type="submit" class="btn btn-sm btn-light" data-toggle="tooltip" data-original-title="Borrar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @endif
         </div>
 
         <div class="card card-body mb-4">
-            <h4>Pasarelas de Envío</h4>
-            <p class="mb-4"><strong>(Solo puedes tener activado uno a la vez)</strong></p>
-
+            <div class="d-flex align-items-start justify-content-between mb-3">
+                <div style="width: 50%">
+                    <h6 class="text-uppercase mb-2">Pasarelas de Envío</h6>
+                    <p class="mb-0">(Solo puedes tener activado uno a la vez)</p>
+                </div>
+            </div>
+        
             <div class="row payment-methods">
                 <div class="col-md-6">
                     <div class="card card-body h-100">
@@ -324,67 +346,104 @@
     </div><!-- modal-dialog -->
 </div><!-- modal -->
 
-@foreach($shipment_options as $options)
-<div id="modalEditOption{{$options->id}}" class="modal fade">
+@foreach($shipment_options as $option)
+<div id="modalEditOption{{$option->id}}" class="modal fade">
     <div class="modal-dialog modal-dialog-vertical-center" role="document">
         <div class="modal-content bd-0 tx-14">
             <div class="modal-header">
-                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Creacion de Opciones de envio</h6>
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear opción de envio</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" action="{{ route('shipping-options.update',$options->id ) }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('shipping-options.update',$option->id ) }}" enctype="multipart/form-data">
             {{ csrf_field() }}
             {{ method_field('PUT') }}
                 <div class="modal-body pd-25">
-
-                    <div class="form-group mt-2">
-                        <label>Nombre</label>
-                        <input type="text" class="form-control" name="name"  value="{{ $options->name }}" />
-                    </div>
-
-                    <div class="form-group mt-2">
-                        <label>Tiempo de entrega</label>
-                        <input type="text" class="form-control" name="delivery_time" value="{{ $options->delivery_time }}" />
-                    </div>
-                      <div class="form-group mt-2">
-                        <label>Activado</label>
-                        @if($options->is_active == true)
-                                <input type="hidden" id="none" name="is_active" value="0">
-                                <input type="checkbox" class="form-control" checked="" name="is_active" value="1" />
-                            @else
-                            <input type="hidden" id="none" name="is_active" value="0">
-                            <input type="checkbox" class="form-control" name="is_active" value="1" />
-                        @endif 
-                     
-                    </div>
-                    <label>Precio</label>
-                        <div class="d-flex">
-                            <div class="input-group ">
-                            <input type="text" class="form-control" id="manual_method_cost" name="price" placeholder="0.00" value="{{ $options->price }}">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">
-                                           @if($config->currency_id=='2')
-                                            MXN
-                                            @else
-                                            USD
-                                            @endif
-                                    </span>
-                                </div>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="form-group mt-2">
+                                <label>Descripción <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" placeholder="Envío Estándar" value="{{ $option->name }}" required />
                             </div>
                         </div>
-                        <div class="form-group mt-2">
-                       <!-- <label>Icono</label>-->
-                        <input type="hidden" class="form-control" name="icon" value="1" />
-                    </div>
-                    <div class="alert alert-warning">
-                        <p class="mb-0">Al guardar la información de esta pasarela se activará automáticamente. El usuario podra seleccionar la opcion al momento del checkout</p>
+                        <div class="col-md-5">
+                            <div class="form-group mt-2">
+                                <label>Tipo <span class="text-danger">*</span></label>
+                                <select id="typeSelect_{{ $option->id }}" class="form-control" name="type" required>
+                                    <option {{ ($option->type == 'pickup') ? 'selected' : '' }} value="pickup">Recolección en Tienda</option>
+                                    <option {{ ($option->type == 'delivery') ? 'selected' : '' }} value="delivery">Envío a Domicilio</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-group mt-2">
+                                <label>Tiempo de entrega <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="delivery_time" placeholder="3-5 días hábiles" value="{{ $option->delivery_time }}" required/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-7">
+                            <label class="mt-2">Precio  <span class="text-danger">*</span></label>
+                                <div class="d-flex">
+                                    <div class="input-group">
+                                    <input type="text" class="form-control" id="manual_method_cost" name="price" value="{{ $option->price }}" placeholder="0.00" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                @if($config->currency_id=='2')
+                                                MXN
+                                                @else
+                                                USD
+                                                @endif
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group mt-2">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>Imagen Actual</label>
+                            @if($option->icon != NULL)
+                            <img src="{{ asset('img/' . $option->icon) }}" alt="{{ Str::slug($option->name) }}" width="40">
+                            @else
+                            <img src="{{ asset('assets/img/package.png') }}" alt="{{ Str::slug($option->name) }}" width="40">
+                            @endif
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="form-group mt-2">
+                                <label>Modificar Imagen / Ícono <span class="text-info">(Opcional)</span></label>
+                                <input type="file" class="form-control" name="icon" />
+                                <small class="text-info">Al subir un nuevo archivo se sobreescribirá la información en la base de datos.</small>
+                            </div>
+                        </div>
+                        
+                        @if($option->type == 'delivery')
+                        <div class="col-md-12" id="locationInfo_{{ $option->id }}" style="display: none;">
+                        @else
+                        <div class="col-md-12" id="locationInfo_{{ $option->id }}">
+                        @endif
+                            <div class="form-group mt-2">
+                                <label>Dirección <span class="text-info">(Opcional)</span></label>
+                                <textarea name="location" class="form-control" rows="4">{{ $option->location ?? '' }}</textarea>
+                            </div>
+                        </div>
                     </div>
 
+                    <div class="custom-control custom-checkbox mb-3">
+                        <input type="checkbox" class="custom-control-input" id="is_active_{{ $option->id }}" name="is_active" value="1" {{ ($option->is_active == '1') ? 'checked' : '' }}>
+                        <label class="custom-control-label" for="is_active_{{ $option->id }}"> Activado</label>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <p class="mb-0">Al guardar la información de esta opción se activará automáticamente. El usuario podra seleccionarla en el proceso de checkout.</p>
+                    </div>
                 </div>
+
                 <div class="modal-footer">
-                    
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar Información</button>
                 </div>
@@ -408,38 +467,62 @@
             {{ csrf_field() }}
                 <div class="modal-body pd-25">
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-7">
                             <div class="form-group mt-2">
-                                <label>Nombre</label>
-                                <input type="text" class="form-control" name="name" />
+                                <label>Descripción <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" placeholder="Envío Estándar" required />
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <div class="form-group mt-2">
-                                <label>Tiempo de entrega</label>
-                                <input type="text" class="form-control" name="delivery_time" />
+                                <label>Tipo <span class="text-danger">*</span></label>
+                                <select id="typeSelect" class="form-control" name="type" required>
+                                    <option value="pickup">Recolección en Tienda</option>
+                                    <option value="delivery" selected>Envío a Domicilio</option>
+                                </select>
                             </div>
                         </div>
-                    </div>
 
-                    <label>Precio</label>
-                        <div class="d-flex">
-                            <div class="input-group ">
-                            <input type="text" class="form-control" id="manual_method_cost" name="price" placeholder="0.00">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">
-                                        @if($config->currency_id=='2')
-                                        MXN
-                                        @else
-                                        USD
-                                        @endif
-                                    </span>
-                                </div>
+                        <div class="col-md-5">
+                            <div class="form-group mt-2">
+                                <label>Tiempo de entrega <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="delivery_time" placeholder="3-5 días hábiles" required/>
                             </div>
                         </div>
-                        <div class="form-group mt-2">
-                       <!-- <label>Icono</label>-->
-                        <input type="hidden" class="form-control" name="icon" value="1" />
+
+                        <div class="col-md-7">
+                            <label class="mt-2">Precio  <span class="text-danger">*</span></label>
+                                <div class="d-flex">
+                                    <div class="input-group">
+                                    <input type="text" class="form-control" id="manual_method_cost" name="price" placeholder="0.00" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                @if($config->currency_id=='2')
+                                                MXN
+                                                @else
+                                                USD
+                                                @endif
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group mt-2">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group mt-2">
+                                <label>Imagen / Ícono <span class="text-info">(Opcional)</span></label>
+                                <input type="file" class="form-control" name="icon" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-12" id="locationInfo" style="display: none;">
+                            <div class="form-group mt-2">
+                                <label>Dirección <span class="text-info">(Opcional)</span></label>
+                                <textarea name="location" class="form-control" rows="4"></textarea>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="custom-control custom-checkbox mb-3">
@@ -450,10 +533,9 @@
                     <div class="alert alert-warning">
                         <p class="mb-0">Al guardar la información de esta opción se activará automáticamente. El usuario podra seleccionarla en el proceso de checkout.</p>
                     </div>
-
                 </div>
+
                 <div class="modal-footer">
-                    
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar Información</button>
                 </div>
@@ -528,17 +610,25 @@
 @endsection
 
 @push('scripts')
-   <script src="{{ asset('lib/cleave.js/cleave.min.js') }}"></script>
-    <script type="text/javascript">
-        var cleaveA = new Cleave('#manual_method_cost', {
-          numeral: true,
-          numeralThousandsGroupStyle: 'thousand'
-        });
+@foreach($shipment_options as $option)
+<script>
+    $('#typeSelect_{{ $option->id }}').on('change', function(e){
+        if($(this).val() == 'pickup'){
+            $('#locationInfo_{{ $option->id }}').show();
+        }else{
+            $('#locationInfo_{{ $option->id }}').hide();
+        }
+    })
+</script>
+@endforeach
 
-           var cleaveB = new Cleave('#value', {
-              numeral: true,
-              numeralThousandsGroupStyle: 'thousand'
-            });
-           
-    </script>
+<script>
+    $('#typeSelect').on('change', function(e){
+        if($(this).val() == 'pickup'){
+            $('#locationInfo').show();
+        }else{
+            $('#locationInfo').hide();
+        }
+    })
+</script>
 @endpush

@@ -3,6 +3,9 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
+use DB;
+use Auth;
+use Image;
 use Session;
 
 use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
@@ -10,78 +13,78 @@ use Illuminate\Http\Request;
 
 class ShipmentOptionsController extends Controller
 {
-
-     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    public function create()
-    {
-        //
-    }
-
     public function store(Request $request)
     {
-          $this -> validate($request, array(
+        $this -> validate($request, array(
             'name' => 'required',
-             'delivery_time' => 'required'
+            'type' => 'required',
+            'delivery_time' => 'required',
+            'price' => 'required'
         ));
 
         // Guardar datos en la base de datos
-        $shipping = new ShipmentOption;
+        $option = new ShipmentOption;
 
-        $shipping->name = $request->name;
-        $shipping->delivery_time = $request->delivery_time;
-        $shipping->is_active = $request->is_active;
-        $shipping->icon = $request->icon;
-        $shipping->price = $request->price;
-        $shipping->save();
+        $option->name = $request->name;
+        $option->type = $request->type;
+        $option->delivery_time = $request->delivery_time;
+        $option->is_active = $request->is_active;
+        $option->price = $request->price;
+        $option->location = $request->location;
+
+        if ($request->hasFile('icon')) {
+            $icon = $request->file('icon');
+            $filename = 'option_' . time() . '.' . $icon->getClientOriginalExtension();
+            $location = public_path('img/' . $filename);
+
+            Image::make($icon)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $option->icon = $filename;
+        }
+
+        $option->save();
 
         // Mensaje de session
-        Session::flash('success', 'Tu información de opciones de envio se guardó correctamente en la base de datos.');
+        Session::flash('success', 'La opción de envío fue configurada exitosamente. Ahora tus clientes pueden usarla en el proceso de compra.');
 
         // Enviar a vista
         return redirect()->back();
     }
 
-    public function show(shipping_options $shipping_options)
-    {
-
-    }
-
-
-    public function edit(shipping_options $shipping_options)
-    {
-
-    }
-
     public function update(Request $request, $id)
     {
-     //Validar
-           $this -> validate($request, array(
+        //Validar
+        $this -> validate($request, array(
             'name' => 'required',
-             'delivery_time' => 'required'
+            'type' => 'required',
+            'delivery_time' => 'required',
+            'price' => 'required'
         ));
 
         // Guardar datos en la base de datos
-        $shipping = ShipmentOption::find($id);
-        $shipping->name = $request->name;
-        $shipping->delivery_time = $request->delivery_time;
-        $shipping->is_active = $request->is_active;
-         $shipping->icon = $request->icon;
-        $shipping->price = $request->price;
+        $option = ShipmentOption::find($id);
 
+        $option->name = $request->name;
+        $option->type = $request->type;
+        $option->delivery_time = $request->delivery_time;
+        $option->is_active = $request->is_active;
+        $option->price = $request->price;
+        $option->location = $request->location;
 
-        $shipping->save();
+        if ($request->hasFile('icon')) {
+            $icon = $request->file('icon');
+            $filename = 'option_' . time() . '.' . $icon->getClientOriginalExtension();
+            $location = public_path('img/' . $filename);
+
+            Image::make($icon)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $option->icon = $filename;
+        }
+
+        $option->save();
 
         // Mensaje de session
-        Session::flash('success', 'Tu información de opciones de envio se guardó correctamente en la base de datos.');
+        Session::flash('success', 'Tu información de opciones de envio se guardó editó en la base de datos.');
 
         // Enviar a vista
         return redirect()->back();
@@ -89,9 +92,8 @@ class ShipmentOptionsController extends Controller
 
     public function destroy($id)
     {
-          $shipping = ShipmentOption::find($id);
-
-        $shipping->delete();
+        $option = ShipmentOption::find($id);
+        $option->delete();
 
         Session::flash('success', 'La opcion de envio fue eliminada de manera correcta.');
 

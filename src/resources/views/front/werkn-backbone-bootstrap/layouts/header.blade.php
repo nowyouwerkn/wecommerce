@@ -16,27 +16,6 @@
                     @endif
                 </ul>
             </div>
-
-            <!--desactivado-->
-            <!--IDIOMA Y MONEDA->
-            <div class="col-md-6 text-end">
-                <ul class="list-inline mb-0">
-                    <li class="list-inline-item">
-                        <select class="form-select form-select-sm" disabled>
-                            <option value="">English</option>
-                            <option value="" selected>Español</option>
-                        </select>
-                    </li>
-                    <li class="list-inline-item">
-                        <select class="form-select form-select-sm" disabled>
-                            <option value="">USD</option>
-                            <option value="">EUR</option>
-                            <option value="" selected="">MXN</option>
-                        </select>
-                    </li>
-                </ul>
-            </div>
-            <--END-->
         </div>
     </div>
 </header>
@@ -80,15 +59,6 @@
             <div class="col-5 text-end">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-
-                        <!--Botón->
-                        <a class="openSearch" href="javascript:void(0)">
-                            <div class="d-flex align-items-center">
-                                <ion-icon name="search-outline" class="me-2"></ion-icon>
-                                <p class="mb-0">Encuentra tu favorito</p>
-                            </div>
-                        </a>
-                        <--Botón-->
                         <form role="search" action="{{ route('search.query') }}" class="catalog-search ">
                             <div class="input-group input-group-search d-flex align-items-center">
                                 <div class="input-group-prepend">
@@ -247,9 +217,10 @@
                 @endif
             @endforeach
             <hr>
-             <li><a class="link link--metis" href="{{ route('utilities.tracking.index') }}">Seguimiento de Orden</a></li>
+            <li><a class="link link--metis" href="{{ route('utilities.tracking.index') }}">Seguimiento de Orden</a></li>
         </ul>
     </div>
+    
     <!-- user -->
     <div class="sidebar-user">
         @guest
@@ -303,7 +274,7 @@
     }
 </script>
 <script>
-    $(function () {
+$(function () {
     $('.openSearch').on('click', function(event) {
         event.preventDefault();
         $('#search').addClass('open');
@@ -325,7 +296,6 @@
           }
       });
     });
-
-    });
+});
 </script>
 @endpush

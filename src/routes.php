@@ -219,7 +219,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
 
     Route::resource('newsletter', Nowyouwerkn\WeCommerce\Controllers\NewsletterController::class); //
 
-
     Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
     Route::get('exportar-ordenes', 'Nowyouwerkn\WeCommerce\Controllers\OrderController@export')->name('export.orders');
 
@@ -231,6 +230,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::put('/orders/{id}/cambiar-estado', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@changeStatus',
         'as' => 'order.status',
+    ]);
+
+    Route::get('/cambiar-estado-orden/{id}/{status_string}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@changeStatusStatic',
+        'as' => 'order.status.static',
     ]);
 
     Route::resource('orders/notes', Nowyouwerkn\WeCommerce\Controllers\OrderNoteController::class); //
@@ -335,8 +339,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::get('support', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@shipping')->name('support.help');
 
     /* Rutas de Correo */
-    Route::get('send_order_email','Nowyouwerkn\WeCommerce\Controllers\NotificationController@order_email');
-
     Route::post('/resend-order-mail/{order_id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\NotificationController@resendOrder',
         'as' => 'resend.order.mail',

@@ -212,7 +212,6 @@ class FrontController extends Controller
 
     public function catalogPromo()
     {
-
         $today_date = Carbon::today();
 
         $products = Product::with('category')->orderBy('created_at', 'desc')->where('status', 'Publicado')->where('has_discount', '1')
@@ -525,7 +524,6 @@ class FrontController extends Controller
 
     public function checkout()
     {
-
         if (!Session::has('cart')) {
             return view('front.theme.' . $this->theme->get_name() . '.cart');
         }
@@ -547,7 +545,7 @@ class FrontController extends Controller
 
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $store_shipping = ShipmentMethod::where('is_active', true)->first();
-        $shipment_options = ShipmentOption::where('is_active', true)->get();
+        $shipment_options = ShipmentOption::where('is_active', true)->orderBy('price', 'asc')->get();
 
         if (empty($store_tax)) {
             $tax_rate = 0;
@@ -555,9 +553,8 @@ class FrontController extends Controller
             $tax_rate = ($store_tax->tax_rate)/100 + 1;
         }
 
-
-        // Reglas de Envios
-        if (empty($store_shipping)) {
+        // Reglas de Envios y Opciones de Envío
+        if (empty($store_shipping) or $shipment_options->count() > 0) {
             $shipping = '0';
         }else{
             if ($store_shipping->cost == '0') {
@@ -713,7 +710,6 @@ class FrontController extends Controller
                 $product_price = $product['item']['price'];
             }
 
-
             // Iva Incluido
             if($has_tax == true){
                 $subtotal_inc_iva += ($product_price * $product['qty']) / ($tax_rate);
@@ -733,7 +729,6 @@ class FrontController extends Controller
                 $total_no_iva += $specific_subtotal + $shipping;
             }
         }
-
 
         // Totales
         $subtotal = $subtotal_inc_iva + $subtotal_no_iva;
@@ -827,6 +822,7 @@ class FrontController extends Controller
     public function postCheckout(Request $request)
     {
         $currency_value = $this->store_config->get_currency_code();
+
         if($currency_value == '1'){
             $currency_value = 'USD';
         }
@@ -839,9 +835,9 @@ class FrontController extends Controller
                'email' => 'unique:users|required|max:255',
             ];
 
-              $customMessages = [
-                'unique' => 'Este correo ya esta registrado en el sistema. ¿Eres tu? Inicia sesión. '
-             ];
+            $customMessages = [
+                'unique' => 'Este correo ya esta registrado en el sistema. ¿Eres tu? Inicia sesión.'
+            ];
 
             //Validar
             $this->validate($request, $rules, $customMessages);
@@ -916,18 +912,17 @@ class FrontController extends Controller
             'name' => 'required|max:255',
             'last_name' => 'required',
             'phone' => 'required',
-            'street' => 'required',
-            'street_num' => 'required',
-            'suburb' => 'required',
-            'postal_code' => 'required',
-            'country' => 'required',
-            'state' => 'required',
-            'city' => 'required',
-            'references' => 'required',
+            'street' => 'sometimes',
+            'street_num' => 'sometimes',
+            'suburb' => 'sometimes',
+            'postal_code' => 'sometimes',
+            'country' => 'sometimes',
+            'state' => 'sometimes',
+            'city' => 'sometimes',
+            'references' => 'sometimes',
         ));
 
         if ($request->method == 'Pago con Tarjeta') {
-
             if (isset($request->street_billing)) {
                 $this -> validate($request, array(
                     'card_number' => 'required|max:255',
@@ -953,42 +948,36 @@ class FrontController extends Controller
                     'card-cvc' => 'required|max:4',
                 ));
             }
-
         }
 
         if ($payment_method->supplier == 'Conekta') {
             require_once(base_path() . '/vendor/conekta/conekta-php/lib/Conekta/Conekta.php');
             if ($payment_method->sandbox_mode == '1') {
                 $private_key_conekta = $payment_method->sandbox_private_key;
-            }elseif ($payment_method->sandbox_mode == '0') {
+            }else{
                 $private_key_conekta = $payment_method->private_key;
             }
             \Conekta\Conekta::setApiKey($private_key_conekta);
             \Conekta\Conekta::setApiVersion("2.0.0");
             \Conekta\Conekta::setLocale('es');
-
         }
 
         if ($payment_method->supplier == 'Stripe') {
-
             if ($payment_method->sandbox_mode == '1') {
                 $private_key_stripe = $payment_method->sandbox_private_key;
-            }elseif ($payment_method->sandbox_mode == '0') {
+            }else{
                 $private_key_stripe = $payment_method->private_key;
             }
             Stripe::setApiKey($private_key_stripe);
-
         }
 
         if ($payment_method->supplier == 'MercadoPago') {
-
             if ($payment_method->sandbox_mode == '1') {
                 $private_key_mercadopago = $payment_method->sandbox_private_key;
-            }elseif ($payment_method->sandbox_mode == '0') {
+            }else{
                 $private_key_mercadopago = $payment_method->private_key;
             }
             MercadoPago\SDK::setAccessToken($private_key_mercadopago);
-
         }
 
         $oldCart = Session::get('cart');
@@ -1008,6 +997,32 @@ class FrontController extends Controller
 
         $client_name = $request->name . ' ' . $request->last_name;
 
+        /* Definición de Opción de Envío */
+        $shipment_option = ShipmentOption::where('type', 'pickup')->where('id', $request->shipping_option)->first();
+
+        if (!empty($shipment_option)) {
+            // Si el método de envio es de Recolección (pickup)
+            $street = 'Tienda';
+            $street_num = 'Tienda';
+            $country = 'Tienda';
+            $state = 'Tienda';
+            $postal_code = 'Tienda';
+            $city = 'Tienda';
+            $phone = 'Tienda';
+            $suburb = 'Tienda';
+            $references = $shipment_option->name;
+        }else{
+            $street = $request->input('street');
+            $street_num = $request->input('street_num');
+            $country = $request->input('country');
+            $state = $request->input('state');
+            $postal_code = $request->input('postal_code');
+            $city = $request->input('city');
+            $phone = $request->input('phone');
+            $suburb = $request->input('suburb');
+            $references = $request->input('references');
+        }
+
         switch ($payment_method->supplier) {
             case 'Conekta':
                 if ($request->method == 'Pago con Oxxo') {
@@ -1025,12 +1040,12 @@ class FrontController extends Controller
 
                                 "shipping_contact" => array(
                                     "address" => array(
-                                        "street1" => $request->input('street'),
-                                        "street2" => $request->input('street_num'),
-                                        "postal_code" => $request->input('postal_code'),
-                                        "city" => $request->input('city'),
-                                        "state" => $request->input('state'),
-                                        "country" => $request->input('country')
+                                        "street1" => $street,
+                                        "street2" => $street_num,
+                                        "postal_code" => $postal_code,
+                                        "city" => $city,
+                                        "state" => $state,
+                                        "country" => $country
                                     ),
                                     "phone" => $request->phone,
                                     "receiver" => $client_name,
@@ -1081,12 +1096,12 @@ class FrontController extends Controller
 
                                 "shipping_contact" => array(
                                     "address" => array(
-                                        "street1" => $request->input('street'),
-                                        "street2" => $request->input('street_num'),
-                                        "postal_code" => $request->input('postal_code'),
-                                        "city" => $request->input('city'),
-                                        "state" => $request->input('state'),
-                                        "country" => $request->input('country')
+                                        "street1" => $street,
+                                        "street2" => $street_num,
+                                        "postal_code" => $postal_code,
+                                        "city" => $city,
+                                        "state" => $state,
+                                        "country" => $country
                                     ),
                                     "phone" => $request->phone,
                                     "receiver" => $client_name,
@@ -1239,17 +1254,15 @@ class FrontController extends Controller
                     $order = new Order();
 
                     $order->cart = serialize($cart);
-                    $order->street = $request->input('street');
-                    $order->street_num = $request->input('street_num');
-                    //$order->between_streets = $request->input('between_streets');
-                    $order->country = $request->input('country');
-                    $order->state = $request->input('state');
-                    $order->postal_code = $request->input('postal_code');
-                    $order->city = $request->input('city');
-                    $order->country = $request->input('country');
-                    $order->phone = $request->input('phone');
-                    $order->suburb = $request->input('suburb');
-                    $order->references = $request->input('references');
+                    $order->street = $street;
+                    $order->street_num = $street_num;
+                    $order->country = $country;
+                    $order->state = $state;
+                    $order->postal_code = $postal_code;
+                    $order->city = $city;
+                    $order->phone = $phone;
+                    $order->suburb = $suburb;
+                    $order->references = $references;
                     $order->shipping_option = $request->shipping_option;
 
                     /* Money Info */
@@ -1308,16 +1321,15 @@ class FrontController extends Controller
                     $order = new Order();
 
                     $order->cart = serialize($cart);
-                    $order->street = $request->input('street');
-                    $order->street_num = $request->input('street_num');
-                    $order->country = $request->input('country');
-                    $order->state = $request->input('state');
-                    $order->postal_code = $request->input('postal_code');
-                    $order->city = $request->input('city');
-                    $order->country = $request->input('country');
-                    $order->phone = $request->input('phone');
-                    $order->suburb = $request->input('suburb');
-                    $order->references = $request->input('references');
+                    $order->street = $street;
+                    $order->street_num = $street_num;
+                    $order->country = $country;
+                    $order->state = $state;
+                    $order->postal_code = $postal_code;
+                    $order->city = $city;
+                    $order->phone = $phone;
+                    $order->suburb = $suburb;
+                    $order->references = $references;
                     $order->shipping_option = $request->shipping_option;
 
                     if (isset($billing_shipping_id)) {
@@ -1374,21 +1386,21 @@ class FrontController extends Controller
 
         // GUARDAR LA DIRECCIÓN
         if ($request->save_address == 'true') {
-            $check = UserAddress::where('street', $request->street)->count();
+            $check = UserAddress::where('street', $street)->count();
 
             if ($check == NULL || $check == 0) {
                 $address = new UserAddress;
                 $address->name = 'Compra_' . Str::substr($request->card_number, 15);
                 $address->user_id = $user->id;
-                $address->street = $request->street;
-                $address->street_num = $request->street_num;
-                $address->postal_code = $request->postal_code;
-                $address->city = $request->city;
-                $address->country = $request->country;
-                $address->state = $request->state;
-                $address->phone = $request->phone;
-                $address->suburb = $request->suburb;
-                $address->references = $request->references;
+                $address->street = $street;
+                $address->street_num = $street_num;
+                $address->postal_code = $postal_code;
+                $address->city = $city;
+                $address->country = $country;
+                $address->state = $state;
+                $address->phone = $phone;
+                $address->suburb = $suburb;
+                $address->references = $references;
                 $address->is_billing = false;
 
                 $address->save();
@@ -1435,16 +1447,15 @@ class FrontController extends Controller
         $order = new Order();
 
         $order->cart = serialize($cart);
-        $order->street = $request->input('street');
-        $order->street_num = $request->input('street_num');
-        $order->country = $request->input('country');
-        $order->state = $request->input('state');
-        $order->postal_code = $request->input('postal_code');
-        $order->city = $request->input('city');
-        $order->country = $request->input('country');
-        $order->phone = $request->input('phone');
-        $order->suburb = $request->input('suburb');
-        $order->references = $request->input('references');
+        $order->street = $street;
+        $order->street_num = $street_num;
+        $order->country = $country;
+        $order->state = $state;
+        $order->postal_code = $postal_code;
+        $order->city = $city;
+        $order->phone = $phone;
+        $order->suburb = $suburb;
+        $order->references = $references;
         $order->shipping_option = $request->shipping_option;
 
         if (isset($billing_shipping_id)) {
@@ -1457,7 +1468,7 @@ class FrontController extends Controller
         $order->sub_total = $request->sub_total;
         $order->tax_rate = $request->tax_rate;
         $order->discounts = $request->discounts;
-        $order->coupon_id = null;
+        $order->coupon_id = 0;
         $order->total = $request->final_total;
         $order->payment_total = $request->final_total;
         /*------------*/
@@ -1520,7 +1531,6 @@ class FrontController extends Controller
 
             $this->notification->send($type, $by ,$data, $model_action, $model_id);
         }
-
 
         // Correo de confirmación de compra
         $mail = MailConfig::first();

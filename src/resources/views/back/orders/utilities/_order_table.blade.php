@@ -101,7 +101,14 @@
                 </span>
             </td>
 
-            <td>{{ $order->user->name }}</td>
+            <td>
+                @if($order->user == NULL)
+                    <span class="badge badge-warning"><i class="fas fa-user-alt-slash"></i> Eliminado por Administración</span>
+                @else
+                    {{ $order->user->name ?? ''}}
+                @endif
+                
+            </td>
 
             <td>
                 <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($order->created_at)->format('d M Y - h:ia') }}</span>
@@ -198,22 +205,42 @@
                             Empaquetado
                             </a>
 
-                            <a class="
-                            dropdown-item
-                            @if ($order->status == 'Enviado' || $order->status == 'Entregado')
-                            disabled
-                            @endif
-                            " href="" data-value="Enviado">
-                            <span class="step-style">
-                                @if ($order->status == 'Enviado' || $order->status == 'Entregado')    
-                                <i class="fas fa-check"></i></span>
-                                @else
-                                3
+                            @if($order->shipment == NULL)
+                                <a class="
+                                dropdown-item
+                                @if ($order->status == 'Enviado' || $order->status == 'Entregado')
+                                disabled
                                 @endif
-                            </span> 
-                            Enviado
-                            </a>
-                            
+                                " href="" data-value="Enviado">
+                                <span class="step-style">
+                                    @if ($order->status == 'Enviado' || $order->status == 'Entregado')    
+                                    <i class="fas fa-check"></i></span>
+                                    @else
+                                    3
+                                    @endif
+                                </span> 
+                                Enviado
+                                </a>
+                            @else
+                                @if($order->shipment->type == 'delivery')
+                                    <a class="
+                                    dropdown-item
+                                    @if ($order->status == 'Enviado' || $order->status == 'Entregado')
+                                    disabled
+                                    @endif
+                                    " href="" data-value="Enviado">
+                                    <span class="step-style">
+                                        @if ($order->status == 'Enviado' || $order->status == 'Entregado')    
+                                        <i class="fas fa-check"></i></span>
+                                        @else
+                                        3
+                                        @endif
+                                    </span> 
+                                    Enviado
+                                    </a>
+                                @endif
+                            @endif
+
                             <a class="
                             dropdown-item
                             @if ($order->status == 'Entregado')
