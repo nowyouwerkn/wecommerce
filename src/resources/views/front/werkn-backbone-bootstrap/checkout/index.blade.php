@@ -42,13 +42,6 @@
 
                     <hr class="responsive-two">
 
-                    <div class="we-co--title d-flex align-items-center justify-content-between">
-                        <h4 class="responsive-one"><span class="we-co--progress-indicator"></span> Dirección de Envío</h4>
-                    </div>
-                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')
-
-                    <hr class="responsive-two">
-
                     @if($shipment_options->count() >0)
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Métodos de Envío</h4>
@@ -56,6 +49,15 @@
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
                     @endif
 
+                    <hr class="responsive-two">
+
+                    <div id="shipmentOptionChecker" style="display:none;">
+                        <div class="we-co--title d-flex align-items-center justify-content-between">
+                            <h4 class="responsive-one"><span class="we-co--progress-indicator"></span> Dirección de Envío</h4>
+                        </div>
+                        @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')
+                    </div>
+                    
                     <hr class="responsive-two">
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>
@@ -119,9 +121,18 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
+        $('#btnBuy').attr('disabled', true);
+
         $('.shipping-options a').click(function() {
             event.preventDefault();
+            $('#btnBuy').attr('disabled', false);
             console.log('Seleccionado:' , $(this).attr('data-value'));
+
+            if($(this).attr('data-type') == 'delivery'){
+                $('#shipmentOptionChecker').fadeIn();
+            }else{
+                $('#shipmentOptionChecker').fadeOut();
+            }
 
             $('.shipping-options a').removeClass('active');
 

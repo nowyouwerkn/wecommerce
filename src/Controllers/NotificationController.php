@@ -145,32 +145,6 @@ class NotificationController extends Controller
         return view('wecommerce::mail.mail_test');
     }
     
-    public function order_email() {
-        $mail = MailConfig::first();
-
-        config(['mail.driver'=> $mail->mail_driver]);
-        config(['mail.host'=>$mail->mail_host]);
-        config(['mail.port'=>$mail->mail_port]);   
-        config(['mail.username'=>$mail->mail_username]);
-        config(['mail.password'=>$mail->mail_password]);
-        config(['mail.encryption'=>$mail->mail_encryption]);
-
-        $user = User::find($id);
-
-        $order = Order::where('user_id', $user->id)->first();
-        $order->cart = unserialize($order->cart);
-
-        $data = array('name'=> $user->name, 'email' => $user->email, 'orden'=> $order, 'total'=> $order->cart->totalPrice, 'num_orden'=> $order->id );
-
-        Mail::send('wecommerce::mail.order_completed', $data, function($message) {
-            $message->to('hey@werkn.mx', $user->name)->subject
-            ('Gracias por tu compra');
-            $message->from('noreply@werkn.mx','Tienda');
-        });
-
-        echo "Correo HTML Estándar. Revisa tu bandeja de entrada.";
-    }
-
     public function resendOrder(Request $request, $order_id) {
         $mail = MailConfig::first();
 

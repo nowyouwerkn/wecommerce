@@ -17,7 +17,7 @@
 	<meta name="format-detection" content="telephone=no" />
 	<meta name="x-apple-disable-message-reformatting" />
 
-	<title>Correo de Notificación - Tienda en Línea</title>
+	<title>Correo de Notificaci&oacute;n - Tienda en Línea</title>
 </head>
 <body style="
 	padding:0 !important; 
@@ -47,7 +47,13 @@
 				<tr>
 					<td>
 						<h1 style="margin-bottom:0px; text-transform: uppercase;">GRACIAS {{ $user->name }}, ESTAMOS TRABAJANDO EN TU PEDIDO.</h1>
+						@if($order->shipment == NULL)
 						<p style="margin-top: 10px; line-height: 1.8;">Tu pedido est&aacute; en proceso. Estamos trabajando para empacarlo y dejarlo en tu puerta, pronto recibir&aacute;s un correo electr&oacute;nico de confirmaci&oacute;n con una guía de seguimiento.</p>
+						@else
+							@if($order->shipment->type == 'pickup')
+							<p style="margin-top: 10px; line-height: 1.8;">Tu pedido est&aacute; en proceso. Estamos trabajando para empacarlo y que puedas recogerlo en {{ $order->shipment->name }}, pronto recibir&aacute;s un correo electr&oacute;nico de confirmaci&oacute;n de recolecci&oacute;n.</p>
+							@endif
+						@endif
 					</td>
 				</tr>
 			</tbody>
@@ -55,6 +61,7 @@
 		<table style="width: 100%; background: #2f3542; color: #f1f2f6;"  cellspacing="20" cellpadding="20">
 			<tbody>
 				<tr>
+					@if($order->shipment == NULL)
 					<td style="width: 50%; vertical-align: top;">
 						<p style="margin-bottom:10px;"><strong>Enviar a:</strong></p>
 						<ul style="margin-top:5px;list-style: none; padding: 0px;">
@@ -64,6 +71,17 @@
 							<li>{{ $order->postal_code }}, {{ $order->city . ',' . $order->state }}</li>
 						</ul>
 					</td>
+					@else
+						@if($order->shipment->type == 'pickup')
+						<td style="width: 50%; vertical-align: top;">
+							<p style="margin-bottom:10px;"><strong>Transportando a:</strong></p>
+							<ul style="margin-top:5px;list-style: none; padding: 0px;">
+								<li>{{ $order->shipment->name }}</li>
+								<li>{{ $order->shipment->location }}</li>
+							</ul>
+						</td>
+						@endif
+					@endif
 
 					<td style="width: 50%; vertical-align: top;">
 						<p style="margin-bottom:10px;"><strong>Número de pedido:</strong></p>
@@ -111,8 +129,12 @@
 							<p style="margin-top:5px;">Paypal</p>
 							@break
 
+							@case('MercadoPago')
+							<p style="margin-top:5px;">MercadoPago</p>
+							@break
+
 							@default
-							<p style="margin-top:5px;">Tarjeta: XXXX XXXX XXXX {{ $order->card_digits }}</p>
+							<p style="margin-top:5px;">Tarjeta: xxxx xxxx xxxx {{ $order->card_digits }}</p>
 							@break
 						@endswitch
 						
@@ -134,40 +156,40 @@
 				<tr>
 					<td>
 						<ul style="list-style: none;display: inline-flex;padding: 0px;">
-                  <li style="padding:0px 5px;"><a href="">Inicio</a></li>
-                  <li style="padding:0px 5px;"><a href="">Catálogo</a></li>
+							<li style="padding:0px 5px;"><a href="{{ route('index') }}">Inicio</a></li>
+							<li style="padding:0px 5px;"><a href="{{ route('catalog.all') }}">Catálogo</a></li>
 
-                  @foreach($legals as $legal)
-                  <li style="padding:0px 5px;">
-                      <a href="{{ route('legal.text' , $legal->type) }}">
-                          @switch($legal->type)
-                              @case('Returns')
-                                  Política de Devoluciones
-                                  @break
+							@foreach($legals as $legal)
+							<li style="padding:0px 5px;">
+								<a href="{{ route('legal.text' , $legal->type) }}">
+									@switch($legal->type)
+										@case('Returns')
+											Política de Devoluciones
+											@break
 
-                              @case('Privacy')
-                                  Política de Privacidad
-                                  @break
+										@case('Privacy')
+											Política de Privacidad
+											@break
 
-                              @case('Terms')
-                                  Términos y Condiciones
-                                  @break
+										@case('Terms')
+											Términos y Condiciones
+											@break
 
-                              @case('Shipment')
-                                  Política de Envíos
-                                  @break
+										@case('Shipment')
+											Política de Envíos
+											@break
 
-                              @default
-                                  Hubo un problema, intenta después.
-                          @endswitch 
-                      </a>
-                  </li>
-                  @endforeach
-              </ul>
+										@default
+											Hubo un problema, intenta después.
+									@endswitch 
+								</a>
+							</li>
+							@endforeach
+						</ul>
 
-						  <p>Si tienes alguna pregunta, no dudes en contactarnos (Si respondes a este correo electr&oacute;nico, no podremos verlo)</p>
-						  <p>&nbsp;</p>
-						  <p>2022 {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
+						<p>Si tienes alguna pregunta, no dudes en contactarnos (Si respondes a este correo electr&oacute;nico, no podremos verlo)</p>
+						<p>&nbsp;</p>
+						<p>2022 {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
 					</td>
 				</tr>
 			</tbody>

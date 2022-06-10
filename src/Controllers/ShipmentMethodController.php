@@ -19,7 +19,7 @@ class ShipmentMethodController extends Controller
 
         $shipments = ShipmentMethod::all();
         $shipment_rules = ShipmentMethodRule::all();
-        $shipment_options = ShipmentOption::all();
+        $shipment_options = ShipmentOption::orderBy('price', 'asc')->get();
 
         $ups_method = ShipmentMethod::where('supplier', 'UPS')->first();
         $manual_method = ShipmentMethod::where('type', 'manual')->first();

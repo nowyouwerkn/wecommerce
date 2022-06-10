@@ -111,43 +111,43 @@
             <div class="col-md-4">
                 <div class="d-flex align-items-center status-row">
                     <div class="status-box btn-{{ Str::slug($order->status) }}">
-                         @switch($order->status)
-                                @case('Pago Pendiente')
-                                    <i class="fas fa-exclamation mr-1"></i> 
-                                    @break
+                        @switch($order->status)
+                            @case('Pago Pendiente')
+                                <i class="fas fa-exclamation mr-1"></i> 
+                                @break
 
-                                @case('Pagado')
-                                    <i class="fas fa-check mr-1"></i> 
-                                    @break
+                            @case('Pagado')
+                                <i class="fas fa-check mr-1"></i> 
+                                @break
 
-                                @case('Empaquetado')
-                                    <i class="fas fa-box mr-1"></i>
-                                    @break
+                            @case('Empaquetado')
+                                <i class="fas fa-box mr-1"></i>
+                                @break
 
-                                @case('Enviado')
-                                    <i class="fas fa-truck mr-1"></i> 
-                                    @break
+                            @case('Enviado')
+                                <i class="fas fa-truck mr-1"></i> 
+                                @break
 
-                                @case('Entregado')
-                                    <i class="fas fa-dolly mr-1"></i>
-                                    @break
+                            @case('Entregado')
+                                <i class="fas fa-dolly mr-1"></i>
+                                @break
 
-                                @case('Cancelado')
-                                    <i class="fas fa-times mr-1"></i> 
-                                    @break
+                            @case('Cancelado')
+                                <i class="fas fa-times mr-1"></i> 
+                                @break
 
-                                @case('Expirado')
-                                    <i class="fas fa-times mr-1"></i> 
-                                    @break
+                            @case('Expirado')
+                                <i class="fas fa-times mr-1"></i> 
+                                @break
 
-                                @case('Sin Completar')
-                                    <i class="fas fa-user-clock"></i>
-                                    @break
+                            @case('Sin Completar')
+                                <i class="fas fa-user-clock"></i>
+                                @break
 
-                                @default
-                                    <i class="fas fa-check mr-1"></i> 
+                            @default
+                                <i class="fas fa-check mr-1"></i> 
 
-                            @endswitch
+                        @endswitch
                         
                         <span>{{ $order->status ?? 'Pagado'}}</span>
                     </div>
@@ -181,12 +181,14 @@
                 </div>
 
                 <div class="card mb-4">
+                    <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
+                        <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Resumen de Orden</h6>
+                    </div>
+
                     @if($order->cart == NULL)
                     <p class="alert alert-warning">Esta orden proviene de una importación de otro sistema. Es posible que la información mostrada esté incompleta.</p>
                     @endif
                     <div class="card-body">  
-                        <h4>Resumen de Orden</h4>
-                        <hr>
                         <div class="row align-items-center">
                             <div class="col">
                                 <h6 class="mb-0 mt-0">Total en Carrito:</h6>
@@ -203,6 +205,9 @@
                             <div class="col text-right">
                                 <p class="mb-0" style="font-size: 1.3em;"><strong>${{ number_format($order->shipping_rate, 2) ?? 'N/A' }}</strong></p>
                             </div>
+                            @if(!empty($shipping_option))
+                            <div class="col-12"><p class="mb-0 text-info">Seleccionado: {{ $shipping_option->name }}</p></div>
+                            @endif
                         </div>
                         <hr>
                         <div class="row align-items-center">
@@ -227,7 +232,11 @@
                                 <h6 class="mb-0 mt-0">Cupón usado:</h6>
                             </div>
                             <div class="col text-right">
-                                <p class="mb-0" style="font-size: 1.3em;"><strong>{{ $order->coupon_id, 2 ?? 'N/A' }}</strong></p>
+                                @if($order->coupon_id == 0 or $order->coupon_id == NULL)
+                                <p class="mb-0" style="font-size: 1.3em;">n/a</p>
+                                @else
+                                <p class="mb-0" style="font-size: 1.3em;"><strong>{{ $order->coupon_id ?? 'n/a' }}</strong></p>
+                                @endif
                             </div>
                         </div>
 
@@ -258,17 +267,12 @@
 
             <div class="col-md-8">
                 <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h4 class="mb-0">Carrito</h4>
-                            </div>
-                            <div class="col text-right">
-                                <p class="mb-0"><strong>Total: ${{ number_format($order->cart_total) }}</strong></p>
-                            </div>
-                        </div>
-                        <hr>
+                    <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
+                        <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Carrito</h6>
+                        <p class="mb-0"><strong>Total: ${{ number_format($order->cart_total) }}</strong></p>
+                    </div>
 
+                    <div class="card-body">
                         @if($order->cart == NULL)
                             <p class="alert alert-warning">Esta orden proviene de una importación de otro sistema. El "módulo carrito" no es compatible con la información y no puede mostrar los detalles.</p>
                         @else
@@ -293,120 +297,174 @@
                             </div>
                             @endforeach
                         @endif
+                    </div>
 
-                        <hr class="dont-print">
-                        <div class="d-flex justify-content-between">
-                            <a href="javascript:void(0)" data-toggle="modal" data-target="#resendMail" class="btn btn-outline-info dont-print"><i class="fas fa-envelope"></i> Reenviar confirmación de orden</a>
+                    <div class="card-footer bg-transparent pd-y-10 pd-sm-y-15 pd-x-10 pd-sm-x-20 dont-print">
+                        <nav class="nav nav-with-icon tx-13">
+                            <a href="javascript:void(0)" class="nav-link" data-toggle="modal" data-target="#resendMail"><i class="fas fa-envelope mr-2"></i> Reenviar confirmación de orden</a>
+                            @if(!empty($shipping_option) && $shipping_option->type == 'pickup')
 
-                            <a href="{{ route('order.packing.list', $order->id) }}" class="btn btn-outline-dark"><i class="fas fa-print"></i> Imprimir Lista de Empaque</a>
-                        </div>
+                            @else
+                            <a href="{{ route('order.packing.list', $order->id) }}" class="nav-link"><i class="fas fa-print mr-2"></i> Imprimir la lista de empaque</a>
+                            @endif
+                        </nav>
                     </div>
                 </div>
 
                 <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <h4 class="mb-0">Guía de Envío</h4>
-                                    </div>
-                                    <div class="col text-right dont-print">
-                                        <a data-toggle="modal" data-target="#trackingModal" class="btn btn-outline-secondary"><i class="iconsminds-box-close"></i> Adjuntar Guía</a>
-                                    </div>
+                    @if(!empty($shipping_option) && $shipping_option->type == 'pickup')
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
+                                    <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Recolección en Tienda</h6>
+                                    @if($order->status == 'Pagado')
+                                    <p class="mb-0 text-warning">Pedido pendiente de empaquetado</p>
+                                    @endif
+                                    
+                                    @if($order->status == 'Empaquetado')
+                                    <p class="mb-0 text-info">Pedido listo para Entregar</p>
+                                    @endif
+
+                                    @if($order->status == 'Entregado')
+                                    <p class="mb-0 text-success text-uppercase"><i class="fas fa-check"></i> Pedido Completo</p>
+                                    @endif
+
                                 </div>
-                                <hr>
+                                <div class="card-body pd-25">
+                                    <div class="d-flex justify-content-between">
+                                        <img src="{{ asset('assets/img/pickup_1.svg') }}" alt="Listo para Recolercar" class="mb-4" width="180">
+                                        <img src="{{ asset('assets/img/delivery_1.svg') }}" alt="Entregado al Cliente" class="mb-4" width="180">
+                                    </div>
 
-                                @if($order->trackings->count())
-                                    @foreach($order->trackings as $tracking)
-                                    <div class="card card-body tracking-card">
-                                        @if($tracking->status == 'En proceso')
-                                        <span class="badge badge-warning">{{ $tracking->status }}</span>
-                                        @endif
-                                        @if($tracking->status == 'Completado')
-                                        <span class="badge badge-success">{{ $tracking->status }}</span>
-                                        @endif
-                                        @if($tracking->status == 'Perdido')
-                                        <span class="badge badge-warning">{{ $tracking->status }}</span>
-                                        @endif
+                                    {{-- 
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    --}}
 
-                                        <p class="small-title">Número de Guía</p>
-                                        <div class="tracking-number">
-                                            <h4 class="mb-0">{{ $tracking->tracking_number }}</h4>
-                                        </div>
-
-                                        <p><em>{{ $tracking->products_on_order ?? 'No hay nota adjunta a esta guía.'}}</em></p>
-
-                                        @if($tracking->is_delivered  == true)
-                                        <a href="javascript:void(0)" class="btn btn-sm btn-success disabled"><i class="fas fa-check"></i> Entregado</a>
+                                    <div class="d-flex align-items-start justify-content-between">
+                                        @if($order->status == 'Empaquetado' or $order->status == 'Entregado')
+                                        <a href="" class="btn btn-sm pd-x-15 btn-white btn-uppercase disabled"><i class="fas fa-box mr-2"></i> Marcar como Empaquetado</a>
                                         @else
-                                        <a href="{{ route('tracking.complete', $tracking->id) }}" class="btn btn-sm btn-outline-info"><i class="fas fa-check"></i> Marcar Entregado</a>
-                                        @endif
+                                        <div>
+                                            <a href="{{ route('order.status.static', [$order->id, 'Empaquetado']) }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase"><i class="fas fa-box mr-2"></i> Marcar como Empaquetado</a>
+                                            <small class="text-mute mt-2 d-block">Se enviará un correo de notificación al comprador.</small>
+                                        </div>
                                         
-                                        <div class="d-flex align-items-center justify-content-between mt-2">
+                                        @endif
+
+                                        @if($order->status == 'Entregado')
+                                        <a href="" class="btn btn-sm pd-x-15 btn-white btn-uppercase disabled"><i class="fas fa-box-open mr-2"></i> Marcar como Entregado</a>
+                                        @else
+                                        <a href="{{ route('order.status.static', [$order->id, 'Entregado']) }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase"><i class="fas fa-box-open mr-2"></i> Marcar como Entregado</a>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @else            
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
+                                    <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Guías de Envío</h6>
+                                    <nav class="nav nav-with-icon tx-13">
+                                        <a href="" class="nav-link" data-toggle="modal" data-target="#trackingModal"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Adjuntar Guía</a>
+                                    </nav>
+                                </div>
+
+                                <div class="card-body">
+                                    @if($order->trackings->count())
+                                        @foreach($order->trackings as $tracking)
+                                        <div class="card card-body tracking-card">
+                                            @if($tracking->status == 'En proceso')
+                                            <span class="badge badge-warning">{{ $tracking->status }}</span>
+                                            @endif
+                                            @if($tracking->status == 'Completado')
+                                            <span class="badge badge-success">{{ $tracking->status }}</span>
+                                            @endif
+                                            @if($tracking->status == 'Perdido')
+                                            <span class="badge badge-warning">{{ $tracking->status }}</span>
+                                            @endif
+
+                                            <p class="small-title">Número de Guía</p>
+                                            <div class="tracking-number">
+                                                <h4 class="mb-0">{{ $tracking->tracking_number }}</h4>
+                                            </div>
+
+                                            <p><em>{{ $tracking->products_on_order ?? 'No hay nota adjunta a esta guía.'}}</em></p>
+
+                                            @if($tracking->is_delivered  == true)
+                                            <a href="javascript:void(0)" class="btn btn-sm btn-success disabled"><i class="fas fa-check"></i> Entregado</a>
+                                            @else
+                                            <a href="{{ route('tracking.complete', $tracking->id) }}" class="btn btn-sm btn-outline-info"><i class="fas fa-check"></i> Marcar Entregado</a>
+                                            @endif
                                             
-                                            <form method="POST" action="{{ route('tracking.destroy', $tracking->id) }}" style="display: inline-block; width: 15%;">
-                                                <button type="submit" class="btn btn-sm btn-outline-light" data-toggle="tooltip" data-original-title="Borrar">
-                                                    <i class="fas fa-trash" aria-hidden="true"></i>
-                                                </button>
-                                                {{ csrf_field() }}
-                                                {{ method_field('DELETE') }}
-                                            </form>
+                                            <div class="d-flex align-items-center justify-content-between mt-2">
+                                                
+                                                <form method="POST" action="{{ route('tracking.destroy', $tracking->id) }}" style="display: inline-block; width: 15%;">
+                                                    <button type="submit" class="btn btn-sm btn-outline-light" data-toggle="tooltip" data-original-title="Borrar">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                    {{ csrf_field() }}
+                                                    {{ method_field('DELETE') }}
+                                                </form>
 
-                                            <a href="" class="btn btn-sm btn-outline-light" style="width:100%; margin-left: 8px;">
-                                                <i class="fas fa-envelope"></i> Reenviar correo
-                                            </a>
-                                        </div> 
+                                                <a href="" class="btn btn-sm btn-outline-light" style="width:100%; margin-left: 8px;">
+                                                    <i class="fas fa-envelope"></i> Reenviar correo
+                                                </a>
+                                            </div> 
+                                        </div>
+                                        @endforeach
+                                    @else
+                                    <div class="text-center my-5">
+                                        <img src="{{ asset('assets/img/new_2.svg') }}" alt="No hay Guía" class="mb-4" width="180">
+                                        <h5 class="mb-0 px-5">Todavía no hay guías adjuntas para esta orden!</h5>
+                                        <p>Adjunta tu primera guía para gestionarla.</p>
                                     </div>
-                                    @endforeach
-                                @else
-                                <div class="text-center my-5">
-                                    <h4 class="mb-0">¡Todavía no se asigna una guía para esta orden!</h4>
-                                    <p>¡Realiza el proceso necesario para comenzar!</p>
-                                </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h5 class="mb-2 mt-1">Dirección de Envío </h5>
-                                        <ul class="list-unstyled">
-                                            <li><strong>Calle + Núm:</strong> {{ $order->street }} {{ $order->street_num }}</li>
-                                            <li><strong>Colonia:</strong> {{ $order->suburb }}</li>
-
-                                            <li><strong>Código Postal:</strong> {{ $order->postal_code }}</li>
-                                            <li><strong>Referencias:</strong> {{ $order->references }}</li>
-                                            <li><hr></li>
-                                            <li><strong>Ciudad:</strong> {{ $order->city }}</li>
-                                            <li><strong>Estado:</strong> {{ $order->state }}</li>
-                                            <li><strong>País:</strong> {{ $order->country }}</li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDhjSfxxL1-NdSlgkiDo5KErlb7rXU5Yw4&q={{ str_replace(' ', '-', $order->street . ' ' . $order->street_num) }},{{ $order->city }},{{ $order->state }},{{ $order->country }}" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen class="mt-0 dont-print"></iframe>
-                                    </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
+                                    <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Dirección de Envío</h6>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="list-unstyled">
+                                                <li><strong>Calle + Núm:</strong> {{ $order->street }} {{ $order->street_num }}</li>
+                                                <li><strong>Colonia:</strong> {{ $order->suburb }}</li>
+
+                                                <li><strong>Código Postal:</strong> {{ $order->postal_code }}</li>
+                                                <li><strong>Referencias:</strong> {{ $order->references }}</li>
+                                                <li><hr></li>
+                                                <li><strong>Ciudad:</strong> {{ $order->city }}</li>
+                                                <li><strong>Estado:</strong> {{ $order->state }}</li>
+                                                <li><strong>País:</strong> {{ $order->country }}</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDhjSfxxL1-NdSlgkiDo5KErlb7rXU5Yw4&q={{ str_replace(' ', '-', $order->street . ' ' . $order->street_num) }},{{ $order->city }},{{ $order->state }},{{ $order->country }}" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen class="mt-0 dont-print"></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 
                 <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h4 class="mb-0">Notas Internas</h4>
-                            </div>
-                            <div class="col text-right dont-print">
-                                <a data-toggle="modal" data-target="#noteModal" class="btn btn-outline-secondary"><i class="iconsminds-box-close"></i> Nueva Nota</a>
-                            </div>
-                        </div>
-                        <hr>
+                    <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
+                        <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Notas Internas</h6>
+                        <nav class="nav nav-with-icon tx-13">
+                            <a href="" class="nav-link" data-toggle="modal" data-target="#noteModal"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Nueva Nota</a>
+                        </nav>
+                    </div>
 
+                    <div class="card-body">
                         @if($order->notes->count())
                             @foreach($order->notes as $note)
                             <div class="note-row row align-items-center">
@@ -440,8 +498,8 @@
                 </div>
 
                 <div class="card mg-t-10 mb-4">
-                    <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                        <h6 class="mg-b-5">Histórico de esta Órden</h6>
+                    <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
+                        <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Histórico de Orden</h6>
                         @php
                             $logs = Nowyouwerkn\WeCommerce\Models\Notification::where('type', 'Orden')->where('model_id', $order->id)->get();
                         @endphp
