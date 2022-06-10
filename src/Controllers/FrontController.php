@@ -212,7 +212,6 @@ class FrontController extends Controller
 
     public function catalogPromo()
     {
-
         $today_date = Carbon::today();
 
         $products = Product::with('category')->orderBy('created_at', 'desc')->where('status', 'Publicado')->where('has_discount', '1')
@@ -555,7 +554,7 @@ class FrontController extends Controller
         }
 
         // Reglas de Envios y Opciones de Envío
-        if (empty($store_shipping) or !empty($shipment_options)) {
+        if (empty($store_shipping) or $shipment_options->count() > 0) {
             $shipping = '0';
         }else{
             if ($store_shipping->cost == '0') {

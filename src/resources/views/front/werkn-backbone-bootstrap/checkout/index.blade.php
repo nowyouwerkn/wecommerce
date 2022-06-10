@@ -42,7 +42,7 @@
 
                     <hr class="responsive-two">
 
-                    @if($shipment_options->count() >0)
+                    @if($shipment_options->count() > 0)
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Métodos de Envío</h4>
                     </div>
@@ -51,7 +51,11 @@
 
                     <hr class="responsive-two">
 
-                    <div id="shipmentOptionChecker" style="display:none;">
+                    @if($shipment_options->count() > 0)
+                    <div id="shipmentOptionChecker" class="mt-4" style="display:none;">
+                    @else
+                    <div class="mt-4">
+                    @endif
                         <div class="we-co--title d-flex align-items-center justify-content-between">
                             <h4 class="responsive-one"><span class="we-co--progress-indicator"></span> Dirección de Envío</h4>
                         </div>
@@ -119,10 +123,16 @@
     }
 </script>
 
+@if($shipment_options->count() > 0)
 <script type="text/javascript">
     $(document).ready(function(){
         $('#btnBuy').attr('disabled', true);
+    });
+</script>
+@endif
 
+<script type="text/javascript">
+    $(document).ready(function(){
         $('.shipping-options a').click(function() {
             event.preventDefault();
             $('#btnBuy').attr('disabled', false);
