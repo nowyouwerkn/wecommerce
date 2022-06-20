@@ -312,7 +312,7 @@
                 </div>
 
                 <div class="row mb-4">
-                    @if(!empty($shipping_option) && $shipping_option->type == 'pickup')
+                    @if($order->shipping_option != NULL or (!empty($shipping_option) && $shipping_option->type == 'pickup'))
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
@@ -362,7 +362,7 @@
                                 </div>
                             </div>
                         </div>
-                    @else            
+                    @else
                         <div class="col-md-6">
                             <div class="card h-100">
                                 <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">

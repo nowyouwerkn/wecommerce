@@ -342,8 +342,8 @@
                         <div class="col-md-12 mt-3">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="has_tax" name="has_tax" value="1" {{ ($product->has_tax == '1') ? 'checked' : '' }}>
-                                <label class="custom-control-label" for="has_tax">Este producto tiene impuestos (I.V.A 16%)</label>
-                                <span class="tx-13 tx-color-03 d-block wd-60p">Aparecerá un anuncio informativo en el detalle de producto indicando los impuestos de acuerdo a tu configuración de cuenta.</span>
+                                <label class="custom-control-label" for="has_tax">Este producto incluye impuestos</label>
+                                <span class="tx-13 tx-color-03 d-block wd-60p">Seleccionar esta casilla si el valor ingresado en el campo de "Precio" ya incluye I.V.A. De lo contrario, la plataforma agregará el impuesto automáticamente (Para tiendas configuradas en MXN).</span>
                             </div>
                         </div>
                     </div>
@@ -362,9 +362,9 @@
                         <div class="form-group">
                             <label for="stock">Cantidad <span class="text-danger">*</span></label>
                             @if($product->has_variants == true)
-                            <input type="number" name="stock" class="form-control" value="{{ $total_qty }}" readonly="">
+                            <input type="number" name="stock" class="form-control" value="{{ $total_qty }}" readonly="" required>
                             @else
-                            <input type="number" name="stock" class="form-control" value="{{ $product->stock }}">
+                            <input type="number" name="stock" class="form-control" value="{{ $product->stock }}" required>
                             @endif
                         </div>
                     </div>
@@ -372,7 +372,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="sku">SKU (Stock Keeping Unit) <span class="text-danger">*</span></label>
-                            <input type="text" name="sku" class="form-control" value="{{ $product->sku }}">
+                            <input type="text" name="sku" class="form-control" value="{{ $product->sku }}" required>
                         </div>
                     </div>
 
@@ -760,8 +760,8 @@
         var discount_price = $('#discount_price').val();
         var production_cost = $('#production_cost').val();
 
-        var margin = ((parseFloat(price) - parseFloat(production_cost)) / 100);
-        var profit = (parseFloat(price) - parseFloat(production_cost));
+        var margin = ((parseFloat(price.replace(/,/g, "")) - parseFloat(production_cost.replace(/,/g, ""))) / 100);
+        var profit = (parseFloat(price.replace(/,/g, "")) - parseFloat(production_cost.replace(/,/g, "")));
 
         $('#margin').text(parseFloat(margin).toFixed(2));
         $('#profit').text(parseFloat(profit).toFixed(2));

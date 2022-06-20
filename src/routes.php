@@ -482,6 +482,12 @@ Route::post('/apply-cuopon', [
     'as' => 'apply.cuopon',
 ]);
 
+/* Recalculate Shipping Options on Checkout */
+Route::post('/calculate-shipment-options', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@calculateTotalWithOptions',
+    'as' => 'calculate.shipment',
+]);
+
 //Profile
 Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_access']], function(){
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
