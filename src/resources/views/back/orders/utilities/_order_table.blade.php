@@ -204,8 +204,8 @@
                             </span> 
                             Empaquetado
                             </a>
-
-                            @if($order->shipment == NULL)
+                            
+                            @if($order->shipping_option == NULL or $order->shipment == NULL)
                                 <a class="
                                 dropdown-item
                                 @if ($order->status == 'Enviado' || $order->status == 'Entregado')

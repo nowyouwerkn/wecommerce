@@ -136,6 +136,7 @@
         $('.shipping-options a').click(function() {
             event.preventDefault();
             $('#btnBuy').attr('disabled', false);
+            // Información de que opción se seleccionó
             console.log('Seleccionado:' , $(this).attr('data-value'));
 
             if($(this).attr('data-type') == 'delivery'){
@@ -152,16 +153,48 @@
                 $(this).addClass('active');
             }
 
-            document.getElementById("shippingRate").textContent = $(this).attr('price-value');
-            document.getElementById("shippingInput").value = $(this).attr('price-value');
-            document.getElementById("shippingOptions").value = $(this).attr('data-value');
-            var subtotal =  parseFloat($('#subtotalInput').val());
-            var shipping = parseFloat($('#shippingInput').val());
-            var total_count = subtotal + parseFloat(shipping);
-            var total = total_count.toString();
+            $("#shippingOptions").val($(this).attr('data-value'));
 
-            $('#totalPayment').text(total);
-            document.getElementById("finalTotal").value = total;
+            /* Recalcular carrito con Envio */
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('calculate.shipment') }}",
+                data:{ 
+                    shipping_input: $(this).attr('price-value'),
+                    shipping_option_id: $(this).attr('data-value'),
+                    _token: '{{ Session::token() }}', 
+                },
+                success: function(msg){
+                    console.log(msg['mensaje']);
+
+                    /* Envío */
+                    $("#shippingRate").text(msg['shipping']);
+                    $("#shippingInput").val(msg['shipping']);
+
+                    /* Subtotales */
+                    $("#subtotal").text(msg['subtotal']);
+                    $("#subtotalInput").val(msg['subtotal']);
+                    
+                    /* Impuestos */
+                    $("#taxValue").text(msg['tax']);
+                    $("#taxRate").val(msg['tax']);
+
+                    /* Mostrar Total */
+                    $('#totalPayment').text(msg['total']);
+                    $("#finalTotal").val(msg['total']);
+                },
+                error: function(msg){
+                    $('.cp-success').hide();
+                    $('#cp_spinner').fadeOut(200);
+
+                    $('.cp-error').text('Problema del servidor: Error 500. Contacta con nosotros para ayudarte.');
+                    $('.cp-error').fadeIn();
+
+                    setTimeout(function () {
+                        $('.cp-error').fadeOut();
+                    }, 3000);
+                }
+            });
 
             if($('#apply_cuopon').hasClass('select-shipment-first')){
                 $('#apply_cuopon').removeClass('select-shipment-first');
@@ -238,11 +271,7 @@
             }
 
             function onSuccess(response) {
-                //alert('Successful operation');
-
                 $('.loader-standby').removeClass('loader-hidden');
-                //console.log(response.id);
-
                 $form.find('button').prop('disabled', true);
 
                 $('#checkout-form').append($('<input type="hidden" name="conektaTokenId" id="conektaTokenId" />').val(response.id));
