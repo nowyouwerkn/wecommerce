@@ -6,10 +6,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                 <li class="breadcrumb-item"><a href="#">Werkn-Commerce</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                <li class="breadcrumb-item active" aria-current="page">Vista General</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Dashboard</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Vista General</h4>
         </div>
     </div>
 @endsection
@@ -94,136 +94,107 @@
 <hr>
 @endif
 
+<style>
+  .crypto-icon-sm{
+    font-size:11px;
+  }
+</style>
 <div class="row row-xs mb-3">
     <div class="col-md-3">
-        <div class="card card-body mb-3">
-            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ventas Totales</h6>
-            <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">${{ number_format($ven_total, 2) }} MXN</h3>
-                <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success"><i class="icon ion-md-arrow-up"></i></span></p>
+      <div class="card mb-3" style="height:515px;">
+            <div class="card-header pd-y-20" style="border-bottom:0px;">
+                <h6 class="mg-b-0">Estatus de Órdenes</h6>
             </div>
-        </div>
 
-        <div class="card card-body mb-3">
-            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Clientes Nuevos</h6>
-            <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">{{ $new_clients }} </h3>
-                <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-info">esta semana.</span></span></p>
-            </div>
-        </div>
-
-        <div class="card card-body mb-3">
-            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Orden Promedio</h6>
-            <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">${{ number_format($avg_order, 2) }} MXN</h3>
-                <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success">0 <i class="icon ion-md-arrow-up"></i></span></p>
-            </div>
-        </div>
-
-        <div class="card card-body">
-            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Órdenes</h6>
-            <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">{{ $new_orders->count() }}</h3>
-                <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-info">esta semana.</span></p>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-9">
-        <div class="card h-100">
-            <div class="card-header pd-y-20 d-md-flex align-items-center justify-content-between">
-              <h6 class="mg-b-0">Resumen de Ventas</h6>
-              <ul class="list-inline d-flex mg-t-20 mg-sm-t-10 mg-md-t-0 mg-b-0">
-                    <li class="list-inline-item d-flex align-items-center">
-                      <span class="d-block wd-10 ht-10 bg-df-1 rounded mg-r-5"></span>
-                      <span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Semana en curso</span>
-                    </li>
-                    <li class="list-inline-item d-flex align-items-center mg-l-5">
-                      <span class="d-block wd-10 ht-10 bg-gray-600 rounded mg-r-5"></span>
-                      <span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Semana Anterior</span>
-                    </li>
-                  </ul>
-            </div>
-            <div class="card-body">
-                
-                @if($new_orders->count() == 0)
-                <p>Esta semana no ha habido pedidos</p>
-                @else 
-                <div class="chart-container chart">
-                    <canvas id="salesChart" style="height:310px;"></canvas>
-                </div>
-                @endif
-            </div>
-        </div>
-    </div>
-
-    <!--
-    <div class="col-md-4">
-        <div class="card card-body mb-2">
-            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Top Producto</h6>
-            <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">N/A</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card card-body">
-            <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ventas Atribuidas a Marketing</h6>
-            <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">$0,00 MXN</h3>
-                <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success">0 <i class="icon ion-md-arrow-up"></i></span></p>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-8">
-        <div class="card mg-b-10">
-            <div class="card-header pd-t-20 d-sm-flex align-items-start justify-content-between bd-b-0 pd-b-0">
-              <div>
-                <h6 class="mg-b-5">Conversión</h6>
-                <p class="tx-13 tx-color-03 mg-b-0">Eventos registrados.</p>
-              </div>
-            </div>
-            <div class="card-body pd-y-30">
-              <div class="d-sm-flex">
-                <div class="media">
-                  <div class="wd-40 wd-md-50 ht-40 ht-md-50 bg-teal tx-white mg-r-10 mg-md-r-10 d-flex align-items-center justify-content-center rounded op-6">
-                    <i data-feather="bar-chart-2"></i>
+              <ul class="list-unstyled mb-4">
+                <li class="list-item">
+                  <div class="media align-items-center">
+                    <div class="crypto-icon crypto-icon-sm btn-pagado">
+                      <i class="fas fa-check"></i> 
+                    </div>
+                    <div class="media-body mg-l-15">
+                      <p class="tx-medium mg-b-0">Pagado</p>
+                    </div>
+                  </div><!-- media -->
+                  <div class="text-right">
+                    <p class="tx-normal tx-rubik mg-b-0">{{ $total_pagado }}</p>
                   </div>
-                  <div class="media-body">
-                    <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold tx-nowrap mg-b-5 mg-md-b-8">Agregado al Carrito</h6>
-                    <h4 class="tx-20 tx-sm-18 tx-md-20 tx-normal tx-rubik mg-b-0">0</h4>
+                </li>
+                <li class="list-item">
+                  <div class="media align-items-center">
+                    <div class="crypto-icon crypto-icon-sm btn-empaquetado">
+                      <i class="fas fa-box"></i>
+                    </div>
+                    <div class="media-body mg-l-15">
+                      <p class="tx-medium mg-b-0">Empaquetado</p>
+                    </div>
+                  </div><!-- media -->
+                  <div class="text-right">
+                    <p class="tx-normal tx-rubik mg-b-0">{{ $total_empaquetado }}</p>
                   </div>
-                </div>
-                <div class="media mg-t-20 mg-sm-t-0 mg-sm-l-15 mg-md-l-40">
-                  <div class="wd-40 wd-md-50 ht-40 ht-md-50 bg-pink tx-white mg-r-10 mg-md-r-10 d-flex align-items-center justify-content-center rounded op-5">
-                    <i data-feather="bar-chart-2"></i>
+                </li>
+                <li class="list-item">
+                  <div class="media align-items-center">
+                    <div class="crypto-icon crypto-icon-sm btn-enviado">
+                      <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="media-body mg-l-15">
+                      <p class="tx-medium mg-b-0">Enviado</p>
+                    </div>
+                  </div><!-- media -->
+                  <div class="text-right">
+                    <p class="tx-normal tx-rubik mg-b-0">{{ $total_enviado }}</p>
                   </div>
-                  <div class="media-body">
-                    <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8">Checkout Iniciado</h6>
-                    <h4 class="tx-20 tx-sm-18 tx-md-20 tx-normal tx-rubik mg-b-0">0</h4>
+                </li>
+                <li class="list-item">
+                  <div class="media align-items-center">
+                    <div class="crypto-icon crypto-icon-sm btn-entregado">
+                      <i class="fas fa-dolly"></i>
+                    </div>
+                    <div class="media-body mg-l-15">
+                      <p class="tx-medium mg-b-0">Entregado</p>
+                    </div>
+                  </div><!-- media -->
+                  <div class="text-right">
+                    <p class="tx-normal tx-rubik mg-b-0">{{ $total_entregado }}</p>
                   </div>
-                </div>
-                <div class="media mg-t-20 mg-sm-t-0 mg-sm-l-15 mg-md-l-40">
-                  <div class="wd-40 wd-md-50 ht-40 ht-md-50 bg-primary tx-white mg-r-10 mg-md-r-10 d-flex align-items-center justify-content-center rounded op-4">
-                    <i data-feather="bar-chart-2"></i>
-                  </div>
-                  <div class="media-body">
-                    <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8">Sesiones Convertidas</h6>
-                    <h4 class="tx-20 tx-sm-18 tx-md-20 tx-normal tx-rubik mg-b-0">0</h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-    </div>
-    -->
-</div>
+                </li>
+                <li class="list-label mb-3">Total de Ordenes Exitosas: {{ $total_entregado +  $total_enviado + $total_empaquetado + $total_pagado}}</li>
 
-<div class="row row-xs">
-    <div class="col-md-3">
-        <div class="card">
+                <li class="list-item" style="border-top:0px;">
+                  <div class="media align-items-center">
+                    <div class="crypto-icon crypto-icon-sm btn-sin-completar">
+                      <i class="fas fa-user-clock"></i>
+                    </div>
+                    <div class="media-body mg-l-15">
+                      <p class="tx-medium mg-b-0">Sin Completar</p>
+                    </div>
+                  </div><!-- media -->
+                  <div class="text-right">
+                    <p class="tx-normal tx-rubik mg-b-0">{{ $total_sincompletar }}</p>
+                  </div>
+                </li>
+                <li class="list-item">
+                  <div class="media align-items-center">
+                    <div class="crypto-icon crypto-icon-sm btn-cancelado">
+                      <i class="fas fa-times"></i> 
+                    </div>
+                    <div class="media-body mg-l-15">
+                      <p class="tx-medium mg-b-0">Canceladas</p>
+                    </div>
+                  </div><!-- media -->
+                  <div class="text-right">
+                    <p class="tx-normal tx-rubik mg-b-0">{{ $total_cancelado }}</p>
+                  </div>
+                </li>
+              </ul>
+
+            <div class="card-footer bd-t-0 pd-t-0">
+                <a href="{{ route('orders.index') }}" class="btn btn-sm btn-block btn-outline-primary btn-uppercase tx-spacing-1">Ir a órdenes</a>
+            </div>
+      </div>
+
+      <div class="card">
             <div class="card-header">
                 <h6 class="mg-b-0">Inventario Total</h6>
             </div>
@@ -239,72 +210,92 @@
             </div>
       </div>
     </div>
+
+    <div class="col-md-9">
+        <div class="card mb-3" style="height:515px;">
+            <div class="card-header pd-y-20 d-md-flex align-items-center justify-content-between">
+              <h6 class="mg-b-0">Resumen de Ventas</h6>
+              <ul class="list-inline d-flex mg-t-20 mg-sm-t-10 mg-md-t-0 mg-b-0">
+                    <li class="list-inline-item d-flex align-items-center">
+                      <span class="d-block wd-10 ht-10 bg-df-1 rounded mg-r-5"></span>
+                      <span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Semana en curso</span>
+                    </li>
+                    <li class="list-inline-item d-flex align-items-center mg-l-5">
+                      <span class="d-block wd-10 ht-10 bg-gray-600 rounded mg-r-5"></span>
+                      <span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Semana Anterior</span>
+                    </li>
+                  </ul>
+            </div>
+            <div class="card-body pos-relative">
+              <div class="t-20 l-20 wd-xl-100p z-index-10 mb-4">  
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h3 class="tx-normal tx-rubik tx-spacing--2 mg-b-5">${{ number_format($ven_total, 2) }}</h3>
+                        <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-10">Ventas del Año</h6>
+                        <p class="mg-b-0 tx-12 tx-color-03">Rango: {{ Carbon\Carbon::now()->startOfYear()->translatedFormat('d M Y') }} al {{ Carbon\Carbon::today()->translatedFormat('d M Y') }}</p>
+                      </div><!-- col -->
+                      <div class="col-sm-4">
+                        <h3 class="tx-normal tx-rubik tx-spacing--2 mg-b-5">${{ number_format($ven_semana, 2) }}
+                          @if($ven_semana > $ven_semana_prev) 
+                          <span class="tx-small tx-success"><i class="icon ion-md-arrow-up"></i></span>
+                          @else
+                          <span class="tx-small tx-danger"><i class="icon ion-md-arrow-down"></i></span>
+                          @endif
+                        </h3>
+                        <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-10 d-flex align-items-center"><span class="d-block wd-10 ht-10 bg-df-1 rounded mg-r-5"></span> Ventas Semana en Curso</h6>
+                        <p class="mg-b-0 tx-12 tx-color-03">Rango: {{ Carbon\Carbon::now()->startOfWeek(Carbon\Carbon::MONDAY)->translatedFormat('d M Y') }} al {{ Carbon\Carbon::now()->endOfWeek(Carbon\Carbon::SUNDAY)->translatedFormat('d M Y') }}</p>
+                      </div><!-- col -->
+                      <div class="col-sm-4 mg-t-20 mg-sm-t-0">
+                        <h3 class="tx-normal tx-rubik tx-spacing--2 mg-b-5">${{ number_format($ven_semana_prev, 2) }} </h3>
+                        <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-10 d-flex align-items-center"><span class="d-block wd-10 ht-10 bg-gray-600 rounded mg-r-5"></span> Ventas Semana Anterior</h6>
+                        <p class="mg-b-0 tx-12 tx-color-03">Rango: {{ Carbon\Carbon::now()->startOfWeek(Carbon\Carbon::MONDAY)->subWeek(1)->translatedFormat('d M Y') }} al {{ Carbon\Carbon::now()->endOfWeek(Carbon\Carbon::SUNDAY)->subWeek(1)->translatedFormat('d M Y') }}</p>
+                      </div><!-- col -->
+                    </div><!-- row -->
+                </div>
+                @if($new_orders->count() == 0)
+                <p>Esta semana no ha habido pedidos</p>
+                @else 
+                <div class="chart-container chart">
+                    <canvas id="salesChart" style="height:310px;"></canvas>
+                </div>
+                @endif
+            </div>
+        </div>
+
+        <div class="row row-xs">
+          <div class="col-md-4">
+              <div class="card card-body mb-3">
+                <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Clientes Nuevos</h6>
+                <div class="d-flex d-lg-block d-xl-flex align-items-end">
+                    <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">{{ $new_clients }} </h3>
+                    <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-info">esta semana.</span></span></p>
+                </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card card-body mb-3">
+                <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Orden Promedio</h6>
+                <div class="d-flex d-lg-block d-xl-flex align-items-end">
+                    <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">${{ number_format($avg_order, 2) }} MXN</h3>
+                    <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success">0 <i class="icon ion-md-arrow-up"></i></span></p>
+                </div>
+            </div>
 </div>
-<br>
-<div class="row row-xs">
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="mg-b-0">Status de órdenes</h6>
-            </div>
 
-            <div class="card-body">
-              <div class="row">
-                <div class="col-6">
-                   <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Entregado</p>
+            <div class="col-md-4">
+            <div class="card card-body">
+                <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Órdenes</h6>
+                <div class="d-flex d-lg-block d-xl-flex align-items-end">
+                    <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">{{ $new_orders->count() }}</h3>
+                    <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-info">esta semana.</span></p>
                 </div>
-                <div class="col-6">
-                   <strong class="btn-entregado">{{$total_entregado}}</strong> 
-                </div>
-                <div class="col-10"><hr></div>
-                  <div class="col-6">
-                   <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Enviado</p>
-                </div>
-                <div class="col-6">
-                   <strong class="btn-enviado">{{$total_enviado}}</strong> 
-                </div>
-                  <div class="col-10"><hr></div>
-                  <div class="col-6">
-                   <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Pagado</p>
-                </div>
-                <div class="col-6">
-                   <strong class="btn-pagado">{{$total_pagado}}</strong>
-                </div>
-                  <div class="col-10"><hr></div>
-                <div class="col-6">
-                         <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Expirado</p>
-                </div>
-                <div class="col-6">
-                    <strong class="btn-expirado">{{$total_expirado}}</strong> 
-                </div>
-                <div class="col-10"><hr></div>
-                <div class="col-6">
-                         <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Sin completar</p>
-                </div>
-                <div class="col-6">
-                        <strong class="btn-sin-completar">{{$total_sincompletar}}</strong> 
-                </div>
-                <div class="col-10"><hr></div>
-                <div class="col-6">
-                         <p class="tx-12 tx-uppercase tx-spacing-1 tx-color-02">Cancelado</p>
-                </div>
-                <div class="col-6">
-                        <strong class="btn-cancelado">{{$total_cancelado}}</strong> 
-                </div>
-              </div>
-               
-                
-          
-                
-                
             </div>
-
-            <div class="card-footer bd-t-0 pd-t-0">
-                <a href="{{ route('orders.index') }}" class="btn btn-sm btn-block btn-outline-primary btn-uppercase tx-spacing-1">Ir a órdenes</a>
-            </div>
-      </div>
+</div>
+        </div>
     </div>
 </div>
+
 @endsection
 
 @push('scripts')
