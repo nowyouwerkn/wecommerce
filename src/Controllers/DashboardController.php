@@ -38,8 +38,6 @@ class DashboardController extends Controller
         $shipment = ShipmentMethod::first();
         $category = Category::first();
 
-        $orders = Order::all();
-
         $total_products = Product::where('status', 'Publicado')->get();
         $total_stock = 0;
 
@@ -49,7 +47,6 @@ class DashboardController extends Controller
 
         $total_stock;
 
-        $new_orders = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '>=', Carbon::now()->subWeek())->get();
         $new_clients = User::role('customer')->where('created_at', '>=', Carbon::now()->subWeek())->count();
 
         // Conteo Ventas KPI's
@@ -116,10 +113,10 @@ class DashboardController extends Controller
         $ven_semana;
         $ven_semana_prev;
 
-        if ($orders->count() == 0) {
+        if ($ventas_total->count() == 0) {
             $avg_order = 0;
         }else{
-            $avg_order = ($ven_total)/($orders->count());
+            $avg_order = ($ven_total)/($ventas_total->count());
         }
 
         /* Ventas por Semana */
@@ -302,6 +299,17 @@ class DashboardController extends Controller
         ->where('created_at', '>=', $year_start)->where('status', '=', 'Cancelado')
         ->count();
 
+
+        /* Estadísticas de Ordenes Nuevas */
+
+        $new_orders = $ventas_semana->count();
+        $prev_orders = $ventas_semana_prev->count();
+
+        $diff_orders = $new_orders - $prev_orders;
+        $avg_ord = ($new_orders + $prev_orders) / 2;
+
+        $percent_diff_orders = number_format(($diff_orders / $avg_ord) * 100,2);
+
         return view('wecommerce::back.index')
         ->with('product', $product)
         ->with('payment', $payment)
@@ -312,7 +320,7 @@ class DashboardController extends Controller
         ->with('ven_semana_prev', $ven_semana_prev)
         ->with('new_clients', $new_clients)
         ->with('new_orders', $new_orders)
-        ->with('orders', $orders)
+        ->with('percent_diff_orders', $percent_diff_orders)
         ->with('avg_order', $avg_order)
         ->with('lun', $lun)
         ->with('mar', $mar)

@@ -5,7 +5,7 @@
         <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
-                <li class="breadcrumb-item"><a href="#">Werkn-Commerce</a></li>
+                <li class="breadcrumb-item"><a href="#">WCommerce</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Vista General</li>
                 </ol>
             </nav>
@@ -252,7 +252,7 @@
                       </div><!-- col -->
                     </div><!-- row -->
                 </div>
-                @if($new_orders->count() == 0)
+                @if($new_orders == 0)
                 <p>Esta semana no ha habido pedidos</p>
                 @else 
                 <div class="chart-container chart">
@@ -276,10 +276,11 @@
           <div class="col-md-4">
             <div class="card card-body mb-3">
                 <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Orden Promedio</h6>
-                <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                    <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">${{ number_format($avg_order, 2) }} MXN</h3>
-                    <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success">0 <i class="icon ion-md-arrow-up"></i></span></p>
-                </div>
+                  <div class="d-flex d-lg-block d-xl-flex align-items-end">
+                    <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">${{ number_format($avg_order, 2) }}</h3>
+                    
+                  </div>
+                  <div class="tx-12 tx-color-03 mt-1">Rango: {{ Carbon\Carbon::now()->startOfYear()->translatedFormat('d M Y') }} al {{ Carbon\Carbon::today()->translatedFormat('d M Y') }}</div>
             </div>
 </div>
 
@@ -287,9 +288,17 @@
             <div class="card card-body">
                 <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Órdenes</h6>
                 <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                    <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">{{ $new_orders->count() }}</h3>
-                    <p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-info">esta semana.</span></p>
+                    <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">{{ $new_orders }}</h3>
+                    <p class="tx-11 tx-color-03 mg-b-0">
+                      @if($percent_diff_orders > 0)
+                      <span class="tx-medium tx-success">{{ $percent_diff_orders }}% <i class="icon ion-md-arrow-up"></i></span>
+                      @else
+                      <span class="tx-medium tx-danger">{{ $percent_diff_orders }}% <i class="icon ion-md-arrow-down"></i></span>
+                      @endif
+                      que la semana anterior.
+                    </p>
                 </div>
+                <div class="tx-12 tx-color-03 mt-1">Comparativa semana en curso vs. anterior.</div>
             </div>
 </div>
         </div>
@@ -317,7 +326,7 @@
                 {
                     data: ctxData1,
                     borderColor: ctxColor1,
-                    borderWidth: 1,
+                    borderWidth: 3,
                     fill: false
                 },{
                     data: ctxData2,
