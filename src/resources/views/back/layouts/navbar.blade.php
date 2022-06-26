@@ -143,8 +143,11 @@
 
             <li class="nav-label mg-t-25">Canales de Venta</li>
             <li class="nav-item">
-                <a href="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#modalSaleChannels" style="margin-top:5px; padding:5px 10px;"><p class="responsive-add"><i data-feather="plus"></i></p>
-                <p class="desktop-add"><i data-feather="plus"></i> Agregar nuevo canal</p></a>
+                <p class="nav-link mb-2"><i data-feather="shopping-cart"></i>Tienda en Línea</span> <span class="badge badge-success tx-8 ml-2">Activado</span></p>
+                <a href="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#modalSaleChannels" style="margin-top:5px; padding:5px 10px;">
+                    <p class="responsive-add"><i data-feather="plus"></i></p>
+                    <p class="desktop-add"><i data-feather="plus"></i> Agregar nuevo canal</p>
+                </a>
             </li>
 
             <li class="nav-label mg-t-100">Configuración</li>
