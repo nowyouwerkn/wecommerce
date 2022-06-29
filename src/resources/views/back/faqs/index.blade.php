@@ -47,7 +47,7 @@
 
     </div>
     <div class="col-md-8">
-        @if($faqs->count() == 0)
+        @if($questions->count() == 0)
         <div class="card card-body text-center" style="padding:50px 0px 50px 0px;">
             <img src="{{ asset('assets/img/group.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
             <h4>¡No hay textos preguntas frecuentes en la base de datos!</h4>
@@ -64,21 +64,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($faqs as $faq)
+                    @foreach($questions as $question)
                     <tr>
-                        <td>{{ $faq->id }}</td>
+                        <td>{{ $question->id }}</td>
                         <td>
-                            {{ $faq->question }}
+                            {{ $question->question }}
                         </td>
                         <td>
-                            {{ $faq->answer }}
+                            {{ $question->answer }}
                         </td>
                         <td class="text-nowrap">
-                            <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm btn-icon" href="javascript:void(0)" data-toggle="modal" data-target="#editFAQ_{{ $faq->id }}">
+                            <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm btn-icon" href="javascript:void(0)" data-toggle="modal" data-target="#editFAQ_{{ $question->id }}">
                                 <i class="fas fa-edit" aria-hidden="true"></i>
                             </a>
 
-                            <form method="POST" action="{{ route('faq.destroy', $faq->id) }}" style="display: inline-block;">
+                            <form method="POST" action="{{ route('faq.destroy', $question->id) }}" style="display: inline-block;">
                                 <button type="submit" class="btn btn-outline-danger btn-sm btn-icon" data-toggle="tooltip" data-original-title="Borrar">
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
@@ -88,7 +88,7 @@
                         </td>
                     </tr>
 
-                    <div id="editFAQ_{{ $faq->id }}" class="modal fade">
+                    <div id="editFAQ_{{ $question->id }}" class="modal fade">
                         <div class="modal-dialog modal-dialog-vertical-center" role="document">
                             <div class="modal-content bd-0 tx-14">
                                 <div class="modal-header">
@@ -98,13 +98,13 @@
                                     </button>
                                 </div>
 
-                                <form method="POST" action="{{ route('faq.update', $faq->id) }}" enctype="multipart/form-data">
+                                <form method="POST" action="{{ route('faq.update', $question->id) }}" enctype="multipart/form-data">
                                 {{ csrf_field() }}
                                 {{ method_field('PUT') }}
                                     <div class="modal-body pd-25">
                                             <div class="form-group mt-2">
                                                 <label>Pregunta</label>
-                                                <input type="text" class="form-control" name="question" value="{{ $faq->question }}"/>
+                                                <input type="text" class="form-control" name="question" value="{{ $question->question }}"/>
 
                                             <div class="form-group mt-2">
                                                 <label>Respuesta</label>
@@ -112,7 +112,7 @@
 
                                             </div>
 
-                                            <textarea id="justHtml_create" name="answer" required="" style="display:none;" value="{{ $faq->answer }}"></textarea>
+                                            <textarea id="justHtml_create" name="answer" required="" style="display:none;" value="{{ $question->answer }}"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -174,10 +174,10 @@
 @push('scripts')
 <script src="{{ asset('lib/quill/quill.min.js') }}"></script>
 
-@foreach($faqs as $faq)
+@foreach($questions as $question)
 <script type="text/javascript">
 
-    var options_{{ $faq->id }} = {
+    var options_{{ $question->id }} = {
         modules: {
             toolbar: [
                 [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -190,12 +190,12 @@
         theme: 'snow'
     };
 
-    var editor_{{ $faq->id }} = new Quill('#editor-container-{{ $faq->id }}', options_{{ $faq->id }});
-    var justHtmlContent_{{ $faq->id }} = document.getElementById('justHtml_{{ $faq->id }}');
+    var editor_{{ $question->id }} = new Quill('#editor-container-{{ $question->id }}', options_{{ $question->id }});
+    var justHtmlContent_{{ $question->id }} = document.getElementById('justHtml_{{ $question->id }}');
 
-    editor_{{ $faq->id }}.on('text-change', function() {
-      var justHtml_{{ $faq->id }} = editor_{{ $faq->id }}.root.innerHTML;
-      justHtmlContent_{{ $faq->id }}.innerHTML = justHtml_{{ $faq->id }};
+    editor_{{ $question->id }}.on('text-change', function() {
+      var justHtml_{{ $question->id }} = editor_{{ $question->id }}.root.innerHTML;
+      justHtmlContent_{{ $question->id }}.innerHTML = justHtml_{{ $question->id }};
     });
 
 </script>

@@ -17,9 +17,9 @@ class FAQController extends Controller
 
     public function index()
     {
-        $faqs = FAQ::all();
+        $questions = FAQ::all();
 
-        return view('wecommerce::back.faqs.index')->with('faqs', $faqs);
+        return view('wecommerce::back.faqs.index')->with('questions', $questions);
     }
 
     public function create()
