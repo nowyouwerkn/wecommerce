@@ -109,14 +109,14 @@
                 </div>
             </div>
             <div class="card-body">
-                <h5 class="card-title display-4 mb-1">{{ $variant->value }}</h5>               
+                <h5 class="card-title display-4 mb-1">{{ $variant->value }}</h5>
                 <p>Productos con esta variante: {{ $variant->products->count() }}</p>
                 <p class="card-text mb-0 mt-3">
                     <small class="text-muted">Actualizado por última vez: <br>{{ $variant->updated_at }}</small>
                 </p>
             </div>
         </div>
-    </div>      
+    </div>
     @endforeach
 </div>
 @endif
@@ -134,10 +134,23 @@
             {{ csrf_field() }}
                 <div class="modal-body pd-25">
                     <div class="row">
+
                         <div class="form-group col-12">
-                            <label class="form-control-label" for="value">Nombre de Variante</label>
+                            <label class="form-control-label" for="type">Tipo de Variante <span class="tx-danger">*</span></label>
+                            <select class="form-control" name="type" id="type" required>
+                                <option value="Talla">Talla</option>
+                                <option value="Color">Color</option>
+                                <option value="Material">Material</option>
+                                <option value="Estilo">Estilo</option>
+                                <option value="Nombre">Nombre</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-12">
+                            <label class="form-control-label" for="value">Nombre de Variante <span class="tx-danger">*</span></label>
                             <input type="text" class="form-control" name="value" value="" required autofocus>
                         </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">
