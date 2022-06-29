@@ -39,7 +39,14 @@ class VariantController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $variant = new Variant;
+
+        $variant->type = $request->type;
+        $variant->value = $request->value;
+
+        $variant->save();
+
+        return redirect()->back();
     }
 
     public function show($id)

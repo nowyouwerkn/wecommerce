@@ -101,7 +101,7 @@
 
                                     <div class="form-group">
                                         <label>Asignarla a categoría <span class="text-danger">*</span></label>
-                                        <select class="form-control" id="category_id" name="category_id">
+                                        <select class="form-control" id="category_id" name="category_id" required>
                                             <option value="0" selected="">Selecciona una opción..</option>
                                             @foreach($categories as $cat)
                                                 @if($cat->parent_id == NULL || 0)
@@ -200,7 +200,7 @@
 
                     <div class="form-group">
                         <label>Asignarla a categoría <span class="text-danger">*</span></label>
-                        <select class="form-control" id="category_id" name="category_id">
+                        <select class="form-control" id="category_id" name="category_id" required>
                             <option value="0" selected="">Selecciona una opción..</option>
                             @foreach($categories as $cat)
                                 @if($cat->parent_id == NULL || 0)

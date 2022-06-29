@@ -24,11 +24,11 @@ class DashboardController extends Controller
     {
         $this->middleware('auth');
     }
-    
-    public function index () 
-    {  
+
+    public function index ()
+    {
         $config = StoreConfig::take(1)->first();
-        
+
         if(empty($config)){
             return redirect()->route('config.step1');
         }
@@ -61,7 +61,7 @@ class DashboardController extends Controller
 
         $week_start = Carbon::now()->startOfWeek(Carbon::MONDAY);
         $week_end = Carbon::now()->endOfWeek(Carbon::SUNDAY);
-        
+
         $ventas_total = Order::where('status', '!=', 'Cancelado')
         ->where('status', '!=', 'Expirado')
         ->where('status', '!=', 'Sin Completar')
@@ -305,10 +305,16 @@ class DashboardController extends Controller
         $new_orders = $ventas_semana->count();
         $prev_orders = $ventas_semana_prev->count();
 
-        $diff_orders = $new_orders - $prev_orders;
-        $avg_ord = ($new_orders + $prev_orders) / 2;
+        if ($new_orders == NULL && $prev_orders == NULL) {
+            $percent_diff_orders = number_format(0,2);
+        } else {
+            $diff_orders = $new_orders - $prev_orders;
+            $avg_ord = ($new_orders + $prev_orders) / 2;
 
-        $percent_diff_orders = number_format(($diff_orders / $avg_ord) * 100,2);
+            $percent_diff_orders = number_format(($diff_orders / $avg_ord) * 100,2);
+        }
+
+
 
         return view('wecommerce::back.index')
         ->with('product', $product)
@@ -346,23 +352,23 @@ class DashboardController extends Controller
         ->with('total_cancelado', $total_cancelado);
     }
 
-    public function configuration () 
+    public function configuration ()
     {
         return view('wecommerce::back.configuration');
     }
 
-    public function shipping () 
+    public function shipping ()
     {
         return view('wecommerce::back.shipping.index');
     }
 
     // Configuration Steps
-    public function configStep1 () 
+    public function configStep1 ()
     {
         return view('wecommerce::back.config_steps.step1');
     }
 
-    public function configStep2 ($id) 
+    public function configStep2 ($id)
     {
         $config = StoreConfig::find($id);
 
@@ -388,13 +394,13 @@ class DashboardController extends Controller
         return redirect()->back();
     }
 
-    public function messages() 
+    public function messages()
     {
         return view('wecommerce::back.messages');
     }
 
     public function generalSearch(Request $request)
-    {   
+    {
         $search_query = $request->input('query');
 
         $products = Product::where('name', 'LIKE', "%{$search_query}%")
