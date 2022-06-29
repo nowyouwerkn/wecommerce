@@ -188,7 +188,7 @@
 
             @if($shipment_rules->count() == 0)
             <div class="text-center">
-                <p class="mb-0"><em>Sin reglas especiales en la tienda.</em></p>
+                <p class="mb-5"><em>Sin reglas especiales en la tienda.</em></p>
             </div>
             @else
             <div class="table-responsive">

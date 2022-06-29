@@ -2,6 +2,11 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.6 - 2022-06-20
+- Funcionalidad de opciones de envio múltiples que permite recolección en tienda.
+- Cambios en cálculo de impuestos, ahora las configuraciones de impuestos son globales dependiento del país de configuración.
+- Cambios visuales en pantallas del back.
+
 ## 1.5 - 2022-02-22
 - Funcionalidad de solicitud de factura
 - Cambios en responsivo para el checkout
