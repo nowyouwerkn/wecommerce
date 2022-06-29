@@ -2430,7 +2430,7 @@ class FrontController extends Controller
     {
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
-        
+
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $shipment_option = ShipmentOption::where('id', $request->shipping_option_id)->first();
 
@@ -2578,7 +2578,7 @@ class FrontController extends Controller
         $tax = ($total_cart + $shipping) - (($total_cart + $shipping) / $tax_rate);
         $subtotal = ($total_cart + $shipping) - ($tax);
         $total = $subtotal + $tax;
-        
+
         return response()->json([
             'mensaje' => $tax,
             'shipping' => number_format($shipping, 2),
