@@ -2,6 +2,12 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.6.1 - 2022-06-26
+- Cambio de pantalla Vista General
+- Se agrega un listado especial en sección de "Canales de Venta"
+- Nuevos indicadores para ofrecer más claridad entre diferencias de ingreso por semana y promedios de ordenes semanales.
+- Nuevo indicador de estátus de orden con mayor claridad. Estilo de iconos identicos a los del listado de ordenes para relacionarlo visualmente y en color.
+
 ## 1.6 - 2022-06-20
 - Funcionalidad de opciones de envio múltiples que permite recolección en tienda.
 - Cambios en cálculo de impuestos, ahora las configuraciones de impuestos son globales dependiento del país de configuración.

@@ -9,28 +9,6 @@
 @endpush
 
 @section('content')
-{{-- 
-<!-- breadcrumb-area -->
-<section class="breadcrumb-area breadcrumb-bg" data-background="{{ asset('themes/werkn-backbone-bootstrap/img/bg/breadcrumb_bg01.jpg') }}">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="breadcrumb-content">
-                    <h2 class="text-white">Catálogo</h2>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item text-white"><a href="{{ route('index') }}">Inicio</a></li>
-                            <li class="breadcrumb-item active text-white" style="opacity:.7;" aria-current="page">Catálogo</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- breadcrumb-area-end -->
---}}
-
 <!-- shop-area -->
 <section class="shop-area pt-100 pb-100">
     <div class="container">

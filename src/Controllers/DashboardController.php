@@ -24,11 +24,11 @@ class DashboardController extends Controller
     {
         $this->middleware('auth');
     }
-    
-    public function index () 
-    {  
+
+    public function index ()
+    {
         $config = StoreConfig::take(1)->first();
-        
+
         if(empty($config)){
             return redirect()->route('config.step1');
         }
@@ -37,8 +37,6 @@ class DashboardController extends Controller
         $payment = PaymentMethod::where('is_active', true)->first();
         $shipment = ShipmentMethod::first();
         $category = Category::first();
-
-        $orders = Order::all();
 
         $total_products = Product::where('status', 'Publicado')->get();
         $total_stock = 0;
@@ -49,7 +47,6 @@ class DashboardController extends Controller
 
         $total_stock;
 
-        $new_orders = Order::where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('created_at', '>=', Carbon::now()->subWeek())->get();
         $new_clients = User::role('customer')->where('created_at', '>=', Carbon::now()->subWeek())->count();
 
         // Conteo Ventas KPI's
@@ -64,19 +61,35 @@ class DashboardController extends Controller
 
         $week_start = Carbon::now()->startOfWeek(Carbon::MONDAY);
         $week_end = Carbon::now()->endOfWeek(Carbon::SUNDAY);
-        
-        $ventas_total = Order::where('created_at', '<=', $year_end)
-        ->where('created_at', '>=', $year_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('status', '!=', 'Sin Completar')->get();
 
-        $ventas_mes = Order::where('created_at', '<=', $month_end)
-        ->where('created_at', '>=', $month_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('status', '!=', 'Sin Completar')->get();
+        $ventas_total = Order::where('status', '!=', 'Cancelado')
+        ->where('status', '!=', 'Expirado')
+        ->where('status', '!=', 'Sin Completar')
+        ->whereBetween('created_at', [$year_start, $year_end])
+        ->get();
 
-        $ventas_semana = Order::where('created_at', '<=', $week_end)
-        ->where('created_at', '>=', $week_start)->where('status', '!=', 'Cancelado')->where('status', '!=', 'Expirado')->where('status', '!=', 'Sin Completar')->get();
+        $ventas_mes = Order::where('status', '!=', 'Cancelado')
+        ->where('status', '!=', 'Expirado')
+        ->where('status', '!=', 'Sin Completar')
+        ->whereBetween('created_at', [$month_start, $month_end])
+        ->get();
+
+        $ventas_semana = Order::where('status', '!=', 'Cancelado')
+        ->where('status', '!=', 'Expirado')
+        ->where('status', '!=', 'Sin Completar')
+        ->whereBetween('created_at', [$week_start, $week_end])
+        ->get();
+
+        $ventas_semana_prev = Order::where('status', '!=', 'Cancelado')
+        ->where('status', '!=', 'Expirado')
+        ->where('status', '!=', 'Sin Completar')
+        ->whereBetween('created_at', [$week_start->subWeek(1), $week_end->subWeek(1)])
+        ->get();
 
         $ven_total = 0;
         $ven_mes = 0;
         $ven_semana = 0;
+        $ven_semana_prev = 0;
 
         foreach ($ventas_total as $v_total) {
             $ven_total += $v_total->payment_total;
@@ -91,14 +104,19 @@ class DashboardController extends Controller
             $ven_semana += $v_week->payment_total;
         };
 
+        foreach ($ventas_semana_prev as $v_week_prev) {
+            $ven_semana_prev += $v_week_prev->payment_total;
+        };
+
         $ven_total;
         $ven_mes;
         $ven_semana;
+        $ven_semana_prev;
 
-        if ($orders->count() == 0) {
+        if ($ventas_total->count() == 0) {
             $avg_order = 0;
         }else{
-            $avg_order = ($ven_total)/($orders->count());
+            $avg_order = ($ven_total)/($ventas_total->count());
         }
 
         /* Ventas por Semana */
@@ -139,45 +157,31 @@ class DashboardController extends Controller
         $dom = 0;
 
         foreach ($lunes as $v_1) {
-            $v_1->cart = unserialize($v_1->cart);
-
-            $lun += $v_1->cart->totalPrice;
+            $lun += $v_1->payment_total;
         };
 
         foreach ($martes as $v_2) {
-            $v_2->cart = unserialize($v_2->cart);
-
-            $mar += $v_2->cart->totalPrice;
+            $mar += $v_2->payment_total;
         };
 
         foreach ($miercoles as $v_3) {
-            $v_3->cart = unserialize($v_3->cart);
-
-            $mie += $v_3->cart->totalPrice;
+            $mie += $v_3->payment_total;
         };
 
         foreach ($jueves as $v_4) {
-            $v_4->cart = unserialize($v_4->cart);
-
-            $jue += $v_4->cart->totalPrice;
+            $jue += $v_4->payment_total;
         };
 
         foreach ($viernes as $v_5) {
-            $v_5->cart = unserialize($v_5->cart);
-
-            $vie += $v_5->cart->totalPrice;
+            $vie += $v_5->payment_total;
         };
 
         foreach ($sabado as $v_6) {
-            $v_6->cart = unserialize($v_6->cart);
-
-            $sab += $v_6->cart->totalPrice;
+            $sab += $v_6->payment_total;
         };
 
         foreach ($domingo as $v_0) {
-            $v_0->cart = unserialize($v_0->cart);
-
-            $dom += $v_0->cart->totalPrice;
+            $dom += $v_0->payment_total;
         };
 
         $lun;
@@ -226,45 +230,31 @@ class DashboardController extends Controller
         $pre_dom = 0;
 
         foreach ($pre_lunes as $vv_1) {
-            $vv_1->cart = unserialize($vv_1->cart);
-
-            $pre_lun += $vv_1->cart->totalPrice;
+            $pre_lun += $vv_1->payment_total;
         };
 
         foreach ($pre_martes as $vv_2) {
-            $vv_2->cart = unserialize($vv_2->cart);
-
-            $pre_mar += $vv_2->cart->totalPrice;
+            $pre_mar += $vv_2->payment_total;
         };
 
         foreach ($pre_miercoles as $vv_3) {
-            $vv_3->cart = unserialize($vv_3->cart);
-
-            $pre_mie += $vv_3->cart->totalPrice;
+            $pre_mie += $vv_3->payment_total;
         };
 
         foreach ($pre_jueves as $vv_4) {
-            $vv_4->cart = unserialize($vv_4->cart);
-
-            $pre_jue += $vv_4->cart->totalPrice;
+            $pre_jue += $vv_4->payment_total;
         };
 
         foreach ($pre_viernes as $vv_5) {
-            $vv_5->cart = unserialize($vv_5->cart);
-
-            $pre_vie += $vv_5->cart->totalPrice;
+            $pre_vie += $vv_5->payment_total;
         };
 
         foreach ($pre_sabado as $vv_6) {
-            $vv_6->cart = unserialize($vv_6->cart);
-
-            $pre_sab += $vv_6->cart->totalPrice;
+            $pre_sab += $vv_6->payment_total;
         };
 
         foreach ($pre_domingo as $vv_0) {
-            $vv_0->cart = unserialize($vv_0->cart);
-
-            $pre_dom += $vv_0->cart->totalPrice;
+            $pre_dom += $vv_0->payment_total;
         };
 
         $pre_lun;
@@ -285,36 +275,46 @@ class DashboardController extends Controller
         }
 
         // Ordenes por su estado actual
-
-         $ord_entregado = Order::where('created_at', '<=', $year_end)
+        $total_entregado = Order::where('created_at', '<=', $year_end)
         ->where('created_at', '>=', $year_start)->where('status', '=', 'Entregado')
-        ->get();
-        $total_entregado = $ord_entregado->count();
+        ->count();
 
-         $ord_enviado = Order::where('created_at', '<=', $year_end)
+        $total_enviado = Order::where('created_at', '<=', $year_end)
         ->where('created_at', '>=', $year_start)->where('status', '=', 'Enviado')
-        ->get();
-        $total_enviado = $ord_enviado->count();
+        ->count();
 
-         $ord_pagado = Order::where('created_at', '<=', $year_end)
+        $total_pagado = Order::where('created_at', '<=', $year_end)
         ->where('created_at', '>=', $year_start)->where('status', '=', 'Pagado')
-        ->get();
-        $total_pagado = $ord_pagado->count();
+        ->count();
 
-         $ord_expirado = Order::where('created_at', '<=', $year_end)
-        ->where('created_at', '>=', $year_start)->where('status', '=', 'Expirado')
-        ->get();
-        $total_expirado = $ord_expirado->count();
+        $total_empaquetado = Order::where('created_at', '<=', $year_end)
+        ->where('created_at', '>=', $year_start)->where('status', '=', 'Empaquetado')
+        ->count();
 
-        $ord_sincompletar = Order::where('created_at', '<=', $year_end)
+        $total_sincompletar = Order::where('created_at', '<=', $year_end)
         ->where('created_at', '>=', $year_start)->where('status', '=', 'Sin Completar')
-        ->get();
-        $total_sincompletar = $ord_sincompletar->count();
+        ->count();
 
-         $ord_cancelado = Order::where('created_at', '<=', $year_end)
+        $total_cancelado = Order::where('created_at', '<=', $year_end)
         ->where('created_at', '>=', $year_start)->where('status', '=', 'Cancelado')
-        ->get();
-        $total_cancelado = $ord_cancelado->count();
+        ->count();
+
+
+        /* Estadísticas de Ordenes Nuevas */
+
+        $new_orders = $ventas_semana->count();
+        $prev_orders = $ventas_semana_prev->count();
+
+        if ($new_orders == NULL && $prev_orders == NULL) {
+            $percent_diff_orders = number_format(0,2);
+        } else {
+            $diff_orders = $new_orders - $prev_orders;
+            $avg_ord = ($new_orders + $prev_orders) / 2;
+
+            $percent_diff_orders = number_format(($diff_orders / $avg_ord) * 100,2);
+        }
+
+
 
         return view('wecommerce::back.index')
         ->with('product', $product)
@@ -322,9 +322,11 @@ class DashboardController extends Controller
         ->with('shipment', $shipment)
         ->with('category', $category)
         ->with('ven_total', $ven_total)
+        ->with('ven_semana', $ven_semana)
+        ->with('ven_semana_prev', $ven_semana_prev)
         ->with('new_clients', $new_clients)
         ->with('new_orders', $new_orders)
-        ->with('orders', $orders)
+        ->with('percent_diff_orders', $percent_diff_orders)
         ->with('avg_order', $avg_order)
         ->with('lun', $lun)
         ->with('mar', $mar)
@@ -345,28 +347,28 @@ class DashboardController extends Controller
         ->with('total_entregado', $total_entregado)
         ->with('total_enviado', $total_enviado)
         ->with('total_pagado', $total_pagado)
-        ->with('total_expirado', $total_expirado)
+        ->with('total_empaquetado', $total_empaquetado)
         ->with('total_sincompletar', $total_sincompletar)
         ->with('total_cancelado', $total_cancelado);
     }
 
-    public function configuration () 
+    public function configuration ()
     {
         return view('wecommerce::back.configuration');
     }
 
-    public function shipping () 
+    public function shipping ()
     {
         return view('wecommerce::back.shipping.index');
     }
 
     // Configuration Steps
-    public function configStep1 () 
+    public function configStep1 ()
     {
         return view('wecommerce::back.config_steps.step1');
     }
 
-    public function configStep2 ($id) 
+    public function configStep2 ($id)
     {
         $config = StoreConfig::find($id);
 
@@ -392,13 +394,13 @@ class DashboardController extends Controller
         return redirect()->back();
     }
 
-    public function messages() 
+    public function messages()
     {
         return view('wecommerce::back.messages');
     }
 
     public function generalSearch(Request $request)
-    {   
+    {
         $search_query = $request->input('query');
 
         $products = Product::where('name', 'LIKE', "%{$search_query}%")

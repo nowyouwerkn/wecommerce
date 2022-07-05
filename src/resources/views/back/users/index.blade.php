@@ -15,7 +15,7 @@
             <a href="{{ route('export.clients') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase mr-1">
                 <i class="fas fa-file-export"></i> Exportar
             </a>
-            
+
             <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreate" class="btn btn-sm btn-primary btn-uppercase"><i class="fas fa-plus"></i> Agregar Usuario</a>
         </div>
     </div>
@@ -126,7 +126,7 @@
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label>Agregar Rol</label>
-                                                            <select class="form-control" name="rol">
+                                                            <select class="form-control" name="rol" required>
                                                                 <option value="0">Selecciona un Rol de Usuario</option>
                                                                 @foreach($roles as $rol)
                                                                     <option value="{{ $rol->name }}">
