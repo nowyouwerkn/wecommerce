@@ -64,7 +64,7 @@
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal_{{ $category->id }}" class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-edit"></i></a></li>
                     <li class="list-inline-item"><a href="{{ route('categories.show', $category->id) }}"  data-toggle="tooltip" data-original-title="Detalle"class="btn btn-rounded btn-icon btn-dark"><i class="fas fa-eye"></i></a></li>
 
-                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalDelete_{{ $category->id }}" class="btn btn-rounded btn-icon btn-danger"><i class="fas fa-times" aria-hidden="true"></i></a></li>                  
+                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalDelete_{{ $category->id }}" class="btn btn-rounded btn-icon btn-danger"><i class="fas fa-times" aria-hidden="true"></i></a></li>
                 </ul>
 
                 <div class="modal fade" id="editModal_{{ $category->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -99,12 +99,12 @@
                                                       <option {{ ($category->priority == '5') ? 'selected' : '' }} value="5">5</option>
                                                       <option {{ ($category->priority == '6') ? 'selected' : '' }} value="6">6</option>
                                                       <option {{ ($category->priority == '7') ? 'selected' : '' }} value="7">7</option>
-                                                </select>  
+                                                </select>
                                             </div>
 
                                             <div class="form-group mt-2">
                                                 <label>Imágen <span class="text-info">(Opcional)</span></label>
-                                                <input type="file" class="form-control" id="image" name="image" />
+                                                <input type="file" class="form-control" id="image" name="image" accept=".jpg, .jpeg, .png" />
                                             </div>
                                         </div>
                                     </div>
@@ -157,21 +157,21 @@
             @endif
 
             <div class="card-body pb-0">
-                <h5 class="card-title display-4 mb-1">{{ $category->name }}</h5> 
+                <h5 class="card-title display-4 mb-1">{{ $category->name }}</h5>
                  <p class="card-text">Prioridad: <span class="badge badge-info">{{ $category->priority }}</span></p>
                 <p class="card-text">Productos en esta categoría: <span class="badge badge-info">{{ $category->products->count() }}</span></p>
 
-                <h5 class="card-title mt-3 mb-2">Sub-Categorías</h5>              
+                <h5 class="card-title mt-3 mb-2">Sub-Categorías</h5>
             </div>
 
             <ul class="mt-0 list-group list-group-flush">
                 @foreach($category->children as $sub)
                 <li class="d-flex align-items-center justify-content-between list-group-item">
-                    <div>  
-                        @php 
+                    <div>
+                        @php
                          $users = DB::table('product_category')->where('category_id', $sub->id)->get();
                         @endphp
-                        <a href="{{ route('categories.show', $sub->id) }}">{{ $sub->name }} 
+                        <a href="{{ route('categories.show', $sub->id) }}">{{ $sub->name }}
                             <span class="badge badge-info">{{ $users->count() }}</span>
                         </a>
                     </div>
@@ -229,7 +229,7 @@
                     <small class="text-muted">Actualizado: {{ $category->updated_at }}</small>
                 </p>
             </div>
-        </div>    
+        </div>
     @endforeach
 </div>
 
@@ -249,7 +249,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            
+
             <form method="POST" action="{{ route('categories.store') }}" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="modal-body pd-25">
@@ -260,7 +260,7 @@
 
                     <div class="form-group mt-2">
                         <label>Imágen <span class="text-info">(Opcional)</span></label>
-                        <input type="file" class="form-control" id="image" name="image" />
+                        <input type="file" class="form-control" id="image" name="image" accept=".jpg, .jpeg, .png" />
                     </div>
 
                     <div class="form-group mt-2">
@@ -285,7 +285,7 @@
                                 @if($cat->parent_id == NULL || 0)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                                 @else
-                                
+
                                 @endif
                             @endforeach
                         </select>

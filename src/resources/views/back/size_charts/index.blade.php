@@ -96,7 +96,7 @@
 
                                     <div class="form-group mt-2">
                                         <label>Imágen <span class="text-danger">*</span></label>
-                                        <input type="file" class="form-control" id="image" name="image" />
+                                        <input type="file" class="form-control" id="image" name="image" accept=".jpg, .jpeg, .png" />
                                     </div>
 
                                     <div class="form-group">
@@ -195,7 +195,7 @@
 
                     <div class="form-group mt-2">
                         <label>Imágen <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" id="image" name="image" />
+                        <input type="file" class="form-control" id="image" name="image" accept=".jpg, .jpeg, .png" />
                     </div>
 
                     <div class="form-group">
