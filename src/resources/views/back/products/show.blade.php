@@ -2,7 +2,7 @@
 
 @push('stylesheets')
 <link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
-<link href="{{ asset('lib/spectrum-colorpicker/spectrum.css') }}" rel="stylesheet"> 
+<link href="{{ asset('lib/spectrum-colorpicker/spectrum.css') }}" rel="stylesheet">
 
 <style>
     .save-bar{
@@ -129,13 +129,13 @@
     {{ csrf_field() }}
     {{ method_field('PUT') }}
 
-    {{-- 
+    {{--
     <div class="save-bar bg-success text-white d-flex align-items-center justify-content-between">
         <p class="mb-0">El sistema guarda como borrador ocasionalmente. Para hacerlo manual da click en el botón.</p>
         <button id="save-form" type="submit" class="btn-save-big btn btn-outline-light btn-sm text-white">Guardar cambios</button>
     </div>
     --}}
-    
+
     <div class="row">
         <!-- Firts Column -->
         <div class="col-md-8">
@@ -255,7 +255,7 @@
                                 });
                             </script>
                             @endpush
-                            
+
                             <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}" alt="Imagen secundaria">
                             <p class="priority-badge" >{{$image->priority}}</p>
                             <a style="right: 30px;" href="javascript:void(0)" data-target="#modalEditImage_{{$image->id}}" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imagen"><i class="fas fa-edit" aria-hidden="true"></i></a>
@@ -286,7 +286,7 @@
                                 <input type="number" id="price" name="price" class="form-control" value="{{ $product->price }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <label for="discount_price">Precio en Descuento</label>
                             <div class="input-group mg-b-10">
@@ -422,7 +422,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <!-- Estatus product -->
             <div class="card mg-t-10 mb-4">
                 <!-- Header -->
@@ -593,7 +593,7 @@
         @endif
         </div>
     </div>
-    
+
 </div>
 
 <!-- Modal -->
@@ -614,7 +614,7 @@
 
                 <div class="form-group">
                     <label for="image">Imagen <span class="text-danger">*</span></label>
-                    <input type="file" name="image" class="form-control">
+                    <input type="file" name="image" class="form-control" accept=".jpg, .jpeg, .png">
                 </div>
 
                 <div class="form-group">
@@ -669,7 +669,7 @@
 
                 <div class="form-group">
                     <label for="model_image">Imagen de Modelo</label>
-                    <input type="file" name="model_image" class="form-control">
+                    <input type="file" name="model_image" class="form-control" accept=".jpg, .jpeg, .png">
                 </div>
 
                 <div class="text-right">
@@ -787,7 +787,7 @@
             $("#newCategory").text("Crear Nueva Categoría");
         }else{
             $("#newCategory").text("Seleccionar Categoría");
-            
+
         }
     });
 
@@ -804,9 +804,9 @@
         $.ajax({
             method: 'POST',
             url: "{{ route('dynamic.subcategory') }}",
-            data:{ 
-                value:value, 
-                _token: '{{ Session::token() }}', 
+            data:{
+                value:value,
+                _token: '{{ Session::token() }}',
             },
             success: function(response){
                 //console.log(msg['mensaje']);

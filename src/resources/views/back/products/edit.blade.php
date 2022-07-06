@@ -56,7 +56,7 @@
             <p class="mb-0">El sistema guarda como borrador ocasionalmente. Para hacerlo manual da click en el botón.</p>
             <button id="save-form" type="submit" class="btn-save-big btn btn-outline-light btn-sm text-white">Guardar cambios</button>
         </div>
-        
+
         <div class="row">
             <!-- Firts Column -->
             <div class="col-md-8">
@@ -76,28 +76,28 @@
                                 <input type="text" name="name" class="form-control" value="{{ $product->name }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="description">Descripción</label>
                                 <textarea name="description" cols="10" rows="3" class="form-control">{{ $product->description }}</textarea>
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="materials">Materiales</label>
                                 <textarea name="materials" cols="10" rows="3" class="form-control">{{ $product->materials }}</textarea>
                             </div>
                         </div>
-    
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="color">Color<span class="text-danger">*</span></label>
                                 <input type="text" name="color" class="form-control" placeholder="Ej. Negro" value="{{ $product->color }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-4">
                             <label for="pattern">Patrón</label>
                             <input type="text" name="pattern"class="form-control" placeholder="Ej. Liso, Lunares" value="{{ $product->pattern }}">
@@ -109,14 +109,14 @@
                                 <input type="text" name="brand" class="form-control" placeholder="" value="{{ $product->brand }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="in_index" name="in_index" value="1" {{ ($product->in_index == '1') ? 'checked' : '' }}>
                                 <label class="custom-control-label" for="in_index">Mostrar en Inicio</label>
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="is_favorite" name="is_favorite" value="1" {{ ($product->is_favorite == '1') ? 'checked' : '' }} >
@@ -125,7 +125,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Multimedia Elements -->
                 <div class="card mg-t-10 mb-4">
                     <!-- Header -->
@@ -139,12 +139,12 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="model_image">Imagen de Modelo</label>
-                                <input type="file" name="model_image" class="form-control">
+                                <input type="file" name="model_image" class="form-control" accept=".jpg, .jpeg, .png">
                             </div>
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Price -->
                 <div class="card mg-t-10 mb-4">
                     <!-- Header -->
@@ -165,7 +165,7 @@
                                     <input type="number" id="price" name="price" class="form-control" value="{{ $product->price }}">
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <label for="discount_price">Precio en Descuento</label>
                                     <div class="input-group mg-b-10">
@@ -188,12 +188,12 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
 
                     <div class="card-footer">
                         <div class="row">
-                            
+
                             <div class="col-md-6">
                                 <label for="production_cost">Costo de Producción</label>
                                 <div class="input-group mg-b-10">
@@ -228,7 +228,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Inventory -->
                 <div class="card mg-t-10 mb-4">
                     <!-- Header -->
@@ -245,7 +245,7 @@
                                 <input type="number" name="stock" class="form-control" value="{{ $product->stock }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="sku">SKU (Stock Keeping Unit)</label>
@@ -277,21 +277,21 @@
                                 <input type="number" name="height" class="form-control" value="{{ $product->height }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="width">Ancho</label>
                                 <input type="number" name="width" class="form-control" value="{{ $product->width }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="lenght">Largo</label>
                                 <input type="number" name="lenght" class="form-control" value="{{ $product->lenght }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="weight">Peso</label>
@@ -302,9 +302,9 @@
                 </div>
 
                 @include('wecommerce::back.products.partials._variant_card')
-                        
+
             </div>
-    
+
             <!-- Second -->
             <div class="col-md-4">
                 <!-- Estatus product -->
@@ -330,7 +330,7 @@
                         </div>
                     </div>
                 </div>
-        
+
                 <!-- Estatus product -->
                 <div class="card mg-t-10 mb-4">
                     <!-- Header -->
@@ -409,9 +409,9 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Disponibility -->
-                {{-- 
+                {{--
                 <div class="card mg-t-10 mb-4">
                     <!-- Header -->
                     <div class="card-header pd-t-20 pd-b-0 bd-b-0">
@@ -479,7 +479,7 @@
             $("#newCategory").text("Crear Nueva Categoría");
         }else{
             $("#newCategory").text("Seleccionar Categoría");
-            
+
         }
     });
 
