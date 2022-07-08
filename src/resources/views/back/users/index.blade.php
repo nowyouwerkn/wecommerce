@@ -112,7 +112,7 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="password">Contraseña <span class="tx-danger">*</span></label>
-                                                            <input type="text" id="txtNewPassword" name="password" class="form-control" required="">
+                                                            <input type="password" id="txtNewPassword" name="password" class="form-control" required="">
                                                         </div>
                                                     </div>
 
