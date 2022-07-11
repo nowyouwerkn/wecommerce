@@ -30,7 +30,7 @@ class SizeChartController extends Controller
     {
         //Validar
         $this -> validate($request, array(
-            'image' => 'sometimes|min:10|max:2100'
+            'image' => 'sometimes|min:10|max:2100|image'
         ));
 
         $size_chart = new SizeChart;
@@ -87,7 +87,7 @@ class SizeChartController extends Controller
     {
         //Validar
         $this -> validate($request, array(
-            'image' => 'sometimes|min:10|max:2100'
+            'image' => 'sometimes|min:10|max:2100|image'
         ));
 
         $size_chart = SizeChart::find($id);

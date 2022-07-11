@@ -339,6 +339,7 @@
                             </div>
                         </div>
 
+                        <!--IVA->
                         <div class="col-md-12 mt-3">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="has_tax" name="has_tax" value="1" {{ ($product->has_tax == '1') ? 'checked' : '' }}>
@@ -346,6 +347,7 @@
                                 <span class="tx-13 tx-color-03 d-block wd-60p">Seleccionar esta casilla si el valor ingresado en el campo de "Precio" ya incluye I.V.A. De lo contrario, la plataforma agregará el impuesto automáticamente (Para tiendas configuradas en MXN).</span>
                             </div>
                         </div>
+                        <!--iva-->
                     </div>
                 </div>
             </div>

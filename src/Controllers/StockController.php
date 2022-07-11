@@ -33,14 +33,15 @@ class StockController extends Controller
     {
         // Guardar datos en la base de datos
         $stock = new ProductVariant;
-        
+
         $stock->product_id = $id;
-        
+
         $variant = Variant::where('value', $request->variant)->first();
-        
+
         if(empty($variant)){
             $variant = new Variant;
             $variant->value = $request->variant;
+            $variant->type = $request->type_id;
             $variant->save();
         }
 
@@ -63,11 +64,11 @@ class StockController extends Controller
     {
         // Guardar datos en la base de datos
         $stock = new ProductVariant;
-        
+
         $stock->product_id = $request->product_id;
-        
+
         $variant = Variant::where('value', $request->variant)->first();
-        
+
         if(empty($variant)){
             $variant = new Variant;
             $variant->value = $request->variant;
@@ -80,7 +81,7 @@ class StockController extends Controller
         $stock->save();
 
         return response()->json([
-            'mensaje' => 'Mensaje de exito', 
+            'mensaje' => 'Mensaje de exito',
             'variant' => $variant->value
         ], 200);
     }
