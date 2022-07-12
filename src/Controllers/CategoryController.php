@@ -45,7 +45,7 @@ class CategoryController extends Controller
         //Validar
         $this -> validate($request, array(
             'name' => 'required|max:255',
-            'image' => 'sometimes|min:10|max:2100'
+            'image' => 'sometimes|min:10|max:2100|image'
         ));
 
         // Guardar datos en la base de datos
@@ -128,7 +128,7 @@ class CategoryController extends Controller
         //Validar
         $this -> validate($request, array(
             'name' => 'required|max:255',
-            'image' => 'sometimes|min:10|max:2100'
+            'image' => 'sometimes|min:10|max:2100|image'
         ));
 
         // Guardar datos en la base de datos

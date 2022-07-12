@@ -65,13 +65,13 @@
     <form method="POST" id="save-form" action="{{ route('products.store') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
 
-        {{-- 
+        {{--
         <div class="save-bar bg-success text-white d-flex align-items-center justify-content-between">
             <p class="mb-0">El sistema guarda como borrador ocasionalmente. Para hacerlo manual da click en el botón.</p>
             <button id="save-form" type="submit" class="btn-save-big btn btn-outline-light btn-sm text-white">Guardar cambios</button>
         </div>
         --}}
-        
+
         <div class="row">
             <!-- Firts Column -->
             <div class="col-md-8">
@@ -91,21 +91,21 @@
                                 <input type="text" name="name" class="form-control" value="{{ old('name') }}" required="">
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="description">Descripción <span class="text-danger">*</span></label>
                                 <textarea name="description" cols="10" rows="3" class="form-control" required="">{{ old('description') }}</textarea>
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="materials">Materiales <span class="text-info tx-12">(Opcional)</span></label>
                                 <textarea name="materials" cols="10" rows="3" class="form-control">{{ old('materiales') }}</textarea>
                             </div>
                         </div>
-            
+
                         <div class="col-md-4">
                             <div class="d-flex">
                                 <div class="form-group me-2">
@@ -119,7 +119,7 @@
                                 </div>
                             </div>
                         </div>
-    
+
                         <div class="col-md-4">
                             <label for="pattern">Patrón</label>
                             <input type="text" name="pattern"class="form-control" placeholder="Ej. Liso, Lunares" value="{{ old('pattern') }}">
@@ -131,14 +131,14 @@
                                 <input type="text" name="brand" class="form-control" placeholder="" value="{{ old('brand') }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="in_index" name="in_index" value="1">
                                 <label class="custom-control-label" for="in_index">Mostrar en Inicio</label>
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="is_favorite" name="is_favorite" value="1">
@@ -147,7 +147,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Multimedia Elements -->
                 <div class="card mg-t-10 mb-4">
                     <!-- Header -->
@@ -161,12 +161,12 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="model_image">Imagen de Modelo <span class="text-success tx-12">Recomendado</span></label>
-                                <input type="file" name="model_image" class="form-control">
+                                <input type="file" name="model_image" class="form-control" accept=".jpg, .jpeg, .png">
                             </div>
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Price -->
                 <div class="card mg-t-10 mb-4">
                     <!-- Header -->
@@ -187,7 +187,7 @@
                                     <input type="text" id="price" name="price" class="form-control" value="{{ old('price') }}" required="">
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <label for="discount_price">Precio en Descuento</label>
                                     <div class="input-group mg-b-10">
@@ -208,7 +208,7 @@
                                     <label for="discount_end">hasta:</label>
                                     <input type="date" id="discount_end" name="discount_end" value="{{ old('discount_end') }}" class="form-control">
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
 
@@ -238,6 +238,7 @@
                                 </div>
                             </div>
 
+                            <!--IVA->
                             <div class="col-md-12 mt-3">
                                 <div class="custom-control custom-checkbox">
                                   <input type="checkbox" class="custom-control-input" id="has_tax" name="has_tax" value="1">
@@ -245,11 +246,12 @@
                                   <span class="tx-13 tx-color-03 d-block wd-60p">Seleccionar esta casilla si el valor ingresado en el campo de "Precio" ya incluye I.V.A. De lo contrario, la plataforma agregará el impuesto automáticamente (Para tiendas configuradas en MXN).</span>
                                 </div>
                             </div>
+                            <!--IVA-->
                         </div>
                     </div>
 
                 </div>
-    
+
                 <!-- Inventory -->
                 <div class="card mg-t-10 mb-4">
                     <!-- Header -->
@@ -266,7 +268,7 @@
                                 <input type="number" name="stock" class="form-control" value="{{ old('stock') }}" value="1" required>
                             </div>
                         </div>
-    
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="sku">SKU (Stock Keeping Unit) <span class="text-danger">*</span></label>
@@ -291,9 +293,9 @@
                 </div>
 
                 {{-- @include('wecommerce::back.products.partials._variant_card') --}}
-                        
+
             </div>
-    
+
             <!-- Second -->
             <div class="col-md-4">
                 <!-- Estatus product -->
@@ -319,7 +321,7 @@
                         </div>
                     </div>
                 </div>
-        
+
                 <!-- Estatus product -->
                 <div class="card mg-t-10 mb-4">
                     <!-- Header -->
@@ -428,21 +430,21 @@
                                 <input type="number" name="height" class="form-control" value="{{ old('height') }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="width">Ancho</label>
                                 <input type="number" name="width" class="form-control" value="{{ old('width') }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="lenght">Largo</label>
                                 <input type="number" name="lenght" class="form-control" value="{{ old('lenght') }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="weight">Peso</label>
@@ -451,9 +453,9 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Disponibility -->
-                {{-- 
+                {{--
                 <div class="card mg-t-10 mb-4">
                     <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                         <h5 class="mg-b-5">Disponibilidad</h5>
@@ -527,7 +529,7 @@
             $("#newCategory").text("Crear Nueva Categoría");
         }else{
             $("#newCategory").text("Seleccionar Categoría");
-            
+
         }
     });
 
@@ -544,9 +546,9 @@
         $.ajax({
             method: 'POST',
             url: "{{ route('dynamic.subcategory') }}",
-            data:{ 
-                value:value, 
-                _token: '{{ Session::token() }}', 
+            data:{
+                value:value,
+                _token: '{{ Session::token() }}',
             },
             success: function(response){
                 //console.log(msg['mensaje']);

@@ -96,7 +96,7 @@
 
                                     <div class="form-group mt-2">
                                         <label>Imágen <span class="text-danger">*</span></label>
-                                        <input type="file" class="form-control" id="image" name="image" />
+                                        <input type="file" class="form-control" id="image" name="image" accept=".jpg, .jpeg, .png" />
                                     </div>
 
                                     <div class="form-group">
@@ -195,11 +195,11 @@
 
                     <div class="form-group mt-2">
                         <label>Imágen <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" id="image" name="image" />
+                        <input type="file" class="form-control" id="image" name="image" accept=".jpg, .jpeg, .png" />
                     </div>
 
                     <div class="form-group">
-                        <label>Asignarla a categoría <span class="text-danger">*</span></label>
+                        <label>Asignarla a categoría</label>
                         <select class="form-control" id="category_id" name="category_id" required>
                             <option value="0" selected="">Selecciona una opción..</option>
                             @foreach($categories as $cat)

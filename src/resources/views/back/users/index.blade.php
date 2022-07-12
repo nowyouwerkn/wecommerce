@@ -112,22 +112,42 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="password">Contraseña <span class="tx-danger">*</span></label>
-                                                            <input type="text" name="password" class="form-control" required="">
+                                                            <input type="password" id="txtNewPassword" name="password" class="form-control" required="">
                                                         </div>
                                                     </div>
 
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="pwd">Confirmar Contraseña:</label>
-                                                            <input type="password" class="form-control">
+                                                            <input type="password" id="txtConfirmPassword" class="form-control">
                                                         </div>
                                                     </div>
+                                                    <div class="registrationFormAlert" style="color:green;" id="CheckPasswordMatch"></div>
+                                                    @push('scripts')
+                                                    <script>
+                                                        function checkPasswordMatch() {
+                                                            var password = $("#txtNewPassword").val();
+                                                            var confirmPassword = $("#txtConfirmPassword").val();
+
+                                                            if (password != confirmPassword){
+                                                                $("#submitModal").text("No coiciden las contraseñas");
+                                                                $("#submitModal").attr("disabled", true);
+                                                            }else{
+                                                                $("#submitModal").text("Guardar Información");
+                                                                $("#submitModal").attr("disabled", false);
+                                                            }
+                                                        }
+                                                        $(document).ready(function () {
+                                                        $("#txtConfirmPassword").keyup(checkPasswordMatch);
+                                                        });
+                                                    </script>
+                                                    @endpush
 
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label>Agregar Rol</label>
                                                             <select class="form-control" name="rol" required>
-                                                                <option value="0">Selecciona un Rol de Usuario</option>
+                                                                <option disabled>Selecciona un Rol de Usuario</option>
                                                                 @foreach($roles as $rol)
                                                                     <option value="{{ $rol->name }}">
                                                                         {{ $rol->name }}
@@ -140,7 +160,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
-                                                <button type="submit" class="btn btn-primary">Guardar Información</button>
+                                                <button id="submitModal" type="submit" class="btn btn-primary">Guardar Información</button>
                                             </div>
                                         </form>
                                     </div>

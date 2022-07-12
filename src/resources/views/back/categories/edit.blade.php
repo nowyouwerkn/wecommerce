@@ -44,14 +44,14 @@
                                 <input type="text" name="name" class="form-control" value="{{ $category->name }}">
                             </div>
                         </div>
-    
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="image">Imagen</label>
-                                <input type="file" name="image"class="form-control">
+                                <input type="file" name="image"class="form-control" accept=".jpg, .jpeg, .png">
                             </div>
                         </div>
-    
+
                     </div>
                 </div>
             </div>

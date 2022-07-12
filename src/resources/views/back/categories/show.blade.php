@@ -57,7 +57,7 @@
 
                             <div class="form-group mt-2">
                                 <label>Imágen <span class="text-info">(Opcional)</span></label>
-                                <input type="file" class="form-control" id="image" name="image" />
+                                <input type="file" class="form-control" id="image" name="image" accept=".jpg, .jpeg, .png" />
                             </div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
             @endif
 
             <div class="card-body pb-0">
-                <h5 class="card-title display-4 mb-1">{{ $category->name }}</h5> 
+                <h5 class="card-title display-4 mb-1">{{ $category->name }}</h5>
                 @if($category->parent_id == NULL || 0)
                 <p class="card-text">Productos en esta categoría: <span class="badge badge-info">{{ $category->products->count() }}</span></p>
                 @endif
@@ -132,7 +132,7 @@
                                 <td style="width: 150px; position: relative;">
                                     <img style="width: 100%;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
                                     <div class="text-center margin-top-10">
-                                        <small><p>+ {{ $product->images->count() }} Imágen(es)</p></small>    
+                                        <small><p>+ {{ $product->images->count() }} Imágen(es)</p></small>
                                     </div>
                                 </td>
                                 <td style="width: 250px;">
@@ -150,7 +150,7 @@
                                 </td>
                                 <!--
                                 <td class="sizes-td">
-                                    
+
                                 </td>
                                 -->
                                 <td>
@@ -198,7 +198,7 @@
                                     @endif
                                 </td>
                                 <td class="text-nowrap">
-                                    {{-- 
+                                    {{--
                                     <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-primary btn-sm btn-icon" data-toggle="tooltip" data-original-title="Ver Detalle">
                                         <i class="fas fa-eye"></i>
                                     </a>
@@ -226,7 +226,7 @@
                                 <td style="width: 150px; position: relative;">
                                     <img style="width: 100%;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
                                     <div class="text-center margin-top-10">
-                                        <small><p>+ {{ $product->images->count() }} Imágen(es)</p></small>    
+                                        <small><p>+ {{ $product->images->count() }} Imágen(es)</p></small>
                                     </div>
                                 </td>
                                 <td style="width: 250px;">
@@ -244,7 +244,7 @@
                                 </td>
                                 <!--
                                 <td class="sizes-td">
-                                    
+
                                 </td>
                                 -->
                                 <td>
@@ -292,7 +292,7 @@
                                     @endif
                                 </td>
                                 <td class="text-nowrap">
-                                    {{-- 
+                                    {{--
                                     <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-primary btn-sm btn-icon" data-toggle="tooltip" data-original-title="Ver Detalle">
                                         <i class="fas fa-eye"></i>
                                     </a>
