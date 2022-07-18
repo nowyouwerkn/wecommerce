@@ -1258,6 +1258,30 @@ class FrontController extends Controller
                     // Identificar al usuario para guardar sus datos.
                     $user->orders()->save($order);
 
+                    // GUARDAR LA DIRECCIÓN
+                    if ($request->save_address == 'true') {
+
+                        $check = UserAddress::where('street', $street)->count();
+
+                        if ($check == NULL || $check == 0) {
+                            $address = new UserAddress;
+                            $address->name = 'Compra_Paypal_' . $order->id;
+                            $address->user_id = $user->id;
+                            $address->street = $street;
+                            $address->street_num = $street_num;
+                            $address->postal_code = $postal_code;
+                            $address->city = $city;
+                            $address->country = $country;
+                            $address->state = $state;
+                            $address->phone = $phone;
+                            $address->suburb = $suburb;
+                            $address->references = $references;
+                            $address->is_billing = false;
+
+                            $address->save();
+                        }
+                    }
+
                     // Enviar al usuario a confirmar su compra en el panel de Paypal
                     return redirect()->away($payment->getApprovalLink());
 
@@ -1353,6 +1377,7 @@ class FrontController extends Controller
 
         // GUARDAR LA DIRECCIÓN
         if ($request->save_address == 'true') {
+
             $check = UserAddress::where('street', $street)->count();
 
             if ($check == NULL || $check == 0) {
