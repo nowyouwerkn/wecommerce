@@ -32,12 +32,16 @@
                 <a href="{{ route('taxes.index') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i></a>
                 <h4 class="mb-0 ml-2">Regresar</h4>
             </div>
-            
+
 
             <h3>Impuestos Base</h3>
             <p>Usa los impuestos base si tienes una obligación fiscal en el país. Se usarán estas tasas de impuestos a menos que se especifiquen anulaciones.</p>
-            
-            <a href="" class="btn btn-secondary mt-3 wd-80p">Restablecer las tasas de impuestos predeterminadas</a>
+
+            <form action="{{ route('taxes.destroy', $tax->id ?? '') }}" method="POST">
+                {{ csrf_field() }}
+                {{ method_field('DELETE') }}
+                <button href="" type="submit" class="btn btn-secondary mt-3 wd-80p">Restablecer las tasas de impuestos predeterminadas</button>
+            </form>
         </div>
     </div>
 
@@ -73,7 +77,7 @@
                         <div class="d-flex align-items-center justify-content-between px-2 py-3" style="border-top: 1px solid rgba(0, 0, 0, .1);">
                             <h5 class="mb-0">
                                 <i class="fas fa-map-pin"></i>
-                                {{ $region->description }} 
+                                {{ $region->description }}
                             </h5>
                             <div class="d-flex align-items-center">
                                 <p class="mb-0">{{ $region->tax_rate }} %</p>

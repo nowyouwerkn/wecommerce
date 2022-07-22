@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class StoreTaxController extends Controller
 {
     public function index()
-    {   
+    {
         $countries = Country::orderBy('id', 'desc')->get();
 
         return view('wecommerce::back.taxes.index')
@@ -78,6 +78,12 @@ class StoreTaxController extends Controller
 
     public function destroy($id)
     {
-        //
+        $tax = StoreTax::find($id);
+
+        $tax->delete();
+
+        Session::flash('success', 'El elemento se restablecio a 0');
+
+        return redirect()->back();
     }
 }
