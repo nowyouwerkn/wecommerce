@@ -23,7 +23,6 @@
 
 @section('content')
     <div class="row">
-
          <div class="col-md-4 mb-4">
             <a href="{{ route('config.index') }}">
                 <div class="card card-body h-100">
