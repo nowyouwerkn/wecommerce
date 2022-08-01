@@ -158,7 +158,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <p class="text-uppercase mb-0" style="font-size: .8em">&copy; 2021 <a href="index.html">{{ $store_config->store_name ?? 'LagerHaus powered by Werkn WeCommerce' }}</a>. Todos los derechos reservados</p>
+                <p class="text-uppercase mb-0" style="font-size: .8em">&copy; {{ Carbon\Carbon::now()->format('Y') }} <a href="index.html">{{ $store_config->store_name ?? 'LagerHaus powered by Werkn WeCommerce' }}</a>. Todos los derechos reservados</p>
             </div>
         </div>
     </div>

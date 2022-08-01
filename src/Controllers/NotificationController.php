@@ -25,6 +25,12 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
+    private $theme;
+
+    public function __construct()
+    {
+        $this->theme = new StoreTheme;
+    }
 
     public function index()
     {
@@ -101,9 +107,26 @@ class NotificationController extends Controller
         $log->save();
     }
 
-    public function mailOrder($data, $name, $email)
+    public function mailOrder($name, $email)
     {
-        $config = StoreConfig::find($id);
+        $mail = MailConfig::first();
+        $config = StoreConfig::first();
+
+        $sender_email = $config->sender_email;
+        $store_name = $config->store_name;
+        $contact_email = $config->contact_email;
+
+        $logo = asset('themes/' . $this->theme->get_name() . '/img/logo.svg');
+        //$logo = asset('assets/img/logo-store.jpg');
+
+        config(['mail.driver'=> $mail->mail_driver]);
+        config(['mail.host'=>$mail->mail_host]);
+        config(['mail.port'=>$mail->mail_port]);
+        config(['mail.username'=>$mail->mail_username]);
+        config(['mail.password'=>$mail->mail_password]);
+        config(['mail.encryption'=>$mail->mail_encryption]);
+
+        $data = array('user_id' => $order->user->id, 'logo' => $logo, 'store_name' => $store_name);
 
         Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email) {
 
@@ -113,15 +136,29 @@ class NotificationController extends Controller
         });
     }
 
-      public function registerUser($name, $email)
+    public function registerUser($name, $email)
     {
-        $config = StoreConfig::find($id);
+        $mail = MailConfig::first();
+        $config = StoreConfig::first();
 
-        Mail::send('wecommerce::mail.new_user', $data, function($message) use($name, $email) {
+        $sender_email = $config->sender_email;
+        $store_name = $config->store_name;
 
-            $message->to($email, $name)->subject('Gracias por registrarte en '. $config->store_name);
-            
-            $message->from($config->sender_email, $config->store_name);
+        $logo = asset('themes/' . $this->theme->get_name() . '/img/logo.svg');
+        //$logo = asset('assets/img/logo-store.jpg');
+
+        config(['mail.driver'=> $mail->mail_driver]);
+        config(['mail.host'=>$mail->mail_host]);
+        config(['mail.port'=>$mail->mail_port]);
+        config(['mail.username'=>$mail->mail_username]);
+        config(['mail.password'=>$mail->mail_password]);
+        config(['mail.encryption'=>$mail->mail_encryption]);
+
+        $data = array('name' => $name, 'logo' => $logo, 'store_name' => $store_name);
+
+        Mail::send('wecommerce::mail.new_user', $data, function($message) use($name, $email, $sender_email, $store_name) {
+            $message->to($email, $name)->subject('Gracias por registrarte en '. $store_name);
+            $message->from($sender_email, $store_name);
         });
     }
 
