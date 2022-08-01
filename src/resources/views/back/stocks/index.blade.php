@@ -123,6 +123,28 @@
         <a href="{{ route('products.create') }}" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Nuevo Producto</a>
     </div>
 @else
+    <!-- KPI's Generales -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card card-body p-3" style="background-color: #f1f5f7;">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h6 class="text-uppercase mb-0" style="font-size: .7rem;">Cantidad de piezas en inventario</h6>
+                    <h5 class="mb-0" style="font-size: 1rem;">{{ number_format($size_total) }}</h5>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card card-body p-3" style="background-color: #f1f5f7;">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h6 class="text-uppercase mb-0" style="font-size: .7rem;">Valor total del inventario</h6>
+                    <h5 class="mb-0" style="font-size: 1rem;">$ {{ number_format($inventory_value, 2) }}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Table -->
     <div class="row">
         <div class="col-lg-12 col-xl-12 mg-t-10">

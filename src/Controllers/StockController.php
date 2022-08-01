@@ -20,8 +20,34 @@ class StockController extends Controller
     {
         $products = Product::paginate(10);
 
-        return view('wecommerce::back.stocks.index')->with('products', $products);
 
+        $all_products = Product::all();
+
+        $size_total = 0;
+        $inventory_value = 0;
+
+        foreach ($all_products as $pr) {
+
+            if($pr->variants_stock->count() == 0){
+                $size_total += $pr->stock;
+            }else{
+                foreach($pr->variants_stock as $sz){
+                    $size_total += $sz->stock;
+                }
+            }
+
+            foreach ($pr->variants_stock as $v_price) {
+                $inventory_value += ($v_price->stock * $v_price->new_price);
+            }
+        };
+
+        $size_total;
+        $inventory_value;
+
+        return view('wecommerce::back.stocks.index')
+        ->with('products', $products)
+        ->with('size_total', $size_total)
+        ->with('inventory_value', $inventory_value);
     }
 
     public function create()
