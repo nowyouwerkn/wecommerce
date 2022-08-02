@@ -277,7 +277,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
 
     Route::resource('users', Nowyouwerkn\WeCommerce\Controllers\UserController::class); //
     Route::get('user/config', 'Nowyouwerkn\WeCommerce\Controllers\UserController@config')->name('user.config');  //
-    Route::get('user/help', 'Nowyouwerkn\WeCommerce\Controllers\UserController@help')->name('user.help');  //
+    Route::get('user/help', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@help')->name('user.help');  //
 
     Route::resource('template', Nowyouwerkn\WeCommerce\Controllers\MailThemeController::class); //
     Route::resource('mail', Nowyouwerkn\WeCommerce\Controllers\MailController::class)->except(['show, create, index']);

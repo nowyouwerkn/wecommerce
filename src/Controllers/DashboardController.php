@@ -399,6 +399,11 @@ class DashboardController extends Controller
         return view('wecommerce::back.messages');
     }
 
+    public function help()
+    {
+        return view('wecommerce::back.help');
+    }
+
     public function generalSearch(Request $request)
     {
         $search_query = $request->input('query');

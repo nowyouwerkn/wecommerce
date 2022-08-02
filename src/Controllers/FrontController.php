@@ -1038,7 +1038,7 @@ class FrontController extends Controller
                             )
                         );
                     }
-                    catch(\Excepton $e) {
+                    catch(\Exception $e) {
                         return redirect()->route('checkout')->with('error', $e->getMessage() );
                     }
                     catch(\Conekta\ParameterValidationError $error){

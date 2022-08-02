@@ -102,40 +102,21 @@
 				<tr>
 					<td>
 						<ul style="list-style: none;display: inline-flex;padding: 0px;">
-                            <li style="padding:0px 5px;"><a href="">Inicio</a></li>
-                            <li style="padding:0px 5px;"><a href="">Catálogo</a></li>
-                            
-                            @foreach($legals as $legal)
-                            <li style="padding:0px 5px;">
-                                <a href="{{ route('legal.text' , $legal->type) }}">
-                                    @switch($legal->type)
-                                        @case('Returns')
-                                            Política de Devoluciones
-                                            @break
+							<li style="padding:0px 5px;"><a href="{{ route('index') }}">Inicio</a></li>
+							<li style="padding:0px 5px;"><a href="{{ route('catalog.all') }}">Catálogo</a></li>
 
-                                        @case('Privacy')
-                                            Política de Privacidad
-                                            @break
-
-                                        @case('Terms')
-                                            Términos y Condiciones
-                                            @break
-
-                                        @case('Shipment')
-                                            Política de Envíos
-                                            @break
-
-                                        @default
-                                            Hubo un problema, intenta después.
-                                    @endswitch 
+							@foreach($legals as $legal)
+							<li style="padding:0px 5px;">
+								<a href="{{ route('legal.text' , $legal->type) }}">
+                                    {{ $legal->title }}
                                 </a>
-                            </li>
-                            @endforeach
-                        </ul>
+							</li>
+							@endforeach
+						</ul>
 
 						<p>Si tienes alguna pregunta, no dudes en contactarnos (Si respondes a este correo electr&oacute;nico, no podremos verlo)</p>
 						<p>&nbsp;</p>
-						<p>2022 {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
+						<p>{{ Carbon\Carbon::now()->format('Y') }} {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
 					</td>
 				</tr>
 			</tbody>

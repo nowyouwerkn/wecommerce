@@ -52,7 +52,7 @@ class VariantController extends Controller
     public function show($id)
     {
         $variant = Variant::findOrFail($id);
-        $products = $variant->products;
+        $products = $variant->products->paginate(15);
 
         return view('wecommerce::back.variants.show')->with('variant', $variant)->with('products', $products);
     }

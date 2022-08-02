@@ -68,6 +68,7 @@ class ClientController extends Controller
         //Validation
         $this -> validate($request, array(
             'name' => 'required|max:255',
+            'email' => 'unique:users|required|max:255',
         ));
 
         $client = User::create([
@@ -78,10 +79,11 @@ class ClientController extends Controller
         $client->assignRole('customer');
 
         $this->notification->registerUser($request->input('name'),$request->input('email'));
+
         //Session message
         Session::flash('success', 'El cliente fue registrado exitosamente.');
 
-        return redirect()->route('clients.show', $client->id);
+        return redirect()->back();
     }
 
     public function show($id)

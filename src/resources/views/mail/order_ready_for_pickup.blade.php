@@ -88,34 +88,15 @@
 							@foreach($legals as $legal)
 							<li style="padding:0px 5px;">
 								<a href="{{ route('legal.text' , $legal->type) }}">
-									@switch($legal->type)
-										@case('Returns')
-											Política de Devoluciones
-											@break
-
-										@case('Privacy')
-											Política de Privacidad
-											@break
-
-										@case('Terms')
-											Términos y Condiciones
-											@break
-
-										@case('Shipment')
-											Política de Envíos
-											@break
-
-										@default
-											Hubo un problema, intenta después.
-									@endswitch 
-								</a>
+                                    {{ $legal->title }}
+                                </a>
 							</li>
 							@endforeach
 						</ul>
 
 						<p>Si tienes alguna pregunta, no dudes en contactarnos (Si respondes a este correo electr&oacute;nico, no podremos verlo)</p>
 						<p>&nbsp;</p>
-						<p>2022 {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
+						<p>{{ Carbon\Carbon::now()->format('Y') }} {{ $store_name }}. Todos los derechos reservados. <a href="{{ route('index') }}">{{ route('index') }}</a></p>
 					</td>
 				</tr>
 			</tbody>
