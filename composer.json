@@ -1,25 +1,31 @@
 {
     "name": "nowyouwerkn/wecommerce",
-    "description": "eCommerce ecosystem to build and scale our clients businesses.",
+    "description": "WeCommerce is an eCommerce ecosystem designed for everyone to build and scale their business. It offers a wide range of functionalities that allows you to have full control of your store. It is combined with easy product information management and fast response time.",
     "keywords": [
-        "werkn",
-        "laravel",
+        "werken",
         "ecommerce",
         "cart",
-        "checkout"
+        "checkout",
+        "system"
     ],
     "type": "library",
     "authors": [
         {
             "name": "Jorge Peña Lama",
-            "email": "jorge.pena@werkn.mx",
-            "homepage" : "https://werkn.mx",
-            "role": "Project Manager"
+            "email": "jorge.pena@werken.mx",
+            "homepage" : "https://werken.mx",
+            "role": "Product Manager"
+        },
+        {
+            "name": "Noe Hassiel Monterrosas",
+            "email": "nosehassiel@werken.mx",
+            "homepage" : "https://werken.mx",
+            "role": "Developer"
         },
         {
             "name": "Itzell Elizondo",
-            "email": "itzell@werkn.mx",
-            "homepage" : "https://werkn.mx",
+            "email": "itzell@werken.mx",
+            "homepage" : "https://werken.mx",
             "role": "Designer"
         }
     ],
@@ -37,7 +43,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/fortify": "^1.7",
         "mews/purifier": "^3.3",
-        "openpay/sdk": "2.1.1",
+        "openpay/sdk": "^2.1.1",
         "paypal/rest-api-sdk-php": "^1.14",
         "rawilk/laravel-ups": "^2.1.1",
         "spatie/laravel-permission": "^4.2",

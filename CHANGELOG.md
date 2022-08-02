@@ -2,6 +2,13 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.6.2 - 2022-08-02
+- Se agergaron nuevos indicadores en la vista de inventario para conocer las existencias totales y su valor total en el sistema.
+- Solucionado el problema en la vista /user/help que no mandaba error al querer acceder.
+- Cambios mayores en las plantillas de correo al mostrar los textos legales de forma correcta.
+- Correo de notificación de registro de usuario ahora es funcional.
+- El listado de ordenes en el detalle de cliente se acomodan ahora por fecha de compra.
+
 ## 1.6.1 - 2022-06-26
 - Cambio de pantalla Vista General
 - Se agrega un listado especial en sección de "Canales de Venta"
