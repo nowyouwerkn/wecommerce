@@ -32,7 +32,7 @@
             <h5 class="card-title display-4 mb-1">{{ $variant->value }}</h5>
             <p>Productos con esta variante: {{ $variant->products->count() }}</p>
             <p class="card-text mb-0 mt-3">
-                <small class="text-muted">Actualizado por última vez: <br>{{ $variant->updated_at }}</small>
+                <small class="text-muted">Actualizado por última vez: <br>{{ Carbon\Carbon::parse($variant->updated_at)->translatedFormat('d M Y - h:ia') }}</small>
             </p>
         </div>
     </div>

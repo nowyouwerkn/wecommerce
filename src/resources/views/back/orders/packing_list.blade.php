@@ -122,11 +122,11 @@
 		    <ul class="list-unstyled lh-7">
 		      <li class="d-flex justify-content-between">
 		        <span>Fecha de Compra</span>
-		        <span>{{ Carbon\Carbon::parse($order->created_at)->format('d M Y - h:ia') }}</span>
+		        <span>{{ Carbon\Carbon::parse($order->created_at)->translatedFormat('d M Y - h:ia') }}</span>
 		      </li>
 		      <li class="d-flex justify-content-between">
 		        <span>Empaquetado:</span>
-		        <span>{{ Carbon\Carbon::now()->format('d M Y - h:ia') }}</span>
+		        <span>{{ Carbon\Carbon::now()->translatedFormat('d M Y - h:ia') }}</span>
 		      </li>
 		    </ul>
 		  </div><!-- col -->

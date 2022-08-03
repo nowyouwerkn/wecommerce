@@ -115,7 +115,7 @@
                             <tr>
                                 <td><a href="{{ route('clients.show', $client->id) }}">{{ $client->name }}</a></td>
                                 <td>
-                                    <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($client->created_at)->format('d M Y - H:i') }}</span>
+                                    <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($client->created_at)->translatedFormat('d M Y - H:i') }}</span>
                                 </td>
                                 <td>{{ $client->email }}</td>
                                 <td>

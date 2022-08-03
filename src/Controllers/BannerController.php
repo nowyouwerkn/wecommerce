@@ -15,7 +15,7 @@ class BannerController extends Controller
 {
     public function index()
     {
-        $banners = Banner::orderBy('priority','asc')->paginate(5);
+        $banners = Banner::orderBy('updated_at', 'desc')->orderBy('is_active', 'desc')->orderBy('priority','asc')->paginate(10);
 
         return view('wecommerce::back.banners.index', compact('banners'));
     }

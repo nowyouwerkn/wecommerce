@@ -176,7 +176,7 @@
                         <p class="mb-0"><strong>Tarjeta:</strong> **** **** **** {{ $order->card_digits }}</p>
 
                         <h5 class="mb-1 mt-3">Horario de Compra:</h5>
-                        <p><span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($order->created_at)->format('d M Y - h:ia') }}</span></p>
+                        <p><span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($order->created_at)->translatedFormat('d M Y - h:ia') }}</span></p>
                     </div>
                 </div>
 

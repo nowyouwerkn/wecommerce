@@ -23,7 +23,7 @@ class HeaderbandController extends Controller
 
     public function index()
     {
-        $headerbands = Headerband::paginate(5);
+        $headerbands = Headerband::orderBy('updated_at', 'desc')->orderBy('is_active', 'desc')->orderBy('priority','asc')->paginate(10);
 
         return view('wecommerce::back.headerbands.index', compact('headerbands'));
     }

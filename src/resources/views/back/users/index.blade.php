@@ -28,7 +28,7 @@
             <div class="card mg-b-10">
 
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-dashboard">
                         <thead>
                             <tr>
                                 <th scope="col">(#) Id</th>
@@ -58,8 +58,8 @@
                                 <td>
                                     {{ $user->getRoleNames() }}
                                 </td>
-                                <td>{{ $user->created_at }}</td>
-                                <td>{{ $user->updated_at }}</td>
+                                <td><span class="text-muted"><i class="far fa-clock"></i>{{ Carbon\Carbon::parse($user->created_at)->translatedFormat('d M Y - h:ia') }}</span></td>
+                                <td><span class="text-muted"><i class="far fa-clock"></i>{{ Carbon\Carbon::parse($user->updated_at)->translatedFormat('d M Y - h:ia') }}</span></td>
 
                                 @if($users->count() > 1)
                                     <td>

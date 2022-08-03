@@ -111,7 +111,7 @@
             </td>
 
             <td>
-                <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($order->created_at)->format('d M Y - h:ia') }}</span>
+                <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($order->created_at)->translatedFormat('d M Y - h:ia') }}</span>
             </td>
 
             <td><strong>${{ number_format($order->payment_total, 2) }}</strong><i class="far fa-question-circle ml-1" style="font-size:.7em;" data-toggle="tooltip" data-placement="top" title="Esta es la cantidad total pagada por el cliente en la compra."></i> </td>

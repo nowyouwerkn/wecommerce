@@ -29,7 +29,7 @@ return [
          *
          * Opciones disponibles son 'sandbox' o 'live'
          */
-        'mode' => env('PAYPAL_MODE', 'sandbox'),
+        'mode' => env('PAYPAL_MODE', 'live'),
 
         // Especificar el tiempo máximo de conexión por petición (3000 = 3 segundos)
         'http.ConnectionTimeOut' => 3000,

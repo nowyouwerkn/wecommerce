@@ -80,7 +80,7 @@
                                 <td>{{ $new->name }}</td>
                                 <td>{{ $new->email }}</td>
                                 <td>
-                                    <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($new->created_at)->format('d M Y - H:i') }}</span>
+                                    <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($new->created_at)->translatedFormat('d M Y - h:ia') }}</span>
                                 </td>
 
                                 <td>
