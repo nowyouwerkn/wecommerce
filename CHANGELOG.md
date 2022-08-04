@@ -12,6 +12,7 @@ Todos los cambios notables para `wecommerce` serán documentados en este archivo
 - Actualización de Facebook PHP SDK a versión 12.0 en `composer.json`
 - Elementos de Autenticación/Inicio de Sesión fueron cambiados a nueva estructura dentro de carpeta Auth. El `WeCommerceServiceProvider` ahora cargará los archivos de autenticación desde esa carpeta. 
 - Cambios en `README` para reflejar nueva estructura de carpetas de Werkn Backbone Boostrap
+- Mejoras varias de rendimiento y visuales.
 
 ### Eliminado
 - Limpieza de bloques comentados en `WeCommerceServiceProvider`
