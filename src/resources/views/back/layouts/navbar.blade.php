@@ -67,7 +67,7 @@
                 <a href="{{ route('dashboard') }}" class="nav-link"><i data-feather="pie-chart"></i> <span>Vista General</span></a>
             </li>
             <li class="nav-item with-sub">
-                <a href="" class="nav-link"><i data-feather="image"></i> <span> Marketing</span></a>
+                <a href="" class="nav-link"><i data-feather="image"></i> <span> Contenido</span></a>
                 <ul>
                   <li><a href="{{ route('banners.index') }}">Banners</a></li>
                   <li><a href="{{ route('popups.index') }}">Pop-ups</a></li>
@@ -75,29 +75,45 @@
                 </ul>
             </li>
 
+            <li class="nav-item with-sub">
+                <a href="" class="nav-link"><i data-feather="percent"></i> <span> Marketing</span></a>
+                <ul>
+                  <li><a href="{{ route('newsletter.index') }}">Newsletter</a></li>
+                  <li><a href="{{ route('promos.index') }}">Promociones</a></li>
+                  <li><a href="{{ route('coupons.index') }}">Cupones</a></li>
+                </ul>
+            </li>
+
             <li class="nav-item with-sub show">
-                <a href="" class="nav-link"><i data-feather="tag"></i> <span>Productos</span></a>
+                <a href="" class="nav-link"><i data-feather="tag"></i> <span>Catálogo</span></a>
                 <ul>
                     <li>
-                        <a href="{{ route('products.index') }}">Ver Todos</a>
+                        <a href="{{ route('products.index') }}">Productos</a>
                     </li>
                     <li>
-                        <a href="{{ route('stocks.index') }}">Inventario</a>
+                        <a href="{{ route('products.promotions') }}">Descuentos</a>
                     </li>
-                     <li>
-                        <a href="{{ route('products.promotions') }}">Promociones</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('variants.index') }}">Variantes</a>
-                    </li>
+
                     <li>
                         <a href="{{ route('categories.index') }}">Colecciones</a>
                     </li>
+
                     <li>
                         <a href="{{ route('size_chart.index') }}">Guía de tallas</a>
                     </li>
+
+                    <li>
+                        <a href="{{ route('variants.index') }}">Variantes</a>
+                    </li>
                 </ul>
             </li>
+
+            <li class="nav-item">
+                <a href="{{ route('stocks.index') }}" class="nav-link">
+                    <i data-feather="package"></i> <span>Inventario</span>
+                </a>
+            </li>
+
             <li class="nav-item">
                 @php
                     $new_orders_kpi = Nowyouwerkn\WeCommerce\Models\Order::where('created_at', '>=', Carbon\Carbon::now()->subWeek())->count();
@@ -108,29 +124,15 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a href="{{ route('clients.index') }}" class="nav-link">
-                    <i data-feather="users"></i> <span>Clientes</span>
-                </a>
+            <li class="nav-item with-sub">
+                <a href="" class="nav-link"><i data-feather="users"></i> <span>Clientes</span></a>
+                <ul>
+                  <li><a href="{{ route('clients.index') }}">Ver Todos</a></li>
+                  <li><a href="{{ route('invoices.index') }}">Facturación</a></li>
+                </ul>
             </li>
 
-            <li class="nav-item">
-                <a href="{{ route('invoices.index') }}" class="nav-link">
-                    <i data-feather="file-text"></i> <span>Facturación</span>
-                </a>
-            </li>
 
-            <li class="nav-item">
-                <a href="{{ route('newsletter.index') }}" class="nav-link">
-                    <i data-feather="file-text"></i> <span>Newsletter</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="{{ route('coupons.index') }}" class="nav-link">
-                    <i data-feather="percent"></i> <span>Cupones</span>
-                </a>
-            </li>
             <li class="nav-item">
                 @php
                     $new_reviews_kpi = Nowyouwerkn\WeCommerce\Models\Review::where('is_approved', false)->count();

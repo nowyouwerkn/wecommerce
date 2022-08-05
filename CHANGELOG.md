@@ -2,8 +2,26 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.7 - 2022-08-03
+
+### Agregado
+- Lanzamiento de módulo "Promociones". Esta nueva funcionalidad permite asignar descuentos en porcentaje o monto fijo a varios productos a la vez filtrados por 'Todos', 'Marca', 'Colecciones' y 'Género'.
+- Cambios de acomodo en el menú lateral. Reclasificación de elementos de navegación.
+- Modificadas todas las fechas en el sistema para que tengan localización de acuerdo al Huso Horario del sistema.
+- En la búsqueda de órdenes ahora se puede buscar por ID de Pago.
+- Actualización de Facebook PHP SDK a versión 12.0 en `composer.json`
+- Elementos de Autenticación/Inicio de Sesión fueron cambiados a nueva estructura dentro de carpeta Auth. El `WeCommerceServiceProvider` ahora cargará los archivos de autenticación desde esa carpeta. 
+- Cambios en `README` para reflejar nueva estructura de carpetas de Werkn Backbone Boostrap
+- Mejoras varias de rendimiento y visuales.
+
+### Eliminado
+- Limpieza de bloques comentados en `WeCommerceServiceProvider`
+- Assets del tema "Werkn Backbone" clásico.
+- Redirección personalizada de Fortify que se encontraba en la carpeta `Response/LoginResponse`. Tambien se eliminó la linea correspondiente en `WeCommerceServiceProvider`
+- Limpieza de archivos de "legado" del proyecto. (Entre ellos home.blade.php y la carpeta auth clásica dentro de resources/views).
+
 ## 1.6.2 - 2022-08-02
-- Se agergaron nuevos indicadores en la vista de inventario para conocer las existencias totales y su valor total en el sistema.
+- Se agregaron nuevos indicadores en la vista de inventario para conocer las existencias totales y su valor total en el sistema.
 - Solucionado el problema en la vista /user/help que no mandaba error al querer acceder.
 - Cambios mayores en las plantillas de correo al mostrar los textos legales de forma correcta.
 - Correo de notificación de registro de usuario ahora es funcional.

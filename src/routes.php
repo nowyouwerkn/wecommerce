@@ -255,6 +255,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'orders.search',
     ]);
 
+    Route::resource('promos', Nowyouwerkn\WeCommerce\Controllers\PromoController::class); //
+
+    Route::post('/get-promo-products', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\PromoController@fetchProducts',
+        'as' => 'dynamic.promo.filter',
+    ]);
+    
     Route::resource('coupons', Nowyouwerkn\WeCommerce\Controllers\CouponController::class); //
     Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class)->except(['store']); //
 

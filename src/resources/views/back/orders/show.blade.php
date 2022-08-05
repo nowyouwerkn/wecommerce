@@ -176,7 +176,7 @@
                         <p class="mb-0"><strong>Tarjeta:</strong> **** **** **** {{ $order->card_digits }}</p>
 
                         <h5 class="mb-1 mt-3">Horario de Compra:</h5>
-                        <p><span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($order->created_at)->format('d M Y - h:ia') }}</span></p>
+                        <p><span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($order->created_at)->translatedFormat('d M Y - h:ia') }}</span></p>
                     </div>
                 </div>
 
@@ -312,147 +312,62 @@
                 </div>
 
                 <div class="row mb-4">
-                    @if($order->shipping_option != 0 or (!empty($shipping_option) && $shipping_option->type == 'pickup'))
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
-                                    <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Recolección en Tienda</h6>
-                                    @if($order->status == 'Pagado')
-                                    <p class="mb-0 text-warning">Pedido pendiente de empaquetado</p>
-                                    @endif
-                                    
-                                    @if($order->status == 'Empaquetado')
-                                    <p class="mb-0 text-info">Pedido listo para Entregar</p>
-                                    @endif
-
-                                    @if($order->status == 'Entregado')
-                                    <p class="mb-0 text-success text-uppercase"><i class="fas fa-check"></i> Pedido Completo</p>
-                                    @endif
-
-                                </div>
-                                <div class="card-body pd-25">
-                                    <div class="d-flex justify-content-between">
-                                        <img src="{{ asset('assets/img/pickup_1.svg') }}" alt="Listo para Recolercar" class="mb-4" width="180">
-                                        <img src="{{ asset('assets/img/delivery_1.svg') }}" alt="Entregado al Cliente" class="mb-4" width="180">
-                                    </div>
-
-                                    {{-- 
-                                    <div class="progress mb-3">
-                                        <div class="progress-bar w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    --}}
-
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        @if($order->status == 'Empaquetado' or $order->status == 'Entregado')
-                                        <a href="" class="btn btn-sm pd-x-15 btn-white btn-uppercase disabled"><i class="fas fa-box mr-2"></i> Marcar como Empaquetado</a>
-                                        @else
-                                        <div>
-                                            <a href="{{ route('order.status.static', [$order->id, 'Empaquetado']) }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase"><i class="fas fa-box mr-2"></i> Marcar como Empaquetado</a>
-                                            <small class="text-mute mt-2 d-block">Se enviará un correo de notificación al comprador.</small>
-                                        </div>
+                    @if(empty($shipping_option))
+                        @include('wecommerce::back.orders.utilities._shipment_guides')
+                    @else
+                        @if($shipping_option->type == 'pickup')
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
+                                        <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Recolección en Tienda</h6>
+                                        @if($order->status == 'Pagado')
+                                        <p class="mb-0 text-warning">Pedido pendiente de empaquetado</p>
+                                        @endif
                                         
+                                        @if($order->status == 'Empaquetado')
+                                        <p class="mb-0 text-info">Pedido listo para Entregar</p>
                                         @endif
 
                                         @if($order->status == 'Entregado')
-                                        <a href="" class="btn btn-sm pd-x-15 btn-white btn-uppercase disabled"><i class="fas fa-box-open mr-2"></i> Marcar como Entregado</a>
-                                        @else
-                                        <a href="{{ route('order.status.static', [$order->id, 'Entregado']) }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase"><i class="fas fa-box-open mr-2"></i> Marcar como Entregado</a>
+                                        <p class="mb-0 text-success text-uppercase"><i class="fas fa-check"></i> Pedido Completo</p>
                                         @endif
+
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    @else
-                        <div class="col-md-6">
-                            <div class="card h-100">
-                                <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
-                                    <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Guías de Envío</h6>
-                                    <nav class="nav nav-with-icon tx-13">
-                                        <a href="" class="nav-link" data-toggle="modal" data-target="#trackingModal"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Adjuntar Guía</a>
-                                    </nav>
-                                </div>
+                                    <div class="card-body pd-25">
+                                        <div class="d-flex justify-content-between">
+                                            <img src="{{ asset('assets/img/pickup_1.svg') }}" alt="Listo para Recolercar" class="mb-4" width="180">
+                                            <img src="{{ asset('assets/img/delivery_1.svg') }}" alt="Entregado al Cliente" class="mb-4" width="180">
+                                        </div>
 
-                                <div class="card-body">
-                                    @if($order->trackings->count())
-                                        @foreach($order->trackings as $tracking)
-                                        <div class="card card-body tracking-card">
-                                            @if($tracking->status == 'En proceso')
-                                            <span class="badge badge-warning">{{ $tracking->status }}</span>
-                                            @endif
-                                            @if($tracking->status == 'Completado')
-                                            <span class="badge badge-success">{{ $tracking->status }}</span>
-                                            @endif
-                                            @if($tracking->status == 'Perdido')
-                                            <span class="badge badge-warning">{{ $tracking->status }}</span>
-                                            @endif
+                                        {{-- 
+                                        <div class="progress mb-3">
+                                            <div class="progress-bar w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        --}}
 
-                                            <p class="small-title">Número de Guía</p>
-                                            <div class="tracking-number">
-                                                <h4 class="mb-0">{{ $tracking->tracking_number }}</h4>
-                                            </div>
-
-                                            <p><em>{{ $tracking->products_on_order ?? 'No hay nota adjunta a esta guía.'}}</em></p>
-
-                                            @if($tracking->is_delivered  == true)
-                                            <a href="javascript:void(0)" class="btn btn-sm btn-success disabled"><i class="fas fa-check"></i> Entregado</a>
+                                        <div class="d-flex align-items-start justify-content-between">
+                                            @if($order->status == 'Empaquetado' or $order->status == 'Entregado')
+                                            <a href="" class="btn btn-sm pd-x-15 btn-white btn-uppercase disabled"><i class="fas fa-box mr-2"></i> Marcar como Empaquetado</a>
                                             @else
-                                            <a href="{{ route('tracking.complete', $tracking->id) }}" class="btn btn-sm btn-outline-info"><i class="fas fa-check"></i> Marcar Entregado</a>
-                                            @endif
+                                            <div>
+                                                <a href="{{ route('order.status.static', [$order->id, 'Empaquetado']) }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase"><i class="fas fa-box mr-2"></i> Marcar como Empaquetado</a>
+                                                <small class="text-mute mt-2 d-block">Se enviará un correo de notificación al comprador.</small>
+                                            </div>
                                             
-                                            <div class="d-flex align-items-center justify-content-between mt-2">
-                                                
-                                                <form method="POST" action="{{ route('tracking.destroy', $tracking->id) }}" style="display: inline-block; width: 15%;">
-                                                    <button type="submit" class="btn btn-sm btn-outline-light" data-toggle="tooltip" data-original-title="Borrar">
-                                                        <i class="fas fa-trash" aria-hidden="true"></i>
-                                                    </button>
-                                                    {{ csrf_field() }}
-                                                    {{ method_field('DELETE') }}
-                                                </form>
+                                            @endif
 
-                                                <a href="" class="btn btn-sm btn-outline-light" style="width:100%; margin-left: 8px;">
-                                                    <i class="fas fa-envelope"></i> Reenviar correo
-                                                </a>
-                                            </div> 
-                                        </div>
-                                        @endforeach
-                                    @else
-                                    <div class="text-center my-5">
-                                        <img src="{{ asset('assets/img/new_2.svg') }}" alt="No hay Guía" class="mb-4" width="180">
-                                        <h5 class="mb-0 px-5">Todavía no hay guías adjuntas para esta orden!</h5>
-                                        <p>Adjunta tu primera guía para gestionarla.</p>
-                                    </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
-                                    <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Dirección de Envío</h6>
-                                </div>
-
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <ul class="list-unstyled">
-                                                <li><strong>Calle + Núm:</strong> {{ $order->street }} {{ $order->street_num }}</li>
-                                                <li><strong>Colonia:</strong> {{ $order->suburb }}</li>
-
-                                                <li><strong>Código Postal:</strong> {{ $order->postal_code }}</li>
-                                                <li><strong>Referencias:</strong> {{ $order->references }}</li>
-                                                <li><hr></li>
-                                                <li><strong>Ciudad:</strong> {{ $order->city }}</li>
-                                                <li><strong>Estado:</strong> {{ $order->state }}</li>
-                                                <li><strong>País:</strong> {{ $order->country }}</li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDhjSfxxL1-NdSlgkiDo5KErlb7rXU5Yw4&q={{ str_replace(' ', '-', $order->street . ' ' . $order->street_num) }},{{ $order->city }},{{ $order->state }},{{ $order->country }}" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen class="mt-0 dont-print"></iframe>
+                                            @if($order->status == 'Entregado')
+                                            <a href="" class="btn btn-sm pd-x-15 btn-white btn-uppercase disabled"><i class="fas fa-box-open mr-2"></i> Marcar como Entregado</a>
+                                            @else
+                                            <a href="{{ route('order.status.static', [$order->id, 'Entregado']) }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase"><i class="fas fa-box-open mr-2"></i> Marcar como Entregado</a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @else
+                            @include('wecommerce::back.orders.utilities._shipment_guides')
+                        @endif
                     @endif
                 </div>
                 

@@ -24,7 +24,7 @@ class PopupController extends Controller
 
     public function index()
     {
-        $popups = Popup::paginate(5);
+        $popups = Popup::orderBy('updated_at', 'desc')->orderBy('is_active', 'desc')->paginate(10);
 
         return view('wecommerce::back.popups.index', compact('popups'));
     }

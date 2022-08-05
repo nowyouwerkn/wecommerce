@@ -288,11 +288,14 @@ class OrderController extends Controller
         return Excel::download(new OrderExport, 'ordenes.xlsx');
     }
 
-     public function query(Request $request)
+    public function query(Request $request)
     {
         $search_query = $request->input('query');
-         $orders = Order::where('client_name', 'LIKE', "%{$search_query}%")
-        ->orWhere('id', 'LIKE', "%{$search_query}%")->paginate(30);
+        
+        $orders = Order::where('client_name', 'LIKE', "%{$search_query}%")
+        ->orWhere('id', 'LIKE', "%{$search_query}%")
+        ->orWhere('payment_id', 'LIKE', "%{$search_query}%")
+        ->paginate(30);
     
         $clients = User::all();
 

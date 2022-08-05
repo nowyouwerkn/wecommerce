@@ -45,7 +45,7 @@
                         @endif
                         <div class="media-body mg-l-15">
                           <p class="mb-1"><strong>{{ $notification->user->name ?? ''}}</strong> {{ $notification->data }}</p>
-                          <span class="text-muted">{{ Carbon\Carbon::parse($notification->created_at)->format('D d g:ia') }}</span>
+                          <span class="text-muted">{{ Carbon\Carbon::parse($notification->created_at)->translatedFormat('l d g:ia') }}</span>
                         </div>
                       </div>
                     @endforeach

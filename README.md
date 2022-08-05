@@ -235,13 +235,11 @@ Para que funcione correctamente el sistema es OBLIGATORIO publicar los archivos 
 
 Etiquetas de elementos publicables:
 
-* --tag=werkn-theme (Tema principal)
-* --tag=werkn-bootstrap
+* --tag=werkn-bootstrap (Tema principal)
 * --tag=error-views
 * --tag=translations
 * --tag=public
 * --tag=config
-* --tag=migrations
 * --tag=seeders
 
 Recomendamos correr la publicación automáticamente pero puedes seleccionar que es lo que necesitas. Principalmente los temas.
@@ -299,37 +297,69 @@ public const HOME = '/profile';
 ```
 <!-- USAGE EXAMPLES -->
 ## Uso
-El paquete publica automáticamente las vistas de front que verán los compradores asi como todos los estilos relacionados a su funcionamiento. Puedes editar las vistas de front que se encuentran en `resources/views/front/theme/werkn-backbone`.
+El paquete publica automáticamente las vistas de front que verán los compradores asi como todos los estilos relacionados a su funcionamiento. Puedes editar las vistas de front que se encuentran en `resources/views/front/theme/werkn-backbone-bootstrap`.
 
 Estructura:
 * :open_file_folder: theme
-  * :open_file_folder: werkn-backbone
+  * :open_file_folder: werkn-backbone-bootstrap
+    * :open_file_folder: auth
+      * login.blade.php
+      * register.blade.php
+      * forgot-password.blade.php
+      * reset-password.blade.php
+    * :open_file_folder: checkout
+      * :open_file_folder: utilities
+        * _order_address.blade.php
+        * _order_address.blade.php
+        * _order_contact.blade.php
+        * _order_payment.blade.php
+        * _order_shipping.blade.php
+        * _order_summary.blade.php
+      * index.blade.php
     * :open_file_folder: layouts
+      * :open_file_folder: checkout
+        * footer.blade.php
+        * header.blade.php
+        * main.blade.php
       * :open_file_folder: partials
+        * _cookies_notice_.blade.php
+        * _headerbands.blade.php
+        * _messages_errors.blade.php
         * _messages.blade.php
         * _modal_messages.blade.php
+        * _modal_popup.blade.php
+        * _werkn_bar_.blade.php
+      * :open_file_folder: utilities
+        * _cart_item_.blade.php
+        * _filter_sidebar_.blade.php
+        * _order_card_.blade.php
+        * _product_card_.blade.php
       * _filter_sidebar.blade.php
-      * _product_card.blade.php
       * footer.blade.php
       * header.blade.php
       * main.blade.php
       * nav-user.blade.php
     * :open_file_folder: search
-      * general_query.blade.php
+      * element.blade.php
+      * index.blade.php
+      * query.blade.php
     * :open_file_folder: user_profile
       * account.blade.php
       * address.blade.php
+      * edit_address.blade.php
+      * image.blade.php
       * profile.blade.php
       * shopping.blade.php
       * wishlist.blade.php
-    * auth.blade.php
     * cart.blade.php
     * catalog.blade.php
     * catalog_filter.blade.php
-    * checkout.blade.php
     * detail.blade.php
+    * faqs.blade.php
+    * legal.blade.php
+    * order_tracking.blade.php
+    * purchase_complete.blade.php
     * index.blade.php :house:
-
 
 ### Eventos de Facebook
 La plataforma esta preparada para recibir eventos de Facebook integrando el código de pixel desde `Integraciones del Sistema` en la sección de `Preferencias Generales` de la configuración, asi como la conexión con la API de Conversiones de Facebook.
@@ -351,14 +381,14 @@ Para activar el evento <strong>Contact</strong> agrega la clase `contact_action`
 
 Para hacer cambios en los estilos puedes modificar libremente el archivo `main.blade.php` dentro de `layouts` para modificar o eliminar los archivos originales de la plantilla. Para sobreescribir los preexistentes recomendamos hacer todo dentro de la carpeta `css` en el archivo `w-custom.css`
 
-Si prefieres crear un nuevo tema que no se sobreescriba al actualizar puedes copiar y pegar la carpeta `werkn-backbone` y ponerle el nombre de tu proyecto. Siguiendo la estructura de la sección anterior el controlador `FrontController` vinculará automaticamente las vistas a la carpeta dentro de `theme`. <strong>Este cambio de estilo se debe configurar en el panel administrativo en Configuración > Apariencia y dar de alta el nombre de la carpeta.</strong>
+Si prefieres crear un nuevo tema que no se sobreescriba al actualizar puedes copiar y pegar la carpeta `werkn-backbone-bootstrap` y ponerle el nombre de tu proyecto. Siguiendo la estructura de la sección anterior el controlador `FrontController` vinculará automaticamente las vistas a la carpeta dentro de `theme`. <strong>Este cambio de estilo se debe configurar en el panel administrativo en Configuración > Apariencia y dar de alta el nombre de la carpeta.</strong>
 
 <strong>Recomendación:</strong> Para mantener limpio el proyecto para facilitar su actualización a futuro lo mejor es colocar los estilos básicos de tu nuevo tema dentro de la carpeta public > themes > [NOMBRE DE TU TEMA]. Los estilos particulares los puedes encontrar en la carpeta css.
 
 Estructura de carpeta theme
 
 * :open_file_folder: themes
-  * werkn-backbone
+  * werkn-backbone-bootstrap
     * [...]
   * [TU PROYECTO]
 
@@ -378,7 +408,7 @@ Revisa los [tickets abiertos](https://github.com/nowyouwerkn/wecommerce/issues) 
 
 MIT License
 
-Copyright (c) [2021] [Werkn S.A de C.V]
+Copyright (c) [2022] [Werken S.A de C.V]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

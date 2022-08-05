@@ -92,10 +92,10 @@
 
             <div class="card-body">
                 <p class="card-text mb-0">
-                    <small class="text-muted">Creado: {{ $category->created_at }}</small>
+                    <small class="text-muted">Creado: {{ Carbon\Carbon::parse($category->created_at)->translatedFormat('d M Y - h:ia') }}</small>
                 </p>
                 <p class="card-text mb-0">
-                    <small class="text-muted">Actualizado: {{ $category->updated_at }}</small>
+                    <small class="text-muted">Actualizado: {{ Carbon\Carbon::parse($category->updated_at)->translatedFormat('d M Y - h:ia') }}</small>
                 </p>
             </div>
         </div>
