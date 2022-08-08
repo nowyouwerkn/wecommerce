@@ -89,7 +89,7 @@
                 <h4>Total</h4>
 
                 <h4>$ <span id="totalPayment">{{ number_format($total,2) }}</span></h4>
-                <input type="hidden" name="final_total" value="{{ $total }}" id="finalTotal">
+                <input type="hidden" name="final_total" value="{{ $final_total }}" id="finalTotal">
             </div>
         </div>
         
