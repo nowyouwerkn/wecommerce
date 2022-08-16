@@ -1243,6 +1243,8 @@ class FrontController extends Controller
                     if (!Auth::check()) {
                         $user = User::create([
                             'name' => $client_name,
+                            'last_name' => $request->last_name,
+                            'phone' => $request->phone,
                             'email' => $request->email,
                             'password' => bcrypt('wkshop'),
                         ]);
@@ -1287,7 +1289,6 @@ class FrontController extends Controller
                     $order->status = 'Sin Completar';
 
                     $order->payment_id = Str::lower($payment->id);
-
                     $order->payment_method = $payment_method->supplier;
 
                     // Identificar al usuario para guardar sus datos.
@@ -1295,7 +1296,6 @@ class FrontController extends Controller
 
                     // GUARDAR LA DIRECCIÓN
                     if ($request->save_address == 'true') {
-
                         $check = UserAddress::where('street', $street)->count();
 
                         if ($check == NULL || $check == 0) {
@@ -1332,6 +1332,8 @@ class FrontController extends Controller
                     if (!Auth::check()) {
                         $user = User::create([
                             'name' => $client_name,
+                            'last_name' => $request->last_name,
+                            'phone' => $request->phone,
                             'email' => $request->email,
                             'password' => bcrypt('wkshop'),
                         ]);
@@ -1401,6 +1403,8 @@ class FrontController extends Controller
         if (!Auth::check()) {
             $user = User::create([
                 'name' => $client_name,
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
                 'email' => $request->email,
                 'password' => bcrypt('wkshop'),
             ]);
@@ -2308,6 +2312,7 @@ class FrontController extends Controller
     public function faqs()
     {
         $faqs = FAQ::all();
+        
         return view('front.theme.' . $this->theme->get_name() . '.faqs')->with('faqs', $faqs);
     }
 
