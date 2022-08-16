@@ -17,7 +17,7 @@ class BannerController extends Controller
     {
         $banners = Banner::orderBy('updated_at', 'desc')->orderBy('is_active', 'desc')->orderBy('priority','asc')->paginate(10);
 
-        return view('wecommerce::back.banners.index', compact('banners'));
+        return view('wecommerce::back.banners.index')->with('banners', $banners);
     }
 
     public function create()
@@ -106,7 +106,7 @@ class BannerController extends Controller
     public function edit($id)
     {
         $banner = Banner::find($id);
-        return view('wecommerce::back.banners.edit', compact('banner'));
+        return view('wecommerce::back.banners.edit')->with('banner', $banner);
     }
 
     public function update(Request $request, $id)
@@ -197,7 +197,6 @@ class BannerController extends Controller
     public function destroy($id)
     {
         $banner = Banner::find($id);
-
         $banner->delete();
 
         Session::flash('success', 'El banner se elimino correctamente.');

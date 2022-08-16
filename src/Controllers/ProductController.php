@@ -7,6 +7,7 @@ use DB;
 use Auth;
 use Image;
 use Session;
+use Carbon\Carbon;
 
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Category;
@@ -62,7 +63,7 @@ class ProductController extends Controller
         //Validar
         $this -> validate($request, array(
             'name' => 'unique:products|required|max:255',
-            'description' => 'required',
+            'description' => 'required|min:30',
             'price' => 'required',
             'model_image' => 'sometimes|min:10|max:2100|image',
             'sku' => 'required',
@@ -104,8 +105,9 @@ class ProductController extends Controller
         }else{
              $product->production_cost = $request->production_cost;
         }
+        
         $product->has_discount = $request->has_discount;
-        $product->discount_start = $request->discount_start;
+        $product->discount_start = Carbon::now()->format('Y-m-d');
         $product->discount_end = $request->discount_end;
 
         $product->has_tax = $request->has_tax;
@@ -345,7 +347,7 @@ class ProductController extends Controller
     {
         //Validar
         $this -> validate($request, array(
-            'description' => 'required',
+            'description' => 'required|min:30',
             'price' => 'required',
             'model_image' => 'sometimes|min:10|max:2100|image',
             'sku' => 'nullable',
@@ -370,7 +372,7 @@ class ProductController extends Controller
         $product->production_cost = $request->production_cost;
 
         $product->has_discount = $request->has_discount;
-        $product->discount_start = $request->discount_start;
+        $product->discount_start = Carbon::now()->format('Y-m-d');
         $product->discount_end = $request->discount_end;
 
         $product->has_tax = $request->has_tax;
@@ -398,7 +400,9 @@ class ProductController extends Controller
         $product->availability = $request->availability;
         $product->visibility = $request->visibility;
         $product->condition = $request->condition;
+        
         $product->product_type = $request->product_type;
+
         $product->fb_product_category = $request->fb_product_category;
         $product->google_product_category = $request->google_product_category;
 

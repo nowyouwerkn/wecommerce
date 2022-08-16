@@ -527,6 +527,9 @@
         content_ids: '{{ $product->sku }}',
         content_name: '{{ $product->name }}',
         content_type: 'product',
+    },
+    {
+        eventID: '{{ $deduplication_code  }}',
     });
 </script>
 

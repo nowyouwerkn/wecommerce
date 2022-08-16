@@ -24,31 +24,39 @@ class WishlistController extends Controller
         $product = Product::all();
         $wishlist = Wishlist::where('user_id', Auth::user()->id)->get();
 
-        return view ('wecommerce::user-profile.wishlist.index')->with('wishlist', $wishlist)->with('product', $product);
+        return view ('wecommerce::user-profile.wishlist.index')
+        ->with('wishlist', $wishlist)
+        ->with('product', $product);
     }
 
     public function add($id)
     {
-        $product = Product::getProductById($id);
+        $product = Product::find($id);
         
-        $check_wishlist = Wishlist::where('user_id', Auth::user()->id)->where('product_id', $product->id)->first();
+        if(Auth::check()){
+            $check_wishlist = Wishlist::where('user_id', Auth::user()->id)->where('product_id', $product->id)->first();
+            
+            if(empty($check_wishlist)){
+                Wishlist::create([
+                    'user_id' => Auth::user()->id,
+                    'product_id' => $product->id,
+                ]);
+    
+                Session::flash('product_added_whislist', 'Producto guardado en el wishlist.');
+            }
 
-        if(empty($check_wishlist)){
-            Wishlist::create([
-                'user_id' => Auth::user()->id,
-                'product_id' => $product->id,
-            ]);
+            return redirect()->back();
+        }else{
+            Session::flash('info', 'Inicia sesión para guardar productos en tu Wishlist.');
 
-            Session::flash('product_added_whislist', 'Producto guardado en el wishlist.');
+            return redirect()->route('login');
         }
-
-        return redirect()->back();
     }
 
     public function destroy($id)
     {
-        $product = Product::getProductById($id);
-
+        $product = Product::find($id);
+        
         Wishlist::where([
             'user_id' => Auth::user()->id,
             'product_id' => $product->id,

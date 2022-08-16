@@ -331,6 +331,24 @@ class FrontController extends Controller
 
         $store_config = $this->store_config;
 
+        //Facebook Event
+        if ($this->store_config->has_pixel() != NULL) {
+            if($product->has_discount == true)
+                $value = $product->discount_price;
+            else{
+                $value = $product->price;
+            }
+            $product_name = $product->name;
+            $product_sku = $product->sku;
+
+            $deduplication_code = md5(rand());
+
+            $event = new FacebookEvents;
+            $event->viewContent($value, $product_name, $product_sku, $deduplication_code);
+        }else{
+            $deduplication_code = NULL;
+        }
+
         if (empty($product)) {
             return redirect()->back();
         }else{
@@ -342,7 +360,8 @@ class FrontController extends Controller
             ->with('size_charts', $size_charts)
             ->with('last_product', $last_product)
             ->with('base_product', $base_product)
-            ->with('all_relationships', $all_relationships);
+            ->with('all_relationships', $all_relationships)
+            ->with('deduplication_code', $deduplication_code);
         }
     }
 
@@ -526,14 +545,30 @@ class FrontController extends Controller
             return view('front.theme.' . $this->theme->get_name() . '.cart');
         }
 
-        //Facebook Event
-        if ($this->store_config->has_pixel() != NULL) {
-            $event = new FacebookEvents;
-            $event->initiateCheckout();
-        }
-
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
+
+        //Facebook Event
+        if ($this->store_config->has_pixel() != NULL) {
+            $value = $cart->totalPrice;
+
+            $collection = collect();
+            $collection_names = collect();
+
+            foreach($cart->items as $product){
+                $collection = $collection->merge($product['item']['sku']);
+            }
+
+            $products_sku = $collection->all();
+            $cart_count = count($cart->items);
+
+            //$deduplication_code = md5(rand());
+
+            $event = new FacebookEvents;
+            $event->initiateCheckout($value, $products_sku, $cart_count);
+        }else{
+            //$deduplication_code = NULL;
+        }
 
         $payment_methods = PaymentMethod::where('is_active', true)->get();
         $card_payment = PaymentMethod::where('supplier', '!=','Paypal')->where('supplier', '!=','MercadoPago')->where('type', 'card')->where('is_active', true)->first();
@@ -1234,10 +1269,10 @@ class FrontController extends Controller
 
                     /* Money Info */
                     $order->cart_total = $cart->totalPrice;
-                    $order->shipping_rate = $request->shipping_rate;
-                    $order->sub_total = $request->sub_total;
-                    $order->tax_rate = $request->tax_rate;
-                    $order->discounts = $request->discounts;
+                    $order->shipping_rate = str_replace(',', '', $request->shipping_rate);
+                    $order->sub_total = str_replace(',', '', $request->sub_total);
+                    $order->tax_rate = str_replace(',', '', $request->tax_rate);
+                    $order->discounts = str_replace(',', '', $request->discounts);
                     $order->total = $request->final_total;
                     $order->payment_total = $request->final_total;
                     /*------------*/
@@ -1329,10 +1364,10 @@ class FrontController extends Controller
 
                     /* Money Info */
                     $order->cart_total = $cart->totalPrice;
-                    $order->shipping_rate = $request->shipping_rate;
-                    $order->sub_total = $request->sub_total;
-                    $order->tax_rate = $request->tax_rate;
-                    $order->discounts = $request->discounts;
+                    $order->shipping_rate = str_replace(',', '', $request->shipping_rate);
+                    $order->sub_total = str_replace(',', '', $request->sub_total);
+                    $order->tax_rate = str_replace(',', '', $request->tax_rate);
+                    $order->discounts = str_replace(',', '', $request->discounts);
                     $order->total = $request->final_total;
                     $order->payment_total = $request->final_total;
 
@@ -1456,10 +1491,10 @@ class FrontController extends Controller
 
         /* Money Info */
         $order->cart_total = $cart->totalPrice;
-        $order->shipping_rate = $request->shipping_rate;
-        $order->sub_total = $request->sub_total;
-        $order->tax_rate = $request->tax_rate;
-        $order->discounts = $request->discounts;
+        $order->shipping_rate = str_replace(',', '', $request->shipping_rate);
+        $order->sub_total = str_replace(',', '', $request->sub_total);
+        $order->tax_rate = str_replace(',', '', $request->tax_rate);
+        $order->discounts = str_replace(',', '', $request->discounts);
         $order->coupon_id = 0;
         $order->total = $request->final_total;
         $order->payment_total = $request->final_total;
@@ -1572,7 +1607,7 @@ class FrontController extends Controller
             Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aun asi la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento.');
         }
 
-        $purchase_value = number_format($cart->totalPrice,2);
+        $purchase_value = $cart->totalPrice;
 
         // Notificación
         $type = 'Orden';
@@ -1598,14 +1633,20 @@ class FrontController extends Controller
             }
             $products_sku = $collection->all();
 
+            $deduplication_code = md5(rand());
+
             $event = new FacebookEvents;
-            $event->purchase($products_sku, $value, $customer_email, $customer_name, $customer_lastname, $customer_phone);
+            $event->purchase($products_sku, $value, $customer_email, $customer_name, $customer_lastname, $customer_phone, $deduplication_code);
+        }else{
+            $deduplication_code = NULL;
         }
 
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
-        return redirect()->route('purchase.complete')->with('purchase_value', $purchase_value);
+        return redirect()->route('purchase.complete')
+        ->with('purchase_value', $purchase_value)
+        ->with('deduplication_code', $deduplication_code);
     }
 
     public function getOpenPayInstance()
@@ -1771,26 +1812,24 @@ class FrontController extends Controller
                 Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aun asi la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento.');
             }
 
-            $purchase_value = number_format($cart->totalPrice,2);
+            $purchase_value = $cart->totalPrice;
 
-                 // Notificación
+            // Notificación
             $type = 'Orden';
-            $by = $user;
+            $by = $order->user;
             $data = 'hizo una compra por $' . $purchase_value;
             $model_action = "create";
             $model_id = "";
 
-
-
-        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+            $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
             //Facebook Event
             if ($this->store_config->has_pixel() != NULL) {
                 $value = $purchase_value;
-                $customer_name = $order->user->name;
-                $customer_lastname = $order->user->last_name;
-                $customer_email = $order->user->email;
-                $customer_phone = $order->user->name;
+                $customer_name = $request->name;
+                $customer_lastname = $request->last_name;
+                $customer_email = $user->email;
+                $customer_phone = $user->name;
 
                 $collection = collect();
 
@@ -1799,14 +1838,19 @@ class FrontController extends Controller
                 }
                 $products_sku = $collection->all();
 
+                $deduplication_code = md5(rand());
+
                 $event = new FacebookEvents;
-                $event->purchase($products_sku, $value, $customer_email, $customer_name, $customer_lastname, $customer_phone);
+                $event->purchase($products_sku, $value, $customer_email, $customer_name, $customer_lastname, $customer_phone, $deduplication_code);
+            }else{
+                $deduplication_code = NULL;
             }
 
             Session::forget('cart');
             Session::flash('purchase_complete', 'Compra Exitosa.');
 
-            return redirect()->route('purchase.complete');
+            return redirect()->route('purchase.complete')
+            ->with('deduplication_code', $deduplication_code);
         }
 
         if (isset($paymentId)) {
@@ -2339,27 +2383,24 @@ class FrontController extends Controller
                 Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aun asi la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento.');
             }
 
-            $purchase_value = number_format($cart->totalPrice,2);
+            $purchase_value = $cart->totalPrice;
 
-
-                  // Notificación
+            // Notificación
             $type = 'Orden';
             $by = $user;
             $data = 'hizo una compra por $' . $purchase_value;
             $model_action = "create";
             $model_id = "";
 
-
-
             $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
             //Facebook Event
             if ($this->store_config->has_pixel() != NULL) {
                 $value = $purchase_value;
-                $customer_name = $order->user->name;
-                $customer_lastname = $order->user->last_name;
-                $customer_email = $order->user->email;
-                $customer_phone = $order->user->name;
+                $customer_name = $request->name;
+                $customer_lastname = $request->last_name;
+                $customer_email = $user->email;
+                $customer_phone = $user->name;
 
                 $collection = collect();
 
@@ -2368,14 +2409,20 @@ class FrontController extends Controller
                 }
                 $products_sku = $collection->all();
 
+                $deduplication_code = md5(rand());
+
                 $event = new FacebookEvents;
-                $event->purchase($products_sku, $value, $customer_email, $customer_name, $customer_lastname, $customer_phone);
+                $event->purchase($products_sku, $value, $customer_email, $customer_name, $customer_lastname, $customer_phone, $deduplication_code);
+            }else{
+                $deduplication_code = NULL;
             }
 
             Session::forget('cart');
         }
 
-        return view('front.theme.' . $this->theme->get_name() . '.purchase_complete')->with('store_config', $store_config);
+        return view('front.theme.' . $this->theme->get_name() . '.purchase_complete')
+        ->with('store_config', $store_config)
+        ->with('deduplication_code', $deduplication_code);
     }
 
     public function purchasePending(Request $request)

@@ -96,6 +96,7 @@
                             <div class="form-group">
                                 <label for="description">Descripción <span class="text-danger">*</span></label>
                                 <textarea name="description" cols="10" rows="3" class="form-control" required="">{{ old('description') }}</textarea>
+                                <small class="text-muted">Debe contener al menos 30 caracteres.</small>
                             </div>
                         </div>
 

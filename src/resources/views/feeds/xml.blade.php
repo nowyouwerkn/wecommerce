@@ -4,8 +4,8 @@
 ?>
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>{{ env('APP_NAME') }} | Catalog</title>
-		<description>{{ env('APP_DESCRIPTION') ?? '' }}</description>
+		<title>Fuente XML | Catálogo WeCommerce</title>
+		<description>Catálogo de Tienda en Línea</description>
 		<link>{{ route('index') }}</link>
 		<atom:link href="{{ route('xml.feed') }}" rel="self" type="application/rss+xml" />
 
@@ -18,7 +18,6 @@
 			<g:description>{{ $product->description }}</g:description>
 			@php
 				$str = preg_replace('/<[^>]*>/', '', $product->materials);
-
 				$clean_material = Illuminate\Support\Str::limit(Purifier::clean($str), 200);
 			@endphp
 
@@ -29,7 +28,7 @@
 			<g:link>{{ route('detail', [$product->category->slug ?? '', $product->slug]) }}</g:link>
 
 			<g:image_link>{{ asset('img/products/' . $product->image) }}</g:image_link>
-
+			
 			@foreach($product->images as $image)
 			<additional_image_link>{{ asset('img/products/' . $image->image) }}</additional_image_link>
 			@endforeach
@@ -58,14 +57,12 @@
 			
 			@if($product->stock == 0)
 				<g:availability>out of stock</g:availability>
-				<visibility>hidden</visibility>
 			@else
-				@if($product->status == 'Publicado')
 				<g:availability>in stock</g:availability>
-				<visibility>published</visibility>
+				@if($product->status == 'Publicado')
+				<status>active</status>
 				@else
-				<g:availability>out of stock</g:availability>
-				<visibility>hidden</visibility>
+				<status>archived</status>
 				@endif
 			@endif
 			
@@ -84,18 +81,13 @@
 			<g:price>{{ number_format($product->price, 2) }} @if($config->currency_id == 2)MXN @else USD @endif</g:price>
 			<g:sale_price>{{ number_format($product->discount_price, 2) }} @if($config->currency_id == 2)MXN @else USD @endif</g:sale_price>
 
-			<g:sale_price_effective_date>{{ Carbon\Carbon::parse($product->discount_start)->subDay()->format('Y-m-d') }}T08:00-06:00/{{ Carbon\Carbon::parse($product->discount_end)->format('Y-m-d') }}T08:00-06:00</g:sale_price_effective_date>
-
-			<g:product_type>Apparel &amp; Accessories &gt; Shoes</g:product_type>
-			
-			@if($product->gender == 'male')
-			<g:fb_product_category>clothing &amp; accessories &gt; shoes &amp; footwear &gt; shoes</g:fb_product_category>
-			@else
-			<g:fb_product_category>clothing &amp; accessories &gt; shoes &amp; footwear &gt; women's shoes</g:fb_product_category>
+			@if($product->has_discount == true)
+			<g:sale_price_effective_date>{{ Carbon\Carbon::parse($product->discount_start)->subDay()->format('Y-m-d') }}T23:59+00:00/{{ Carbon\Carbon::parse($product->discount_end)->format('Y-m-d') }}T23:59+00:00</g:sale_price_effective_date>
 			@endif
 
-			<g:google_product_category>Apparel &amp; Accessories &gt; Shoes</g:google_product_category>
-			<g:custom_label_0>{{ $product->custom_label ?? 'Made with Passion' }}</g:custom_label_0>
+			<g:product_type>{{ $product->google_product_category ?? 'Apparel & Accessories > Shoes' }}</g:product_type>
+			<g:fb_product_category>{{ $product->fb_product_category ?? 'clothing & accessories > shoes & footwear' }}</g:fb_product_category>
+			<g:google_product_category>{{ $product->google_product_category ?? 'Apparel & Accessories > Shoes' }}</g:google_product_category>
 		</item>
 		@endforeach
 	</channel>

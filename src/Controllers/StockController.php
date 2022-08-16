@@ -20,7 +20,6 @@ class StockController extends Controller
     {
         $products = Product::paginate(10);
 
-
         $all_products = Product::all();
 
         $size_total = 0;

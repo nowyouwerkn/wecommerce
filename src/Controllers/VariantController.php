@@ -40,10 +40,8 @@ class VariantController extends Controller
     public function store(Request $request)
     {
         $variant = new Variant;
-
         $variant->type = $request->type;
         $variant->value = $request->value;
-
         $variant->save();
 
         return redirect()->back();
@@ -65,9 +63,7 @@ class VariantController extends Controller
     public function update(Request $request, $id)
     {
         $variant = Variant::find($id);
-
         $variant->value = $request->value;
-
         $variant->save();
 
         return redirect()->back();
