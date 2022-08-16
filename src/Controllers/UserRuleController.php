@@ -7,20 +7,7 @@ use Nowyouwerkn\WeCommerce\Models\UserRule;
 use Illuminate\Http\Request;
 
 class UserRuleController extends Controller
-{
-
-    public function index()
-    {
-        
-    }
-
-
-    public function create()
-    {
-        
-    }
-
-    
+{   
     public function store(Request $request)
     {
         //Validation
@@ -46,19 +33,6 @@ class UserRuleController extends Controller
         Session::flash('success', 'El elemento fue registrado exitosamente.');
         return redirect()->route('coupons.index');
     }
-
-
-    public function show($id)
-    {
-        
-    }
-
-
-    public function edit($id)
-    {
-        
-    }
-
  
     public function update(Request $request, $id)
     {
@@ -68,7 +42,6 @@ class UserRuleController extends Controller
         ));
 
         $rule = UserRule::find($id);
-
         $rule->update([
             'type' => $request->type,
             'value' => $request->value,

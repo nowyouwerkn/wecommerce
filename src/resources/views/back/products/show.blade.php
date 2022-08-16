@@ -156,6 +156,7 @@
                         <div class="form-group">
                             <label for="description">Descripción <span class="text-danger">*</span></label>
                             <textarea name="description" cols="10" rows="3" class="form-control">{{ $product->description }}</textarea>
+                            <small class="text-muted">Debe contener al menos 30 caracteres.</small>
                         </div>
                     </div>
 
@@ -473,10 +474,16 @@
                             @endif
                         </div>
 
+                        @php
+                            $subcategories = Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', $product->category_id)->get();
+                        @endphp
+                        
                         <div class="form-group mt-3">
                             <label>Sub-Categorías</label>
                             <select class="form-control select2" name="subcategory[]" id="subcategory" data-plugin="select2" multiple="">
-
+                                @foreach($subcategories as $sub)
+                                <option value="{{ $sub->id }}">{{ $sub->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -801,7 +808,7 @@
         event.preventDefault();
 
         var value = $('#main_category').val();
-        $('#client_ip').append('<option value="0" disabled selected>Processing...</option>');
+        $('#subcategory').append('<option value="0" disabled selected>Processing...</option>');
 
         $.ajax({
             method: 'POST',

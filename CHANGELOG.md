@@ -2,6 +2,16 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.7.1 - 2022-08-16
+
+### Agregado
+- Soluciones de formato en totales y subtotales al finalizar la orden.
+- Actualización de versiones para librerias del programa.
+- Mejora de Eventos de la API Facebook para potenciar las calificaciones del pixel.
+- Taxonomía de categorías para Google y Facebook; seleccionables desde el formulario de producto.
+- Modificación de XML de Catálogo con nuevas opciones y validación de fecha en precios con descuento.
+- Modificación de formulario de producto en tamaño mínimo para campo de descripción.
+
 ## 1.7 - 2022-08-03
 
 ### Agregado

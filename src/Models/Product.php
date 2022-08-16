@@ -82,10 +82,4 @@ class Product extends Model
         if($status)
             return $query->where('status', $status);
     }
-
-    public static function getProductById($id)
-    {
-        $model = new static;
-        return $model->where('id', '=', $id)->first();
-    }
 }

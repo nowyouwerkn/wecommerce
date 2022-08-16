@@ -168,11 +168,14 @@
 
 @push('pixel-events')
     @if($store_config->has_pixel() == NULL)
-        <script type="text/javascript">
-            fbq('track', 'Purchase', {
-                currency: 'MXN',
-                value: {{ $purchase_value ?? '0.00' }}
-            });
-        </script>
+    <script type="text/javascript">
+        fbq('track', 'Purchase', {
+            currency: 'MXN',
+            value: '{{ $purchase_value }}',
+        },
+        {
+            eventID: '{{ $deduplication_code  }}',
+        });
+    </script>
     @endif
 @endpush

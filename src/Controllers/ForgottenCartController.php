@@ -26,22 +26,22 @@ class ForgottenCartController extends Controller
     }
 
 
-    public function show(ForgottenCart $forgottenCart)
+    public function show($id)
     {
         
     }
 
-    public function edit(ForgottenCart $forgottenCart)
+    public function edit($id)
     {
         
     }
 
-    public function update(Request $request, ForgottenCart $forgottenCart)
+    public function update(Request $request, $id)
     {
         
     }
 
-    public function destroy(ForgottenCart $forgottenCart)
+    public function destroy($id)
     {
         
     }
