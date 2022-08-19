@@ -181,7 +181,7 @@
 
                     /* Mostrar Total */
                     $('#totalPayment').text(msg['total']);
-                    $("#finalTotal").val(msg['total']);
+                    $("#finalTotal").val(msg['final_total']);
                 },
                 error: function(msg){
                     $('.cp-success').hide();

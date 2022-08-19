@@ -65,22 +65,13 @@
                 <p>$ <span id="taxValue">{{ number_format($tax, 2) }}</span></p>
                 <input type="hidden" name="tax_rate" id="taxRate" value="{{ $tax }}">
             </div>
-            @else
-            {{-- 
-            <div class="d-flex align-items-center justify-content-between">
-                <p>IVA (16%) <ion-icon class="pointer" name="information-circle-outline" data-bs-toggle="popover" data-bs-placement="left" data-bs-content="Desglose de I.V.A"></ion-icon></p>
-
-                <p>$ <span id="taxValue">{{ number_format($tax, 2) }}</span></p>
-                <input type="hidden" name="tax_rate"  id="taxRate" value="{{ $tax }}">
-            </div>
-            --}}
             @endif
 
             <div class="d-flex align-items-center justify-content-between">
                 <p>Cupones</p>
 
                 <p>- $ <span id="discountValue">0.00</span></p>
-                <input type="hidden" name="discounts" id="discount" value="" >
+                <input type="hidden" name="discounts" id="discount" value="">
             </div>
             
             <div class="border mt-2 mb-3"></div>
