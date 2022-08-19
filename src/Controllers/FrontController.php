@@ -1275,7 +1275,11 @@ class FrontController extends Controller
                     $order->shipping_rate = str_replace(',', '', $request->shipping_rate);
                     $order->sub_total = str_replace(',', '', $request->sub_total);
                     $order->tax_rate = str_replace(',', '', $request->tax_rate);
-                    $order->discounts = str_replace(',', '', $request->discounts);
+                    if(isset($request->discounts)){
+                        $order->discounts = str_replace(',', '', $request->discounts);
+                    }
+                        
+                    
                     $order->total = $request->final_total;
                     $order->payment_total = $request->final_total;
                     /*------------*/
@@ -1370,7 +1374,9 @@ class FrontController extends Controller
                     $order->shipping_rate = str_replace(',', '', $request->shipping_rate);
                     $order->sub_total = str_replace(',', '', $request->sub_total);
                     $order->tax_rate = str_replace(',', '', $request->tax_rate);
-                    $order->discounts = str_replace(',', '', $request->discounts);
+                    if(isset($request->discounts)){
+                        $order->discounts = str_replace(',', '', $request->discounts);
+                    }
                     $order->total = $request->final_total;
                     $order->payment_total = $request->final_total;
 
@@ -1499,7 +1505,9 @@ class FrontController extends Controller
         $order->shipping_rate = str_replace(',', '', $request->shipping_rate);
         $order->sub_total = str_replace(',', '', $request->sub_total);
         $order->tax_rate = str_replace(',', '', $request->tax_rate);
-        $order->discounts = str_replace(',', '', $request->discounts);
+        if(isset($request->discounts)){
+            $order->discounts = str_replace(',', '', $request->discounts);
+        }
         $order->coupon_id = 0;
         $order->total = $request->final_total;
         $order->payment_total = $request->final_total;
