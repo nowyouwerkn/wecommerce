@@ -799,6 +799,7 @@ class FrontController extends Controller
         if (!empty($payment_methods)) {
             return view('front.theme.' . $this->theme->get_name() . '.checkout.index')
             ->with('total', $total)
+            ->with('final_total', $total)
             ->with('payment_methods', $payment_methods)
             ->with('card_payment', $card_payment)
             ->with('cash_payment', $cash_payment)
