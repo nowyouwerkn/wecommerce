@@ -20,11 +20,11 @@
             <a href="{{ route('export.products') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
                 <i class="fas fa-file-export"></i> Exportar
             </a>
-            <a href="javascript:void(0)"  data-toggle="modal" data-target="#modalImport" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5">
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#modalImport" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5">
                 <i class="fas fa-file-import"></i> Importar
             </a>
 
-            <a href="{{ route('products.create') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#createProductModal" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
                 <i class="fas fa-plus"></i> Nuevo producto
             </a>
         </div>
@@ -58,6 +58,34 @@
         .table-dashboard thead th, .table-dashboard tbody td{
             white-space: initial;
         }
+
+        .product-btn{
+            background-color: #fff;
+            border: 1px solid;
+            border-color: #c0ccda;
+            color: rgba(27, 46, 75, 0.7);
+            padding: 50px 20px;
+            display: inline-block;
+            border-radius: 10px;
+            width: 100%;
+            min-height: 190px;
+            transition: all .2s ease-in-out;
+        }
+
+        .product-btn img{
+            width: 50px;
+            margin-bottom: 15px;
+        }
+
+        .product-btn h5{
+            font-size: 1em;
+            margin-bottom: 0px;
+        }
+
+        .product-btn:hover{
+            background-color: #dfe6e9;
+        }
+        
     </style>
 @endsection
 
@@ -116,5 +144,46 @@
                 </form>
             </div>
         </div><!-- modal-dialog -->
-    </div><!-- modal -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="createProductModal" tabindex="-1" role="dialog" aria-labelledby="createProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Crear nuevo Producto</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 pr-2">
+                            <a href="{{ route('products.create') }}" class="text-center product-btn">
+                                <img src="{{ asset('assets/img/physical-product.png') }}" alt="">
+                                <h5>Producto Físico</h5>
+                            </a>
+                        </div>
+                        <div class="col-md-4 px-2">
+                            <a href="{{ route('products.create.digital') }}" class="text-center product-btn">
+                                <img src="{{ asset('assets/img/digital-product.png') }}" alt="">
+                                <h5>Producto Digital</h5>
+                            </a>
+                        </div>
+                        <div class="col-md-4 pl-2">
+                            <a href="{{ route('products.create.suscription') }}" class="text-center product-btn">
+                                <img src="{{ asset('assets/img/suscription-product.png') }}" alt="">
+                                <h5>Suscripción</h5>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

@@ -51,7 +51,23 @@ class ProductController extends Controller
         ->with('categories', $categories);
     }
 
-        public function promotions()
+    public function createDigital()
+    {
+        $categories = Category::where('parent_id', NULL)->orWhere('parent_id', '0')->get();
+
+        return view('wecommerce::back.products.create_digital')
+        ->with('categories', $categories);
+    }
+
+    public function createSuscription()
+    {
+        $categories = Category::where('parent_id', NULL)->orWhere('parent_id', '0')->get();
+
+        return view('wecommerce::back.products.create_suscription')
+        ->with('categories', $categories);
+    }
+
+    public function promotions()
     {
         $products = Product::where('has_discount', true)->paginate(15);
 

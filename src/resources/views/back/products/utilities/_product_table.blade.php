@@ -10,7 +10,10 @@
                     <a class="filter-btn" href="{{route('filter.products', ['desc', 'name'])}}">
                     <i class="icon ion-md-arrow-down"></i></a>
                 </div>
-             </th>
+            </th>
+
+            <th>Tipo</th>
+
             <th style="min-width:130px;">          
                 <div class="d-flex align-items-center">
                     <span class="table-title">SKU / UPC</span>
@@ -76,18 +79,37 @@
 
                 <small class="badge badge-info mb-3" style="white-space: unset;">{{ $product->search_tags }}</small>
             </td>
+            <td>
+                <div class="d-flex align-items-center">
+                    @switch($product->type)
+                        @case('physical')
+                            <img src="{{ asset('assets/img/physical-product.png') }}" width="15px" class="mr-1" alt="">
+                            @break
+
+                        @case('digital')
+                            <img src="{{ asset('assets/img/digital-product.png') }}" width="15px" class="mr-1" alt="">
+                            @break
+
+                        @case('suscription')
+                            <img src="{{ asset('assets/img/suscription-product.png') }}" width="15px"c lass="mr-1" alt="">
+                            @break
+                        @default
+                            <img src="{{ asset('assets/img/physical-product.png') }}" width="15px" class="mr-1" alt="">
+                    @endswitch
+                    {{ $product->type ?? 'Físico' }}
+                </div>
+                
+            </td>
+
             <td style="width: 100px;">
                 {{ $product->sku }}
                 <small class="d-block"><em>{{ $product->barcode }}</em></small>
             </td>
             <td>${{ number_format($product->price,2) }}</td>
-            <td>
-                ${{ number_format($product->discount_price,2) }}
-            </td>
+            <td>${{ number_format($product->discount_price,2) }}</td>
 
             <td>
                 <ul class="list-unstyled mb-0">
-
                     <li>
                         @if($product->in_index == true)
                         <i class="fas fa-check text-info"></i>
@@ -122,6 +144,7 @@
                     </li>
                 </ul>
             </td>
+
             <td>
                 @if($product->status == 'Publicado')
                     <span class="status-circle bg-success"></span> Publicado
@@ -129,6 +152,7 @@
                     <span class="status-circle bg-danger"></span> Borrador
                 @endif
             </td>
+            
             <td class="text-nowrap">
                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-primary btn-sm btn-icon" data-toggle="tooltip" data-original-title="Editar">
                     <i class="fas fa-edit" aria-hidden="true"></i>

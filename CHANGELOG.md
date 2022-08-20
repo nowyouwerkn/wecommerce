@@ -2,6 +2,14 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.8 - 2022-08-20
+
+### Agregado
+- Nueva funcionalidad de tipos de productos, ahora se pueden configurar productos digitales o suscripciones para las tiendas en linea.
+- Cambios visuales generales en los formularios.
+- Nuevas migraciones de funcionalidad nueva de tipos de productos.
+
+
 ## 1.7.1 - 2022-08-16
 
 ### Agregado

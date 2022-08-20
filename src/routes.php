@@ -84,6 +84,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
 
     //Catalog
     Route::resource('products', Nowyouwerkn\WeCommerce\Controllers\ProductController::class); //
+    
+    Route::get('products/create/digital', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@createDigital',
+        'as' => 'products.create.digital',
+    ]);
+
+    Route::get('products/create/suscription', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@createSuscription',
+        'as' => 'products.create.suscription',
+    ]);
+
     Route::get('productsquery', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@search',
         'as' => 'products.query',
@@ -104,6 +115,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@fetchSubcategory',
         'as' => 'dynamic.subcategory',
     ]);
+
+    // Get Functions
+    Route::get('/characteristic-inputs', function () {
+        return view('wecommerce::back.products.includes._characteristic_inputs');
+    })->name('suscription.inputs');
 
     Route::post('products/new-image', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeImage',
