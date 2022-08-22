@@ -129,13 +129,20 @@
     {{ csrf_field() }}
     {{ method_field('PUT') }}
 
-    {{--
-    <div class="save-bar bg-success text-white d-flex align-items-center justify-content-between">
-        <p class="mb-0">El sistema guarda como borrador ocasionalmente. Para hacerlo manual da click en el botón.</p>
-        <button id="save-form" type="submit" class="btn-save-big btn btn-outline-light btn-sm text-white">Guardar cambios</button>
-    </div>
-    --}}
+    @switch($product->type)
+        @case('physical')
+        <h1>FISICO</h1>
+        @break
 
+        @case('digital')
+        <h1>digital</h1>
+        @break
+
+        @case('suscription')
+        <h1>suscripcion</h1>
+        @break
+    @endswitch
+    
     <div class="row">
         <!-- Firts Column -->
         <div class="col-md-8">

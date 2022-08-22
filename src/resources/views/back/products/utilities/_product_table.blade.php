@@ -84,21 +84,23 @@
                     @switch($product->type)
                         @case('physical')
                             <img src="{{ asset('assets/img/physical-product.png') }}" width="15px" class="mr-1" alt="">
+                            Físico
                             @break
 
                         @case('digital')
                             <img src="{{ asset('assets/img/digital-product.png') }}" width="15px" class="mr-1" alt="">
+                            Digital
                             @break
 
                         @case('suscription')
                             <img src="{{ asset('assets/img/suscription-product.png') }}" width="15px"c lass="mr-1" alt="">
+                            Suscripción
                             @break
                         @default
                             <img src="{{ asset('assets/img/physical-product.png') }}" width="15px" class="mr-1" alt="">
+                            Físico
                     @endswitch
-                    {{ $product->type ?? 'Físico' }}
                 </div>
-                
             </td>
 
             <td style="width: 100px;">
@@ -133,14 +135,6 @@
                         <i class="fas fa-times text-danger"></i>
                         @endif
                         Descuento Activo
-                    </li>
-                    <li>
-                        @if($product->has_tax == true)
-                        <i class="fas fa-check text-info"></i>
-                        @else
-                        <i class="fas fa-times text-danger"></i>
-                        @endif
-                        Tiene impuestos
                     </li>
                 </ul>
             </td>
