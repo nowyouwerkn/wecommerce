@@ -182,6 +182,12 @@
                     /* Mostrar Total */
                     $('#totalPayment').text(msg['total']);
                     $("#finalTotal").val(msg['final_total']);
+
+                    // Definiendo Referencia de MercadoPago
+                    var mp_preference = msg['mp_preference'];
+                    var mp_preference_id = msg['mp_preference_id'];
+                    $('#mp_preference').val(mp_preference);
+                    $('#mp_preference_id').val(mp_preference_id);
                 },
                 error: function(msg){
                     $('.cp-success').hide();
