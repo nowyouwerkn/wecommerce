@@ -2,6 +2,12 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.7.2 - 2022-08-22
+
+### Agregado
+- Actualización de envio de información de mercadopago con opciones de envio cuando se selecciona una opción con costo de envio adicional. 
+
+
 ## 1.7.1 - 2022-08-16
 
 ### Agregado
