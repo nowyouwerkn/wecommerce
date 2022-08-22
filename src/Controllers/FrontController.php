@@ -752,7 +752,7 @@ class FrontController extends Controller
 
             // Crear el elemento a pagar
             $item = new MercadoPago\Item();
-            $item->title = 'Tu compra desde tu tienda en linea';
+            $item->title = 'Tu compra desde tu tienda en Linea';
             $item->quantity = 1;
             $item->unit_price = $total;
 
@@ -1394,7 +1394,7 @@ class FrontController extends Controller
                     // Identificar al usuario para guardar sus datos.
                     $user->orders()->save($order);
 
-                    // Enviar al usuario a confirmar su compra en el panel de Paypal
+                    // Enviar al usuario a confirmar su compra en el panel de Mercadopago
                     return redirect()->away($request->mp_preference);
                 } catch (Exception $e) {
 
@@ -2229,7 +2229,7 @@ class FrontController extends Controller
 
                         // Create a Item to Pay
                         $item = new MercadoPago\Item();
-                        $item->title = 'Tu compra en linea';
+                        $item->title = 'Tu compra desde tu tienda en Linea.';
                         $item->quantity = 1;
                         $item->unit_price = $subtotal - $discount + $free_shipping;
 
@@ -2665,6 +2665,69 @@ class FrontController extends Controller
         $subtotal = ($total_cart + $shipping) - ($tax);
         $total = $subtotal + $tax;
 
+        /* Renovar Preferencia de Pago de Mercado Pago */
+        $mercado_payment = PaymentMethod::where('supplier', 'MercadoPago')->where('is_active', true)->first();
+
+        if (empty($mercado_payment)) {
+            $mp_preference = NULL;
+            $mp_preference_id =  NULL;
+        }else{
+            if ($mercado_payment->sandbox_mode == '1') {
+                $private_key_mercadopago = $mercado_payment->sandbox_private_key;
+            }elseif ($mercado_payment->sandbox_mode == '0') {
+                $private_key_mercadopago = $mercado_payment->private_key;
+            }
+            MercadoPago\SDK::setAccessToken($private_key_mercadopago);
+
+            // Create a Item to Pay
+            $item = new MercadoPago\Item();
+            $item->title = 'Tu compra desde tu tienda en Linea';
+            $item->quantity = 1;
+            $item->unit_price = $total;
+
+            // Create Payer
+            if (!empty(Auth::user())) {
+                $payer = new MercadoPago\Payer();
+                $payer->name = Auth::user()->name;
+                $payer->email = Auth::user()->email;
+            }
+
+            // Create Preference
+            $preference = new MercadoPago\Preference();
+            $preference->items = array($item);
+            if (!empty(Auth::user())) {
+                $preference->payer = $payer;
+            }
+
+            $preference->back_urls = array(
+                "success" => route('purchase.complete'),
+                "failure" => route('checkout'),
+                "pending" => route('checkout')
+            );
+
+            $mercadopago_oxxo = array ("id" => $mercado_payment->mercadopago_oxxo);
+            $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_paypal);
+
+            $preference->payment_methods = array(
+                "excluded_payment_methods" => array(
+                $mercadopago_paypal,
+                $mercadopago_oxxo
+              ),
+              "excluded_payment_types" => array(
+                array("id" => "ticket", "id" => "atm")
+              ),
+            );
+
+            $preference->auto_return = "approved";
+            $preference->binary_mode = true;
+
+            $preference->save();
+
+            $mp_preference = $preference->init_point;
+            $mp_preference_id = $preference->id;
+        }
+
+        // Regresar Respuesta a la Vista
         return response()->json([
             'mensaje' => $tax,
             'shipping' => number_format($shipping, 2),
@@ -2672,6 +2735,8 @@ class FrontController extends Controller
             'tax' => number_format($tax, 2),
             'total' => number_format($total, 2),
             'final_total' => $total,
+            'mp_preference_id' => $mp_preference_id, 
+            'mp_preference' => $mp_preference
         ], 200);
     }
 }
