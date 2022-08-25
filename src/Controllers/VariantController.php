@@ -79,9 +79,11 @@ class VariantController extends Controller
         $data = 'eliminó la variante "' . $variant->value . '" del sistema.';
         $model_action = "delete";
         $model_id = $variant->id;
+        
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         $variant->delete();
+
         Session::flash('success', 'Se eliminó la variante correctamente.');
         return redirect()->back();
     }

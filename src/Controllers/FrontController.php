@@ -915,14 +915,6 @@ class FrontController extends Controller
             'name' => 'required|max:255',
             'last_name' => 'required',
             'phone' => 'required',
-            'street' => 'sometimes',
-            'street_num' => 'sometimes',
-            'suburb' => 'sometimes',
-            'postal_code' => 'sometimes',
-            'country' => 'sometimes',
-            'state' => 'sometimes',
-            'city' => 'sometimes',
-            'references' => 'sometimes',
         ));
 
         if ($request->method == 'Pago con Tarjeta') {
@@ -1015,6 +1007,22 @@ class FrontController extends Controller
             $suburb = 'Tienda';
             $references = $shipment_option->name;
         }else{
+            //Validar
+            $customMessages = [
+                'unique' => 'Verifica que tu dirección de envío sea correcta y que esté completa. Puedes crear una nueva directamente desde este formulario.'
+            ];
+
+            $this -> validate($request, array(
+                'street' => 'required',
+                'street_num' => 'required',
+                'suburb' => 'required',
+                'postal_code' => 'required',
+                'country' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'references' => 'required',
+            ), $customMessages);
+            
             $street = $request->input('street');
             $street_num = $request->input('street_num');
             $country = $request->input('country');
@@ -2432,7 +2440,13 @@ class FrontController extends Controller
             }
 
             Session::forget('cart');
+
+            return view('front.theme.' . $this->theme->get_name() . '.purchase_complete')
+            ->with('store_config', $store_config)
+            ->with('deduplication_code', $deduplication_code);
         }
+
+        $deduplication_code = NULL;
 
         return view('front.theme.' . $this->theme->get_name() . '.purchase_complete')
         ->with('store_config', $store_config)

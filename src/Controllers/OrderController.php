@@ -200,7 +200,6 @@ class OrderController extends Controller
 
             // Actualizar existencias del producto
             foreach ($cart->items as $product) {
-
                 if ($product['item']['has_variants'] == true) {
                     $variant = Variant::where('value', $product['variant'])->first();
                     $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
