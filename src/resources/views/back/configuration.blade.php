@@ -12,11 +12,7 @@
             <h4 class="mg-b-0 tx-spacing--1">Configuración</h4>
         </div>
         <div class="d-none d-md-block">
-            <!--
-            <a href="{{ route('dashboard') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
-                Dashboard
-            </a>
-            -->
+
         </div>
     </div>
 @endsection

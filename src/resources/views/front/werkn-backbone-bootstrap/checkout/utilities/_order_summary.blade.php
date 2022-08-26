@@ -1,33 +1,66 @@
 <div class="card">
     <div class="card-body">
-        <div class="alert alert-info d-flex justify-content-between">
-            ¿Quieres editar el carrito? 
-            <a href="{{ route('cart') }}">Ir al carrito</a>
-        </div>
+        @if(!empty($products))
+            <div class="alert alert-info d-flex justify-content-between">
+                ¿Quieres editar el carrito? 
+                <a href="{{ route('cart') }}">Ir al carrito</a>
+            </div>
 
-        @foreach($products as $product)
-            @php
-                $item_img = $product['item']['image'];
-                $variant = $product['variant'];
-            @endphp
+            @foreach($products as $product)
+                @php
+                    $item_img = $product['item']['image'];
+                    $variant = $product['variant'];
+                @endphp
+                <!--List product -->
+                <div class="we-co--product-list-item d-flex align-items-center">
+                    <div class="we-co--product-img-wrap w-25">
+                        <span class="we-co--qty-circle">{{ $product['qty'] }}</span>
+                        <img src="{{ asset('img/products/' . $item_img ) }}" class="img-fluid" alt="{{ $product['item']['name'] }}">
+                    </div>
+                    
+                    <div class="w-75 d-flex justify-content-between">
+                        <div class="we-co--product-item-info">
+                            <h6 class="mb-0">{{ $product['item']['name'] }}</h6>
+                            <p class="mb-0">{{ $type ?? 'Variante' }}: {{ $variant }}</p>
+                        </div>
+
+                        <p>$ {{ number_format($product['price']) }}</p>
+                    </div>
+                </div>
+            @endforeach
+        @else
             <!--List product -->
             <div class="we-co--product-list-item d-flex align-items-center">
                 <div class="we-co--product-img-wrap w-25">
-                    <span class="we-co--qty-circle">{{ $product['qty'] }}</span>
-                    <img src="{{ asset('img/products/' . $item_img ) }}" class="img-fluid" alt="{{ $product['item']['name'] }}">
+                    <img src="{{ asset('img/products/') }}" class="img-fluid" alt="Suscripción">
                 </div>
                 
                 <div class="w-75 d-flex justify-content-between">
                     <div class="we-co--product-item-info">
-                        <h6 class="mb-0">{{ $product['item']['name'] }}</h6>
-                        <p class="mb-0">{{ $type ?? 'Variante' }}: {{ $variant }}</p>
+                        <h6 class="mb-0">Suscripción</h6>
+                        <p class="mb-0">2 Meses</p>
                     </div>
 
-                    <p>$ {{ number_format($product['price']) }}</p>
+                    <p>$ {{ number_format($product['price'] ?? '999.00') }}</p>
                 </div>
             </div>
-        @endforeach
+
+            <div class="alert alert-info d-flex justify-content-between mt-3">
+                <div>
+                    <strong>Este cobro es recurrente.</strong> Tu siguiente fecha de pago será: 25 de agosto del 2022. Puedes cancelar tu suscripción en cualquier momento desde tu perfil de cliente.
+                </div>
+            </div>
+
+            <div class="alert alert-info d-flex justify-content-between mt-3">
+                <div>
+                    <strong>Este cobro es mensual hasta 25 de agosto del 2022.</strong> Tu suscripción termina el: 25 de septiembre del 2022. Puedes renovar comprando nuevamente la suscripción.
+                </div>
+            </div>
+            <hr>
+        @endif
+
         <div class="we-co--order-numbers mt-4">
+            @if(!empty($products))
             <div class="d-flex align-items-center justify-content-between">
                 <p>Envío</p>
                 
@@ -49,7 +82,8 @@
             </div>
 
             <hr>
-
+            @endif
+            
             <div class="d-flex align-items-center justify-content-between">
                 <p>Sub-total</p>
 
@@ -95,10 +129,14 @@
                 <div class="input-group input-cuopon mb-3">
                     <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Código de descuento">
                     <div class="form-group-append">
-                        @if($shipment_options->count() != 0)
-                        <button class="we-co--btn-coupon select-shipment-first" id="apply_cuopon" type="button">Usar Código</button>
+                        @if(!empty($products))
+                            @if($shipment_options->count() != 0)
+                            <button class="we-co--btn-coupon select-shipment-first" id="apply_cuopon" type="button">Usar Código</button>
+                            @else
+                            <button class="we-co--btn-coupon" id="apply_cuopon" type="button">Usar Código</button>
+                            @endif
                         @else
-                        <button class="we-co--btn-coupon" id="apply_cuopon" type="button">Usar Código</button>
+                            <button class="we-co--btn-coupon" id="apply_cuopon" type="button">Usar Código</button>
                         @endif
                     </div>
                 </div>

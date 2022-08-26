@@ -179,11 +179,9 @@ class ProductController extends Controller
         /* Características Productos Digitales */
         if($request->type == 'digital'){
             $product->download_link = $request->download_link;
-            //$product->doc_file = $request->doc_file;
-            //$product->image_file = $request->image_file;
 
             /* Crear Slug del Nombre */
-            $nameslug = str_slug($request->name);
+            $nameslug = Str::slug($request->name);
             $code_gen = substr(md5(uniqid(mt_rand(), true)) , 0, 5);
 
             if ($request->hasFile('doc_file')) {
@@ -526,7 +524,7 @@ class ProductController extends Controller
             //$product->image_file = $request->image_file;
 
             /* Crear Slug del Nombre */
-            $nameslug = str_slug($request->name);
+            $nameslug = Str::slug($request->name);
             $code_gen = substr(md5(uniqid(mt_rand(), true)) , 0, 5);
 
             if ($request->hasFile('doc_file')) {

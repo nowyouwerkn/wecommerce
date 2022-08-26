@@ -484,9 +484,17 @@ Route::get('cart', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@cart')->n
 
 /* Checkout */
 Route::get('/checkout', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkout')->name('checkout');
+
+Route::get('/checkout/suscription', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutSuscription')->name('checkout.suscription');
+
 Route::post('/checkout',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckout',
     'as' => 'checkout.store',
+]);
+
+Route::post('/checkout/suscription',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutSuscription',
+    'as' => 'checkout.suscription.store',
 ]);
 
 Route::get('/zip_codes/get',[

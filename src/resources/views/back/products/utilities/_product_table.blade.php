@@ -93,7 +93,7 @@
                             @break
 
                         @case('suscription')
-                            <img src="{{ asset('assets/img/suscription-product.png') }}" width="15px"c lass="mr-1" alt="">
+                            <img src="{{ asset('assets/img/suscription-product.png') }}" width="15px" class="mr-1" alt="">
                             Suscripción
                             @break
                         @default
