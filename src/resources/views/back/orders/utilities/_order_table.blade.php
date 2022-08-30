@@ -1,4 +1,4 @@
-<table class="table table-dashboard">
+<table class="table table-dashboard table-responsive">
     <thead>
         <tr>
             <th>
@@ -10,6 +10,7 @@
                         <i class="icon ion-md-arrow-down"></i></a>
                 </div>
             </th>
+            <th>Tipo</th>
             <th>ID Pago</th>
             <th style="width: 80px;">
                <div class="d-flex align-items-center">
@@ -80,17 +81,34 @@
                     @endif
                 </a>
             </td>
-          
-            <td class="type-td" style="width:280px;">
-                @if(strlen($order->payment_id) > 30)
-                {{$str = substr($order->payment_id, 0, 27) . '...';  }}
+            <td>
+                @switch($order->type)
+                    @case('recurring_payment')
+                    <div class="d-flex align-items-center">
+                        @if($order->subscription_status == true)
+                        <i class="fas fa-circle text-success mr-2"></i>
+                        @else
+                        <i class="fas fa-circle text-danger mr-2"></i>
+                        @endif
+                        Suscripción
+                    </div>
+                    
+                    @break
+
+                    @default
+                    Pago único
+                @endswitch
+            </td>
+            <td class="type-td" style="width:100px;">
+                @if(strlen($order->payment_id) > 15)
+                {{$str = substr($order->payment_id, 0, 10) . '...';  }}
                 @else
                 {{ $order->payment_id }}
                 @endif
             </td>
 
             <td class="text-muted">
-                <span style="display:block; width:120px;" data-toggle="tooltip" data-placement="bottom" title="ID de Pago: {{ $order->payment_id }}">
+                <span style="display:block; width:100px;" data-toggle="tooltip" data-placement="bottom" title="ID de Pago: {{ $order->payment_id }}">
                 	@if($order->payment_method == 'Paypal')
                 		<i class="fab fa-paypal"></i>
                 	@else
@@ -107,7 +125,6 @@
                 @else
                     {{ $order->user->name ?? ''}}
                 @endif
-                
             </td>
 
             <td>
@@ -117,6 +134,7 @@
             <td><strong>${{ number_format($order->payment_total, 2) }}</strong><i class="far fa-question-circle ml-1" style="font-size:.7em;" data-toggle="tooltip" data-placement="top" title="Esta es la cantidad total pagada por el cliente en la compra."></i> </td>
 
             <td>
+                @if($order->type != 'recurring_payment')
                 <div id="orderStatus_{{ $order->id }}" class="dropdown order-status">
 
                     <button class="badge badge-table btn btn-{{ Str::slug($order->status) }} dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -327,6 +345,39 @@
                         });
                     </script>
                 @endpush
+                @else
+                <div class="badge badge-table btn btn-{{ Str::slug($order->status) }}" style="font-size: 10px;">                
+                    <div class="order-info">
+                        @switch($order->status)
+                            @case('Pago Pendiente')
+                                <i class="fas fa-exclamation mr-1"></i> 
+                                @break
+
+                            @case('Pagado')
+                                <i class="fas fa-check mr-1"></i> 
+                                @break
+
+                            @case('Cancelado')
+                                <i class="fas fa-times mr-1"></i> 
+                                @break
+
+                            @case('Expirado')
+                                <i class="fas fa-times mr-1"></i> 
+                                @break
+
+                            @case('Sin Completar')
+                                <i class="fas fa-user-clock"></i>
+                                @break
+
+                            @default
+                                <i class="fas fa-check mr-1"></i> 
+
+                        @endswitch
+                        
+                        <span>{{ $order->status ?? 'Pagado'}}</span>
+                    </div> 
+                </div>
+                @endif
             </td>
 
             <td>

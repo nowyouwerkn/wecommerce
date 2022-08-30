@@ -28,6 +28,18 @@ use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Exception\PayPalConnectionException;
 
+/* Paypal Subscription Models */
+use PayPal\Api\ChargeModel;
+use PayPal\Api\Currency;
+use PayPal\Api\MerchantPreferences;
+use PayPal\Api\PaymentDefinition;
+use PayPal\Api\Plan as PaypalPlan;
+use PayPal\Api\Patch;
+use PayPal\Api\PatchRequest;
+use PayPal\Common\PayPalModel;
+use PayPal\Api\Agreement;
+use PayPal\Api\ShippingAddress;
+
 /* Openpay Helpers */
 use Openpay;
 use OpenpayApiError;
@@ -1907,7 +1919,7 @@ class FrontController extends Controller
 
                 break;
 
-            case 'monthly':
+            case 'yearly':
                 $interval = 'year';
                 if($product->time_for_cancellation != NULL){
                     $cancel_at = Carbon::now()->addYears($product->time_for_cancellation)->getTimestamp();
@@ -2054,7 +2066,7 @@ class FrontController extends Controller
                             ), 
                         ),
                         "cancel_at" => $cancel_at ?? NULL,
-                    )); 
+                    ));
 
                 } catch(\Stripe\Exception\CardException $e) {
                     // Error de validaciçon de tarjeta
@@ -2122,33 +2134,109 @@ class FrontController extends Controller
                 try {
                     $instance = $this->getPaypalInstance();
 
-                    $payer = new Payer();
-                    $payer->setPaymentMethod('paypal');
+                    $plan = new PaypalPlan();
 
-                    $amount = new Amount();
-                    $amount->setTotal($request->final_total);
-                    $amount->setCurrency($currency_value);
+                    $plan
+                    ->setName($product->name)
+                    ->setDescription($product->description)
+                    ->setType('FIXED');
 
-                    $transaction = new Transaction();
-                    $transaction->setAmount($amount);
-                    $transaction->setDescription('Compra en tu Tienda en Linea');
+                    // Set billing plan definitions
+                    $transaction = new PaymentDefinition();
+                    $transaction
+                    ->setName($product->name)
+                    ->setType('REGULAR')
+                    ->setFrequency($interval)
+                    ->setFrequencyInterval($product->payment_frequency_qty)
+                    ->setCycles($product->time_for_cancellation)
+                    ->setAmount(new Currency(array(
+                        'value' => $request->final_total,
+                        'currency' => $currency_value
+                    )));
+
+                    // Set charge models
+                    $chargeModel = new ChargeModel();
+                    $chargeModel->setType('SHIPPING')->setAmount(new Currency(array(
+                        'value' => $request->final_total,
+                        'currency' => $currency_value,
+                    )));
+                    $transaction->setChargeModels(array(
+                        $chargeModel
+                    ));
 
                     $callbackUrl = url('/paypal/status');
+                    
+                    // Set merchant preferences
+                    $merchantPreferences = new MerchantPreferences();
+                    $merchantPreferences->setReturnUrl($callbackUrl)
+                        ->setCancelUrl($callbackUrl)
+                        ->setAutoBillAmount('yes')
+                        ->setInitialFailAmountAction('CONTINUE')
+                        ->setMaxFailAttempts('0')
+                        ->setSetupFee(new Currency(array(
+                        'value' => $request->final_total,
+                        'currency' => $currency_value,
+                    )));
 
-                    $redirectUrls = new RedirectUrls();
-                    $redirectUrls->setReturnUrl($callbackUrl)
-                        ->setCancelUrl($callbackUrl);
-
-                    $payment = new Payment();
-                    $payment->setIntent('sale')
-                        ->setPayer($payer)
-                        ->setTransactions(array($transaction))
-                        ->setRedirectUrls($redirectUrls);
+                    $plan->setPaymentDefinitions(array(
+                        $transaction
+                    ));
+                    $plan->setMerchantPreferences($merchantPreferences);
 
                     try {
-                        $payment->create($instance);
+                        $createdPlan = $plan->create($instance);
+                    } catch (PayPal\Exception\PayPalConnectionException $ex) {
+                        return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getData() );
+                    } 
+                    catch (\Exception $e) {
+                        return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getData() );
+                    }
+
+                    try {
+                        $patch = new Patch();
+                        $value = new PayPalModel('{"state":"ACTIVE"}');
+                        $patch->setOp('replace')
+                            ->setPath('/')
+                            ->setValue($value);
+                        $patchRequest = new PatchRequest();
+                        $patchRequest->addPatch($patch);
+                        $createdPlan->update($patchRequest, $instance);
+                        $patchedPlan = PaypalPlan::get($createdPlan->getId(), $instance);
+                        
+                        // Create new agreement
+                        $startDate = date('c', time() + 3600);
+                        $agreement = new Agreement();
+                        $agreement->setName('Contratación de Suscripción: ' . $product->name)
+                            ->setDescription('Esta suscripción se contrató desde tu tienda en linea.')
+                            ->setStartDate($startDate);
+
+                        // Set plan id
+                        $plan = new PaypalPlan();
+                        $plan->setId($patchedPlan->getId());
+                        $agreement->setPlan($plan);
+
+                        // Add payer type
+                        $payer = new Payer();
+                        $payer->setPaymentMethod('paypal');
+                        $agreement->setPayer($payer);
+
+                        // Adding shipping details
+                        /*
+                        $shippingAddress = new ShippingAddress();
+                        $shippingAddress->setLine1('111 First Street')
+                            ->setCity('Saratoga')
+                            ->setState('CA')
+                            ->setPostalCode('95070')
+                            ->setCountryCode('US');
+                        $agreement->setShippingAddress($shippingAddress);
+                        */
+                        // Create agreement
+                        $agreement = $agreement->create($instance);
+                        
+                    } catch (PayPal\Exception\PayPalConnectionException $ex) {
+                        return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getData() );
                     } catch (\Exception $e) {
-                        return redirect()->route('checkout')->with('error', $e->getMessage() );
+                        return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getData() );
                     }
 
                     if (!Auth::check()) {
@@ -2167,73 +2255,69 @@ class FrontController extends Controller
 
                     // GUARDAR LA ORDEN
                     $order = new Order();
+                    $order->type = 'recurring_payment';
 
-                    $order->cart = serialize($cart);
-                    $order->street = $street;
-                    $order->street_num = $street_num;
-                    $order->country = $country;
-                    $order->state = $state;
-                    $order->postal_code = $postal_code;
-                    $order->city = $city;
-                    $order->phone = $phone;
-                    $order->suburb = $suburb;
-                    $order->references = $references;
-                    $order->shipping_option = $request->shipping_option;
-
-                    /* Money Info */
-                    $order->cart_total = $cart->totalPrice;
-                    $order->shipping_rate = str_replace(',', '', $request->shipping_rate);
-                    $order->sub_total = str_replace(',', '', $request->sub_total);
-                    $order->tax_rate = str_replace(',', '', $request->tax_rate);
-                    if(isset($request->discounts)){
-                        $order->discounts = str_replace(',', '', $request->discounts);
-                    }
-                        
-                    
-                    $order->total = $request->final_total;
-                    $order->payment_total = $request->final_total;
-                    /*------------*/
+                    $order->cart = 'N/A';
+                    $order->street = 'N/A';
+                    $order->street_num = 'N/A';
+                    $order->country = 'N/A';
+                    $order->state = 'N/A';
+                    $order->postal_code = 'N/A';
+                    $order->city = 'N/A';
+                    $order->phone = 'N/A';
+                    $order->suburb = 'N/A';
+                    $order->references = 'N/A';
 
                     if (isset($billing_shipping_id)) {
                         $order->billing_shipping_id = $billing_shipping_id->id;
                     }
 
+                    /* Money Info */
+                    $order->cart_total = $product->price;
+                    $order->shipping_rate = '0';
+                    $order->sub_total = str_replace(',', '', $request->sub_total);
+                    $order->tax_rate = str_replace(',', '', $request->tax_rate);
+
+                    if(isset($request->discounts)){
+                        $order->discounts = str_replace(',', '', $request->discounts);
+                    }
+
+                    $order->coupon_id = 0;
+                    $order->total = $request->final_total;
+                    $order->payment_total = $request->final_total;
+                    $order->shipping_option = 0;
+
+                    /*------------*/
                     $order->card_digits = Str::substr($request->card_number, 15);
                     $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
-
+                    $order->payment_id = Str::lower($plan->id);
+                    $order->is_completed = true;
                     $order->status = 'Sin Completar';
-
-                    $order->payment_id = Str::lower($payment->id);
                     $order->payment_method = $payment_method->supplier;
+
+                    $order->subscription_status = false;
+                    $order->stripe_subscription_id = Str::lower($plan->id);
+                    $order->subscription_period_start = Carbon::now();
+
+                    if(isset($request->coupon_code)){
+                        $coupon = Coupon::where('code', $request->coupon_code)->where('is_active', true)->orderBy('created_at', 'desc')->first();
+
+                        if(!empty($coupon)){
+                            $order->coupon_id = $coupon->id;
+
+                            // Guardar Uso de cupón para el usuario
+                            $used = new UserCoupon;
+                            $used->user_id = $user->id;
+                            $used->coupon_id = $coupon->id;
+                            $used->save();
+                        }
+                    }
 
                     // Identificar al usuario para guardar sus datos.
                     $user->orders()->save($order);
 
-                    // GUARDAR LA DIRECCIÓN
-                    if ($request->save_address == 'true') {
-                        $check = UserAddress::where('street', $street)->count();
-
-                        if ($check == NULL || $check == 0) {
-                            $address = new UserAddress;
-                            $address->name = 'Compra_Paypal_' . $order->id;
-                            $address->user_id = $user->id;
-                            $address->street = $street;
-                            $address->street_num = $street_num;
-                            $address->postal_code = $postal_code;
-                            $address->city = $city;
-                            $address->country = $country;
-                            $address->state = $state;
-                            $address->phone = $phone;
-                            $address->suburb = $suburb;
-                            $address->references = $references;
-                            $address->is_billing = false;
-
-                            $address->save();
-                        }
-                    }
-
                     // Enviar al usuario a confirmar su compra en el panel de Paypal
-                    return redirect()->away($payment->getApprovalLink());
+                    return redirect()->away($agreement->getApprovalLink());
 
                 } catch (PayPalConnectionException $ex) {
                     echo $ex->getData();
@@ -2304,7 +2388,6 @@ class FrontController extends Controller
         $order->is_completed = true;
         $order->status = 'Pagado';
         $order->payment_method = $payment_method->supplier;
-
 
         /* Stripe Subscription */
         if($subscription_data['status'] == 'active'){
@@ -2404,7 +2487,7 @@ class FrontController extends Controller
             Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
         }
 
-        $purchase_value = '999';
+        $purchase_value = $product->price;
 
         // Notificación
         $type = 'Orden';
@@ -2489,7 +2572,6 @@ class FrontController extends Controller
             $paypal_password_access = $paypal_config->password_access ;
         }
 
-
         $api_context = new ApiContext(
             new OAuthTokenCredential(
                 $paypal_email_access,
@@ -2512,7 +2594,7 @@ class FrontController extends Controller
 
         if (!$paymentId || !$payerId || !$token) {
             Session::flash('error', 'Lo sentimos! El pago a través de PayPal no se pudo realizar. Inténtalo nuevamente o usa otro método de pago. Contacta con nosotros si tienes alguna pregunta.');
-            return redirect()->route('checkout.paypal');
+            return redirect()->route('index');
         }
 
         $payment = Payment::get($paymentId, $config);

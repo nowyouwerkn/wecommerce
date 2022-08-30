@@ -374,7 +374,16 @@
                 @else
                 <div class="card mb-4">
                     <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
-                        <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Suscripción</h6>
+                        <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">
+                            @if($order->type == 'recurring_payment')
+                                @if($order->subscription_status == true)
+                                <i class="fas fa-circle text-success mr-2"></i>
+                                @else
+                                <i class="fas fa-circle text-danger mr-2"></i>
+                                @endif
+                            @endif
+                            Suscripción
+                        </h6>
                         <p class="mb-0"><strong>Total: ${{ number_format($order->cart_total) }}</strong></p>
                     </div>
 
@@ -397,11 +406,13 @@
                         </div>
                     </div>
 
+                    @if($order->subscription_status == true)
                     <div class="card-footer bg-transparent pd-y-10 pd-sm-y-15 pd-x-10 pd-sm-x-20 dont-print">
                         <nav class="nav nav-with-icon tx-13">
-                            <a href="javascript:void(0)" class="nav-link text-danger"><i class="fas fa-ban mr-2"></i> Cancelar Suscripción</a>
+                            <a href="{{ route('order.cancel.subscription', $order->id) }}" class="nav-link text-danger"><i class="fas fa-ban mr-2"></i> Cancelar Suscripción</a>
                         </nav>
                     </div>
+                    @endif
                 </div>
                 @endif
                 <div class="card mb-4">

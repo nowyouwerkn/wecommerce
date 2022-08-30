@@ -271,6 +271,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'orders.search',
     ]);
 
+    Route::get('/orders/{id}/cancelar-suscription', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@cancelSubscription',
+        'as' => 'order.cancel.subscription',
+    ]);
+
     Route::resource('promos', Nowyouwerkn\WeCommerce\Controllers\PromoController::class); //
 
     Route::post('/get-promo-products', [

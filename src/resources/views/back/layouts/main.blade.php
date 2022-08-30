@@ -29,8 +29,6 @@
     <meta name="author" content="Werken">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="../../assets/img/favicon.png">
-
     <title>Werkn Commerce - Vista Principal</title>
 
     <!-- vendor css -->

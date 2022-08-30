@@ -36,10 +36,8 @@
     <div class="row">
         <div class="col-lg-12 col-xl-12 mg-t-10">
             <div class="card mg-b-10">
-
-                <div class="">
-                    @include('wecommerce::back.orders.utilities._order_table')
-                </div>
+                @include('wecommerce::back.orders.utilities._order_table')
+                
 
                 <div class="d-flex align-items-center justify-content-center">
                     {{ $orders->links() }}
