@@ -271,7 +271,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'orders.search',
     ]);
 
-    Route::get('/orders/{id}/cancelar-suscription', [
+    Route::get('/orders/{id}/cancelar-suscripcion', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@cancelSubscription',
         'as' => 'order.cancel.subscription',
     ]);

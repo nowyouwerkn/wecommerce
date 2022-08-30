@@ -262,7 +262,6 @@ class ProductController extends Controller
         $model_action = "create";
         $model_id = $product->id;
 
-
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         // Mensaje de session

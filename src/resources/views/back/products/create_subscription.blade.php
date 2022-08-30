@@ -78,7 +78,7 @@
         {{ csrf_field() }}
 
         {{-- TIPO DE PRODUCTO --}}
-        <input type="hidden" value="suscription" name="type">
+        <input type="hidden" value="subscription" name="type">
 
         <div class="row">
             <!-- Firts Column -->
@@ -350,7 +350,7 @@
     });
 
     $('#newCharacteristic').on('click', function(e){
-        $.get("{{ route('suscription.inputs') }}", function(data) {
+        $.get("{{ route('subscription.inputs') }}", function(data) {
             $('#charForm').append(data);
         });
     });

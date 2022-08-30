@@ -172,7 +172,7 @@
                             </a>
                         </div>
                         <div class="col-md-4 pl-2">
-                            <a href="{{ route('products.create.suscription') }}" class="text-center product-btn">
+                            <a href="{{ route('products.create.subscription') }}" class="text-center product-btn">
                                 <img src="{{ asset('assets/img/suscription-product.png') }}" alt="">
                                 <h5>Suscripción</h5>
                             </a>
