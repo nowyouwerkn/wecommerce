@@ -90,9 +90,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'products.create.digital',
     ]);
 
-    Route::get('products/create/suscription', [
-        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@createSuscription',
-        'as' => 'products.create.suscription',
+    Route::get('products/create/subscription', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@createSubscription',
+        'as' => 'products.create.subscription',
     ]);
 
     Route::get('productsquery', [
@@ -119,7 +119,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     // Get Functions
     Route::get('/characteristic-inputs', function () {
         return view('wecommerce::back.products.includes._characteristic_inputs');
-    })->name('suscription.inputs');
+    })->name('subscription.inputs');
 
     Route::post('products/new-image', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeImage',
@@ -485,16 +485,16 @@ Route::get('cart', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@cart')->n
 /* Checkout */
 Route::get('/checkout', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkout')->name('checkout');
 
-Route::get('/checkout/suscription', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutSuscription')->name('checkout.suscription');
+Route::get('/checkout/subscription/{subscription_id}', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutSubscription')->name('checkout.subscription');
 
 Route::post('/checkout',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckout',
     'as' => 'checkout.store',
 ]);
 
-Route::post('/checkout/suscription',[
-    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutSuscription',
-    'as' => 'checkout.suscription.store',
+Route::post('/checkout/subscription/{subscription_id}',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutSubscription',
+    'as' => 'checkout.subscription.store',
 ]);
 
 Route::get('/zip_codes/get',[

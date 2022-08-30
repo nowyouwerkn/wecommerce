@@ -236,7 +236,7 @@
                     <div class="product-actions d-flex align-items-center mt-5">
                         @switch($product->type)
                             @case('suscription')
-                            <a href="{{ route('checkout.suscription') }}" class="btn btn-primary d-flex align-items-center me-3" role="button">
+                            <a href="{{ route('checkout.suscription', $product->id) }}" class="btn btn-primary d-flex align-items-center me-3" role="button">
                                 <ion-icon name="planet-outline" class="me-2"></ion-icon> Comprar esta suscripción
                             </a>
                             @break

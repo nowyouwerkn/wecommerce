@@ -68,8 +68,11 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::find($id);
-        $order->cart = unserialize($order->cart);
 
+        if($order->cart != 'N/A'){
+            $order->cart = unserialize($order->cart);
+        }
+        
         $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
         $shipping_method = '0';
 

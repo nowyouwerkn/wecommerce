@@ -32,30 +32,113 @@
             <!--List product -->
             <div class="we-co--product-list-item d-flex align-items-center">
                 <div class="we-co--product-img-wrap w-25">
-                    <img src="{{ asset('img/products/') }}" class="img-fluid" alt="Suscripción">
+                    <img src="{{ asset('img/products/' . $subscription->image) }}" class="img-fluid" alt="{{ $subscription->name }}">
                 </div>
                 
                 <div class="w-75 d-flex justify-content-between">
                     <div class="we-co--product-item-info">
-                        <h6 class="mb-0">Suscripción</h6>
-                        <p class="mb-0">2 Meses</p>
+                        <h6 class="mb-0">{{ $subscription->name }}</h6>
+                        <p class="mb-0">
+                            {{ $subscription->payment_frequency_qty ?? '1' }} 
+                            @switch($subscription->payment_frequency)
+                                @case('daily')
+                                Día(s)
+                                @break
+
+                                @case('weekly')
+                                Semana(s)
+                                @break
+
+                                @case('monthly')
+                                Mes(es)
+                                @break
+
+                                @case('yearly')
+                                Año(s)
+                                @break
+                            @endswitch
+                        </p>
                     </div>
 
-                    <p>$ {{ number_format($product['price'] ?? '999.00') }}</p>
+                    @if($subscription->has_discount == true)
+                    <p>$ {{ number_format($subscription->discount_price) }}</p>
+                    @else
+                    <p>$ {{ number_format($subscription->price) }}</p>
+                    @endif
                 </div>
             </div>
 
+            @if($subscription->time_for_cancellation == NULL)
             <div class="alert alert-info d-flex justify-content-between mt-3">
                 <div>
-                    <strong>Este cobro es recurrente.</strong> Tu siguiente fecha de pago será: 25 de agosto del 2022. Puedes cancelar tu suscripción en cualquier momento desde tu perfil de cliente.
-                </div>
-            </div>
+                    <strong>Este cobro es recurrente.</strong> Tu siguiente fecha de pago será:
+                     @switch($subscription->payment_frequency)
+                        @case('daily')
+                        {{ Carbon\Carbon::now()->addDays($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
+                        @break
 
-            <div class="alert alert-info d-flex justify-content-between mt-3">
-                <div>
-                    <strong>Este cobro es mensual hasta 25 de agosto del 2022.</strong> Tu suscripción termina el: 25 de septiembre del 2022. Puedes renovar comprando nuevamente la suscripción.
+                        @case('weekly')
+                        {{ Carbon\Carbon::now()->addWeeks($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
+                        @break
+
+                        @case('monthly')
+                        {{ Carbon\Carbon::now()->addMonths($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
+                        @break
+
+                        @case('yearly')
+                        {{ Carbon\Carbon::now()->addYears($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
+                        @break
+                    @endswitch
+                    
+                    . Puedes cancelar tu suscripción en cualquier momento desde tu perfil de cliente.
                 </div>
             </div>
+            @else 
+            <div class="alert alert-info d-flex justify-content-between mt-3">
+                <div>
+                    <strong>Este cobro es
+                        @switch($subscription->payment_frequency)
+                            @case('daily')
+                            diario, tu siguiente cobro es el {{ Carbon\Carbon::now()->addDays($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
+                            @break
+
+                            @case('weekly')
+                            semanal, tu siguiente cobro es el {{ Carbon\Carbon::now()->addWeeks($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
+                            @break
+
+                            @case('monthly')
+                            mensual, tu siguiente cobro es el {{ Carbon\Carbon::now()->addMonths($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
+                            @break
+
+                            @case('yearly')
+                            anual, tu siguiente cobro es el {{ Carbon\Carbon::now()->addYears($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
+                            @break
+                        @endswitch
+                    </strong> 
+
+                    . Tu suscripción termina el:                        
+                    @switch($subscription->payment_frequency)
+                        @case('daily')
+                        {{ Carbon\Carbon::now()->addDays($subscription->time_for_cancellation)->translatedFormat('j \\de F') }}
+                        @break
+
+                        @case('weekly')
+                        {{ Carbon\Carbon::now()->addWeeks($subscription->time_for_cancellation)->translatedFormat('j \\de F') }}
+                        @break
+
+                        @case('monthly')
+                        {{ Carbon\Carbon::now()->addMonths($subscription->time_for_cancellation)->translatedFormat('j \\de F') }}
+                        @break
+
+                        @case('yearly')
+                        {{ Carbon\Carbon::now()->addYears($subscription->time_for_cancellation)->translatedFormat('j \\de F') }}
+                        @break
+                    @endswitch
+                    
+                    . Puedes renovar comprando nuevamente la suscripción al terminar el periodo.
+                </div>
+            </div>
+            @endif
             <hr>
         @endif
 

@@ -40,28 +40,29 @@
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_contact')
 
+                    @if($has_digital_product == false)
                     <hr class="responsive-two">
-
-                    @if($shipment_options->count() > 0)
-                    <div class="we-co--title d-flex align-items-center justify-content-between">
-                        <h4><span class="we-co--progress-indicator"></span> Métodos de Envío</h4>
-                    </div>
-                    @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
-                    @endif
-
-                    <hr class="responsive-two">
-
-                    @if($shipment_options->count() > 0)
-                    <div id="shipmentOptionChecker" class="mt-4" style="display:none;">
-                    @else
-                    <div class="mt-4">
-                    @endif
+                        @if($shipment_options->count() > 0)
                         <div class="we-co--title d-flex align-items-center justify-content-between">
-                            <h4 class="responsive-one"><span class="we-co--progress-indicator"></span> Dirección de Envío</h4>
+                            <h4><span class="we-co--progress-indicator"></span> Métodos de Envío</h4>
                         </div>
-                        @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')
-                    </div>
-                    
+                        @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
+                        @endif
+
+                        <hr class="responsive-two">
+
+                        @if($shipment_options->count() > 0)
+                        <div id="shipmentOptionChecker" class="mt-4" style="display:none;">
+                        @else
+                        <div class="mt-4">
+                        @endif
+                            <div class="we-co--title d-flex align-items-center justify-content-between">
+                                <h4 class="responsive-one"><span class="we-co--progress-indicator"></span> Dirección de Envío</h4>
+                            </div>
+                            @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')
+                        </div>
+                    @endif
+
                     <hr class="responsive-two">
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>
@@ -123,12 +124,14 @@
     }
 </script>
 
-@if($shipment_options->count() > 0)
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('#btnBuy').attr('disabled', true);
-    });
-</script>
+@if($has_digital_product == false)
+    @if($shipment_options->count() > 0)
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#btnBuy').attr('disabled', true);
+        });
+    </script>
+    @endif
 @endif
 
 <script type="text/javascript">
@@ -459,6 +462,9 @@
 <script type="text/javascript">
     $form.submit(function(event){
         if($('input[name=method]').val() === 'Pago con MercadoPago') {
+            //$('#checkout-form').append($('<input type="hidden" name="mp_preference" />').val('{{ $preference->init_point }}'));
+            //$('#checkout-form').append($('<input type="hidden" name="mp_preference_id" />').val('{{ $preference->id }}'));
+
             // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
             $form.find('button').prop('disabled', true);
             $('.loader-standby h2').text('Redireccionándote a MercadoPago...');

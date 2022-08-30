@@ -11,6 +11,7 @@ use Carbon\Carbon;
 /* Stripe Helpers */
 use Stripe\Stripe;
 use Stripe\Charge;
+use Stripe\Plan;
 use Stripe\Customer;
 use Stripe\Subscription;
 
@@ -77,6 +78,7 @@ use Nowyouwerkn\WeCommerce\Models\Newsletter;
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
 use Nowyouwerkn\WeCommerce\Models\UserInvoice;
+use Nowyouwerkn\WeCommerce\Models\UserSubscription;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -798,6 +800,25 @@ class FrontController extends Controller
             $preference->save();
         }
 
+        /* Check for physical products in Cart */
+        $has_digital_product = false;
+        $digital = 0;
+        $physical = 0;
+
+        foreach ($cart->items as $product) {
+            if ($product['item']['type'] == 'digital') {
+                $digital += 1;
+            }
+
+            if ($product['item']['type'] == 'physical') {
+                $physical += 1;
+            }
+        }
+
+        if ($digital >= 1 && $physical == 0) {
+            $has_digital_product = true;
+        }
+
         if (!empty($payment_methods)) {
             return view('front.theme.' . $this->theme->get_name() . '.checkout.index')
             ->with('total', $total)
@@ -815,7 +836,8 @@ class FrontController extends Controller
             ->with('products', $cart->items)
             ->with('store_config', $store_config)
             ->with('legals', $legals)
-            ->with('preference', $preference);
+            ->with('preference', $preference)
+            ->with('has_digital_product', $has_digital_product);
         }else{
             //Session message
             Session::flash('info', 'No se han configurado métodos de pago en esta tienda. Contacta con un administrador de sistema.');
@@ -824,12 +846,19 @@ class FrontController extends Controller
         }
     }
 
-    public function checkoutSuscription()
-    {
+    public function checkoutSubscription($subscription_id)
+    {   
+        $subscription = Product::find($subscription_id);
+
         //Facebook Event
         if ($this->store_config->has_pixel() != NULL) {
-            $value = '999';
-            $products_sku = 'Suscripción';
+            if($subscription->has_discount == true){
+                $value = $subscription->discount_price;
+            }else{
+                $value = $subscription->price;
+            }
+            
+            $products_sku = $subscription->name;
             $cart_count = 1;
 
             //$deduplication_code = md5(rand());
@@ -856,7 +885,11 @@ class FrontController extends Controller
             $has_tax = true;
         }
 
-        $total_cart = '999';
+        if($subscription->has_discount == true){
+            $total_cart = $subscription->discount_price;
+        }else{
+            $total_cart = $subscription->price;
+        }
 
         $tax = $total_cart / $tax_rate;
         $subtotal = ($total_cart) - ($tax);
@@ -866,65 +899,13 @@ class FrontController extends Controller
 
         $store_config = $this->store_config;
         $legals = LegalText::all();
-
-        if (empty($mercado_payment)) {
-            $preference = NULL;
-        }else{
-            if ($mercado_payment->sandbox_mode == true) {
-                $private_key_mercadopago = $mercado_payment->sandbox_private_key;
-            }else{
-                $private_key_mercadopago = $mercado_payment->private_key;
-            }
-            MercadoPago\SDK::setAccessToken($private_key_mercadopago);
-
-            // Crear el elemento a pagar
-            $item = new MercadoPago\Item();
-            $item->title = 'Tu compra desde tu tienda en Linea';
-            $item->quantity = 1;
-            $item->unit_price = $total;
-
-            // Crear el perfil del comprador
-            if (!empty(Auth::user())) {
-                $payer = new MercadoPago\Payer();
-                $payer->name = Auth::user()->name;
-                $payer->email = Auth::user()->email;
-            }
-
-            // Crear la preferencia de pago
-            $preference = new MercadoPago\Preference();
-            $preference->items = array($item);
-            if (!empty(Auth::user())) {
-                $preference->payer = $payer;
-            }
-
-            $preference->back_urls = array(
-                "success" => route('purchase.complete'),
-                "failure" => route('checkout'),
-            );
-            $preference->external_reference = "mp_".Str::random(30);
-            $preference->notification_url = route('webhook.order.mercadopago');
-
-            $mercadopago_oxxo = array ("id" => $mercado_payment->mercadopago_oxxo);
-            $mercadopago_paypal = array ("id" => $mercado_payment->mercadopago_paypal);
-
-            $preference->payment_methods = array(
-                "excluded_payment_methods" => array(
-                    $mercadopago_paypal,
-                    $mercadopago_oxxo
-                ),
-                "excluded_payment_types" => array(
-                    array("id" => "ticket", "id" => "atm")
-                ),
-            );
-
-            $preference->auto_return = "approved";
-            $preference->binary_mode = true;
-
-            $preference->save();
-        }
-
+        
+        /* Variable proveiene de API MercadoPago */
+        $preference = NULL;
+        
         if (!empty($payment_methods)) {
-            return view('front.theme.' . $this->theme->get_name() . '.checkout.suscription')
+            return view('front.theme.' . $this->theme->get_name() . '.checkout.subscription')
+            ->with('subscription', $subscription)
             ->with('total', $total)
             ->with('final_total', $total)
             ->with('payment_methods', $payment_methods)
@@ -1800,7 +1781,7 @@ class FrontController extends Controller
         ->with('deduplication_code', $deduplication_code);
     }
 
-    public function postCheckoutSuscription(Request $request)
+    public function postCheckoutSubscription(Request $request, $subscription_id)
     {
         $currency_value = $this->store_config->get_currency_code();
 
@@ -1896,7 +1877,44 @@ class FrontController extends Controller
             Stripe::setApiKey($private_key_stripe);
         }
 
+        /* Información de Compra */
+        $product = Product::find($subscription_id);
         $client_name = $request->name . ' ' . $request->last_name;
+
+        switch($product->payment_frequency){
+            case 'daily':
+                $interval = 'day';
+
+                if($product->time_for_cancellation != NULL){
+                    $cancel_at = Carbon::now()->addDays($product->time_for_cancellation)->getTimestamp();
+                }
+                
+                break;
+
+            case 'weekly':
+                $interval = 'week';
+                if($product->time_for_cancellation != NULL){
+                    $cancel_at = Carbon::now()->addWeeks($product->time_for_cancellation)->getTimestamp();
+                }
+
+                break;
+
+            case 'monthly':
+                $interval = 'month';
+                if($product->time_for_cancellation != NULL){
+                    $cancel_at = Carbon::now()->addMonths($product->time_for_cancellation)->getTimestamp();
+                }
+
+                break;
+
+            case 'monthly':
+                $interval = 'year';
+                if($product->time_for_cancellation != NULL){
+                    $cancel_at = Carbon::now()->addYears($product->time_for_cancellation)->getTimestamp();
+                }
+
+                break;
+        }
 
         switch ($payment_method->supplier) {
             case 'Conekta':
@@ -2015,42 +2033,47 @@ class FrontController extends Controller
                     $customer = Customer::create(array(
                         "email" => $request->email,
                         "name" => $client_name,
+                        'source' => $request->input('stripeToken'),
                     ));
 
-                    $subscription = Subscription::create(array(
-                        'customer' => $customer->id,
-                        'items' => [[
-                            'price' => $request->final_total * 100,
-                        ]],
-                        'payment_behavior' => 'default_incomplete',
-                        'payment_settings' => ['save_default_payment_method' => 'on_subscription'],
-                        'expand' => ['latest_invoice.payment_intent'],
-                    ));
+                    $plan = Plan::create(array( 
+                        "product" => [ 
+                            "name" => $product->name 
+                        ], 
+                        "amount" => round($product->price*100), 
+                        "currency" => $currency_value, 
+                        "interval" => $interval, 
+                        "interval_count" => $product->payment_frequency_qty,
+                    )); 
 
-                    $charge = Charge::create(array(
-                        "amount" => $request->final_total * 100,
-                        "currency" => $currency_value,
-                        "source" => $request->input('stripeToken'),
-                        "description" => "Purchase Successful",
-                    ));
+                    $subscription = Subscription::create(array( 
+                        "customer" => $customer->id, 
+                        "items" => array( 
+                            array( 
+                                "plan" => $plan->id, 
+                            ), 
+                        ),
+                        "cancel_at" => $cancel_at ?? NULL,
+                    )); 
+
                 } catch(\Stripe\Exception\CardException $e) {
                     // Error de validaciçon de tarjeta
-                    return redirect()->route('checkout')->with('error', $e->getError());
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getError());
                 }catch (\Stripe\Exception\RateLimitException $e) {
                     // Too many requests made to the API too quickly
-                    return redirect()->route('checkout')->with('error', $e->getError());
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getError());
                 } catch (\Stripe\Exception\InvalidRequestException $e) {
                     // Invalid parameters were supplied to Stripe's API
-                    return redirect()->route('checkout')->with('error', $e->getError());
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getError());
                 } catch (\Stripe\Exception\AuthenticationException $e) {
                     // Authentication with Stripe's API failed
-                    return redirect()->route('checkout')->with('error', $e->getError());
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getError());
                 } catch (\Stripe\Exception\ApiConnectionException $e) {
                     // Network communication with Stripe failed
-                    return redirect()->route('checkout')->with('error', $e->getError());
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getError());
                 } catch (\Stripe\Exception\ApiErrorException $e) {
                     // Display a very generic error to the user
-                    return redirect()->route('checkout')->with('error', $e->getError());
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getMessage());
                 }
 
                 break;
@@ -2237,29 +2260,30 @@ class FrontController extends Controller
             $user = Auth::user();
         }
 
+        // Retrieve subscription data 
+        $subscription_data = $subscription->jsonSerialize(); 
+        
         // GUARDAR LA ORDEN
         $order = new Order();
+        $order->type = 'recurring_payment';
 
-        $order->cart = serialize($cart);
-
-        $order->street = $street;
-        $order->street_num = $street_num;
-        $order->country = $country;
-        $order->state = $state;
-        $order->postal_code = $postal_code;
-        $order->city = $city;
-        $order->phone = $phone;
-        $order->suburb = $suburb;
-        $order->references = $references;
-
-        $order->shipping_option = NULL;
+        $order->cart = 'N/A';
+        $order->street = 'N/A';
+        $order->street_num = 'N/A';
+        $order->country = 'N/A';
+        $order->state = 'N/A';
+        $order->postal_code = 'N/A';
+        $order->city = 'N/A';
+        $order->phone = 'N/A';
+        $order->suburb = 'N/A';
+        $order->references = 'N/A';
 
         if (isset($billing_shipping_id)) {
             $order->billing_shipping_id = $billing_shipping_id->id;
         }
 
         /* Money Info */
-        $order->cart_total = '999';
+        $order->cart_total = $product->price;
         $order->shipping_rate = '0';
         $order->sub_total = str_replace(',', '', $request->sub_total);
         $order->tax_rate = str_replace(',', '', $request->tax_rate);
@@ -2271,14 +2295,29 @@ class FrontController extends Controller
         $order->coupon_id = 0;
         $order->total = $request->final_total;
         $order->payment_total = $request->final_total;
+        $order->shipping_option = 0;
 
         /*------------*/
         $order->card_digits = Str::substr($request->card_number, 15);
         $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
-        $order->payment_id = $charge->id;
+        $order->payment_id = $charge->id ?? $subscription_data['id'];
         $order->is_completed = true;
         $order->status = 'Pagado';
         $order->payment_method = $payment_method->supplier;
+
+
+        /* Stripe Subscription */
+        if($subscription_data['status'] == 'active'){
+            $order->subscription_status = true;
+        }else{
+            $order->subscription_status = false;
+        }
+        
+        $order->stripe_subscription_id = $subscription_data['id'];
+        $order->stripe_customer_id = $subscription_data['customer']; 
+        $order->stripe_plan_id = $subscription_data['plan']['id'];
+        $order->subscription_period_start = Carbon::createFromTimestamp($subscription_data['current_period_start'])->toDateTimeString();
+        $order->subscription_period_end = Carbon::createFromTimestamp($subscription_data['current_period_end'])->toDateTimeString();
 
         if(isset($request->coupon_code)){
             $coupon = Coupon::where('code', $request->coupon_code)->where('is_active', true)->orderBy('created_at', 'desc')->first();
@@ -2318,7 +2357,7 @@ class FrontController extends Controller
             $model_id = $invoice->id;
 
             $this->notification->send($type, $by ,$data, $model_action, $model_id);
-        }
+        }        
 
         // Correo de confirmación de compra
         $mail = MailConfig::first();
@@ -2642,8 +2681,11 @@ class FrontController extends Controller
     {
         $total_orders = Order::where('user_id', Auth::user()->id)->get();
         $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
+        
         $orders->transform(function($order, $key){
-            $order->cart = unserialize($order->cart);
+            if($order->cart != 'N/A'){
+                $order->cart = unserialize($order->cart);
+            }
             return $order;
         });
 

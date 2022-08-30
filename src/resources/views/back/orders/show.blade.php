@@ -266,7 +266,8 @@
             </div>
 
             <div class="col-md-8">
-                <div class="card mb-4">
+                @if($order->type == 'single_payment')
+                <div class="card mb-4">'
                     <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
                         <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Carrito</h6>
                         <p class="mb-0"><strong>Total: ${{ number_format($order->cart_total) }}</strong></p>
@@ -370,7 +371,39 @@
                         @endif
                     @endif
                 </div>
-                
+                @else
+                <div class="card mb-4">
+                    <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
+                        <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Suscripción</h6>
+                        <p class="mb-0"><strong>Total: ${{ number_format($order->cart_total) }}</strong></p>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="card d-flex flex-row mb-3">
+                            <a class="d-flex" href="#">
+                                <img height="40px" alt="{{ $order->subscription->name }}" src="{{ asset('img/products/' . $order->subscription->image ) }}" class="list-thumbnail responsive border-0 card-img-left">
+                            </a>
+                            <div class="pl-2 d-flex flex-grow-1 min-width-zero">
+                                <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
+                                    <a href="{{ route('products.show', $order->subscription->id ) }}" class="w-40 w-sm-100">
+                                        <p class="list-item-heading mb-1 truncate">{{ $order->subscription->name }}</p>
+                                    </a>
+                                </div>
+
+                                <div class="pl-1 align-self-center pr-4">
+                                    <span class="badge badge-pill badge-secondary float-right">$ {{ $order->subscription->price }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-transparent pd-y-10 pd-sm-y-15 pd-x-10 pd-sm-x-20 dont-print">
+                        <nav class="nav nav-with-icon tx-13">
+                            <a href="javascript:void(0)" class="nav-link text-danger"><i class="fas fa-ban mr-2"></i> Cancelar Suscripción</a>
+                        </nav>
+                    </div>
+                </div>
+                @endif
                 <div class="card mb-4">
                     <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
                         <h6 class="tx-13 tx-spacing-1 tx-uppercase tx-semibold mg-b-0">Notas Internas</h6>

@@ -2,11 +2,12 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
-## 1.8.1 - 2022-08-26
+## 1.8.1 - 2022-08-29
 
 ### Agregado
 - Cambio en creador de XML para catálogo de facebook en visibilidad de productos.
 - Nuevas vistas de Checkout para productos de tipo suscripciones.
+- La migración de ordenes al instalar WeCommerce ahora permite valor `NULL`.
 
 ## 1.8 - 2022-08-23
 

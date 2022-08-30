@@ -12,7 +12,7 @@
 
 <!-- Checkout -->
 <section class="mt-5 mb-5 container we-co--checkout-container">
-    <form action="{{ route('checkout.suscription.store') }}" method="POST" id="checkout-form" data-parsley-validate="">
+    <form action="{{ route('checkout.subscription.store', $subscription->id) }}" method="POST" id="checkout-form" data-parsley-validate="">
         @if(!empty($card_payment))
         <input type="hidden" name="method" value="Pago con Tarjeta" disabled="">
         @else
@@ -323,44 +323,4 @@
 </script>
 @endif
 
-@if(!empty($mercado_payment))
-<script type="text/javascript">
-    $form.submit(function(event){
-        if($('input[name=method]').val() === 'Pago con MercadoPago') {
-            // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
-            $form.find('button').prop('disabled', true);
-            $('.loader-standby h2').text('Redireccionándote a MercadoPago...');
-            $('.loader-standby').removeClass('loader-hidden');
-            //console.log(response.id);
-
-            setTimeout(function() {
-                $form.get(0).submit();
-            }, 2000);
-        }
-    });
-</script>
-@endif
-
-@if(!empty($cash_payment))
-    <!-- CONEKTA TOKENIZE API -->
-    @if($cash_payment->supplier == 'Conekta')
-    <script type="text/javascript">
-        $form.submit(function(event){
-            if($('input[name=method]').val() === 'Pago con Oxxo') {
-                // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
-                $form.find('button').prop('disabled', true);
-                $('.loader-standby h2').text('Generando tu referencia de pago...');
-                $('.loader-standby').removeClass('loader-hidden');
-                //console.log(response.id);
-
-                $form.get(0).submit();
-            }
-        });
-    </script>
-    @endif
-
-    @if($cash_payment->supplier == 'OpenPay')
-
-    @endif
-@endif
 @endpush

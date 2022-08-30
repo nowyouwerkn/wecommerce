@@ -24,6 +24,11 @@ class Order extends Model
         return $this->hasOne(UserInvoice::class);
     }
 
+    public function subscription()
+    {
+        return $this->belongsTo(Product::class)->where('type', 'subscription');
+    }
+
     public function notes()
     {
     	return $this->hasMany(OrderNote::class, 'order_id');

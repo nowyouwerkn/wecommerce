@@ -60,11 +60,11 @@ class ProductController extends Controller
         ->with('categories', $categories);
     }
 
-    public function createSuscription()
+    public function createSubscription()
     {
         $categories = Category::where('parent_id', NULL)->orWhere('parent_id', '0')->get();
 
-        return view('wecommerce::back.products.create_suscription')
+        return view('wecommerce::back.products.create_subscription')
         ->with('categories', $categories);
     }
 
@@ -78,7 +78,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         //Validar
-        if($request->type == 'suscription'){
+        if($request->type == 'subscription'){
             $this -> validate($request, array(
                 'name' => 'unique:products|required|max:255',
                 'description' => 'required|min:30',
@@ -210,7 +210,7 @@ class ProductController extends Controller
         }
 
         /* Características Productos Suscripción */
-        if($request->type == 'suscription'){
+        if($request->type == 'subscription'){
             $product->payment_frecuency = $request->payment_frecuency;
 
             $code_gen = substr(md5(uniqid(mt_rand(), true)) , 0, 5);
@@ -254,7 +254,7 @@ class ProductController extends Controller
         // Notificación
         $type = 'Producto';
         $by = Auth::user();
-        if($request->type == 'suscription'){
+        if($request->type == 'subscription'){
             $data = 'creó un producto de suscripción con nombre: ' . $product->name;
         }else{
             $data = 'creó el nuevo producto con nombre: ' . $product->name;
@@ -553,7 +553,7 @@ class ProductController extends Controller
         }
 
         /* Características Productos Suscripción */
-        if($request->type == 'suscription'){
+        if($request->type == 'subscription'){
             $product->payment_frecuency = $request->payment_frecuency;
 
             $code_gen = substr(md5(uniqid(mt_rand(), true)) , 0, 5);
