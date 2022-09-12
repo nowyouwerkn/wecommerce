@@ -212,6 +212,8 @@ class ProductController extends Controller
         /* Características Productos Suscripción */
         if($request->type == 'subscription'){
             $product->payment_frecuency = $request->payment_frecuency;
+            $product->payment_frecuency_qty = $request->payment_frecuency_qty;
+            $product->time_for_cancellation = $request->time_for_cancellation;
 
             $code_gen = substr(md5(uniqid(mt_rand(), true)) , 0, 5);
 
@@ -241,11 +243,9 @@ class ProductController extends Controller
                     }
                     
                     $chars->save();
-
                     $index++;
                 }
             }
-            
         }
         
         $product->save();
@@ -277,11 +277,8 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         $categories = Category::where('parent_id', NULL)->orWhere('parent_id', '0')->get();
-
         $variant_stock = ProductVariant::where('product_id', $product->id)->get();
-
         $related_products = Product::where('id', '!=' , $id)->where('category_id', $product->category_id)->get();
-
         $total_qty = 0;
 
         foreach ($variant_stock as $v_stock) {
@@ -289,7 +286,6 @@ class ProductController extends Controller
         };
 
         $total_qty;
-
         $product_relationships = ProductRelationship::where('base_product_id', $id)->orWhere('product_id', $id)->get();
 
         if ($product_relationships->count() == NULL) {
@@ -299,7 +295,6 @@ class ProductController extends Controller
             $base_product = $product_relationships->take(1)->first();
             $all_relationships = ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
         }
-
 
         return view('wecommerce::back.products.show')
         ->with('product', $product)
@@ -554,6 +549,8 @@ class ProductController extends Controller
         /* Características Productos Suscripción */
         if($request->type == 'subscription'){
             $product->payment_frecuency = $request->payment_frecuency;
+            $product->payment_frecuency_qty = $request->payment_frecuency_qty;
+            $product->time_for_cancellation = $request->time_for_cancellation;
 
             $code_gen = substr(md5(uniqid(mt_rand(), true)) , 0, 5);
 
@@ -617,13 +614,17 @@ class ProductController extends Controller
         $product = Product::find($id);
         $vars = ProductVariant::where('product_id', $product->id)->get();
 
-        foreach($vars as $var){
-            $var->delete();
+        if($vars->count() != 0){
+            foreach($vars as $var){
+                $var->delete();
+            }
         }
-
+    
         $relations = ProductRelationship::where('product_id', $product->id)->orWhere('base_product_id', $product->id)->get();
-        foreach($relations as $rel){
-            $rel->delete();
+        if($relations->count() != 0){
+            foreach($relations as $rel){
+                $rel->delete();
+            }
         }
 
         // Notificación
@@ -633,10 +634,8 @@ class ProductController extends Controller
         $model_action = "delete";
         $model_id = $product->id;
 
-
-
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
-        //
+
         $product->delete();
 
         Session::flash('success', 'Este producto se eliminó exitosamente.');
@@ -712,9 +711,8 @@ class ProductController extends Controller
         return view('wecommerce::back.products.index')->with('products', $products);
     }
 
-      public function filter($order , $filter)
+    public function filter($order , $filter)
     {
-
         $products = Product::orderBy($filter, $order)->paginate(15);
 
         if ($filter == 'sku' && $order == 'desc') {

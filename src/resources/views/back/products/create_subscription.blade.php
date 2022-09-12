@@ -155,14 +155,29 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="payment_frequency">Frecuencia de Pago <span class="text-danger">*</span></label>
-                                <select class="custom-select tx-13" name="payment_frequency">
-                                    <option value="weekly" selected="">Semanal</option>
-                                    <option value="monthly">Mensual</option>
-                                    <option value="annual">Anual</option>
-                                </select>
-                            </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="payment_frequency">Cantidad<span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" name="payment_frequency_qty" value="1" required>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label for="payment_frequency">Frecuencia de Pago <span class="text-danger">*</span></label>
+                                        <select class="custom-select tx-13" name="payment_frequency" required>
+                                            <option value="weekly">Semanal</option>
+                                            <option value="monthly" selected="">Mensual</option>
+                                            <option value="annual">Anual</option>
+                                        </select>
+                                    </div>
+                                </div>
 
+                                <div class="row mt-4">
+                                    <div class="col-md-12">
+                                        <label for="payment_frequency">Tiempo para Cancelación<span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" name="time_for_cancellation" value="1" required>
+                                        <small>Se calcula de acuerdo a la frecuencia de pago. Es decir, la suscripción se cancelará automáticamente en "X" meses a partir de la fecha de contración del cliente.</small>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <label for="discount_price">Precio <span class="text-danger">*</span></label>
                                 <div class="input-group mg-b-10">
@@ -172,12 +187,14 @@
                                     <input type="text" id="price" name="price" class="form-control" value="{{ old('price') }}" required="">
                                 </div>
 
-                                <label for="discount_price">Precio en Descuento</label>
+                                <div class="mt-4">
+                                    <label for="discount_price">Precio en Descuento</label>
                                     <div class="input-group mg-b-10">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon1">MX$</span>
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">MX$</span>
+                                        </div>
+                                        <input type="text" id="discount_price" name="discount_price" value="{{ old('discount_price') }}" class="form-control">
                                     </div>
-                                    <input type="text" id="discount_price" name="discount_price" value="{{ old('discount_price') }}" class="form-control">
                                 </div>
 
                                 <div class="custom-control custom-checkbox">
@@ -190,6 +207,9 @@
                                     <input type="date" id="discount_end" name="discount_end" value="{{ old('discount_end') }}" class="form-control">
                                 </div>
                             </div>
+                            
+
+                            
                         </div>
                     </div>
                 </div>
