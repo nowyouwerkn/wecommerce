@@ -2,6 +2,12 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.8.2 - 2022-09-12
+
+### Agregado
+- Modificadas las reglas de validación para las vistas de checkout.
+- Agregados mensajes de procesamiento de tarjeta para la animación de carga al confirmar la compra.
+
 ## 1.8.1 - 2022-08-29
 
 ### Agregado

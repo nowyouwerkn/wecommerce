@@ -211,7 +211,7 @@
                     <div class="col-6 col-md-7">
                         <div class="mb-3">
                             <label class="form-label" for="rfc_num">RFC <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="rfc_num" name="rfc_num" value="" required="" />
+                            <input type="text" class="form-control" id="rfc_num" name="rfc_num" value=""/>
                         </div>
                     </div>
 
