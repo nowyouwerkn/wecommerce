@@ -30,6 +30,26 @@ use Nowyouwerkn\WeCommerce\Exports\OrderExport;
 
 use Illuminate\Http\Request;
 
+/* Stripe Helpers */
+use Stripe\Stripe;
+use Stripe\Charge;
+use Stripe\Plan;
+use Stripe\Customer;
+use Stripe\Subscription;
+
+/* Paypal Helpers */
+use PayPal\Rest\ApiContext;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Api\Payer;
+use PayPal\Api\Item;
+use PayPal\Api\ItemList;
+use PayPal\Api\Amount;
+use PayPal\Api\Transaction;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\Payment;
+use PayPal\Api\PaymentExecution;
+use PayPal\Exception\PayPalConnectionException;
+
 class OrderController extends Controller
 {
     private $notification;
@@ -64,12 +84,14 @@ class OrderController extends Controller
         ->with('new_orders', $new_orders);
     }
 
-
     public function show($id)
     {
         $order = Order::find($id);
-        $order->cart = unserialize($order->cart);
 
+        if($order->cart != 'N/A'){
+            $order->cart = unserialize($order->cart);
+        }
+        
         $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
         $shipping_method = '0';
 
@@ -200,7 +222,6 @@ class OrderController extends Controller
 
             // Actualizar existencias del producto
             foreach ($cart->items as $product) {
-
                 if ($product['item']['has_variants'] == true) {
                     $variant = Variant::where('value', $product['variant'])->first();
                     $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
@@ -321,6 +342,35 @@ class OrderController extends Controller
          return view('wecommerce::back.orders.index')
         ->with('clients', $clients)
         ->with('orders', $orders);
+    }
 
+
+    public function cancelSubscription($id) 
+    {
+        $order = Order::find($id);
+        
+        $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
+
+        if ($payment_method->supplier == 'Stripe') {
+            if ($payment_method->sandbox_mode == true) {
+                $private_key_stripe = $payment_method->sandbox_private_key;
+            }else{
+                $private_key_stripe = $payment_method->private_key;
+            }
+            Stripe::setApiKey($private_key_stripe);
+
+            /* Actualizar suscripción */
+            $subscription = Subscription::update( 
+                $order->stripe_subscription_id,
+                array(
+                    "cancel_at_period_end" => true,
+                ),
+            );
+
+            $order->subscription_status = false;
+            $order->save();
+        }
+
+        return redirect()->back();
     }
 }

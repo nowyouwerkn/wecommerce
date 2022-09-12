@@ -106,7 +106,21 @@
             </div>
 
             <div class="col-md-6">
-                <div class="shop-details-content">                    
+                <div class="shop-details-content">
+                    @switch($product->type)
+                        @case('physical')
+                        <span class="badge bg-info">Producto Físico</span>
+                        @break
+
+                        @case('subscription')
+                        <span class="badge bg-info">Suscripción</span>
+                        @break
+
+                        @case('digital')
+                        <span class="badge bg-info">Producto Digital</span>
+                        @break
+                    @endswitch
+           
                     <h2 class="title mt-2">{{ $product->name }}</h2>
 
                     <div class="rating d-flex mt-2">
@@ -158,8 +172,17 @@
                             <ion-icon name="star"></ion-icon>
                         @endif
                     </div>
-                    
                     <p class="style-name mt-2">SKU: {{ $product->sku }}</p>
+
+                    @if($product->type == 'subscription')
+                        <p>Incluye:</p>    
+                        <hr>
+                        <ul class="list-unstyled">
+                            @foreach($product->characteristics as $characteristic)
+                                <li><ion-icon name="checkmark-circle" class="text-success"></ion-icon> {{ $characteristic->title }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
 
                     @if($product->has_discount == true && $product->discount_end > Carbon\Carbon::today())
                         <div class="wk-price">${{ number_format($product->discount_price, 2) }}</div>
@@ -211,49 +234,55 @@
                     @endif
 
                     <div class="product-actions d-flex align-items-center mt-5">
-                        <!--
-                        <div class="cart-plus-minus">
-                            <form action="#" class="num-block">
-                                <input type="text" class="in-num" value="1" readonly="">
-                                <div class="qtybutton-box">
-                                    <span class="plus"><img src="img/icon/plus.png" alt=""></span>
-                                    <span class="minus dis"><img src="img/icon/minus.png" alt=""></span>
-                                </div>
-                            </form>
-                        </div>
-                        -->
-                        @if($product->has_variants == true)
-                            @if($product->variants->count() == 0)
-                                <div class="me-3">
-                                    <p class="no-existance-btn mb-0"><i class="fas fa-heartbeat"></i> Sin Existencias</p>
-                                    <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>
-                                </div>
-                            @else
-                            <a href="#" id="addToCartBtn" class="btn btn-primary d-flex align-items-center me-3" role="button">
-                                <div id="size-alert" class="size-alert">Selecciona una talla.</div>
-                                <ion-icon name="bag-add-outline"></ion-icon> Agregar al carrito
+                        @switch($product->type)
+                            @case('subscription')
+                            <a href="{{ route('checkout.subscription', $product->id) }}" class="btn btn-primary d-flex align-items-center me-3" role="button">
+                                <ion-icon name="planet-outline" class="me-2"></ion-icon> Comprar esta suscripción
                             </a>
-                            @endif
-                        @else
-                            @if($product->stock <= 0)
-                            <div class="me-3">
-                                <p class="no-existance-btn mb-0"><i class="fas fa-heartbeat"></i> Sin Existencias</p>
-                                <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>
-                            </div>
-                            @else
-                            <a href="{{ route('add-cart', ['id' => $product->id, 'variant' => 'unique']) }}" id="addToCartBtn" class="btn btn-primary d-flex align-items-center me-3" role="button">
-                                <ion-icon name="bag-add-outline"></ion-icon> Agregar al carrito
+                            @break
+
+                            @case('digital')
+                            <a href="{{ route('add-cart', ['id' => $product->id, 'variant' => 'digital_product']) }}" id="addToCartBtn" class="btn btn-primary d-flex align-items-center me-3" role="button">
+                                <ion-icon name="bag-add-outline" class="me-2"></ion-icon> Agregar al carrito
                             </a>
-                            @endif
-                        @endif
+                            @break
+
+                            @default
+                                @if($product->has_variants == true)
+                                    @if($product->variants->count() == 0)
+                                        <div class="me-3">
+                                            <p class="no-existance-btn mb-0"><i class="fas fa-heartbeat"></i> Sin Existencias</p>
+                                            <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>
+                                        </div>
+                                    @else
+                                    <a href="#" id="addToCartBtn" class="btn btn-primary d-flex align-items-center me-3" role="button">
+                                        <div id="size-alert" class="size-alert">Selecciona una talla.</div>
+                                        <ion-icon name="bag-add-outline" class="me-2"></ion-icon> Agregar al carrito
+                                    </a>
+                                    @endif
+                                @else
+                                    @if($product->stock <= 0)
+                                    <div class="me-3">
+                                        <p class="no-existance-btn mb-0"><i class="fas fa-heartbeat"></i> Sin Existencias</p>
+                                        <p class="no-existance-explain mb-0 mt-0"><small>Resurtiremos pronto, revisa más adelante.</small></p>
+                                    </div>
+                                    @else
+                                    <a href="{{ route('add-cart', ['id' => $product->id, 'variant' => 'unique']) }}" id="addToCartBtn" class="btn btn-primary d-flex align-items-center me-3" role="button">
+                                        <ion-icon name="bag-add-outline" class="me-2"></ion-icon> Agregar al carrito
+                                    </a>
+                                    @endif
+                                @endif
+
+                                @break
+                        @endswitch
 
                         @if(isset(Auth::user()->id) && Auth::user()->isInWishlist($product->id))
-                            <a href="{{ route('wishlist.remove', $product->id) }}" class="btn btn-outline-secondary d-flex align-items-center"><ion-icon name="heart-dislike-outline"></ion-icon> Quitar de tu Wishlist</a>
+                            <a href="{{ route('wishlist.remove', $product->id) }}" class="btn btn-outline-secondary d-flex align-items-center"><ion-icon name="heart-dislike-outline" class="me-2"></ion-icon> Quitar de tu Wishlist</a>
                         @else
                             @guest
-                            <a href="{{ route('login') }}" class="btn btn-outline-secondary d-flex align-items-center"><ion-icon name="heart-outline"></ion-icon> Agregar a tu Wishlist</a>
+                            <a href="{{ route('login') }}" class="btn btn-outline-secondary d-flex align-items-center"><ion-icon name="heart-outline"></ion-icon class="me-2"> Agregar a tu Wishlist</a>
                             @else
-                            <a href="{{ route('wishlist.add', $product->id) }}" class="btn btn-outline-secondary d-flex align-items-center"><ion-icon name="heart-outline"></ion-icon> Agregar a tu Wishlist</a>
+                            <a href="{{ route('wishlist.add', $product->id) }}" class="btn btn-outline-secondary d-flex align-items-center"><ion-icon name="heart-outline" class="me-2"></ion-icon> Agregar a tu Wishlist</a>
                             @endif
                         @endif
                     </div>
@@ -544,7 +573,6 @@
             content_type: 'product',
         });
     @endif
-
 
     @if(Session::has('product_added_whislist'))
         fbq('track', 'AddToWishlist' {

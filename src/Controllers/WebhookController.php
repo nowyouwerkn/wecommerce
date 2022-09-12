@@ -82,17 +82,17 @@ class WebhookController extends Controller
 		http_response_code(200); 
 
 		if($data['type'] == 'charge.expired'){
-      // Obtener usuario de la orden de MercadoPago
-      $user = User::where('email', $data['payer']['email'])->first();
-      // Encontrar la orden de mercadopago realizada por este usuario
-      $orders = Order::where('user_id', $user->id)->where('payment_method', 'MercadoPago')->where('status', 'Sin Completar')->first();
-      $reference = $data['id'];
+      	// Obtener usuario de la orden de MercadoPago
+      	$user = User::where('email', $data['payer']['email'])->first();
+      	// Encontrar la orden de mercadopago realizada por este usuario
+      	$orders = Order::where('user_id', $user->id)->where('payment_method', 'MercadoPago')->where('status', 'Sin Completar')->first();
+      	$reference = $data['id'];
 
-      $order->is_completed = 0;
-      $order->status = 1;
-      $order->save();
+      	$order->is_completed = 0;
+      	$order->status = 1;
+      	$order->save();
 
-      return response()->json(['mensaje' => 'Orden Pagada Exitosamente.', 'order' => $reference]);
+      	return response()->json(['mensaje' => 'Orden Pagada Exitosamente.', 'order' => $reference]);
 	  }
   }
 }

@@ -84,6 +84,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
 
     //Catalog
     Route::resource('products', Nowyouwerkn\WeCommerce\Controllers\ProductController::class); //
+    
+    Route::get('products/create/digital', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@createDigital',
+        'as' => 'products.create.digital',
+    ]);
+
+    Route::get('products/create/subscription', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@createSubscription',
+        'as' => 'products.create.subscription',
+    ]);
+
     Route::get('productsquery', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@search',
         'as' => 'products.query',
@@ -104,6 +115,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@fetchSubcategory',
         'as' => 'dynamic.subcategory',
     ]);
+
+    // Get Functions
+    Route::get('/characteristic-inputs', function () {
+        return view('wecommerce::back.products.includes._characteristic_inputs');
+    })->name('subscription.inputs');
 
     Route::post('products/new-image', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeImage',
@@ -253,6 +269,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::get('ordersquery', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@query',
         'as' => 'orders.search',
+    ]);
+
+    Route::get('/orders/{id}/cancelar-suscripcion', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@cancelSubscription',
+        'as' => 'order.cancel.subscription',
     ]);
 
     Route::resource('promos', Nowyouwerkn\WeCommerce\Controllers\PromoController::class); //
@@ -468,9 +489,17 @@ Route::get('cart', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@cart')->n
 
 /* Checkout */
 Route::get('/checkout', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkout')->name('checkout');
+
+Route::get('/checkout/subscription/{subscription_id}', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutSubscription')->name('checkout.subscription');
+
 Route::post('/checkout',[
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckout',
     'as' => 'checkout.store',
+]);
+
+Route::post('/checkout/subscription/{subscription_id}',[
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutSubscription',
+    'as' => 'checkout.subscription.store',
 ]);
 
 Route::get('/zip_codes/get',[

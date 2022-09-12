@@ -2,7 +2,19 @@
 	<!-- Header -->
 	<div class="card-header pd-t-20 pd-b-0 bd-b-0">
 	    <h5 class="mg-b-5">Relaciones</h5>
-	    <p class="tx-12 tx-color-03 mg-b-0">Se pueden relacionar otros productos para tener múltiples opciones de tipo "Color" o "Material".</p>
+		@switch($product->type)
+            @case('physical')
+				<p class="tx-12 tx-color-03 mg-b-0">Se pueden relacionar otros productos para tener múltiples opciones de tipo "Color" o "Material".</p>
+            @break
+
+            @case('digital')
+            	<p class="tx-12 tx-color-03 mg-b-0">Se pueden relacionar otros productos para tener múltiples opciones de "Tipo" o "Archivo"</p>
+            @break
+
+            @case('subscription')
+            	<p class="tx-12 tx-color-03 mg-b-0">Se pueden relacionar otros productos para tener múltiples "Paquetes" y "Frecuencias".</p>
+            @break
+        @endswitch
 	</div>
 
 	<!-- Form -->
@@ -48,8 +60,22 @@
 	                <tr>
 	                    <td class="tx-color-03 tx-normal">
 	                    	<select name="type" id="relationshipType" class="form-control">
-	                            <option value="Color">Color</option>
-	                            <option value="Material">Material</option>
+								@switch($product->type)
+									@case('physical')
+										<option value="Color">Color</option>
+										<option value="Material">Material</option>
+									@break
+
+									@case('digital')
+										<option value="Archivo">Archivo</option>
+										<option value="Tipo">Tipo</option>
+									@break
+
+									@case('subscription')
+										<option value="Paquete">Paquete</option>
+										<option value="Frecuencia">Frecuencia</option>
+									@break
+								@endswitch
 	                        </select>  
 	                    </td>
 
@@ -154,7 +180,6 @@
 	    @endif
 	</div>
 </div>
-
 
 @push('scripts')
 	<script type="text/javascript">

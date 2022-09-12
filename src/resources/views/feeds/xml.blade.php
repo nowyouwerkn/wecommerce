@@ -55,15 +55,16 @@
 
 			<g:condition>{{ $product->condition ?? 'New' }}</g:condition>
 			
-			@if($product->stock == 0)
-				<g:availability>out of stock</g:availability>
-			@else
-				<g:availability>in stock</g:availability>
-				@if($product->status == 'Publicado')
-				<status>active</status>
+			@if($product->status == 'Publicado')
+				@if($product->stock == 0)
+					<g:availability>out of stock</g:availability>
 				@else
-				<status>archived</status>
+					<g:availability>in stock</g:availability>
 				@endif
+				<status>active</status>
+			@else
+			<status>archived</status>
+			<g:availability>out of stock</g:availability>
 			@endif
 			
 			@php

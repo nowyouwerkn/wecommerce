@@ -108,11 +108,11 @@
 
                                             <div class="form-group mt-2">
                                                 <label>Respuesta</label>
-                                                <div id="editor-container-create" class="ht-350 mb-4">
+                                                <div id="editor-container-{{ $question->id }}" class="ht-350 mb-4">
 
                                             </div>
 
-                                            <textarea id="justHtml_create" name="answer" required="" style="display:none;" value="{{ $question->answer }}"></textarea>
+                                            <textarea id="justHtml_{{ $question->id }}" name="answer" required="" style="display:none;" value="{{ $question->answer }}"></textarea>
                                             </div>
                                         </div>
                                     </div>

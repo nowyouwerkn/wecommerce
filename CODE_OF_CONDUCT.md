@@ -1,4 +1,4 @@
-# Código de Conducta Werkn S.A de C.V
+# Código de Conducta Werken S.A de C.V
 
 ## Nuestra Promesa
 Este código de conducta brinda orientación sobre la participación en los equipos de Werkn y describe el proceso para denunciar comportamientos inaceptables. Como organización y comunidad, estamos comprometidos a brindar un entorno inclusivo para todos, libre de acoso, independientemente de la edad, el tamaño del cuerpo, la discapacidad, el origen étnico, las características sexuales, la identidad y expresión de género, el nivel de experiencia, la educación, el estado socioeconómico, la nacionalidad, la apariencia personal, raza, religión o identidad y orientación sexual. 
@@ -29,15 +29,14 @@ Como colaboradores, miembros o espectadores, cada uno de nosotros individualment
 
 ## Cumplimiento y Reporte de Cuestiones del Código de Conducta.
 
-Los casos de comportamiento abusivo, acosador o inaceptable se pueden informar comunicándose con conducta@werkn.mx.  
+Los casos de comportamiento abusivo, acosador o inaceptable se pueden informar comunicándose con conducta@werken.mx.  
 
 Todas las quejas serán revisadas e investigadas y darán como resultado una respuesta que se considere necesaria y adecuada a las circunstancias. 
-
 
 ## Preguntas Frecuentes
 
 ### ¿Qué cubre este Código de Conducta? 
-Este código de conducta cubre toda la actividad de desarrollo de Werkn S.A de C.V; ya sea código, documentación o comentarios de problemas/relaciones públicas. 
+Este código de conducta cubre toda la actividad de desarrollo de Werken S.A de C.V; ya sea código, documentación o comentarios de problemas/relaciones públicas. 
  
 ###  ¿Cómo planteo una inquietud? 
-Si ha presenciado o ha sido objeto de una infracción del Código de conducta, envíe un correo electrónico a conducta@werkn.mx. Su mensaje será manejado de manera segura y confidencial. 
+Si ha presenciado o ha sido objeto de una infracción del Código de conducta, envíe un correo electrónico a conducta@werken.mx. Su mensaje será manejado de manera segura y confidencial. 

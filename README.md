@@ -12,7 +12,7 @@
   <h3 align="center">WeCommerce</h3>
 
   <p align="center">
-    La plataforma autoadministrable de E-commerce de Werkn
+    La plataforma autoadministrable de E-commerce de Werken
     <br />
     <a href="https://github.com/nowyouwerkn/wecommerce"><strong>Lee la documentación »</strong></a>
     <br />

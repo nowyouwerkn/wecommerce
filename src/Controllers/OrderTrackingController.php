@@ -95,7 +95,7 @@ class OrderTrackingController extends Controller
         try {
             Mail::send('wecommerce::mail.order_tracking', $data, function($message) use($name, $email, $sender_email, $store_name) {
                 $message->to($email, $name)->subject
-                ('Guía de seguimiento de tu compra!');
+                ('¡Guía de seguimiento de tu compra!');
                 
                 $message->from($sender_email, $store_name);
             });
@@ -105,8 +105,6 @@ class OrderTrackingController extends Controller
 
             return redirect()->back();
         }
-
-
 
         // Mensaje de session
         Session::flash('success', 'La guía de envío de esta orden se guardó exitosamente en la base de datos.');

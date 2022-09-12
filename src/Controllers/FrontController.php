@@ -11,6 +11,9 @@ use Carbon\Carbon;
 /* Stripe Helpers */
 use Stripe\Stripe;
 use Stripe\Charge;
+use Stripe\Plan;
+use Stripe\Customer;
+use Stripe\Subscription;
 
 /* Paypal Helpers */
 use PayPal\Rest\ApiContext;
@@ -24,6 +27,18 @@ use PayPal\Api\RedirectUrls;
 use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Exception\PayPalConnectionException;
+
+/* Paypal Subscription Models */
+use PayPal\Api\ChargeModel;
+use PayPal\Api\Currency;
+use PayPal\Api\MerchantPreferences;
+use PayPal\Api\PaymentDefinition;
+use PayPal\Api\Plan as PaypalPlan;
+use PayPal\Api\Patch;
+use PayPal\Api\PatchRequest;
+use PayPal\Common\PayPalModel;
+use PayPal\Api\Agreement;
+use PayPal\Api\ShippingAddress;
 
 /* Openpay Helpers */
 use Openpay;
@@ -75,6 +90,7 @@ use Nowyouwerkn\WeCommerce\Models\Newsletter;
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
 use Nowyouwerkn\WeCommerce\Models\UserInvoice;
+use Nowyouwerkn\WeCommerce\Models\UserSubscription;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -796,6 +812,25 @@ class FrontController extends Controller
             $preference->save();
         }
 
+        /* Check for physical products in Cart */
+        $has_digital_product = false;
+        $digital = 0;
+        $physical = 0;
+
+        foreach ($cart->items as $product) {
+            if ($product['item']['type'] == 'digital') {
+                $digital += 1;
+            }
+
+            if ($product['item']['type'] == 'physical') {
+                $physical += 1;
+            }
+        }
+
+        if ($digital >= 1 && $physical == 0) {
+            $has_digital_product = true;
+        }
+
         if (!empty($payment_methods)) {
             return view('front.theme.' . $this->theme->get_name() . '.checkout.index')
             ->with('total', $total)
@@ -811,6 +846,88 @@ class FrontController extends Controller
             ->with('shipping', $shipping)
             ->with('store_tax', $store_tax)
             ->with('products', $cart->items)
+            ->with('store_config', $store_config)
+            ->with('legals', $legals)
+            ->with('preference', $preference)
+            ->with('has_digital_product', $has_digital_product);
+        }else{
+            //Session message
+            Session::flash('info', 'No se han configurado métodos de pago en esta tienda. Contacta con un administrador de sistema.');
+
+            return redirect()->route('index');
+        }
+    }
+
+    public function checkoutSubscription($subscription_id)
+    {   
+        $subscription = Product::find($subscription_id);
+
+        //Facebook Event
+        if ($this->store_config->has_pixel() != NULL) {
+            if($subscription->has_discount == true){
+                $value = $subscription->discount_price;
+            }else{
+                $value = $subscription->price;
+            }
+            
+            $products_sku = $subscription->name;
+            $cart_count = 1;
+
+            //$deduplication_code = md5(rand());
+
+            $event = new FacebookEvents;
+            $event->initiateCheckout($value, $products_sku, $cart_count);
+        }else{
+            //$deduplication_code = NULL;
+        }
+
+        $payment_methods = PaymentMethod::where('is_active', true)->get();
+        $card_payment = PaymentMethod::where('supplier', '!=','Paypal')->where('supplier', '!=','MercadoPago')->where('type', 'card')->where('is_active', true)->first();
+        $cash_payment = PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
+        $paypal_payment = PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
+        $mercado_payment = PaymentMethod::where('supplier', 'MercadoPago')->where('is_active', true)->first();
+
+        $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
+
+        if (empty($store_tax)) {
+            $tax_rate = 0;
+            $has_tax = false;
+        }else{
+            $tax_rate = ($store_tax->tax_rate)/100 + 1;
+            $has_tax = true;
+        }
+
+        if($subscription->has_discount == true){
+            $total_cart = $subscription->discount_price;
+        }else{
+            $total_cart = $subscription->price;
+        }
+
+        $tax = $total_cart / $tax_rate;
+        $subtotal = ($total_cart) - ($tax);
+        $total = $subtotal + $tax;
+
+        /*---------------*/
+
+        $store_config = $this->store_config;
+        $legals = LegalText::all();
+        
+        /* Variable proveiene de API MercadoPago */
+        $preference = NULL;
+        
+        if (!empty($payment_methods)) {
+            return view('front.theme.' . $this->theme->get_name() . '.checkout.subscription')
+            ->with('subscription', $subscription)
+            ->with('total', $total)
+            ->with('final_total', $total)
+            ->with('payment_methods', $payment_methods)
+            ->with('card_payment', $card_payment)
+            ->with('cash_payment', $cash_payment)
+            ->with('paypal_payment', $paypal_payment)
+            ->with('mercado_payment', $mercado_payment)
+            ->with('subtotal', $subtotal)
+            ->with('tax', $tax)
+            ->with('store_tax', $store_tax)
             ->with('store_config', $store_config)
             ->with('legals', $legals)
             ->with('preference', $preference);
@@ -915,14 +1032,6 @@ class FrontController extends Controller
             'name' => 'required|max:255',
             'last_name' => 'required',
             'phone' => 'required',
-            'street' => 'sometimes',
-            'street_num' => 'sometimes',
-            'suburb' => 'sometimes',
-            'postal_code' => 'sometimes',
-            'country' => 'sometimes',
-            'state' => 'sometimes',
-            'city' => 'sometimes',
-            'references' => 'sometimes',
         ));
 
         if ($request->method == 'Pago con Tarjeta') {
@@ -1015,6 +1124,22 @@ class FrontController extends Controller
             $suburb = 'Tienda';
             $references = $shipment_option->name;
         }else{
+            //Validar
+            $customMessages = [
+                'unique' => 'Verifica que tu dirección de envío sea correcta y que esté completa. Puedes crear una nueva directamente desde este formulario.'
+            ];
+
+            $this -> validate($request, array(
+                'street' => 'required',
+                'street_num' => 'required',
+                'suburb' => 'required',
+                'postal_code' => 'required',
+                'country' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'references' => 'required',
+            ), $customMessages);
+            
             $street = $request->input('street');
             $street_num = $request->input('street_num');
             $country = $request->input('country');
@@ -1202,7 +1327,7 @@ class FrontController extends Controller
                     return redirect()->route('checkout')->with('error', $e->getMessage());
                 }catch (OpenpayApiError $e) {
                     return redirect()->route('checkout')->with('error', $e->getMessage());
-                }catch(Exception $e) {
+                }catch(\Exception $e) {
                     return redirect()->route('checkout')->with('error', 'Hubo un error. Revisa tu información e intenta de nuevo o ponte en contacto con nosotros.');
                 }
 
@@ -1237,7 +1362,7 @@ class FrontController extends Controller
 
                     try {
                         $payment->create($instance);
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         return redirect()->route('checkout')->with('error', $e->getMessage() );
                     }
 
@@ -1396,7 +1521,7 @@ class FrontController extends Controller
 
                     // Enviar al usuario a confirmar su compra en el panel de Mercadopago
                     return redirect()->away($request->mp_preference);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
 
                 }
 
@@ -1521,13 +1646,16 @@ class FrontController extends Controller
 
         if(isset($request->coupon_code)){
             $coupon = Coupon::where('code', $request->coupon_code)->where('is_active', true)->orderBy('created_at', 'desc')->first();
-            $order->coupon_id = $coupon->id;
 
-            // Guardar Uso de cupón para el usuario
-            $used = new UserCoupon;
-            $used->user_id = $user->id;
-            $used->coupon_id = $coupon->id;
-            $used->save();
+            if(!empty($coupon)){
+                $order->coupon_id = $coupon->id;
+
+                // Guardar Uso de cupón para el usuario
+                $used = new UserCoupon;
+                $used->user_id = $user->id;
+                $used->coupon_id = $coupon->id;
+                $used->save();
+            }
         }
 
         // Identificar al usuario para guardar sus datos.
@@ -1616,8 +1744,11 @@ class FrontController extends Controller
                 $message->from($sender_email, $store_name);
             });
         }
-        catch (Exception $e) {
-            Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aun asi la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento.');
+        catch (\Exception $e) {
+            Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
+        }
+        catch(\Swift_TransportException $e){
+            Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
         }
 
         $purchase_value = $cart->totalPrice;
@@ -1653,6 +1784,722 @@ class FrontController extends Controller
         }else{
             $deduplication_code = NULL;
         }
+
+        Session::forget('cart');
+        Session::flash('purchase_complete', 'Compra Exitosa.');
+
+        return redirect()->route('purchase.complete')
+        ->with('purchase_value', $purchase_value)
+        ->with('deduplication_code', $deduplication_code);
+    }
+
+    public function postCheckoutSubscription(Request $request, $subscription_id)
+    {
+        $currency_value = $this->store_config->get_currency_code();
+
+        if($currency_value == '1'){
+            $currency_value = 'USD';
+        }
+        if($currency_value == '2'){
+            $currency_value = 'MXN';
+        }
+
+        if (!Auth::check()) {
+            $rules = [
+               'email' => 'unique:users|required|max:255',
+            ];
+
+            $customMessages = [
+                'unique' => 'Este correo ya esta registrado en el sistema. ¿Eres tu? Inicia sesión.'
+            ];
+
+            //Validar
+            $this->validate($request, $rules, $customMessages);
+        }
+
+        // Selector de métodos de pago
+        switch ($request->method) {
+            case 'Pago con Paypal':
+                $payment_method = PaymentMethod::where('is_active', true)->where('supplier', 'Paypal')->first();
+
+                break;
+
+            case 'Pago con Tarjeta':
+                $payment_method = PaymentMethod::where('supplier', '!=', 'Paypal')->where('is_active', true)->where('type', 'card')->first();
+                break;
+
+            default:
+                $payment_method = NULL;
+                break;
+        }
+
+        //Validar
+        $this -> validate($request, array(
+            'name' => 'required|max:255',
+            'last_name' => 'required',
+            'phone' => 'required',
+        ));
+
+        if ($request->method == 'Pago con Tarjeta') {
+            if (isset($request->street_billing)) {
+                $this -> validate($request, array(
+                    'card_number' => 'required|max:255',
+                    'card-name' => 'required',
+                    'card-month' => 'required|max:2',
+                    'card-year' => 'required|max:4',
+                    'card-cvc' => 'required|max:4',
+
+                    'street_billing' => 'required',
+                    'street_num_billing' => 'required',
+                    'suburb_billing' => 'required',
+                    'postal_code_billing' => 'required',
+                    'country_billing' => 'required',
+                    'state_billing' => 'required',
+                    'city_billing' => 'required',
+                ));
+            }else{
+                $this -> validate($request, array(
+                    'card_number' => 'required|max:255',
+                    'card-name' => 'required',
+                    'card-month' => 'required|max:2',
+                    'card-year' => 'required|max:4',
+                    'card-cvc' => 'required|max:4',
+                ));
+            }
+        }
+
+        if ($payment_method->supplier == 'Conekta') {
+            require_once(base_path() . '/vendor/conekta/conekta-php/lib/Conekta/Conekta.php');
+            if ($payment_method->sandbox_mode == true) {
+                $private_key_conekta = $payment_method->sandbox_private_key;
+            }else{
+                $private_key_conekta = $payment_method->private_key;
+            }
+            \Conekta\Conekta::setApiKey($private_key_conekta);
+            \Conekta\Conekta::setApiVersion("2.0.0");
+            \Conekta\Conekta::setLocale('es');
+        }
+
+        if ($payment_method->supplier == 'Stripe') {
+            if ($payment_method->sandbox_mode == true) {
+                $private_key_stripe = $payment_method->sandbox_private_key;
+            }else{
+                $private_key_stripe = $payment_method->private_key;
+            }
+            Stripe::setApiKey($private_key_stripe);
+        }
+
+        /* Información de Compra */
+        $product = Product::find($subscription_id);
+        $client_name = $request->name . ' ' . $request->last_name;
+
+        switch($product->payment_frequency){
+            case 'daily':
+                $interval = 'day';
+
+                if($product->time_for_cancellation != NULL){
+                    $cancel_at = Carbon::now()->addDays($product->time_for_cancellation)->getTimestamp();
+                }
+                
+                break;
+
+            case 'weekly':
+                $interval = 'week';
+                if($product->time_for_cancellation != NULL){
+                    $cancel_at = Carbon::now()->addWeeks($product->time_for_cancellation)->getTimestamp();
+                }
+
+                break;
+
+            case 'monthly':
+                $interval = 'month';
+                if($product->time_for_cancellation != NULL){
+                    $cancel_at = Carbon::now()->addMonths($product->time_for_cancellation)->getTimestamp();
+                }
+
+                break;
+
+            case 'yearly':
+                $interval = 'year';
+                if($product->time_for_cancellation != NULL){
+                    $cancel_at = Carbon::now()->addYears($product->time_for_cancellation)->getTimestamp();
+                }
+
+                break;
+        }
+
+        switch ($payment_method->supplier) {
+            case 'Conekta':
+                if ($request->method == 'Pago con Oxxo') {
+                    try{
+                        $charge = \Conekta\Order::create(
+                            array(
+                                "line_items" => $products,
+
+                                "shipping_lines" => array(
+                                    array(
+                                        "amount" => 0 . '00',
+                                        "carrier" => "N/A"
+                                    )
+                                ),
+
+                                "shipping_contact" => array(
+                                    "address" => array(
+                                        "street1" => $street,
+                                        "street2" => $street_num,
+                                        "postal_code" => $postal_code,
+                                        "city" => $city,
+                                        "state" => $state,
+                                        "country" => $country
+                                    ),
+                                    "phone" => $request->phone,
+                                    "receiver" => $client_name,
+                                ),
+
+                                "currency" => $currency_value,
+                                "description" => "Pago de Orden",
+
+                                "customer_info" => array(
+                                    'name' => $client_name,
+                                    'phone' => $request->phone,
+                                    'email' => $request->email
+                                ),
+
+                                "charges" => array(
+                                    array(
+                                        "payment_method" => array(
+                                            "type" => "oxxo_cash",
+                                            "expires_at" => Carbon::now()->addDays(2)->timestamp,
+                                        )
+                                    )
+                                )
+                            )
+                        );
+                    }
+                    catch(\Exception $e) {
+                        return redirect()->route('checkout')->with('error', $e->getMessage() );
+                    }
+                    catch(\Conekta\ParameterValidationError $error){
+                        echo $error->getMessage();
+                        return redirect()->back()->with('error', $error->getMessage() );
+                    } catch (\Conekta\Handler $error){
+                        echo $error->getMessage();
+                        return redirect()->back()->with('error', $error->getMessage() );
+                    }
+                }else{
+                    try {
+                        $charge = \Conekta\Order::create(
+                            array(
+                                "line_items" => $products,
+
+                                "shipping_lines" => array(
+                                    array(
+                                        "amount" => 0 . '00',
+                                        "carrier" => "N/A"
+                                    )
+                                ),
+
+                                "shipping_contact" => array(
+                                    "address" => array(
+                                        "street1" => $street,
+                                        "street2" => $street_num,
+                                        "postal_code" => $postal_code,
+                                        "city" => $city,
+                                        "state" => $state,
+                                        "country" => $country
+                                    ),
+                                    "phone" => $request->phone,
+                                    "receiver" => $client_name,
+                                ),
+
+                                "currency" => $currency_value,
+                                "description" => "Pago de Orden",
+
+                                "customer_info" => array(
+                                    'name' => $client_name,
+                                    'phone' => $request->phone,
+                                    'email' => $request->email
+                                ),
+
+                                "charges" => array(
+                                    array(
+                                        "payment_method" => array(
+                                            "type" => "card",
+                                            "token_id" => $request->conektaTokenId,
+                                        )
+                                    )
+                                ),
+                            )
+                        );
+                    }catch(\Conekta\ParameterValidationError $error){
+                        return redirect()->back()->with('error', $error->getMessage() );
+                    }catch (\Conekta\Handler $error){
+                        return redirect()->back()->with('error', $error->getMessage() );
+                    }
+                }
+
+                break;
+
+            case 'Stripe':
+                try {
+                    $customer = Customer::create(array(
+                        "email" => $request->email,
+                        "name" => $client_name,
+                        'source' => $request->input('stripeToken'),
+                    ));
+
+                    $plan = Plan::create(array( 
+                        "product" => [ 
+                            "name" => $product->name 
+                        ], 
+                        "amount" => round($product->price*100), 
+                        "currency" => $currency_value, 
+                        "interval" => $interval, 
+                        "interval_count" => $product->payment_frequency_qty,
+                    )); 
+
+                    $subscription = Subscription::create(array( 
+                        "customer" => $customer->id, 
+                        "items" => array( 
+                            array( 
+                                "plan" => $plan->id, 
+                            ), 
+                        ),
+                        "cancel_at" => $cancel_at ?? NULL,
+                    ));
+
+                } catch(\Stripe\Exception\CardException $e) {
+                    // Error de validaciçon de tarjeta
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getError());
+                }catch (\Stripe\Exception\RateLimitException $e) {
+                    // Too many requests made to the API too quickly
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getError());
+                } catch (\Stripe\Exception\InvalidRequestException $e) {
+                    // Invalid parameters were supplied to Stripe's API
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getError());
+                } catch (\Stripe\Exception\AuthenticationException $e) {
+                    // Authentication with Stripe's API failed
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getError());
+                } catch (\Stripe\Exception\ApiConnectionException $e) {
+                    // Network communication with Stripe failed
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getError());
+                } catch (\Stripe\Exception\ApiErrorException $e) {
+                    // Display a very generic error to the user
+                    return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getMessage());
+                }
+
+                break;
+
+            case 'OpenPay':
+                try {
+                    $openpay = $this->getOpenPayInstance();
+
+                    $customer = array(
+                        'name' => $request->name,
+                        'last_name' => $request->last_name,
+                        'phone_number' => $request->phone,
+                        'email' => $request->email,
+                        'requires_account' => false
+                    );
+
+                    $chargeRequest = array(
+                        'method' => 'card',
+                        'source_id' => $request->input('openPayToken'),
+                        'amount' => $request->final_total,
+                        'currency' => $currency_value,
+                        'description' => 'Orden en Tienda en Línea',
+                        'device_session_id' => $request->device_hidden,
+                        'customer' => $customer
+                    );
+
+                    $charge = $openpay->charges->create($chargeRequest);
+
+                }catch (OpenpayApiTransactionError $e) {
+                    return redirect()->route('checkout')->with('error', $e->getMessage());
+                }catch (OpenpayApiRequestError $e) {
+                    return redirect()->route('checkout')->with('error', $e->getMessage());
+                }catch (OpenpayApiConnectionError $e) {
+                    return redirect()->route('checkout')->with('error', $e->getMessage());
+                }catch (OpenpayApiAuthError $e) {
+                    return redirect()->route('checkout')->with('error', $e->getMessage());
+                }catch (OpenpayApiError $e) {
+                    return redirect()->route('checkout')->with('error', $e->getMessage());
+                }catch(\Exception $e) {
+                    return redirect()->route('checkout')->with('error', 'Hubo un error. Revisa tu información e intenta de nuevo o ponte en contacto con nosotros.');
+                }
+
+                break;
+
+            case 'Paypal':
+                try {
+                    $instance = $this->getPaypalInstance();
+
+                    $plan = new PaypalPlan();
+
+                    $plan
+                    ->setName($product->name)
+                    ->setDescription($product->description)
+                    ->setType('FIXED');
+
+                    // Set billing plan definitions
+                    $transaction = new PaymentDefinition();
+                    $transaction
+                    ->setName($product->name)
+                    ->setType('REGULAR')
+                    ->setFrequency($interval)
+                    ->setFrequencyInterval($product->payment_frequency_qty)
+                    ->setCycles($product->time_for_cancellation)
+                    ->setAmount(new Currency(array(
+                        'value' => $request->final_total,
+                        'currency' => $currency_value
+                    )));
+
+                    // Set charge models
+                    $chargeModel = new ChargeModel();
+                    $chargeModel->setType('SHIPPING')->setAmount(new Currency(array(
+                        'value' => $request->final_total,
+                        'currency' => $currency_value,
+                    )));
+                    $transaction->setChargeModels(array(
+                        $chargeModel
+                    ));
+
+                    $callbackUrl = url('/paypal/status');
+                    
+                    // Set merchant preferences
+                    $merchantPreferences = new MerchantPreferences();
+                    $merchantPreferences->setReturnUrl($callbackUrl)
+                        ->setCancelUrl($callbackUrl)
+                        ->setAutoBillAmount('yes')
+                        ->setInitialFailAmountAction('CONTINUE')
+                        ->setMaxFailAttempts('0')
+                        ->setSetupFee(new Currency(array(
+                        'value' => $request->final_total,
+                        'currency' => $currency_value,
+                    )));
+
+                    $plan->setPaymentDefinitions(array(
+                        $transaction
+                    ));
+                    $plan->setMerchantPreferences($merchantPreferences);
+
+                    try {
+                        $createdPlan = $plan->create($instance);
+                    } catch (PayPal\Exception\PayPalConnectionException $ex) {
+                        return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getData() );
+                    } 
+                    catch (\Exception $e) {
+                        return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getData() );
+                    }
+
+                    try {
+                        $patch = new Patch();
+                        $value = new PayPalModel('{"state":"ACTIVE"}');
+                        $patch->setOp('replace')
+                            ->setPath('/')
+                            ->setValue($value);
+                        $patchRequest = new PatchRequest();
+                        $patchRequest->addPatch($patch);
+                        $createdPlan->update($patchRequest, $instance);
+                        $patchedPlan = PaypalPlan::get($createdPlan->getId(), $instance);
+                        
+                        // Create new agreement
+                        $startDate = date('c', time() + 3600);
+                        $agreement = new Agreement();
+                        $agreement->setName('Contratación de Suscripción: ' . $product->name)
+                            ->setDescription('Esta suscripción se contrató desde tu tienda en linea.')
+                            ->setStartDate($startDate);
+
+                        // Set plan id
+                        $plan = new PaypalPlan();
+                        $plan->setId($patchedPlan->getId());
+                        $agreement->setPlan($plan);
+
+                        // Add payer type
+                        $payer = new Payer();
+                        $payer->setPaymentMethod('paypal');
+                        $agreement->setPayer($payer);
+
+                        // Adding shipping details
+                        /*
+                        $shippingAddress = new ShippingAddress();
+                        $shippingAddress->setLine1('111 First Street')
+                            ->setCity('Saratoga')
+                            ->setState('CA')
+                            ->setPostalCode('95070')
+                            ->setCountryCode('US');
+                        $agreement->setShippingAddress($shippingAddress);
+                        */
+                        // Create agreement
+                        $agreement = $agreement->create($instance);
+                        
+                    } catch (PayPal\Exception\PayPalConnectionException $ex) {
+                        return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getData() );
+                    } catch (\Exception $e) {
+                        return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getData() );
+                    }
+
+                    if (!Auth::check()) {
+                        $user = User::create([
+                            'name' => $client_name,
+                            'last_name' => $request->last_name,
+                            'phone' => $request->phone,
+                            'email' => $request->email,
+                            'password' => bcrypt('wkshop'),
+                        ]);
+
+                        $user->assignRole('customer');
+                    }else{
+                        $user = Auth::user();
+                    }
+
+                    // GUARDAR LA ORDEN
+                    $order = new Order();
+                    $order->type = 'recurring_payment';
+
+                    $order->cart = 'N/A';
+                    $order->street = 'N/A';
+                    $order->street_num = 'N/A';
+                    $order->country = 'N/A';
+                    $order->state = 'N/A';
+                    $order->postal_code = 'N/A';
+                    $order->city = 'N/A';
+                    $order->phone = 'N/A';
+                    $order->suburb = 'N/A';
+                    $order->references = 'N/A';
+
+                    if (isset($billing_shipping_id)) {
+                        $order->billing_shipping_id = $billing_shipping_id->id;
+                    }
+
+                    /* Money Info */
+                    $order->cart_total = $product->price;
+                    $order->shipping_rate = '0';
+                    $order->sub_total = str_replace(',', '', $request->sub_total);
+                    $order->tax_rate = str_replace(',', '', $request->tax_rate);
+
+                    if(isset($request->discounts)){
+                        $order->discounts = str_replace(',', '', $request->discounts);
+                    }
+
+                    $order->coupon_id = 0;
+                    $order->total = $request->final_total;
+                    $order->payment_total = $request->final_total;
+                    $order->shipping_option = 0;
+
+                    /*------------*/
+                    $order->card_digits = Str::substr($request->card_number, 15);
+                    $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
+                    $order->payment_id = Str::lower($plan->id);
+                    $order->is_completed = true;
+                    $order->status = 'Sin Completar';
+                    $order->payment_method = $payment_method->supplier;
+
+                    $order->subscription_status = false;
+                    $order->stripe_subscription_id = Str::lower($plan->id);
+                    $order->subscription_period_start = Carbon::now();
+
+                    if(isset($request->coupon_code)){
+                        $coupon = Coupon::where('code', $request->coupon_code)->where('is_active', true)->orderBy('created_at', 'desc')->first();
+
+                        if(!empty($coupon)){
+                            $order->coupon_id = $coupon->id;
+
+                            // Guardar Uso de cupón para el usuario
+                            $used = new UserCoupon;
+                            $used->user_id = $user->id;
+                            $used->coupon_id = $coupon->id;
+                            $used->save();
+                        }
+                    }
+
+                    // Identificar al usuario para guardar sus datos.
+                    $user->orders()->save($order);
+
+                    // Enviar al usuario a confirmar su compra en el panel de Paypal
+                    return redirect()->away($agreement->getApprovalLink());
+
+                } catch (PayPalConnectionException $ex) {
+                    echo $ex->getData();
+                }
+
+                break;
+
+            default:
+                // code...
+                break;
+        }
+
+        if (!Auth::check()) {
+            $user = User::create([
+                'name' => $client_name,
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => bcrypt('wkshop'),
+            ]);
+
+            $user->assignRole('customer');
+        }else{
+            $user = Auth::user();
+        }
+
+        // Retrieve subscription data 
+        $subscription_data = $subscription->jsonSerialize(); 
+        
+        // GUARDAR LA ORDEN
+        $order = new Order();
+        $order->type = 'recurring_payment';
+
+        $order->cart = 'N/A';
+        $order->street = 'N/A';
+        $order->street_num = 'N/A';
+        $order->country = 'N/A';
+        $order->state = 'N/A';
+        $order->postal_code = 'N/A';
+        $order->city = 'N/A';
+        $order->phone = 'N/A';
+        $order->suburb = 'N/A';
+        $order->references = 'N/A';
+
+        if (isset($billing_shipping_id)) {
+            $order->billing_shipping_id = $billing_shipping_id->id;
+        }
+
+        /* Money Info */
+        $order->cart_total = $product->price;
+        $order->shipping_rate = '0';
+        $order->sub_total = str_replace(',', '', $request->sub_total);
+        $order->tax_rate = str_replace(',', '', $request->tax_rate);
+
+        if(isset($request->discounts)){
+            $order->discounts = str_replace(',', '', $request->discounts);
+        }
+
+        $order->coupon_id = 0;
+        $order->total = $request->final_total;
+        $order->payment_total = $request->final_total;
+        $order->shipping_option = 0;
+
+        /*------------*/
+        $order->card_digits = Str::substr($request->card_number, 15);
+        $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
+        $order->payment_id = $charge->id ?? $subscription_data['id'];
+        $order->is_completed = true;
+        $order->status = 'Pagado';
+        $order->payment_method = $payment_method->supplier;
+
+        /* Stripe Subscription */
+        if($subscription_data['status'] == 'active'){
+            $order->subscription_status = true;
+        }else{
+            $order->subscription_status = false;
+        }
+        
+        $order->stripe_subscription_id = $subscription_data['id'];
+        $order->stripe_customer_id = $subscription_data['customer']; 
+        $order->stripe_plan_id = $subscription_data['plan']['id'];
+        $order->subscription_period_start = Carbon::createFromTimestamp($subscription_data['current_period_start'])->toDateTimeString();
+        $order->subscription_period_end = Carbon::createFromTimestamp($subscription_data['current_period_end'])->toDateTimeString();
+
+        if(isset($request->coupon_code)){
+            $coupon = Coupon::where('code', $request->coupon_code)->where('is_active', true)->orderBy('created_at', 'desc')->first();
+
+            if(!empty($coupon)){
+                $order->coupon_id = $coupon->id;
+
+                // Guardar Uso de cupón para el usuario
+                $used = new UserCoupon;
+                $used->user_id = $user->id;
+                $used->coupon_id = $coupon->id;
+                $used->save();
+            }
+        }
+
+        // Identificar al usuario para guardar sus datos.
+        $user->orders()->save($order);
+
+        // Guardar solicitud de factura si es que existe
+        if (isset($request->rfc_num)) {
+            $invoice = new UserInvoice;
+
+            $invoice->invoice_request_num = Str::slug(substr($request->rfc_num,0,4)) . '_' . Str::random(10);
+            $invoice->rfc_num = $request->rfc_num;
+            $invoice->cfdi_use = $request->cfdi_use;
+            $invoice->order_id = $order->id;
+            $invoice->user_id = $user->id;
+            $invoice->email = $request->email;
+
+            $invoice->save();
+
+            // Notificación
+            $type = 'Invoice';
+            $by = $user;
+            $data = 'Solicitó una factura para la orden: ' . $order->id;
+            $model_action = "create";
+            $model_id = $invoice->id;
+
+            $this->notification->send($type, $by ,$data, $model_action, $model_id);
+        }        
+
+        // Correo de confirmación de compra
+        $mail = MailConfig::first();
+        $config = StoreConfig::first();
+
+        $name = $user->name;
+        $email = $user->email;
+
+        $sender_email = $config->sender_email;
+        $store_name = $config->store_name;
+        $contact_email = $config->contact_email;
+        $logo = asset('themes/' . $this->theme->get_name() . '/img/logo.svg');
+
+        //$logo = asset('assets/img/logo-store.jpg');
+
+        config(['mail.driver'=> $mail->mail_driver]);
+        config(['mail.host'=>$mail->mail_host]);
+        config(['mail.port'=>$mail->mail_port]);
+        config(['mail.username'=>$mail->mail_username]);
+        config(['mail.password'=>$mail->mail_password]);
+        config(['mail.encryption'=>$mail->mail_encryption]);
+
+        $data = array('order_id' => $order->id, 'user_id' => $user->id, 'logo' => $logo, 'store_name' => $store_name, 'order_date' => $order->created_at);
+
+        try {
+            Mail::send('wecommerce::mail.order_completed', $data, function($message) use($name, $email, $sender_email, $store_name) {
+                $message->to($email, $name)->subject
+                ('¡Gracias por comprar con nosotros!');
+
+                $message->from($sender_email, $store_name);
+            });
+
+            Mail::send('wecommerce::mail.new_order', $data, function($message) use($sender_email, $store_name, $contact_email){
+                $message->to($contact_email, $store_name)->subject
+                ('¡Nueva Compra en tu Tienda!');
+
+                $message->from($sender_email, $store_name);
+            });
+        }
+        catch (\Exception $e) {
+            Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
+        }
+        catch(\Swift_TransportException $e){
+            Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
+        }
+
+        $purchase_value = $product->price;
+
+        // Notificación
+        $type = 'Orden';
+        $by = $user;
+        $data = 'hizo una compra por $' . $purchase_value;
+        $model_action = "create";
+        $model_id = $order->id;
+
+        $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
+        //Facebook Event
+        $deduplication_code = NULL;
 
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
@@ -1725,7 +2572,6 @@ class FrontController extends Controller
             $paypal_password_access = $paypal_config->password_access ;
         }
 
-
         $api_context = new ApiContext(
             new OAuthTokenCredential(
                 $paypal_email_access,
@@ -1748,7 +2594,7 @@ class FrontController extends Controller
 
         if (!$paymentId || !$payerId || !$token) {
             Session::flash('error', 'Lo sentimos! El pago a través de PayPal no se pudo realizar. Inténtalo nuevamente o usa otro método de pago. Contacta con nosotros si tienes alguna pregunta.');
-            return redirect()->route('checkout.paypal');
+            return redirect()->route('index');
         }
 
         $payment = Payment::get($paymentId, $config);
@@ -1821,8 +2667,8 @@ class FrontController extends Controller
                     $message->from($sender_email, $store_name);
                 });
             }
-            catch (Exception $e) {
-                Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aun asi la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento.');
+            catch (\Exception $e) {
+                Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
             }
 
             $purchase_value = $cart->totalPrice;
@@ -1917,8 +2763,11 @@ class FrontController extends Controller
     {
         $total_orders = Order::where('user_id', Auth::user()->id)->get();
         $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
+        
         $orders->transform(function($order, $key){
-            $order->cart = unserialize($order->cart);
+            if($order->cart != 'N/A'){
+                $order->cart = unserialize($order->cart);
+            }
             return $order;
         });
 
@@ -2394,7 +3243,7 @@ class FrontController extends Controller
                 });
             }
             catch (Exception $e) {
-                Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aun asi la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento.');
+                Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
             }
 
             $purchase_value = $cart->totalPrice;
@@ -2432,7 +3281,13 @@ class FrontController extends Controller
             }
 
             Session::forget('cart');
+
+            return view('front.theme.' . $this->theme->get_name() . '.purchase_complete')
+            ->with('store_config', $store_config)
+            ->with('deduplication_code', $deduplication_code);
         }
+
+        $deduplication_code = NULL;
 
         return view('front.theme.' . $this->theme->get_name() . '.purchase_complete')
         ->with('store_config', $store_config)

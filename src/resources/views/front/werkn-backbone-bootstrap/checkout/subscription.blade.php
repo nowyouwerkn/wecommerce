@@ -12,7 +12,7 @@
 
 <!-- Checkout -->
 <section class="mt-5 mb-5 container we-co--checkout-container">
-    <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" data-parsley-validate="">
+    <form action="{{ route('checkout.subscription.store', $subscription->id) }}" method="POST" id="checkout-form" data-parsley-validate="">
         @if(!empty($card_payment))
         <input type="hidden" name="method" value="Pago con Tarjeta" disabled="">
         @else
@@ -39,30 +39,7 @@
                         @endguest
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_contact')
-
-                    @if($has_digital_product == false)
-                    <hr class="responsive-two">
-                        @if($shipment_options->count() > 0)
-                        <div class="we-co--title d-flex align-items-center justify-content-between">
-                            <h4><span class="we-co--progress-indicator"></span> Métodos de Envío</h4>
-                        </div>
-                        @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_shipping')
-                        @endif
-
-                        <hr class="responsive-two">
-
-                        @if($shipment_options->count() > 0)
-                        <div id="shipmentOptionChecker" class="mt-4" style="display:none;">
-                        @else
-                        <div class="mt-4">
-                        @endif
-                            <div class="we-co--title d-flex align-items-center justify-content-between">
-                                <h4 class="responsive-one"><span class="we-co--progress-indicator"></span> Dirección de Envío</h4>
-                            </div>
-                            @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_address')
-                        </div>
-                    @endif
-
+                    
                     <hr class="responsive-two">
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>
@@ -98,118 +75,6 @@
         else
             $(".billing_form").fadeIn(500);
     }
-
-    function newAdress()
-    {
-        if($('.option-address').is(":checked"))
-            $(".card-body-new-add").fadeOut(500);
-            $(".form-check-input").checked;
-
-
-
-        if($('.new-address').is(":checked"))
-            $(".card-body-new-add").fadeIn(500);
-
-    }
-
-    function newAdressGuest()
-    {
-        if($('.new-address').is(":checked"))
-            $(".guest-address").fadeOut(500);
-
-
-        if($('.new-address').is(":checked"))
-            $(".guest-address").fadeIn(500);
-
-    }
-</script>
-
-@if($has_digital_product == false)
-    @if($shipment_options->count() > 0)
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('#btnBuy').attr('disabled', true);
-        });
-    </script>
-    @endif
-@endif
-
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('.shipping-options a').click(function() {
-            event.preventDefault();
-            $('#btnBuy').attr('disabled', false);
-            // Información de que opción se seleccionó
-            console.log('Seleccionado:' , $(this).attr('data-value'));
-
-            if($(this).attr('data-type') == 'delivery'){
-                $('#shipmentOptionChecker').fadeIn();
-            }else{
-                $('#shipmentOptionChecker').fadeOut();
-            }
-
-            $('.shipping-options a').removeClass('active');
-
-            if($(this).hasClass('active')){
-                $(this).removeClass('active');
-            }else{
-                $(this).addClass('active');
-            }
-
-            $("#shippingOptions").val($(this).attr('data-value'));
-
-            /* Recalcular carrito con Envio */
-            $.ajax({
-                method: 'POST',
-                url: "{{ route('calculate.shipment') }}",
-                data:{ 
-                    shipping_input: $(this).attr('price-value'),
-                    shipping_option_id: $(this).attr('data-value'),
-                    _token: '{{ Session::token() }}', 
-                },
-                success: function(msg){
-                    console.log(msg['mensaje']);
-
-                    /* Envío */
-                    $("#shippingRate").text(msg['shipping']);
-                    $("#shippingInput").val(msg['shipping']);
-
-                    /* Subtotales */
-                    $("#subtotal").text(msg['subtotal']);
-                    $("#subtotalInput").val(msg['subtotal']);
-                    
-                    /* Impuestos */
-                    $("#taxValue").text(msg['tax']);
-                    $("#taxRate").val(msg['tax']);
-
-                    /* Mostrar Total */
-                    $('#totalPayment').text(msg['total']);
-                    $("#finalTotal").val(msg['final_total']);
-
-                    // Definiendo Referencia de MercadoPago
-                    var mp_preference = msg['mp_preference'];
-                    var mp_preference_id = msg['mp_preference_id'];
-                    $('#mp_preference').val(mp_preference);
-                    $('#mp_preference_id').val(mp_preference_id);
-                },
-                error: function(msg){
-                    $('.cp-success').hide();
-                    $('#cp_spinner').fadeOut(200);
-
-                    $('.cp-error').text('Problema del servidor: Error 500. Contacta con nosotros para ayudarte.');
-                    $('.cp-error').fadeIn();
-
-                    setTimeout(function () {
-                        $('.cp-error').fadeOut();
-                    }, 3000);
-                }
-            });
-
-            if($('#apply_cuopon').hasClass('select-shipment-first')){
-                $('#apply_cuopon').removeClass('select-shipment-first');
-            }
-        });
-    });
 </script>
 
 <script type="text/javascript">
@@ -458,47 +323,4 @@
 </script>
 @endif
 
-@if(!empty($mercado_payment))
-<script type="text/javascript">
-    $form.submit(function(event){
-        if($('input[name=method]').val() === 'Pago con MercadoPago') {
-            //$('#checkout-form').append($('<input type="hidden" name="mp_preference" />').val('{{ $preference->init_point }}'));
-            //$('#checkout-form').append($('<input type="hidden" name="mp_preference_id" />').val('{{ $preference->id }}'));
-
-            // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
-            $form.find('button').prop('disabled', true);
-            $('.loader-standby h2').text('Redireccionándote a MercadoPago...');
-            $('.loader-standby').removeClass('loader-hidden');
-            //console.log(response.id);
-
-            setTimeout(function() {
-                $form.get(0).submit();
-            }, 2000);
-        }
-    });
-</script>
-@endif
-
-@if(!empty($cash_payment))
-    <!-- CONEKTA TOKENIZE API -->
-    @if($cash_payment->supplier == 'Conekta')
-    <script type="text/javascript">
-        $form.submit(function(event){
-            if($('input[name=method]').val() === 'Pago con Oxxo') {
-                // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
-                $form.find('button').prop('disabled', true);
-                $('.loader-standby h2').text('Generando tu referencia de pago...');
-                $('.loader-standby').removeClass('loader-hidden');
-                //console.log(response.id);
-
-                $form.get(0).submit();
-            }
-        });
-    </script>
-    @endif
-
-    @if($cash_payment->supplier == 'OpenPay')
-
-    @endif
-@endif
 @endpush

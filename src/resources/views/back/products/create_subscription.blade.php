@@ -38,6 +38,18 @@
     .new-cat{
         display: none;
     }
+
+    .btn-eliminate{
+        width: 20px;
+        height: 20px;
+        background-color: red;
+        color: #fff;
+        display: inline-block;
+        border-radius: 100%;
+        text-align: center;
+        line-height: 20px;
+        font-size: .8em;
+    }
 </style>
 @endpush
 
@@ -50,7 +62,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Productos</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1"><img src="{{ asset('assets/img/physical-product.png') }}" width="35px" class="mr-1" alt=""> Agregar Producto</h4>
+            <h4 class="mg-b-0 tx-spacing--1"><img src="{{ asset('assets/img/suscription-product.png') }}" width="35px" class="mr-1" alt=""> Agregar Suscripción</h4>
         </div>
         <div class="d-none d-md-block">
             <a href="{{ route('products.index') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
@@ -66,14 +78,7 @@
         {{ csrf_field() }}
 
         {{-- TIPO DE PRODUCTO --}}
-        <input type="hidden" value="physical" name="type">
-
-        {{--
-        <div class="save-bar bg-success text-white d-flex align-items-center justify-content-between">
-            <p class="mb-0">El sistema guarda como borrador ocasionalmente. Para hacerlo manual da click en el botón.</p>
-            <button id="save-form" type="submit" class="btn-save-big btn btn-outline-light btn-sm text-white">Guardar cambios</button>
-        </div>
-        --}}
+        <input type="hidden" value="subscription" name="type">
 
         <div class="row">
             <!-- Firts Column -->
@@ -95,44 +100,11 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="description">Descripción <span class="text-danger">*</span></label>
                                 <textarea name="description" cols="10" rows="3" class="form-control" required="">{{ old('description') }}</textarea>
                                 <small class="text-muted">Debe contener al menos 30 caracteres.</small>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="materials">Materiales <span class="text-info tx-12">(Opcional)</span></label>
-                                <textarea name="materials" cols="10" rows="3" class="form-control">{{ old('materiales') }}</textarea>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="d-flex">
-                                <div class="form-group me-2">
-                                    <label for="color">Color <span class="text-danger">*</span></label>
-                                    <input type="text" name="color" class="form-control" placeholder="Ej. Negro" value="{{ old('color') }}" required="">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="hex_color"># <span class="text-danger">*</span></label>
-                                    <input type="color" name="hex_color" class="form-control" value="{{ old('color') ?? '#17A2B8' }}" style="width:50px;" required="">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label for="pattern">Patrón</label>
-                            <input type="text" name="pattern"class="form-control" placeholder="Ej. Liso, Lunares" value="{{ old('pattern') }}">
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="brand">Marca <span class="text-success tx-12">Recomendado</span></label>
-                                <input type="text" name="brand" class="form-control" placeholder="" value="{{ old('brand') }}">
                             </div>
                         </div>
 
@@ -164,7 +136,7 @@
                     <div class="card-body row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="model_image">Imagen de Modelo <span class="text-success tx-12">Recomendado</span></label>
+                                <label for="model_image">Imagen del Servicio <span class="text-success tx-12">Recomendado</span></label>
                                 <input type="file" name="model_image" class="form-control" accept=".jpg, .jpeg, .png">
                             </div>
                         </div>
@@ -183,26 +155,48 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="discount_price">Precio <span class="text-danger">*</span></label>
-                                <div class="input-group mg-b-10">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">MX$</span>
-                                  </div>
-                                    <input type="text" id="price" name="price" class="form-control" value="{{ old('price') }}" required="">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="payment_frequency">Cantidad<span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" name="payment_frequency_qty" value="1" required>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label for="payment_frequency">Frecuencia de Pago <span class="text-danger">*</span></label>
+                                        <select class="custom-select tx-13" name="payment_frequency" required>
+                                            <option value="weekly">Semanal</option>
+                                            <option value="monthly" selected="">Mensual</option>
+                                            <option value="annual">Anual</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-md-12">
+                                        <label for="payment_frequency">Tiempo para Cancelación<span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" name="time_for_cancellation" value="1" required>
+                                        <small>Se calcula de acuerdo a la frecuencia de pago. Es decir, la suscripción se cancelará automáticamente en "X" meses a partir de la fecha de contración del cliente.</small>
+                                    </div>
                                 </div>
                             </div>
-
                             <div class="col-md-6">
-                                <label for="discount_price">Precio en Descuento</label>
-                                    <div class="input-group mg-b-10">
+                                <label for="discount_price">Precio <span class="text-danger">*</span></label>
+                                <div class="input-group mg-b-10">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">MX$</span>
                                     </div>
-                                    <input type="text" id="discount_price" name="discount_price" value="{{ old('discount_price') }}" class="form-control">
+                                    <input type="text" id="price" name="price" class="form-control" value="{{ old('price') }}" required="">
                                 </div>
-                            </div>
 
-                            <div class="col-md-6 offset-md-6">
+                                <div class="mt-4">
+                                    <label for="discount_price">Precio en Descuento</label>
+                                    <div class="input-group mg-b-10">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">MX$</span>
+                                        </div>
+                                        <input type="text" id="discount_price" name="discount_price" value="{{ old('discount_price') }}" class="form-control">
+                                    </div>
+                                </div>
+
                                 <div class="custom-control custom-checkbox">
                                   <input type="checkbox" class="custom-control-input" name="has_discount" id="customCheck1" value="1">
                                   <label class="custom-control-label" for="customCheck1">Activar descuento</label><br>
@@ -213,91 +207,33 @@
                                     <input type="date" id="discount_end" name="discount_end" value="{{ old('discount_end') }}" class="form-control">
                                 </div>
                             </div>
+                            
+
+                            
                         </div>
                     </div>
-
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col-md-6 mt-2">
-                                <label for="production_cost">Costo de Producción</label>
-                                <div class="input-group mg-b-10">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">MX$</span>
-                                  </div>
-                                    <input type="text" id="production_cost" name="production_cost" value="{{ old('production_cost') }}" class="form-control value-checker">
-                                </div>
-                                <span class="tx-13 tx-color-03 d-block">Tus clientes no verán esto.</span>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="d-flex align-items-center justify-content-between pt-4">
-                                    <div class="">
-                                        <p class="mb-0">Margen</p>
-                                        <h2><span id="margin">-</span>%</h2>
-                                    </div>
-                                    <div class="">
-                                        <p class="mb-0">Ganancia</p>
-                                        <h2>$<span id="profit">-</span></h2>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--IVA->
-                            <div class="col-md-12 mt-3">
-                                <div class="custom-control custom-checkbox">
-                                  <input type="checkbox" class="custom-control-input" id="has_tax" name="has_tax" value="1">
-                                  <label class="custom-control-label" for="has_tax">Este producto incluye impuestos.</label>
-                                  <span class="tx-13 tx-color-03 d-block wd-60p">Seleccionar esta casilla si el valor ingresado en el campo de "Precio" ya incluye I.V.A. De lo contrario, la plataforma agregará el impuesto automáticamente (Para tiendas configuradas en MXN).</span>
-                                </div>
-                            </div>
-                            <!--IVA-->
-                        </div>
-                    </div>
-
                 </div>
 
-                <!-- Inventory -->
+                <!-- characteristics -->
                 <div class="card mg-t-10 mb-4">
                     <!-- Header -->
                     <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                        <h5 class="mg-b-5">Inventario</h5>
-                        <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
+                        <h5 class="mg-b-5">Características</h5>
+                        <p class="tx-12 tx-color-03 mg-b-0">Configura esta información para darle a conocer a tus clientes que incluye tu paquete de suscripción.</p>
                     </div>
 
                     <!-- Form -->
-                    <div class="card-body row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="stock">Cantidad <span class="text-danger">*</span></label>
-                                <input type="number" name="stock" class="form-control" value="{{ old('stock') }}" required>
-                            </div>
-                        </div>
+                    <div class="card-body">
+                        <div id="charForm">
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="sku">SKU (Stock Keeping Unit) <span class="text-danger">*</span></label>
-                                <input type="text" name="sku" class="form-control" value="{{ old('sku') }}" required>
-                            </div>
                         </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="barcode">Código de Barras (ISBN, UPC, GTIN, etc) <span class="text-info">(Opcional)</span></label>
-                                <input type="text" name="barcode" class="form-control" value="{{ old('barcode') }}">
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 mb-4">
-                            <div class="custom-control custom-checkbox" >
-                                <input type="checkbox" class="custom-control-input" id="hasVariants" name="has_variants" value="1">
-                                <label class="custom-control-label" for="hasVariants">Este producto tiene variantes</label>
-                            </div>
-                        </div>
+                        <hr>
+                        <a href="javascript:void(0)" id="newCharacteristic" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5"><i class="far fa-plus-square"></i> Agrega característica</a>
                     </div>
                 </div>
 
-                {{-- @include('wecommerce::back.products.partials._variant_card') --}}
-
+                <!-- Inventory -->
+                <input type="hidden" name="stock" class="form-control" value="1">
             </div>
 
             <!-- Second -->
@@ -347,14 +283,6 @@
                             </div>
 
                             <div class="form-group mb-1">
-                                <!--
-                                <label for="category_id">Colección <span class="text-danger">*</span></label>
-                                <select class="custom-select tx-13" name="category_id" required="">
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                                -->
                                 @if($categories->count() != 0)
                                     <label for="category_id">Colección <span class="text-danger">*</span></label>
                                     <select class="custom-select tx-13 old-cat" id="main_category"  name="category_id" required="">
@@ -386,22 +314,11 @@
                             <div class="col-md-12">
                                 <div class="form-group mb-3 mt-2">
                                     <label for="tsearch_tagsags">Etiquetas <span class="text-info tx-12">(Opcional)</span></label>
-                                    <input type="text" name="search_tags" class="form-control" placeholder="Algodón, Fresco, Verano" value="{{ old('search_tags') }}">
+                                    <input type="text" name="search_tags" class="form-control" placeholder="Especial, Mensual, Paquete" value="{{ old('search_tags') }}">
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label for="condition">Condición <br> <span class="text-info tx-12">(Opcional)</span></label>
-                                    <select class="custom-select tx-13" name="condition">
-                                        <option value="new" selected="">Nuevo</option>
-                                        <option value="used">Usado</option>
-                                        <option value="refurbished">Renovado</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group mb-2">
                                     <label for="tsearch_tagsags">Rango de Edad <span class="text-success tx-12">Recomendado</span></label>
                                     <select class="custom-select tx-13" name="age_group">
@@ -419,63 +336,6 @@
                     </div>
                 </div>
 
-                <div class="card mg-t-10 mb-4">
-                    <!-- Header -->
-                    <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                        <h5 class="mg-b-5">Características de envío</h5>
-                        <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
-                    </div>
-
-                    <!-- Form -->
-                    <div class="card-body row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="height">Alto</label>
-                                <input type="number" name="height" class="form-control" value="{{ old('height') }}">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="width">Ancho</label>
-                                <input type="number" name="width" class="form-control" value="{{ old('width') }}">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="lenght">Largo</label>
-                                <input type="number" name="lenght" class="form-control" value="{{ old('lenght') }}">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="weight">Peso</label>
-                                <input type="number" name="weight" class="form-control" value="{{ old('weight') }}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Disponibility -->
-                {{--
-                <div class="card mg-t-10 mb-4">
-                    <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                        <h5 class="mg-b-5">Disponibilidad</h5>
-                        <p class="tx-12 tx-color-03 mg-b-0">Disponibilidad.</p>
-                    </div>
-
-                    <div class="card-body row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="available_date_start">Disponibilidad</label>
-                                <input type="date" name="available_date_start" class="form-control" value="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                --}}
 
                 <button type="submit" class="btn btn-lg pd-x-15 btn-primary btn-uppercase btn-block">
                     <i class="fas fa-save mr-1"></i> Guardar Producto
@@ -495,31 +355,6 @@
         });
     });
 
-    // Value Checker
-    $('.value-checker').keyup(function(){
-        event.preventDefault();
-
-        var price = $('#price').val();
-        var discount_price = $('#discount_price').val();
-        var production_cost = $('#production_cost').val();
-
-        var margin = ((parseFloat(price.replace(/,/g, "")) - parseFloat(production_cost.replace(/,/g, ""))) / 100);
-        var profit = (parseFloat(price.replace(/,/g, "")) - parseFloat(production_cost.replace(/,/g, "")));
-
-        $('#margin').text(parseFloat(margin).toFixed(2));
-        $('#profit').text(parseFloat(profit).toFixed(2));
-    });
-
-    $('.form-control').keyup(function(){
-        event.preventDefault();
-
-        if ($(this).val().length === 0 ) {
-            $('.save-bar').removeClass('show-bar');
-        }else{
-            $('.save-bar').addClass('show-bar');
-        }
-    });
-
     $("#newCategory").click(function() {
         var $this = $(this);
         $(".new-cat").toggle("slow");
@@ -534,8 +369,10 @@
         }
     });
 
-    $("#hasVariants").click(function() {
-        $('#save-form').submit();
+    $('#newCharacteristic').on('click', function(e){
+        $.get("{{ route('subscription.inputs') }}", function(data) {
+            $('#charForm').append(data);
+        });
     });
 
     $('#main_category').on('click', function(){

@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
 
             $table->integer('user_id');
-            $table->text('cart');
+            $table->text('cart')->nullable();
 
             $table->string('sub_total')->nullable();
             $table->string('shipping_rate')->nullable();

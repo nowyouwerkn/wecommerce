@@ -9,14 +9,14 @@
     <meta name="twitter:site" content="@nowyouwerkn">
     <meta name="twitter:creator" content="@nowyouwerkn">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Werkn">
-    <meta name="twitter:description" content="Werkn WeCommerce">
+    <meta name="twitter:title" content="Werken">
+    <meta name="twitter:description" content="Werken WeCommerce">
     <meta name="twitter:image" content="">
 
     <!-- Facebook -->
-    <meta property="og:url" content="http://www.werkn.mx">
-    <meta property="og:title" content="Werkn">
-    <meta property="og:description" content="Werkn WeCommerce">
+    <meta property="og:url" content="http://www.werken.mx">
+    <meta property="og:title" content="Werken">
+    <meta property="og:description" content="Werken WeCommerce">
 
     <meta property="og:image" content="">
     <meta property="og:image:secure_url" content="">
@@ -25,12 +25,10 @@
     <meta property="og:image:height" content="600">
 
     <!-- Meta -->
-    <meta name="description" content="Werkn WeCommerce">
-    <meta name="author" content="Werkn">
+    <meta name="description" content="Werken WeCommerce">
+    <meta name="author" content="Werken">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="../../assets/img/favicon.png">
-
     <title>Werkn Commerce - Vista Principal</title>
 
     <!-- vendor css -->
