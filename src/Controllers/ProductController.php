@@ -211,8 +211,8 @@ class ProductController extends Controller
 
         /* Características Productos Suscripción */
         if($request->type == 'subscription'){
-            $product->payment_frecuency = $request->payment_frecuency;
-            $product->payment_frecuency_qty = $request->payment_frecuency_qty;
+            $product->payment_frequency = $request->payment_frequency;
+            $product->payment_frequency_qty = $request->payment_frequency_qty;
             $product->time_for_cancellation = $request->time_for_cancellation;
 
             $code_gen = substr(md5(uniqid(mt_rand(), true)) , 0, 5);
@@ -495,7 +495,7 @@ class ProductController extends Controller
         $product->visibility = $request->visibility;
         $product->condition = $request->condition;
         
-        $product->type = $request->type;
+        //$product->type = $request->type;
 
         $product->fb_product_category = $request->fb_product_category;
         $product->google_product_category = $request->google_product_category;
@@ -512,7 +512,7 @@ class ProductController extends Controller
         }
 
         /* Características Productos Digitales */
-        if($request->type == 'digital'){
+        if($product->type == 'digital'){
             $product->download_link = $request->download_link;
             //$product->doc_file = $request->doc_file;
             //$product->image_file = $request->image_file;
@@ -547,9 +547,9 @@ class ProductController extends Controller
         }
 
         /* Características Productos Suscripción */
-        if($request->type == 'subscription'){
-            $product->payment_frecuency = $request->payment_frecuency;
-            $product->payment_frecuency_qty = $request->payment_frecuency_qty;
+        if($product->type == 'subscription'){
+            $product->payment_frequency = $request->payment_frequency;
+            $product->payment_frequency_qty = $request->payment_frequency_qty;
             $product->time_for_cancellation = $request->time_for_cancellation;
 
             $code_gen = substr(md5(uniqid(mt_rand(), true)) , 0, 5);
