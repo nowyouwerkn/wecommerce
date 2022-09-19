@@ -168,7 +168,7 @@
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Datos generales</h5>
                         </div>
-        
+
                         <div class="card-body row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -176,7 +176,7 @@
                                     <input type="text" name="name" class="form-control" value="{{ $product->name }}">
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="description">Descripción <span class="text-danger">*</span></label>
@@ -184,47 +184,47 @@
                                     <small class="text-muted">Debe contener al menos 30 caracteres.</small>
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="materials">Materiales</label>
                                     <textarea name="materials" cols="10" rows="3" class="form-control">{{ $product->materials }}</textarea>
                                 </div>
                             </div>
-        
+
                             <div class="col-md-4">
                                 <div class="d-flex">
                                     <div class="form-group me-2">
                                         <label for="color">Color <span class="text-danger">*</span></label>
                                         <input type="text" name="color" class="form-control" placeholder="Ej. Negro" value="{{ $product->color }}" required="">
                                     </div>
-        
+
                                     <div class="form-group">
                                         <label for="hex_color"># <span class="text-danger">*</span></label>
                                         <input type="color" name="hex_color" class="form-control" value="{{ $product->hex_color ?? '#17A2B8'}}" style="width:50px;" required="">
                                     </div>
                                 </div>
                             </div>
-        
+
                             <div class="col-md-4">
                                 <label for="pattern">Patrón</label>
                                 <input type="text" name="pattern" class="form-control" placeholder="Ej. Liso, Lunares" value="{{ $product->pattern }}">
                             </div>
-        
+
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="brand">Marca <span class="text-success tx-12">Recomendado</span></label>
                                     <input type="text" name="brand" class="form-control" placeholder="" value="{{ $product->brand }}">
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="in_index" name="in_index" value="1" {{ ($product->in_index == '1') ? 'checked' : '' }}>
                                     <label class="custom-control-label" for="in_index">Mostrar en Inicio</label>
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="is_favorite" name="is_favorite" value="1" {{ ($product->is_favorite == '1') ? 'checked' : '' }} >
@@ -233,14 +233,14 @@
                             </div>
                         </div>
                     </div>
-        
+
                     <!-- Multimedia Elements -->
                     <div class="card mg-t-10 mb-4">
                         <!-- Header -->
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Archivos multimedia</h5>
                         </div>
-        
+
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
@@ -248,32 +248,32 @@
                                     <div class="col-12 justify-content-center">
                                         <h5>Imagen principal</h5>
                                     </div>
-        
+
                                     <div class="col-md-4 offset-md-4">
                                         <a href="javascript:void(0)" data-target="#modalChangeImage" data-toggle="modal" class="btn btn-rounded btn-icon btn-info"><i class="fas fa-edit" aria-hidden="true"></i></a>
                                         <img class="img-fluid mb-4" src="{{ asset('img/products/' . $product->image ) }}" alt="Imagen principal">
                                     </div>
                                 </div>
                             </div>
-        
+
                             <div class="col-12">
                                 <h5>Imagenes extras</h5>
                             </div>
-        
+
                             @foreach($product->images as $image)
                             <div class="col-md-4">
                                 <div class="thumbnail-wrap">
                                     <button type="button" id="deleteImage_{{ $image->id }}" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
                                         <i class="fas fa-times" aria-hidden="true"></i>
                                     </button>
-        
+
                                     @push('scripts')
-        
+
                                     <form method="POST" id="deleteImageForm_{{ $image->id }}" action="{{ route('image.destroy', $image->id) }}" style="display: none;">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
                                     </form>
-        
+
                                     <script type="text/javascript">
                                         $('#deleteImage_{{ $image->id }}').on('click', function(){
                                             event.preventDefault();
@@ -281,26 +281,26 @@
                                         });
                                     </script>
                                     @endpush
-        
+
                                     <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}" alt="Imagen secundaria">
                                     <p class="priority-badge" >{{$image->priority}}</p>
                                     <a style="right: 30px;" href="javascript:void(0)" data-target="#modalEditImage_{{$image->id}}" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imagen"><i class="fas fa-edit" aria-hidden="true"></i></a>
                                 </div>
                             </div>
                             @endforeach
-        
+
                             <div class="col-md-4">
                                 <a href="javascript:void(0)" data-target="#modalNewImage" data-toggle="modal" class="image-btn"><span class="fas fa-plus"></span> Agregar más imágenes</a>
                             </div>
                         </div>
                     </div>
-        
+
                     <!-- Price -->
                     <div class="card mg-t-10 mb-4">
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Precios</h5>
                         </div>
-        
+
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
@@ -312,24 +312,24 @@
                                         <input type="number" id="price" name="price" class="form-control" value="{{ $product->price }}">
                                     </div>
                                 </div>
-        
+
                                 <div class="col-md-6">
                                     <label for="discount_price">Precio en Descuento</label>
                                     <div class="input-group mg-b-10">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">MX$</span>
                                         </div>
-        
+
                                         <input type="number" id="discount_price" name="discount_price" class="form-control" value="{{ $product->discount_price }}">
                                     </div>
                                 </div>
-        
+
                                 <div class="col-md-6 offset-md-6">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" name="has_discount" id="customCheck1" value="1" {{ ($product->has_discount == '1') ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Activar descuento</label><br>
                                     </div>
-        
+
                                     <div class="form-group mt-3">
                                         <label for="discount_end">hasta:</label>
                                         <input type="date" id="discount_end" name="discount_end" value="{{ $product->discount_end }}" class="form-control">
@@ -337,7 +337,7 @@
                                 </div>
                             </div>
                         </div>
-        
+
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-6">
@@ -348,10 +348,10 @@
                                         </div>
                                         <input type="number" id="production_cost" name="production_cost" class="form-control value-checker" value="{{ $product->production_cost }}">
                                     </div>
-        
+
                                     <span class="tx-13 tx-color-03 d-block">Tus clientes no verán esto.</span>
                                 </div>
-        
+
                                 <div class="col-md-4">
                                     <div class="d-flex align-items-center justify-content-between pt-4">
                                         <div class="">
@@ -364,7 +364,7 @@
                                         </div>
                                     </div>
                                 </div>
-        
+
                                 <!--IVA->
                                 <div class="col-md-12 mt-3">
                                     <div class="custom-control custom-checkbox">
@@ -377,13 +377,13 @@
                             </div>
                         </div>
                     </div>
-        
+
                     <!-- Inventory -->
                     <div class="card mg-t-10 mb-3">
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Inventario</h5>
                         </div>
-        
+
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-4">
@@ -396,21 +396,21 @@
                                     @endif
                                 </div>
                             </div>
-        
+
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="sku">SKU (Stock Keeping Unit) <span class="text-danger">*</span></label>
                                     <input type="text" name="sku" class="form-control" value="{{ $product->sku }}" required>
                                 </div>
                             </div>
-        
+
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="barcode">Código de Barras (ISBN, UPC, GTIN, etc) <span class="text-info">(Opcional)</span></label>
                                     <input type="text" name="barcode" class="form-control" value="{{ $product->barcode }}">
                                 </div>
                             </div>
-        
+
                             <div class="col-md-12 mb-4">
                                 @if($product->has_variants == true)
                                 <div class="custom-control custom-checkbox" >
@@ -427,14 +427,14 @@
                         </div>
                     </div>
                 </div>
-        
+
                 <!-- Second -->
                 <div class="col-md-4">
                     <div class="card mg-t-10 mb-4">
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Estatus</h5>
                         </div>
-        
+
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
@@ -444,20 +444,20 @@
                                         <option {{ ($product->status == 'Borrador') ? 'selected' : '' }} value="Borrador">Borrador</option>
                                         <option {{ ($product->status == 'Publicado') ? 'selected' : '' }} value="Publicado">Publicado</option>
                                     </select>
-        
+
                                     <span class="tx-13 tx-color-03 d-block mt-2">Este producto estará oculto de tu tienda pero aparecerá en tu listado de productos.</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-        
+
                     <!-- Estatus product -->
                     <div class="card mg-t-10 mb-4">
                         <!-- Header -->
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Categorización</h5>
                         </div>
-        
+
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
@@ -469,7 +469,7 @@
                                         <option value="female" {{ ($product->gender == 'female') ? 'selected' : '' }}>Mujeres</option>
                                     </select>
                                 </div>
-        
+
                                 <div class="form-group mb-1">
                                     @if($categories->count() != 0)
                                         <label for="category_id">Colección <span class="text-danger">*</span></label>
@@ -478,16 +478,16 @@
                                                 <option {{ ($category->id == $product->category_id) ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         </select>
-        
+
                                         <input type="text" name="category_name" class="form-control new-cat">
-        
+
                                         <small><a href="javascript:void(0)" id="newCategory" class="btn-add original-state">Crear nueva categoría</a></small>
                                     @else
                                         <label for="category_id">Colección <span class="text-danger">*</span></label>
                                         <input type="text" name="category_name" required="" class="form-control">
                                     @endif
                                 </div>
-        
+
                                 <div class="mt-4 mb-2">
                                     <h6>Subcategorías actualmente seleccionadas</h6>
                                     @if($product->subCategory->count() == 0)
@@ -498,11 +498,11 @@
                                         @endforeach
                                     @endif
                                 </div>
-        
+
                                 @php
                                     $subcategories = Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', $product->category_id)->get();
                                 @endphp
-                                
+
                                 <div class="form-group mt-3">
                                     <label>Sub-Categorías</label>
                                     <select class="form-control select2" name="subcategory[]" id="subcategory" data-plugin="select2" multiple="">
@@ -513,7 +513,7 @@
                                 </div>
                             </div>
                         </div>
-        
+
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-12">
@@ -522,7 +522,7 @@
                                         <input type="text" name="search_tags" class="form-control" placeholder="Algodón, Fresco, Verano" value="{{ $product->search_tags }}">
                                     </div>
                                 </div>
-        
+
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label for="condition">Condición <br> <span class="text-info tx-12">(Opcional)</span></label>
@@ -533,7 +533,7 @@
                                         </select>
                                     </div>
                                 </div>
-    
+
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label for="tsearch_tagsags">Rango de Edad <span class="text-success tx-12">Recomendado</span></label>
@@ -551,14 +551,14 @@
                             </div>
                         </div>
                     </div>
-        
+
                     <div class="card mg-t-10 mb-4">
                         <!-- Header -->
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Características de Envío</h5>
                             <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
                         </div>
-        
+
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-6">
@@ -567,21 +567,21 @@
                                     <input type="number" name="height" class="form-control" value="{{ $product->height }}">
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="width">Ancho</label>
                                     <input type="number" name="width" class="form-control" value="{{ $product->width }}">
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="lenght">Largo</label>
                                     <input type="number" name="lenght" class="form-control" value="{{ $product->lenght }}">
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="weight">Peso</label>
@@ -590,7 +590,7 @@
                             </div>
                         </div>
                     </div>
-        
+
                     <div class="text-center">
                         <button type="submit" class="btn btn-block btn-big pd-x-15 btn-primary btn-uppercase mg-l-5">
                             <i class="fas fa-save mr-1"></i> Guardar Producto
@@ -643,7 +643,7 @@
                                     <label class="custom-control-label" for="in_index">Mostrar en Inicio</label>
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="is_favorite" name="is_favorite" value="1" {{ ($product->is_favorite == '1') ? 'checked' : '' }} >
@@ -659,7 +659,7 @@
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Archivos multimedia</h5>
                         </div>
-        
+
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
@@ -667,32 +667,32 @@
                                     <div class="col-12 justify-content-center">
                                         <h5>Imagen principal</h5>
                                     </div>
-        
+
                                     <div class="col-md-4 offset-md-4">
                                         <a href="javascript:void(0)" data-target="#modalChangeImage" data-toggle="modal" class="btn btn-rounded btn-icon btn-info"><i class="fas fa-edit" aria-hidden="true"></i></a>
                                         <img class="img-fluid mb-4" src="{{ asset('img/products/' . $product->image ) }}" alt="Imagen principal">
                                     </div>
                                 </div>
                             </div>
-        
+
                             <div class="col-12">
                                 <h5>Imagenes extras</h5>
                             </div>
-        
+
                             @foreach($product->images as $image)
                             <div class="col-md-4">
                                 <div class="thumbnail-wrap">
                                     <button type="button" id="deleteImage_{{ $image->id }}" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
                                         <i class="fas fa-times" aria-hidden="true"></i>
                                     </button>
-        
+
                                     @push('scripts')
-        
+
                                     <form method="POST" id="deleteImageForm_{{ $image->id }}" action="{{ route('image.destroy', $image->id) }}" style="display: none;">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
                                     </form>
-        
+
                                     <script type="text/javascript">
                                         $('#deleteImage_{{ $image->id }}').on('click', function(){
                                             event.preventDefault();
@@ -700,14 +700,14 @@
                                         });
                                     </script>
                                     @endpush
-        
+
                                     <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}" alt="Imagen secundaria">
                                     <p class="priority-badge" >{{$image->priority}}</p>
                                     <a style="right: 30px;" href="javascript:void(0)" data-target="#modalEditImage_{{$image->id}}" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imagen"><i class="fas fa-edit" aria-hidden="true"></i></a>
                                 </div>
                             </div>
                             @endforeach
-        
+
                             <div class="col-md-4">
                                 <a href="javascript:void(0)" data-target="#modalNewImage" data-toggle="modal" class="image-btn"><span class="fas fa-plus"></span> Agregar más imágenes</a>
                             </div>
@@ -741,17 +741,17 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">MX$</span>
                                         </div>
-        
+
                                         <input type="number" id="discount_price" name="discount_price" class="form-control" value="{{ $product->discount_price }}">
                                     </div>
                                 </div>
-        
+
                                 <div class="col-md-6 offset-md-6">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" name="has_discount" id="customCheck1" value="1" {{ ($product->has_discount == '1') ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Activar descuento</label><br>
                                     </div>
-        
+
                                     <div class="form-group mt-3">
                                         <label for="discount_end">hasta:</label>
                                         <input type="date" id="discount_end" name="discount_end" value="{{ $product->discount_end }}" class="form-control">
@@ -856,7 +856,7 @@
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Estatus</h5>
                         </div>
-        
+
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
@@ -866,20 +866,20 @@
                                         <option {{ ($product->status == 'Borrador') ? 'selected' : '' }} value="Borrador">Borrador</option>
                                         <option {{ ($product->status == 'Publicado') ? 'selected' : '' }} value="Publicado">Publicado</option>
                                     </select>
-        
+
                                     <span class="tx-13 tx-color-03 d-block mt-2">Este producto estará oculto de tu tienda pero aparecerá en tu listado de productos.</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-        
+
                     <!-- Estatus product -->
                     <div class="card mg-t-10 mb-4">
                         <!-- Header -->
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Categorización</h5>
                         </div>
-        
+
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
@@ -891,7 +891,7 @@
                                         <option value="female" {{ ($product->gender == 'female') ? 'selected' : '' }}>Mujeres</option>
                                     </select>
                                 </div>
-        
+
                                 <div class="form-group mb-1">
                                     @if($categories->count() != 0)
                                         <label for="category_id">Colección <span class="text-danger">*</span></label>
@@ -900,16 +900,16 @@
                                                 <option {{ ($category->id == $product->category_id) ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         </select>
-        
+
                                         <input type="text" name="category_name" class="form-control new-cat">
-        
+
                                         <small><a href="javascript:void(0)" id="newCategory" class="btn-add original-state">Crear nueva categoría</a></small>
                                     @else
                                         <label for="category_id">Colección <span class="text-danger">*</span></label>
                                         <input type="text" name="category_name" required="" class="form-control">
                                     @endif
                                 </div>
-        
+
                                 <div class="mt-4 mb-2">
                                     <h6>Subcategorías actualmente seleccionadas</h6>
                                     @if($product->subCategory->count() == 0)
@@ -920,11 +920,11 @@
                                         @endforeach
                                     @endif
                                 </div>
-        
+
                                 @php
                                     $subcategories = Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', $product->category_id)->get();
                                 @endphp
-                                
+
                                 <div class="form-group mt-3">
                                     <label>Sub-Categorías</label>
                                     <select class="form-control select2" name="subcategory[]" id="subcategory" data-plugin="select2" multiple="">
@@ -935,7 +935,7 @@
                                 </div>
                             </div>
                         </div>
-        
+
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-12">
@@ -944,7 +944,7 @@
                                         <input type="text" name="search_tags" class="form-control" placeholder="Algodón, Fresco, Verano" value="{{ $product->search_tags }}">
                                     </div>
                                 </div>
-        
+
                                 <div class="col-md-12">
                                     <div class="form-group mb-2">
                                         <label for="tsearch_tagsags">Rango de Edad <span class="text-success tx-12">Recomendado</span></label>
@@ -1005,7 +1005,7 @@
                                     <label class="custom-control-label" for="in_index">Mostrar en Inicio</label>
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="is_favorite" name="is_favorite" value="1" {{ ($product->is_favorite == '1') ? 'checked' : '' }} >
@@ -1136,7 +1136,7 @@
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Estatus</h5>
                         </div>
-        
+
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
@@ -1146,20 +1146,20 @@
                                         <option {{ ($product->status == 'Borrador') ? 'selected' : '' }} value="Borrador">Borrador</option>
                                         <option {{ ($product->status == 'Publicado') ? 'selected' : '' }} value="Publicado">Publicado</option>
                                     </select>
-        
+
                                     <span class="tx-13 tx-color-03 d-block mt-2">Este producto estará oculto de tu tienda pero aparecerá en tu listado de productos.</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-        
+
                     <!-- Estatus product -->
                     <div class="card mg-t-10 mb-4">
                         <!-- Header -->
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Categorización</h5>
                         </div>
-        
+
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
@@ -1171,7 +1171,7 @@
                                         <option value="female" {{ ($product->gender == 'female') ? 'selected' : '' }}>Mujeres</option>
                                     </select>
                                 </div>
-        
+
                                 <div class="form-group mb-1">
                                     @if($categories->count() != 0)
                                         <label for="category_id">Colección <span class="text-danger">*</span></label>
@@ -1180,16 +1180,16 @@
                                                 <option {{ ($category->id == $product->category_id) ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         </select>
-        
+
                                         <input type="text" name="category_name" class="form-control new-cat">
-        
+
                                         <small><a href="javascript:void(0)" id="newCategory" class="btn-add original-state">Crear nueva categoría</a></small>
                                     @else
                                         <label for="category_id">Colección <span class="text-danger">*</span></label>
                                         <input type="text" name="category_name" required="" class="form-control">
                                     @endif
                                 </div>
-        
+
                                 <div class="mt-4 mb-2">
                                     <h6>Subcategorías actualmente seleccionadas</h6>
                                     @if($product->subCategory->count() == 0)
@@ -1200,11 +1200,11 @@
                                         @endforeach
                                     @endif
                                 </div>
-        
+
                                 @php
                                     $subcategories = Nowyouwerkn\WeCommerce\Models\Category::where('parent_id', $product->category_id)->get();
                                 @endphp
-                                
+
                                 <div class="form-group mt-3">
                                     <label>Sub-Categorías</label>
                                     <select class="form-control select2" name="subcategory[]" id="subcategory" data-plugin="select2" multiple="">
@@ -1215,7 +1215,7 @@
                                 </div>
                             </div>
                         </div>
-        
+
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-12">
@@ -1224,7 +1224,7 @@
                                         <input type="text" name="search_tags" class="form-control" placeholder="Algodón, Fresco, Verano" value="{{ $product->search_tags }}">
                                     </div>
                                 </div>
-        
+
                                 <div class="col-md-12">
                                     <div class="form-group mb-2">
                                         <label for="tsearch_tagsags">Rango de Edad <span class="text-success tx-12">Recomendado</span></label>
@@ -1563,6 +1563,8 @@
                 });
             });
         </script>
+
+
     @break
 @endswitch
 @endpush

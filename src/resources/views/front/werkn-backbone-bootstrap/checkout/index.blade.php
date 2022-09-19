@@ -162,10 +162,10 @@
             $.ajax({
                 method: 'POST',
                 url: "{{ route('calculate.shipment') }}",
-                data:{ 
+                data:{
                     shipping_input: $(this).attr('price-value'),
                     shipping_option_id: $(this).attr('data-value'),
-                    _token: '{{ Session::token() }}', 
+                    _token: '{{ Session::token() }}',
                 },
                 success: function(msg){
                     console.log(msg['mensaje']);
@@ -177,7 +177,7 @@
                     /* Subtotales */
                     $("#subtotal").text(msg['subtotal']);
                     $("#subtotalInput").val(msg['subtotal']);
-                    
+
                     /* Impuestos */
                     $("#taxValue").text(msg['tax']);
                     $("#taxRate").val(msg['tax']);
