@@ -12,7 +12,7 @@
 
 <!-- Checkout -->
 <section class="mt-5 mb-5 container we-co--checkout-container">
-    <form action="{{ route('checkout.subscription.store', $subscription->id) }}" method="POST" id="checkout-form" data-parsley-validate="">
+    <form action="{{ route('checkout.subscription.store', $subscription->id) }}" method="POST" id="checkout-form" data-parsley-validate="" data-parsley-excluded="[disabled=disabled]">
         @if(!empty($card_payment))
         <input type="hidden" name="method" value="Pago con Tarjeta" disabled="">
         @else
@@ -39,7 +39,7 @@
                         @endguest
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_contact')
-                    
+
                     <hr class="responsive-two">
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>
@@ -116,52 +116,61 @@
     <script type="text/javascript" src="https://cdn.conekta.io/js/latest/conekta.js"></script>
 
     <script type="text/javascript">
-        $form.submit(function(event){
-            if($('input[name=method]').val() === 'Pago con Tarjeta') {
-                Conekta.setPublicKey('{{ $card_payment->public_key }}');
-                Conekta.setLanguage("es");
+        var $form = $('#checkout-form');
 
-                // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
-                $form.find('button').prop('disabled', true);
+        $(function () {
+            $('#checkout-form').parsley().on('field:validated', function() {
+            var ok = $('.parsley-error').length === 0;
+                $('.bs-callout-info').toggleClass('hidden', !ok);
+                $('.bs-callout-warning').toggleClass('hidden', ok);
+            })
+            .on('form:submit', function() {
+                if($('input[name=method]').val() === 'Pago con Tarjeta') {
+                    Conekta.setPublicKey('{{ $card_payment->public_key }}');
+                    Conekta.setLanguage("es");
 
-                Conekta.Token.create({
-                    "card": {
-                        "number": $('#card-number').val().replace(/\s+/g, ''),
-                        "name": $('#card-name').val(),
-                        "exp_year": $('#card-year').val(),
-                        "exp_month": $('#card-month').val(),
-                        "cvc": $('#card-cvc').val(),
-                        "address": {
-                            "street1": $('#street').val(),
-                            "city": $('#city').val(),
-                            "state": $('#state').val(),
-                            "zip": $('#postal_code').val().replace(/ /g,''),
-                            "country": $('#country').val()
+                    // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
+                    $form.find('button').prop('disabled', true);
+
+                    Conekta.Token.create({
+                        "card": {
+                            "number": $('#card-number').val().replace(/\s+/g, ''),
+                            "name": $('#card-name').val(),
+                            "exp_year": $('#card-year').val(),
+                            "exp_month": $('#card-month').val(),
+                            "cvc": $('#card-cvc').val(),
+                            "address": {
+                                "street1": $('#street').val(),
+                                "city": $('#city').val(),
+                                "state": $('#state').val(),
+                                "zip": $('#postal_code').val().replace(/ /g,''),
+                                "country": $('#country').val()
+                            }
                         }
-                    }
-                }, onSuccess, onError);
+                    }, onSuccess, onError);
 
-                return false;
-            }
+                    return false;
+                }
 
-            function onSuccess(response) {
-                $('.loader-standby').removeClass('loader-hidden');
-                $form.find('button').prop('disabled', true);
+                function onSuccess(response) {
+                    $('.loader-standby').removeClass('loader-hidden');
+                    $form.find('button').prop('disabled', true);
 
-                $('#checkout-form').append($('<input type="hidden" name="conektaTokenId" id="conektaTokenId" />').val(response.id));
+                    $('#checkout-form').append($('<input type="hidden" name="conektaTokenId" id="conektaTokenId" />').val(response.id));
 
-                $form.get(0).submit();
-            }
+                    $form.get(0).submit();
+                }
 
-            function onError(response) {
-                $('.loader-standby').addClass('loader-hidden');
+                function onError(response) {
+                    $('.loader-standby').addClass('loader-hidden');
 
-                $('.pay-error').show();
-                $('.pay-error').text(response['message_to_purchaser']);
+                    $('.pay-error').show();
+                    $('.pay-error').text(response['message_to_purchaser']);
 
-                $form.find('button').prop('disabled', false);
-                console.log(response);
-            }
+                    $form.find('button').prop('disabled', false);
+                    console.log(response);
+                }
+            });
         });
     </script>
     @endif
@@ -171,49 +180,58 @@
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 
     <script>
-        $form.submit(function(event){
-            if($('input[name=method]').val() === 'Pago con Tarjeta') {
-                Stripe.setPublishableKey('{{ $card_payment->public_key }}');
+        var $form = $('#checkout-form');
 
-                // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
-                $form.find('button').prop('disabled', true);
+        $(function () {
+            $('#checkout-form').parsley().on('field:validated', function() {
+            var ok = $('.parsley-error').length === 0;
+                $('.bs-callout-info').toggleClass('hidden', !ok);
+                $('.bs-callout-warning').toggleClass('hidden', ok);
+            })
+            .on('form:submit', function() {
+                if($('input[name=method]').val() === 'Pago con Tarjeta') {
+                    Stripe.setPublishableKey('{{ $card_payment->public_key }}');
 
-                Stripe.card.createToken({
-                    name: $('#card-name').val(),
-                    number: $('#card-number').val().replace(/\s+/g, ''),
-                    cvc: $('#card-cvc').val(),
-                    exp_month: $('#card-month').val(),
-                    exp_year: $('#card-year').val()
-                }, stripeResponseHandler);
-
-                return false;
-            }
-
-            function stripeResponseHandler(status, response){
-                if (response.error) {
-                    $form.find('button').prop('disabled', false);
-                    $('.loader-standby').addClass('loader-hidden');
-                    console.log(response);
-
-                    $('.pay-error').show();
-                    $('.pay-error').text(response['error'].message);
-
-                }else{
-                    $('.loader-standby').removeClass('loader-hidden');
+                    // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
                     $form.find('button').prop('disabled', true);
 
-                    $('.pay-error').hide();
+                    Stripe.card.createToken({
+                        name: $('#card-name').val(),
+                        number: $('#card-number').val().replace(/\s+/g, ''),
+                        cvc: $('#card-cvc').val(),
+                        exp_month: $('#card-month').val(),
+                        exp_year: $('#card-year').val()
+                    }, stripeResponseHandler);
 
-                    console.log(response.id);
-                    var token = response.id;
-
-                    // Insert the token into the form so it gets submitted to the server:
-                    $('#checkout-form').append($('<input type="hidden" name="stripeToken" id="stripeToken" />').val(token));
-
-                    // Submit the form:
-                    $form.get(0).submit();
+                    return false;
                 }
-            };
+
+                function stripeResponseHandler(status, response){
+                    if (response.error) {
+                        $form.find('button').prop('disabled', false);
+                        $('.loader-standby').addClass('loader-hidden');
+                        console.log(response);
+
+                        $('.pay-error').show();
+                        $('.pay-error').text(response['error'].message);
+
+                    }else{
+                        $('.loader-standby').removeClass('loader-hidden');
+                        $form.find('button').prop('disabled', true);
+
+                        $('.pay-error').hide();
+
+                        console.log(response.id);
+                        var token = response.id;
+
+                        // Insert the token into the form so it gets submitted to the server:
+                        $('#checkout-form').append($('<input type="hidden" name="stripeToken" id="stripeToken" />').val(token));
+
+                        // Submit the form:
+                        $form.get(0).submit();
+                    }
+                };
+            });
         });
     </script>
     @endif
@@ -224,50 +242,59 @@
     <script type="text/javascript" src="https://js.openpay.mx/openpay-data.v1.min.js"></script>
 
     <script>
-        $form.submit(function(event){
-            if($('input[name=method]').val() === 'Pago con Tarjeta') {
-                OpenPay.setId('{{ $card_payment->merchant_id }}');
-                OpenPay.setApiKey('{{ $card_payment->public_key }}');
-                OpenPay.setSandboxMode('{{ env("OPENPAY_PRODUCTION_MODE", false) }}');
+        var $form = $('#checkout-form');
 
-                var deviceSessionId = OpenPay.deviceData.setup('checkout-form', "device_hidden");
-                //console.log(deviceSessionId);
+        $(function () {
+            $('#checkout-form').parsley().on('field:validated', function() {
+            var ok = $('.parsley-error').length === 0;
+                $('.bs-callout-info').toggleClass('hidden', !ok);
+                $('.bs-callout-warning').toggleClass('hidden', ok);
+            })
+            .on('form:submit', function() {
+                if($('input[name=method]').val() === 'Pago con Tarjeta') {
+                    OpenPay.setId('{{ $card_payment->merchant_id }}');
+                    OpenPay.setApiKey('{{ $card_payment->public_key }}');
+                    OpenPay.setSandboxMode('{{ env("OPENPAY_PRODUCTION_MODE", false) }}');
 
-                // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
-                $form.find('button').prop('disabled', true);
+                    var deviceSessionId = OpenPay.deviceData.setup('checkout-form', "device_hidden");
+                    //console.log(deviceSessionId);
 
-                $('.loader-standby').removeClass('loader-hidden');
+                    // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
+                    $form.find('button').prop('disabled', true);
 
-                OpenPay.token.create({
-                      "card_number": $('#card-number').val().replace(/\s+/g, ''),
-                      "holder_name":$('#card-name').val(),
-                      "expiration_year":$('#card-year').val(),
-                      "expiration_month":$('#card-month').val(),
-                      "cvv2":$('#card-cvc').val(),
-                }, onSuccess, onError);
+                    $('.loader-standby').removeClass('loader-hidden');
 
-                return false;
-            }
+                    OpenPay.token.create({
+                        "card_number": $('#card-number').val().replace(/\s+/g, ''),
+                        "holder_name":$('#card-name').val(),
+                        "expiration_year":$('#card-year').val(),
+                        "expiration_month":$('#card-month').val(),
+                        "cvv2":$('#card-cvc').val(),
+                    }, onSuccess, onError);
 
-            function onSuccess(response) {
-                console.log(response.data.id);
+                    return false;
+                }
 
-                $form.find('button').prop('disabled', true);
+                function onSuccess(response) {
+                    console.log(response.data.id);
 
-                $form.append($('<input type="hidden" name="openPayToken" />').val(response.data.id));
+                    $form.find('button').prop('disabled', true);
 
-                $form.get(0).submit()
-            }
+                    $form.append($('<input type="hidden" name="openPayToken" />').val(response.data.id));
 
-            function onError(response) {
-                $('.loader-standby').addClass('loader-hidden');
+                    $form.get(0).submit()
+                }
 
-                $('.pay-error').show();
-                $('.pay-error').text(response['data'].description);
+                function onError(response) {
+                    $('.loader-standby').addClass('loader-hidden');
 
-                $form.find('button').prop('disabled', false);
-                console.log(response);
-            }
+                    $('.pay-error').show();
+                    $('.pay-error').text(response['data'].description);
+
+                    $form.find('button').prop('disabled', false);
+                    console.log(response);
+                }
+            });
         });
     </script>
     <!-- // OPEN PAY API -->
@@ -309,16 +336,25 @@
 
 @if(!empty($paypal_payment))
 <script type="text/javascript">
-    $form.submit(function(event){
-        if($('input[name=method]').val() === 'Pago con Paypal') {
-            // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
-            $form.find('button').prop('disabled', true);
-            $('.loader-standby h2').text('Redireccionándote a Paypal...');
-            $('.loader-standby').removeClass('loader-hidden');
-            //console.log(response.id);
+    var $form = $('#checkout-form');
 
-            $form.get(0).submit();
-        }
+    $(function () {
+        $('#checkout-form').parsley().on('field:validated', function() {
+        var ok = $('.parsley-error').length === 0;
+            $('.bs-callout-info').toggleClass('hidden', !ok);
+            $('.bs-callout-warning').toggleClass('hidden', ok);
+        })
+        .on('form:submit', function() {
+            if($('input[name=method]').val() === 'Pago con Paypal') {
+                // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
+                $form.find('button').prop('disabled', true);
+                $('.loader-standby h2').text('Redireccionándote a Paypal...');
+                $('.loader-standby').removeClass('loader-hidden');
+                //console.log(response.id);
+
+                $form.get(0).submit();
+            }
+        });
     });
 </script>
 @endif
