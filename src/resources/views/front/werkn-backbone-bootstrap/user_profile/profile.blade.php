@@ -27,6 +27,9 @@
 @endpush
 
 @section('content')
+@php
+    $membership = Nowyouwerkn\WeCommerce\Models\MembershipConfig::where('is_active', true)->first();
+@endphp
     <!-- Profile -->
     <section>
         <div class="container">
@@ -34,12 +37,24 @@
             <div class="row">
                 <div class="col-md-12">
                     <p>Bienvenido</p>
-                    <h1>Hola, {{ Auth()->user()->name ?? 'N/A' }}</h1>
+                    <h1>Hola, {{ Auth()->user()->name ?? 'N/A' }} @if ($vip_status != false)<ion-icon name="trophy"></ion-icon>@endif</h1>
                 </div>
             </div>
             <!-- Content -->
             <div class="row mt-3">
                 <div class="col-md-3">
+                    @if (!empty($membership))
+                    <div class="card p-3 mb-4">
+                        <p>Puntos disponibles</p>
+                        <input type="text" disabled class="text-center form-control mb-3" value="{{ $valid }}">
+                        @if ($membership->has_expiration_time == true)
+                            @if (!empty($last_points))
+                                <p>Vencen: <span>{{  Carbon\Carbon::parse($last_points->valid_until)->translatedFormat('d \d\e F, Y') }}</span></p>
+                            @endif
+                        @endif
+                        <a href="" class="btn btn-primary">Usar</a>
+                    </div>
+                    @endif
                     @include('front.theme.werkn-backbone-bootstrap.layouts.nav-user')
                 </div>
 

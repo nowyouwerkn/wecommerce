@@ -553,12 +553,28 @@ class FrontController extends Controller
 
         $membership = MembershipConfig::where('is_active', true)->first();
 
-        if (empty($membership)) {
-            $points = 0;
-        } else{
+        $points = NULL;
+        $available = NULL;
+        $used =  NULL;
+        if (!empty($membership)) {
+            $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+            $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+
+            foreach ($available_points as $a_point) {
+                $available += $a_point->value;
+            }
+
+            foreach ($used_points as $u_point) {
+                $used += $u_point->value;
+            }
+
+            $valid = $available - $used;
+
             if ($total >= $membership->minimum_purchase){
                 $qty = floor($total / $membership->qty_for_points);
+
                 $points = ($qty * $membership->earned_points);
+
             } else{
                 $points = 0;
             }
@@ -781,39 +797,34 @@ class FrontController extends Controller
         $points = NULL;
         $available = NULL;
         $point_disc = NULL;
+        $valid = NULL;
         if (!empty($membership)) {
             if ($total >= $membership->minimum_purchase){
                 $qty = floor($total / $membership->qty_for_points);
 
-                if ($membership->vip_clients == true && $membership->points_vip_accounts != NULL) {
-                    $points = ($qty * $membership->points_vip_accounts);
-                } else {
-                    $points = ($qty * $membership->earned_points);
-                }
-
-                $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
-                $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
-
-                $used = 0;
-                $available = 0;
-
-                foreach ($available_points as $v_points) {
-                    $available += $v_points->value ;
-                }
-
-                foreach ($used_points as $u_point) {
-                    $used += $u_point->value;
-                }
-
-                $valid = $available - $used;
-
-                $point_disc = $membership->point_value;
+                $points = ($qty * $membership->earned_points);
 
             } else{
                 $points = 0;
-                $available = 0;
-                $point_disc = 0;
             }
+
+            $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+            $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+
+            $used = 0;
+            $available = 0;
+
+            foreach ($available_points as $a_points) {
+                $available += $a_points->value ;
+            }
+
+            foreach ($used_points as $u_point) {
+                $used += $u_point->value;
+            }
+
+            $valid = $available - $used;
+
+            $point_disc = $membership->point_value;
         }
 
 
@@ -2848,8 +2859,11 @@ class FrontController extends Controller
 
         $valid = NULL;
         $vip_status = NULL;
+        $last_points = NULL;
 
         if (!empty($membership)) {
+
+            $last_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->get()->last();
             $used = 0;
             $available = 0;
 
@@ -2877,6 +2891,7 @@ class FrontController extends Controller
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')
         ->with('total_orders', $total_orders)
         ->with('orders', $orders)
+        ->with('last_points', $last_points)
         ->with('valid', $valid)
         ->with('vip_status', $vip_status)
         ->with('addresses', $addresses);
@@ -2917,21 +2932,24 @@ class FrontController extends Controller
         $available = NULL;
         $used =  NULL;
         $used_points =  NULL;
+        $last_points =  NULL;
         if (!empty($membership)) {
             $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
             $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
             $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
             $all_points = UserPoint::where('user_id', Auth::user()->id)->get();
 
+            $last_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->get()->last();
+
             $minimum = $membership->minimum_purchase;
 
-            $pending_orders = Order::where('total', '>=', $minimum)
-            ->where('user_id', Auth::user()->id)
-            ->where('status', '!=', 'Entregado')
-            ->where('status', '!=', 'Sin Completar')
-            ->orWhere('status', 'Pagado')
-            ->orWhere('status', 'Enviado')
-            ->orWhere('status', 'Empaquetado')
+            $pending_orders = Order::where('user_id', Auth::user()->id)
+            ->where('payment_total', '>=', $minimum)
+            ->where(function ($query) {
+                $query->where('status', 'Pagado')
+                    ->orWhere('status', 'Empaquetado')
+                    ->orWhere('status', 'Enviado');
+            })
             ->get();
 
             foreach ($available_points as $a_point) {
@@ -2946,8 +2964,8 @@ class FrontController extends Controller
 
             $pending = 0;
 
-            foreach ($pending_orders as $points) {
-                $pending+= floor($points->total / $membership->qty_for_points * $membership->earned_points);
+            foreach ($pending_orders as $p_points) {
+                $pending+= floor(($p_points->total / $membership->qty_for_points) * $membership->earned_points);
             }
 
         }
@@ -2955,7 +2973,9 @@ class FrontController extends Controller
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.points')
         ->with('all_points', $all_points)
         ->with('available', $available)
+        ->with('membership', $membership)
         ->with('used_points', $used_points)
+        ->with('last_points', $last_points)
         ->with('pending', $pending)
         ->with('pending_orders', $pending_orders);
     }

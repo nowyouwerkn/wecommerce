@@ -2,7 +2,7 @@
     <div class="card-body">
         @if(!empty($products))
             <div class="alert alert-info d-flex justify-content-between">
-                ¿Quieres editar el carrito? 
+                ¿Quieres editar el carrito?
                 <a href="{{ route('cart') }}">Ir al carrito</a>
             </div>
 
@@ -17,7 +17,7 @@
                         <span class="we-co--qty-circle">{{ $product['qty'] }}</span>
                         <img src="{{ asset('img/products/' . $item_img ) }}" class="img-fluid" alt="{{ $product['item']['name'] }}">
                     </div>
-                    
+
                     <div class="w-75 d-flex justify-content-between">
                         <div class="we-co--product-item-info">
                             <h6 class="mb-0">{{ $product['item']['name'] }}</h6>
@@ -34,12 +34,12 @@
                 <div class="we-co--product-img-wrap w-25">
                     <img src="{{ asset('img/products/' . $subscription->image) }}" class="img-fluid" alt="{{ $subscription->name }}">
                 </div>
-                
+
                 <div class="w-75 d-flex justify-content-between">
                     <div class="we-co--product-item-info">
                         <h6 class="mb-0">{{ $subscription->name }}</h6>
                         <p class="mb-0">
-                            {{ $subscription->payment_frequency_qty ?? '1' }} 
+                            {{ $subscription->payment_frequency_qty ?? '1' }}
                             @switch($subscription->payment_frequency)
                                 @case('daily')
                                 Día(s)
@@ -89,11 +89,11 @@
                         {{ Carbon\Carbon::now()->addYears($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
                         @break
                     @endswitch
-                    
+
                     . Puedes cancelar tu suscripción en cualquier momento desde tu perfil de cliente.
                 </div>
             </div>
-            @else 
+            @else
             <div class="alert alert-info d-flex justify-content-between mt-3">
                 <div>
                     <strong>Este cobro es
@@ -114,9 +114,9 @@
                             anual, tu siguiente cobro es el {{ Carbon\Carbon::now()->addYears($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
                             @break
                         @endswitch
-                    </strong> 
+                    </strong>
 
-                    . Tu suscripción termina el:                        
+                    . Tu suscripción termina el:
                     @switch($subscription->payment_frequency)
                         @case('daily')
                         {{ Carbon\Carbon::now()->addDays($subscription->time_for_cancellation)->translatedFormat('j \\de F') }}
@@ -134,7 +134,7 @@
                         {{ Carbon\Carbon::now()->addYears($subscription->time_for_cancellation)->translatedFormat('j \\de F') }}
                         @break
                     @endswitch
-                    
+
                     . Puedes renovar comprando nuevamente la suscripción al terminar el periodo.
                 </div>
             </div>
@@ -146,7 +146,7 @@
             @if(!empty($products))
             <div class="d-flex align-items-center justify-content-between">
                 <p>Envío</p>
-                
+
                 @if($shipment_options->count() > 0)
                 <p>$ <span id="shippingRate"><span class="text-info" style="font-size:.8em;">Selecciona un método</span></span></p>
                 <input type="hidden" name="shipping_rate" id="shippingInput" value="">
@@ -166,7 +166,7 @@
 
             <hr>
             @endif
-            
+
             <div class="d-flex align-items-center justify-content-between">
                 <p>Sub-total</p>
 
@@ -190,7 +190,7 @@
                 <p>- $ <span id="discountValue">0.00</span></p>
                 <input type="hidden" name="discounts" id="discount" value="">
             </div>
-            
+
             <div class="border mt-2 mb-3"></div>
 
             <div class="d-flex align-items-center justify-content-between">
@@ -199,8 +199,20 @@
                 <h4>$ <span id="totalPayment">{{ number_format($total,2) }}</span></h4>
                 <input type="hidden" name="final_total" value="{{ $final_total }}" id="finalTotal">
             </div>
+
+            @php
+                $membership = Nowyouwerkn\WeCommerce\Models\MembershipConfig::where('is_active', true)->first();
+            @endphp
+
+            @if(!empty($membership))
+            <div class="d-flex align-items-center justify-content-between">
+                <p>Puntos por acumular</p>
+
+                <p><span id="earnedPoints">{{ $points }}</span></p>
+            </div>
+            @endif
         </div>
-        
+
         <div class="row mt-3 text-left">
             <!-- STATUS ROW -->
             <div class="col-md-12">
@@ -224,6 +236,82 @@
                     </div>
                 </div>
             </div>
+
+            @if(!empty($membership))
+
+            <style>
+                .range-input {
+                padding:10px 20px;
+                display:flex;
+                align-items:center;
+                border-radius:10px;
+                width: 100%;
+                justify-content: space-between
+                }
+                .range-input input {
+                -webkit-appearance:none;
+                width:200px;
+                height:2px;
+                background:#4471ef;
+                border:none;
+                outline:none;
+                }
+                .range-input input::-webkit-slider-thumb {
+                -webkit-appearance:none;
+                width:20px;
+                height:20px;
+                background:#eee;
+                border:2px solid #4471ef;
+                border-radius:50%;
+                }
+                .range-input input::-webkit-slider-thumb:hover {
+                background:#4471ef;
+                }
+                .range-input .value {
+                color:#4471ef;
+                text-align:center;
+                font-weight:600;
+                line-height:40px;
+                height:40px;
+                overflow:hidden;
+                margin-left:10px;
+                }
+                .range-input .value div {
+                transition:all 300ms ease-in-out;
+                }
+            </style>
+
+                @if ($valid < 10)
+                <div class="col-md-12">
+                    <div class="bg-secondary bg-opacity-10">
+                        <div class="p-3">
+                            <h6 class="fw-semiBold">No tienes los puntos suficientes para utilizar en tu compra</h6>
+                        </div>
+                    </div>
+                </div>
+                @else
+                <div class="col-md-12">
+                    <div class="bg-secondary bg-opacity-10">
+                        <div class="p-3">
+                            <h6 class="fw-semiBold">Paga con puntos</h6>
+                        </div>
+                        <div class="range-input">
+                            <input type="range" id="points" min="0" max="{{ $valid }}" value="0" step="10">
+                            <div class="value">
+                                <div></div>
+                            </div>
+                            <button class="we-co--btn-coupon" id="apply_points" type="button">Canjear</button>
+                        </div>
+                        <div class="p-3">
+                            <p>Desliza el slider para determinar los puntos a usar</p>
+                        </div>
+                        <input type="text" name="points_to_apply" id="points_to_apply" hidden>
+                        <input type="text" value="{{ $point_disc }}" id="point_value" hidden>
+                        <input type="text" name="points" hidden id="points_discount">
+                    </div>
+                </div>
+                @endif
+            @endif
         </div>
 
         {{ csrf_field() }}
@@ -236,7 +324,7 @@
 <p class="we-co--method">Tu pago será procesado por <span id="paymentMethod">-</span></p>
 
 <p class="mb-2 we-co--terms-links text-center"><small>
-    Al confirmar la orden, aceptas nuestras 
+    Al confirmar la orden, aceptas nuestras
     @foreach($legals as $legal)
     <a href="{{ route('legal.text' , $legal->type) }}">
         @switch($legal->type)
@@ -258,7 +346,7 @@
 
             @default
                 Hubo un problema, intenta después.
-        @endswitch 
+        @endswitch
     </a>,
     @endforeach
 </small></p>
@@ -305,12 +393,12 @@
             $.ajax({
                 method: 'POST',
                 url: "{{ route('apply.cuopon') }}",
-                data:{ 
+                data:{
                     coupon_code: coupon_code,
                     subtotal: subtotal,
                     shipping: shipping,
                     user_email: user_email,
-                    _token: '{{ Session::token() }}', 
+                    _token: '{{ Session::token() }}',
                 },
                 success: function(msg){
                     if (msg['type'] == 'exception') {
@@ -318,7 +406,7 @@
                         $('#cp_spinner').fadeOut(200);
 
                         console.log(msg);
-                        
+
                         $('.cp-error').text(msg['mensaje']);
                         $('.cp-error').fadeIn();
 
@@ -381,6 +469,81 @@
                     }, 3000);
                 }
             });
+        }
+    });
+</script>
+<script>
+    let rangeInput = document.querySelector(".range-input input");
+    let rangeValue = document.querySelector(".range-input .value div");
+
+    let start = parseFloat(rangeInput.min);
+    let end = parseFloat(rangeInput.max);
+    let step = parseFloat(rangeInput.step);
+
+    for(let i=start;i<=end;i+=step){
+        rangeValue.innerHTML += '<div>'+i+'</div>';
+    }
+
+    rangeInput.addEventListener("input",function(){
+        let top = parseFloat(rangeInput.value)/step * -40;
+        rangeValue.style.marginTop = top+"px";
+    });
+</script>
+<script>
+    $('#apply_points').on('click', function(){
+        event.preventDefault();
+
+        if($(this).hasClass('select-shipment-first')){
+            $('.cp-error').text('Selecciona un método de envío primero.');
+            $('.cp-error').fadeIn();
+
+            setTimeout(function () {
+                $('.cp-error').fadeOut();
+            }, 3000);
+        }else{
+
+            var subtotal =  parseFloat($('#subtotalInput').val());
+            var shipping = parseFloat($('#shippingInput').val());
+
+            $use_points = $("#points").val();
+            $point_disc = $("#point_value").val();
+            $points = $use_points * $point_disc;
+
+            $("#points_to_apply").val($points);
+
+            if ($points > 0) {
+                $("#coupon_code").attr("disabled", true);
+                $("#apply_coupon").attr("disabled", true);
+
+                //CALCULAR DESCUENTO
+                $('#discountValue').text(parseFloat($points.toString().replace(/,/g, '')).toFixed(2));
+                $("#points_discount").val($points);
+
+                var total_count = subtotal - parseFloat($points.toString().replace(/,/g, '')) + parseFloat(shipping.toString().replace(/,/g, ''));
+
+                var total = total_count.toString().replace(/,/g, '');
+                $('#totalPayment').text(total);
+
+                /* Calculate Tax */
+                var tax_rate = 0;
+                var tax = parseFloat(total_count*tax_rate).toFixed(2);
+                /* Print Tax on Screen */
+                $('#taxValue').text(tax);
+
+                // Clean Numbers
+                var total = total_count.toString().replace(/,/g, '');
+                var total = parseFloat(total);
+                var tax = parseFloat(tax);
+                var finaltotal = parseFloat(total + tax).toFixed(2);
+
+                $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                $('#finalTotal').val(parseFloat(finaltotal));
+
+            } else {
+                $("#coupon_code").attr("disabled", false);
+                $("#apply_coupon").attr("disabled", false);
+            }
+
         }
     });
 </script>

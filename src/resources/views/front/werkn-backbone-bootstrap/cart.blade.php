@@ -84,66 +84,6 @@
                     </li>
                     @endforeach
                 </ul>
-
-                {{-- 
-                <div class="table-responsive">
-                    <table class="table align-middle mb-4">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Producto</th>
-                                <th>Precio</th>
-                                <th>Cantidad</th>
-                                <th>Subtotal</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($products as $product)
-                            @php
-                                $item_img = $product['item']['image'];
-                                $variant = $product['variant'];
-                            @endphp
-                            <tr>
-                                <td>
-                                    <a href="{{ route('catalog.all') }}">
-                                        <img src="{{ asset('img/products/' . $item_img ) }}" alt="" width="100">
-                                    </a>
-                                </td>
-                                <td>
-                                    <a href="{{ route('catalog.all') }}" class="title_small">
-                                        {{ $product['item']['name'] }}
-                                    </a>
-                                    <p class="subtitle">Talla: {{ $variant }}</p>
-                                </td>
-                                @if($product['item']['has_discount'] == true)
-                                    <td>${{ number_format($product['item']['discount_price'],2) }}</td>
-                                @else
-                                    <td>${{ number_format($product['item']['price'],2) }}</td>
-                                @endif
-                                <td>
-                                    <div class="btn-group">
-                                          @if($product['qty'] == 1)
-                                        @else
-                                        <a href="{{ route( 'cart.substract', [ 'id' => $product['item']['id'], 'variant' => $product['variant'] ] ) }}" class="btn d-flex align-items-center">-</a>
-                                         @endif
-                                        <p class="btn d-flex align-items-center h-100">{{ $product['qty'] }}</p>
-                                        <a href="{{ route( 'cart.add-more', [ 'id' => $product['item']['id'], 'variant' => $product['variant'], 'qty' => $product['qty'] ] ) }}" class="btn d-flex align-items-center">+</a>
-                                    </div>
-                                </td>
-                                <td><span>$ {{ number_format($product['price'], 2) }} </span></td>
-
-                                <td>
-                                    <a href="{{ route( 'cart.delete', ['id' => $product['item']['id'], 'variant' => $variant ] ) }}" class="btn">
-                                        <ion-icon name="trash-outline"></ion-icon>
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                --}}
             </div>
 
             <div class="col-12">
@@ -154,6 +94,7 @@
                             $cash_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
                             $paypal_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
                             $mercado_payment = Nowyouwerkn\WeCommerce\Models\PaymentMethod::where('supplier', 'MercadoPago')->where('is_active', true)->first();
+                            $membership = Nowyouwerkn\WeCommerce\Models\MembershipConfig::where('is_active', true)->first();
                         @endphp
 
                         <div class="card px-4 pt-3 pb-3 mb-4">
@@ -262,15 +203,21 @@
                                         </strong>
                                         </span>
 
-                                        <span style="margin-right: 2px"><strong>{{ number_format($rule->value) }}</strong></span> 
+                                        <span style="margin-right: 2px"><strong>{{ number_format($rule->value) }}</strong></span>
                                     </div>
                                     @endif
 
                                     <p class="mt-2 mb-3"><strong>Aplica cupones en el siguiente paso.</strong></p>
 
-                                    <li class="d-flex justify-content-between">
+                                    <li class="d-flex justify-content-between mb-3">
                                         <span class="subtitle">Total</span> <span class="amount">${{ number_format($total,2) }}</span>
                                     </li>
+
+                                    @if(!empty($membership))
+                                    <li class="d-flex justify-content-between">
+                                        <span>Puntos para acumular</span><span class="points">{{ $points }}</span>
+                                    </li>
+                                    @endif
                                 </ul>
 
                                 <div class="row">
@@ -278,7 +225,7 @@
                                     <div class="col-12">
                                         <a class="btn btn-primary mb-2 w-100 btn_icon" style="padding: 15px;" href="{{ route('checkout') }}">
                                             <ion-icon name="cash-outline"></ion-icon> Completar pago
-                                        </a> 
+                                        </a>
                                     </div>
                                     @endif
 
@@ -286,7 +233,7 @@
                                     <div class="col pe-1">
                                         <a class="btn btn-light mb-2 w-100 btn_icon" href="{{ route('checkout') }}">
                                             <img src="{{ asset('assets/img/brands/paypal.png') }}" style="padding-top: 10px; margin-bottom: 5px; height: 35px; width: auto !important;">
-                                        </a> 
+                                        </a>
                                     </div>
                                     @endif
 
@@ -302,7 +249,7 @@
                                     <div class="col-12">
                                         <a class="btn btn-light mb-2 w-100 btn_icon" href="{{ route('checkout') }}">
                                             <img src="{{ asset('assets/img/brands/oxxopay.png') }}" style="padding-top: 10px; margin-bottom: 5px; height: 35px; width: auto !important;">
-                                        </a> 
+                                        </a>
                                     </div>
                                     @endif
                                 </div>
