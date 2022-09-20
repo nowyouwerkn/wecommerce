@@ -4,6 +4,10 @@ Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
 ## 1.9 - 2022-09-23
 
+- Nueva funcionalidad en el área de Marketing, ahora se puede dar de alta un sistema de lealtad para la tienda en línea.
+- Se agregan espacios en el front para mostrar puntos a los usuarios.
+- Nuevas migraciones de funcionalidad nueva de sistema de lealtad y ordenes con descuento de puntos.
+
 ## 1.8.2 - 2022-09-12
 
 ### Agregado
