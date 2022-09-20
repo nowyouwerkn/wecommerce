@@ -88,7 +88,7 @@
 
     @if ($config->is_active == 1)
     <label class="switch">
-        <input id="switchOff" type="checkbox" href="javascript:void(0)" data-toggle="modal" data-target="#cancelMem" checked>
+        <input id="switchOff" type="checkbox" checked>
         <span class="slider round"></span>
     </label>
 
@@ -187,14 +187,19 @@
                         <h4>Duración de puntos:</h4>
                     </div>
                     <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1" name="has_expiration_time" {{ ($config->has_expiration_time == '1') ? 'checked' : '' }}>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch5" value="1" name="has_expiration_time" {{ ($config->has_expiration_time == '1') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="customSwitch5"></label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <select class="custom-select tx-13" name="point_expiration_time">
+                                @if (!empty($config->point_expiration_time))
+                                <option selected value="{{ $config->point_expiration_time }}">{{ $config->point_expiration_time. ' '.'meses' ?? 'Elegir duración' }}</option>
+                                @else
                                 <option selected disabled>Elegir duración</option>
+                                @endif
                                 <option value="1">1 mes</option>
                                 <option value="2">2 meses</option>
                                 <option value="4">4 meses</option>
@@ -244,8 +249,9 @@
                         <h4>Clientes V.I.P:</h4>
                     </div>
                     <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input"  id="clientVIP" type="checkbox" value="1" name="vip_clients" {{ ($config->vip_clients == '1') ? 'checked' : '' }}>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="clientVIP" type="checkbox" value="1" name="vip_clients" {{ ($config->vip_clients == '1') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="clientVIP"></label>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -254,26 +260,28 @@
                         <h4>Puntos para ser V.I.P:</h4>
                     </div>
                     <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" id="pointsVIPc" type="checkbox" value="1" name="has_vip_minimum_points" {{ ($config->has_vip_minimum_points == '1') ? 'checked' : '' }}>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="pointsVIPc" value="1" name="has_vip_minimum_points" {{ ($config->has_vip_minimum_points == '1') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="pointsVIPc"></label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <input type="text" name="vip_minimum_points" class="form-control noText" value="{{ $config->vip_minimum_points }}">
+                            <input type="text" id="pointsVIPi" name="vip_minimum_points" class="form-control noText" value="{{ $config->vip_minimum_points }}">
                         </div>
                     </div>
                     <div class="col-md-5">
                         <h4>Compras para mantener nivel V.I.P:</h4>
                     </div>
                     <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" id="ordersVIPc" type="checkbox" value="1" name="has_vip_minimum_orders" {{ ($config->has_vip_minimum_orders == '1') ? 'checked' : '' }}>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="ordersVIPc" value="1" name="has_vip_minimum_orders" {{ ($config->has_vip_minimum_orders == '1') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="ordersVIPc"></label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <input type="text" name="vip_minimum_orders" class="form-control noText" value="{{ $config->vip_minimum_orders }}">
+                            <input type="text" id="ordersVIPi" name="vip_minimum_orders" class="form-control noText" value="{{ $config->vip_minimum_orders }}">
                         </div>
                     </div>
                 </div>
@@ -301,8 +309,9 @@
                         <h4>Crear Cuenta:</h4>
                     </div>
                     <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1" name="on_account_creation" {{ ($config->on_account_creation == '1') ? 'checked' : '' }}>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch1" value="1" name="on_account_creation" {{ ($config->on_account_creation == '1') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="customSwitch1"></label>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -310,15 +319,15 @@
                             <input type="text" name="points_account_created" class="form-control noText" value="{{ $config->points_account_created }}">
                         </div>
                     </div>
-                    <div class="col-md-5" style="display:none">
+                    <div class="col-md-5 d-none">
                         <h4>Cumpleaños:</h4>
                     </div>
-                    <div class="col-md-3" style="display:none">
+                    <div class="col-md-3 d-none">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="1" name="on_birthday" {{ ($config->on_birthday == '1') ? 'checked' : '' }}>
                         </div>
                     </div>
-                    <div class="col-md-4" style="display:none">
+                    <div class="col-md-4 d-none">
                         <div class="form-group">
                             <input type="text" name="points_birthdays" class="form-control noText" value="{{ $config->points_birthdays }}">
                         </div>
@@ -327,8 +336,9 @@
                         <h4>Puntos para cliente V.I.P:</h4>
                     </div>
                     <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1" name="on_vip_account" {{ ($config->on_vip_account == '1') ? 'checked' : '' }}>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch2" value="1" name="on_vip_account" {{ ($config->on_vip_account == '1') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="customSwitch2"></label>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -340,8 +350,9 @@
                         <h4>Por reseñas:</h4>
                     </div>
                     <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1" name="on_review" {{ ($config->on_review == '1') ? 'checked' : '' }}>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch3" value="1" name="on_review" {{ ($config->on_review == '1') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="customSwitch3"></label>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -349,15 +360,16 @@
                             <input type="text" name="points_review" class="form-control noText" value="{{ $config->points_review }}">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-5 d-none">
                         <h4>Por reseña con imagen:</h4>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1" name="on_review_with_image" {{ ($config->on_review_with_image == '1') ? 'checked' : '' }}>
+                    <div class="col-md-3 d-none">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch4" value="1" name="on_review_with_image" {{ ($config->on_review_with_image == '1') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="customSwitch4"></label>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 d-none">
                         <div class="form-group">
                             <input type="text" name="points_review_with_image" class="form-control noText" value="{{ $config->points_review_with_image }}">
                         </div>
@@ -421,15 +433,8 @@
     </script>
     <script>
         $("#switchOff").on('click', function(){
-            $(this).removeAttr("checked");
-        });
-
-        $("#closeModal").on('click', function () {
-            $("#switchOff").attr("checked");
-        });
-
-        $("#notCancel").on('click', function () {
-            $("#switchOff").attr("checked", "checked");
+            $("#cancelMem").modal("toggle");
+            $(this).prop("checked", true);
         });
     </script>
 
@@ -440,32 +445,44 @@
         });
     </script>
 
-    <script>
-        if($("#clientVIP").val(0)){
-            $("#pointsVIPc").attr("disabled", true);
-            $("#number4").attr("disabled", true);
-            $("#ordersVIPc").attr("disabled", true);
-            $("#number5").attr("disabled", true);
-        } else {
-            $("#pointsVIPc").attr("disabled", false);
-            $("#number4").attr("disabled", false);
-            $("#ordersVIPc").attr("disabled", false);
-            $("#number5").attr("disabled", false);
-        }
-
-
-        $("#clientVIP").on("click", function () {
-            if($("#clientVIP:checked")){
+     <script>
+      $(document).ready(function() {
+          $('#clientVIP').click(function() {
+              if($(this).prop("checked") == true) {
                 $("#pointsVIPc").attr("disabled", false);
-                $("#number4").attr("disabled", false);
+                $("#pointsVIPi").attr("disabled", false);
                 $("#ordersVIPc").attr("disabled", false);
-                $("#number5").attr("disabled", false);
-            } else {
-                $("#pointsVIPc").attr("disabled", false);
-                $("#number4").attr("disabled", false);
-                $("#ordersVIPc").attr("disabled", false);
-                $("#number5").attr("disabled", false);
-            }
+                $("#ordersVIPi").attr("disabled", false);
+              }
+              else if($(this).prop("checked") == false) {
+                $("#pointsVIPc").attr("disabled", true).prop("checked", false);
+                $("#pointsVIPi").attr("disabled", true).val(null);
+                $("#ordersVIPc").attr("disabled", true).prop("checked", false);
+                $("#ordersVIPi").attr("disabled", true).val(null);
+              }
+            });
+
+            $('#pointsVIPc').click(function(){
+                if($(this).prop("checked") == true) {
+                    $("#ordersVIPc").attr("disabled", true).prop("checked", false);
+                    $("#ordersVIPi").attr("disabled", true).val(null);
+                }
+                else if($(this).prop("checked") == false) {
+                    $("#ordersVIPc").attr("disabled", false);
+                    $("#ordersVIPi").attr("disabled", false);
+                }
+            })
+
+            $('#ordersVIPc').click(function(){
+                if($(this).prop("checked") == true) {
+                    $("#pointsVIPc").attr("disabled", true).prop("checked", false);
+                    $("#pointsVIPi").attr("disabled", true).val(null);
+                }
+                else if($(this).prop("checked") == false) {
+                    $("#pointsVIPc").attr("disabled", false);
+                    $("#pointsVIPi").attr("disabled", false);
+                }
+            })
         });
     </script>
 

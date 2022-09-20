@@ -97,6 +97,9 @@ class MembershipController extends Controller
         $config->has_vip_minimum_points = $request->has_vip_minimum_points;
         $config->vip_minimum_points = $request->vip_minimum_points;
 
+        $config->has_vip_minimum_orders = $request->has_vip_minimum_orders;
+        $config->vip_minimum_orders = $request->vip_minimum_orders;
+
         $config->on_account_creation = $request->on_account_creation;
         $config->points_account_created = $request->points_account_created;
 

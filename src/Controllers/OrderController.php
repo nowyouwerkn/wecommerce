@@ -91,6 +91,7 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::find($id);
+        $membership = MembershipConfig::where('is_active', true)->first();
 
         if($order->cart != 'N/A'){
             $order->cart = unserialize($order->cart);
@@ -103,6 +104,7 @@ class OrderController extends Controller
 
         return view('wecommerce::back.orders.show')
         ->with('order', $order)
+        ->with('membership', $membership)
         ->with('payment_method', $payment_method)
         ->with('shipping_method', $shipping_method)
         ->with('shipping_option', $shipping_option);
@@ -137,7 +139,15 @@ class OrderController extends Controller
                 $points->user_id = $order->user_id;
                 $points->order_id = $order->id;
                 $points->type = 'in';
-                $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+
+                if ($membership->vip_clients == true && $membership->points_vip_accounts != NULL) {
+
+                    $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+
+                } else {
+                    $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                }
+
 
                 if ($membership->has_expiration_time == true){
                     $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
@@ -250,7 +260,11 @@ class OrderController extends Controller
                 $points->user_id = $order->user_id;
                 $points->order_id = $order->id;
                 $points->type = 'in';
-                $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                if ($membership->vip_clients == true && $membership->points_vip_accounts != NULL) {
+                    $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                } else {
+                    $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                }
 
                 if ($membership->has_expiration_time == true){
                     $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');

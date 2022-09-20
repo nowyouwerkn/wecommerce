@@ -575,6 +575,9 @@ class FrontController extends Controller
 
     public function checkout()
     {
+
+        $membership = MembershipConfig::where('is_active', true)->first();
+
         if (!Session::has('cart')) {
             return view('front.theme.' . $this->theme->get_name() . '.cart');
         }
@@ -775,28 +778,40 @@ class FrontController extends Controller
         /*SISTEMA DE LEALTAD*/
         $membership = MembershipConfig::where('is_active', true)->first();
 
-        if (empty($membership)) {
-            $points = 0;
-            $valid = 0;
-            $point_disc = 0;
-        } else{
+        $points = NULL;
+        $available = NULL;
+        $point_disc = NULL;
+        if (!empty($membership)) {
             if ($total >= $membership->minimum_purchase){
                 $qty = floor($total / $membership->qty_for_points);
-                $points = ($qty * $membership->earned_points);
 
-                $valid_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->get();
-
-                $valid = 0;
-
-                foreach ($valid_points as $v_points) {
-                    $valid += $v_points->value ;
+                if ($membership->vip_clients == true && $membership->points_vip_accounts != NULL) {
+                    $points = ($qty * $membership->points_vip_accounts);
+                } else {
+                    $points = ($qty * $membership->earned_points);
                 }
 
-                $point_disc = $valid * $membership->point_value;
+                $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+
+                $used = 0;
+                $available = 0;
+
+                foreach ($available_points as $v_points) {
+                    $available += $v_points->value ;
+                }
+
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
+
+                $valid = $available - $used;
+
+                $point_disc = $membership->point_value;
 
             } else{
                 $points = 0;
-                $valid = 0;
+                $available = 0;
                 $point_disc = 0;
             }
         }
@@ -913,6 +928,7 @@ class FrontController extends Controller
     public function checkoutSubscription($subscription_id)
     {
         $subscription = Product::find($subscription_id);
+        $membership = MembershipConfig::where('is_active', true)->first();
 
         //Facebook Event
         if ($this->store_config->has_pixel() != NULL) {
@@ -994,6 +1010,8 @@ class FrontController extends Controller
     public function postCheckout(Request $request)
     {
         $currency_value = $this->store_config->get_currency_code();
+
+        $membership = MembershipConfig::where('is_active', true)->first();
 
         if($currency_value == '1'){
             $currency_value = 'USD';
@@ -1685,6 +1703,7 @@ class FrontController extends Controller
         if(isset($request->discounts)){
             $order->discounts = str_replace(',', '', $request->discounts);
         }
+
         $order->coupon_id = 0;
         $order->total = $request->final_total;
         $order->payment_total = $request->final_total;
@@ -1710,8 +1729,31 @@ class FrontController extends Controller
             }
         }
 
+        //Guadar puntos de salida
+        if(isset($request->points)){
+            $order->points = $request->points;
+        }
+
         // Identificar al usuario para guardar sus datos.
         $user->orders()->save($order);
+
+        //Guadar puntos de salida
+
+        if (!empty($membership)){
+            if(isset($request->points)){
+                $points = new UserPoint();
+                $points->type = 'out';
+                $points->value = $request->points_to_apply;
+                $points->order_id = $order->id;
+                $points->user_id = $user->id;
+
+                if ($membership->has_expiration_time == true){
+                    $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                }
+
+                $points->save();
+            }
+        }
 
         // Actualizar existencias del producto
         foreach ($cart->items as $product) {
@@ -2796,31 +2838,48 @@ class FrontController extends Controller
             return $order;
         });
 
-
         /*SISTEMA DE LEALTAD*/
         $membership = MembershipConfig::where('is_active', true)->first();
-        $valid_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->get();
 
-        if (empty($membership)) {
-            $points = 0;
-        } else{
-
-            $valid = 0;
-
-            foreach ($valid_points as $points) {
-                $valid += $points->value;
-            }
-
-            $points = 1;
-        }
+        $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+        $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
 
         $addresses = UserAddress::where('user_id', Auth::user()->id)->where('is_billing', false)->get();
+
+        $valid = NULL;
+        $vip_status = NULL;
+
+        if (!empty($membership)) {
+            $used = 0;
+            $available = 0;
+
+            foreach ($available_points as $a_point) {
+                $available += $a_point->value;
+            }
+
+            foreach ($used_points as $u_point) {
+                $used += $u_point->value;
+            }
+
+            $valid = $available - $used;
+            $vip_status = false;
+
+            if ($membership->vip_clients == true && $valid >= $membership->vip_minimum_points){
+                $vip_status = true;
+            }
+
+            if ($membership->vip_clients == true && $orders->count() >= $membership->vip_minimum_orders){
+                $vip_status = true;
+            }
+
+        }
 
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')
         ->with('total_orders', $total_orders)
         ->with('orders', $orders)
-        ->with('addresses', $addresses)
-        ->with('points', $points);
+        ->with('valid', $valid)
+        ->with('vip_status', $vip_status)
+        ->with('addresses', $addresses);
     }
 
     public function wishlist ()
@@ -2852,47 +2911,50 @@ class FrontController extends Controller
         /*SISTEMA DE LEALTAD*/
         $membership = MembershipConfig::where('is_active', true)->first();
 
-        if (empty($membership)) {
-            $points = 0;
+        $all_points = NULL;
+        $pending = NULL;
+        $pending_orders = NULL;
+        $available = NULL;
+        $used =  NULL;
+        $used_points =  NULL;
+        if (!empty($membership)) {
+            $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+            $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+            $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
+            $all_points = UserPoint::where('user_id', Auth::user()->id)->get();
+
+            $minimum = $membership->minimum_purchase;
+
+            $pending_orders = Order::where('total', '>=', $minimum)
+            ->where('user_id', Auth::user()->id)
+            ->where('status', '!=', 'Entregado')
+            ->where('status', '!=', 'Sin Completar')
+            ->orWhere('status', 'Pagado')
+            ->orWhere('status', 'Enviado')
+            ->orWhere('status', 'Empaquetado')
+            ->get();
+
+            foreach ($available_points as $a_point) {
+                $available += $a_point->value;
+            }
+
+            foreach ($used_points as $u_point) {
+                $used += $u_point->value;
+            }
+
+            $valid = $available - $used;
+
             $pending = 0;
-            $valid_points = 0;
-            $used = 0;
-        } else {
 
-        $valid_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->get();
-        $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
-
-        $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
-
-        $all_points = UserPoint::where('user_id', Auth::user()->id)->get();
-
-        $minimum = $membership->minimum_purchase;
-
-        $pending_orders = Order::where('total', '>=', $minimum)
-        ->where('user_id', Auth::user()->id)
-        ->where('status', '!=', 'Entregado')
-        ->where('status', '!=', 'Sin Completar')
-        ->get();
-
-        $valid = 0;
-
-        foreach ($valid_points as $points) {
-            $valid += $points->value;
-        }
-
-        $pending = 0;
-
-        foreach ($pending_orders as $points) {
-
-            $pending+= floor($points->total / $membership->qty_for_points * $membership->earned_points);
-        }
-
+            foreach ($pending_orders as $points) {
+                $pending+= floor($points->total / $membership->qty_for_points * $membership->earned_points);
+            }
 
         }
 
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.points')
         ->with('all_points', $all_points)
-        ->with('valid', $valid)
+        ->with('available', $available)
         ->with('used_points', $used_points)
         ->with('pending', $pending)
         ->with('pending_orders', $pending_orders);
