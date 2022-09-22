@@ -1893,6 +1893,7 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
+
         return redirect()->route('purchase.complete')
         ->with('purchase_value', $purchase_value)
         ->with('deduplication_code', $deduplication_code);

@@ -1,149 +1,33 @@
 <div class="card">
     <div class="card-body">
-        @if(!empty($products))
-            <div class="alert alert-info d-flex justify-content-between">
-                ¿Quieres editar el carrito?
-                <a href="{{ route('cart') }}">Ir al carrito</a>
-            </div>
+        <div class="alert alert-info d-flex justify-content-between">
+            ¿Quieres editar el carrito?
+            <a href="{{ route('cart') }}">Ir al carrito</a>
+        </div>
 
-            @foreach($products as $product)
-                @php
-                    $item_img = $product['item']['image'];
-                    $variant = $product['variant'];
-                @endphp
-                <!--List product -->
-                <div class="we-co--product-list-item d-flex align-items-center">
-                    <div class="we-co--product-img-wrap w-25">
-                        <span class="we-co--qty-circle">{{ $product['qty'] }}</span>
-                        <img src="{{ asset('img/products/' . $item_img ) }}" class="img-fluid" alt="{{ $product['item']['name'] }}">
-                    </div>
-
-                    <div class="w-75 d-flex justify-content-between">
-                        <div class="we-co--product-item-info">
-                            <h6 class="mb-0">{{ $product['item']['name'] }}</h6>
-                            <p class="mb-0">{{ $type ?? 'Variante' }}: {{ $variant }}</p>
-                        </div>
-
-                        <p>$ {{ number_format($product['price']) }}</p>
-                    </div>
-                </div>
-            @endforeach
-        @else
+        @foreach($products as $product)
+            @php
+                $item_img = $product['item']['image'];
+                $variant = $product['variant'];
+            @endphp
             <!--List product -->
             <div class="we-co--product-list-item d-flex align-items-center">
                 <div class="we-co--product-img-wrap w-25">
-                    <img src="{{ asset('img/products/' . $subscription->image) }}" class="img-fluid" alt="{{ $subscription->name }}">
+                    <span class="we-co--qty-circle">{{ $product['qty'] }}</span>
+                    <img src="{{ asset('img/products/' . $item_img ) }}" class="img-fluid" alt="{{ $product['item']['name'] }}">
                 </div>
 
                 <div class="w-75 d-flex justify-content-between">
                     <div class="we-co--product-item-info">
-                        <h6 class="mb-0">{{ $subscription->name }}</h6>
-                        <p class="mb-0">
-                            {{ $subscription->payment_frequency_qty ?? '1' }}
-                            @switch($subscription->payment_frequency)
-                                @case('daily')
-                                Día(s)
-                                @break
-
-                                @case('weekly')
-                                Semana(s)
-                                @break
-
-                                @case('monthly')
-                                Mes(es)
-                                @break
-
-                                @case('yearly')
-                                Año(s)
-                                @break
-                            @endswitch
-                        </p>
+                        <h6 class="mb-0">{{ $product['item']['name'] }}</h6>
+                        <p class="mb-0">{{ $type ?? 'Variante' }}: {{ $variant }}</p>
                     </div>
 
-                    @if($subscription->has_discount == true)
-                    <p>$ {{ number_format($subscription->discount_price) }}</p>
-                    @else
-                    <p>$ {{ number_format($subscription->price) }}</p>
-                    @endif
+                    <p>$ {{ number_format($product['price']) }}</p>
                 </div>
             </div>
-
-            @if($subscription->time_for_cancellation == NULL)
-            <div class="alert alert-info d-flex justify-content-between mt-3">
-                <div>
-                    <strong>Este cobro es recurrente.</strong> Tu siguiente fecha de pago será:
-                     @switch($subscription->payment_frequency)
-                        @case('daily')
-                        {{ Carbon\Carbon::now()->addDays($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
-                        @break
-
-                        @case('weekly')
-                        {{ Carbon\Carbon::now()->addWeeks($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
-                        @break
-
-                        @case('monthly')
-                        {{ Carbon\Carbon::now()->addMonths($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
-                        @break
-
-                        @case('yearly')
-                        {{ Carbon\Carbon::now()->addYears($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
-                        @break
-                    @endswitch
-
-                    . Puedes cancelar tu suscripción en cualquier momento desde tu perfil de cliente.
-                </div>
-            </div>
-            @else
-            <div class="alert alert-info d-flex justify-content-between mt-3">
-                <div>
-                    <strong>Este cobro es
-                        @switch($subscription->payment_frequency)
-                            @case('daily')
-                            diario, tu siguiente cobro es el {{ Carbon\Carbon::now()->addDays($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
-                            @break
-
-                            @case('weekly')
-                            semanal, tu siguiente cobro es el {{ Carbon\Carbon::now()->addWeeks($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
-                            @break
-
-                            @case('monthly')
-                            mensual, tu siguiente cobro es el {{ Carbon\Carbon::now()->addMonths($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
-                            @break
-
-                            @case('yearly')
-                            anual, tu siguiente cobro es el {{ Carbon\Carbon::now()->addYears($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
-                            @break
-                        @endswitch
-                    </strong>
-
-                    . Tu suscripción termina el:
-                    @switch($subscription->payment_frequency)
-                        @case('daily')
-                        {{ Carbon\Carbon::now()->addDays($subscription->time_for_cancellation)->translatedFormat('j \\de F') }}
-                        @break
-
-                        @case('weekly')
-                        {{ Carbon\Carbon::now()->addWeeks($subscription->time_for_cancellation)->translatedFormat('j \\de F') }}
-                        @break
-
-                        @case('monthly')
-                        {{ Carbon\Carbon::now()->addMonths($subscription->time_for_cancellation)->translatedFormat('j \\de F') }}
-                        @break
-
-                        @case('yearly')
-                        {{ Carbon\Carbon::now()->addYears($subscription->time_for_cancellation)->translatedFormat('j \\de F') }}
-                        @break
-                    @endswitch
-
-                    . Puedes renovar comprando nuevamente la suscripción al terminar el periodo.
-                </div>
-            </div>
-            @endif
-            <hr>
-        @endif
-
+        @endforeach
         <div class="we-co--order-numbers mt-4">
-            @if(!empty($products))
             <div class="d-flex align-items-center justify-content-between">
                 <p>Envío</p>
 
@@ -165,7 +49,6 @@
             </div>
 
             <hr>
-            @endif
 
             <div class="d-flex align-items-center justify-content-between">
                 <p>Sub-total</p>
@@ -224,14 +107,10 @@
                 <div class="input-group input-cuopon mb-3">
                     <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Código de descuento">
                     <div class="form-group-append">
-                        @if(!empty($products))
-                            @if($shipment_options->count() != 0)
-                            <button class="we-co--btn-coupon select-shipment-first" id="apply_cuopon" type="button">Usar Código</button>
-                            @else
-                            <button class="we-co--btn-coupon" id="apply_cuopon" type="button">Usar Código</button>
-                            @endif
+                        @if($shipment_options->count() != 0)
+                        <button class="we-co--btn-coupon select-shipment-first" id="apply_cuopon" type="button">Usar Código</button>
                         @else
-                            <button class="we-co--btn-coupon" id="apply_cuopon" type="button">Usar Código</button>
+                        <button class="we-co--btn-coupon" id="apply_cuopon" type="button">Usar Código</button>
                         @endif
                     </div>
                 </div>
@@ -300,7 +179,7 @@
                             <div class="value">
                                 <div></div>
                             </div>
-                            <button class="we-co--btn-coupon" id="apply_points" type="button">Canjear</button>
+                            <button class="we-co--btn-coupon select-shipment-first" id="apply_points" type="button">Canjear</button>
                         </div>
                         <div class="p-3">
                             <p>Desliza el slider para determinar los puntos a usar</p>
@@ -489,6 +368,7 @@
         rangeValue.style.marginTop = top+"px";
     });
 </script>
+
 <script>
     $('#apply_points').on('click', function(){
         event.preventDefault();
@@ -500,10 +380,12 @@
             setTimeout(function () {
                 $('.cp-error').fadeOut();
             }, 3000);
-        }else{
 
+        }else{
             var subtotal =  parseFloat($('#subtotalInput').val());
             var shipping = parseFloat($('#shippingInput').val());
+
+            var final_s = parseFloat($('#finalTotal').val());
 
             $use_points = $("#points").val();
             $point_disc = $("#point_value").val();
@@ -519,7 +401,8 @@
                 $('#discountValue').text(parseFloat($points.toString().replace(/,/g, '')).toFixed(2));
                 $("#points_discount").val($points);
 
-                var total_count = subtotal - parseFloat($points.toString().replace(/,/g, '')) + parseFloat(shipping.toString().replace(/,/g, ''));
+                var total_count = final_s - parseFloat($points.toString().replace(/,/g, ''));
+
 
                 var total = total_count.toString().replace(/,/g, '');
                 $('#totalPayment').text(total);
@@ -529,6 +412,7 @@
                 var tax = parseFloat(total_count*tax_rate).toFixed(2);
                 /* Print Tax on Screen */
                 $('#taxValue').text(tax);
+                $('#taxRate').val(0);
 
                 // Clean Numbers
                 var total = total_count.toString().replace(/,/g, '');
@@ -542,9 +426,32 @@
             } else {
                 $("#coupon_code").attr("disabled", false);
                 $("#apply_coupon").attr("disabled", false);
+
+
+                var total_count = subtotal * 1.16;
+
+                var total = total_count.toString().replace(/,/g, '');
+                $('#totalPayment').text(total);
+
+                /* Calculate Tax */
+                var tax_rate = 0;
+                var tax = parseFloat(total_count-subtotal).toFixed(2);
+                /* Print Tax on Screen */
+                $('#taxValue').text(tax);
+                $('#taxRate').val(tax);
+
+                // Clean Numbers
+                var total = total_count.toString().replace(/,/g, '');
+                var total = parseFloat(total);
+                var tax = parseFloat(tax);
+                var finaltotal = parseFloat(total_count).toFixed(2);
+
+                $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                $('#finalTotal').val(parseFloat(finaltotal));
             }
 
         }
     });
 </script>
+
 @endpush

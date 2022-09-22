@@ -284,6 +284,20 @@
                             <input type="text" id="ordersVIPi" name="vip_minimum_orders" class="form-control noText" value="{{ $config->vip_minimum_orders }}">
                         </div>
                     </div>
+                    <div class="col-md-5">
+                        <h4>Puntos para cliente V.I.P:</h4>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch2" value="1" name="on_vip_account" {{ ($config->on_vip_account == '1') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="customSwitch2"></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="text" name="points_vip_accounts" class="form-control noText" value="{{ $config->points_vip_accounts }}">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -330,20 +344,6 @@
                     <div class="col-md-4 d-none">
                         <div class="form-group">
                             <input type="text" name="points_birthdays" class="form-control noText" value="{{ $config->points_birthdays }}">
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <h4>Puntos para cliente V.I.P:</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch2" value="1" name="on_vip_account" {{ ($config->on_vip_account == '1') ? 'checked' : '' }}>
-                            <label class="custom-control-label" for="customSwitch2"></label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <input type="text" name="points_vip_accounts" class="form-control noText" value="{{ $config->points_vip_accounts }}">
                         </div>
                     </div>
                     <div class="col-md-5">

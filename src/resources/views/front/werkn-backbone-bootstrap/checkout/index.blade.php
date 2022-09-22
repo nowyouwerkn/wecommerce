@@ -210,6 +210,10 @@
             if($('#apply_cuopon').hasClass('select-shipment-first')){
                 $('#apply_cuopon').removeClass('select-shipment-first');
             }
+
+            if($('#apply_points').hasClass('select-shipment-first')){
+                $('#apply_points').removeClass('select-shipment-first');
+            }
         });
     });
 </script>
