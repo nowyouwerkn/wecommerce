@@ -37,7 +37,13 @@
             <div class="row">
                 <div class="col-md-12">
                     <p>Bienvenido</p>
-                    <h1>Hola, {{ Auth()->user()->name ?? 'N/A' }} @if ($vip_status != false)<ion-icon name="trophy"></ion-icon>@endif</h1>
+                    <h1>Hola, {{ Auth()->user()->name ?? 'N/A' }}
+                        @if ($vip_status != false && $total_orders->count() >= $membership->vip_minimum_orders)
+                            <ion-icon name="trophy"></ion-icon>
+                        @elseif ($vip_status != false && $valid >= $membership->vip_minimum_points)
+                            <ion-icon name="trophy"></ion-icon>
+                        @endif
+                    </h1>
                 </div>
             </div>
             <!-- Content -->
