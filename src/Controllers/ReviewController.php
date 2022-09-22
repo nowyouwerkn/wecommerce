@@ -3,6 +3,8 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
+use Carbon\Carbon;
+
 use Auth;
 use Session;
 
@@ -11,9 +13,9 @@ use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Review;
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
-/*Sistema de lealtad*/
-use Nowyouwerkn\WeCommerce\Controllers\MembershipConfig;
-use Nowyouwerkn\WeCommerce\Controllers\UserPoint;
+/*Loyalty system*/
+use Nowyouwerkn\WeCommerce\Models\UserPoint;
+use Nowyouwerkn\WeCommerce\Models\MembershipConfig;
 
 use Illuminate\Http\Request;
 
