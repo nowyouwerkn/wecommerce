@@ -394,8 +394,7 @@
 
                 <div class="modal-body">
                     <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">¿Estas seguro/a que quieres desactivar tu sistema de lealtad?</h6>
-                    <p>Al momento de desactivar el sistema de lealtad el cliente tendrá hasta la fecha de corte para usar los puntos que
-                        tiene actualmente, se dejará de acumular puntos y todo punto no usado después de la fecha de corte no se podrá recuperar.</p>
+                    <p>Al momento de desactivar el sistema de lealtad se eliminarán todos los puntos de tus clientes y no se podrán recuperar, y se deshabilitará las vista de puntos.</p>
                 </div>
                 <form action="{{ route('mem-status.update', $config->id) }}" id="off" method="POST" enctype="multipart/form-data">
                 {{ csrf_field() }}

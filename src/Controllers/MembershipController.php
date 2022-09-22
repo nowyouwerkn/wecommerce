@@ -13,6 +13,7 @@ use Session;
 
 // Modelos
 use Nowyouwerkn\WeCommerce\Models\MembershipConfig;
+use Nowyouwerkn\WeCommerce\Models\UserPoint;
 
 
 /* Notificaciones */
@@ -60,6 +61,10 @@ class MembershipController extends Controller
            $config = MembershipConfig::find($id);
 
            $config->is_active = $request->is_active;
+
+           if ($request->is_active == false) {
+                UserPoint::truncate();
+           }
 
            $config->save();
 
