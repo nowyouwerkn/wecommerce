@@ -56,28 +56,6 @@ class ReviewController extends Controller
 
         $review = new Review();
 
-        if (!empty($user)) {
-            $review->user_id = $user->id;
-
-            $membership = MembershipConfig::where('is_active', true)->first();
-
-            if (!empty($membership)){
-                if($membership->on_review == true){
-                    $points = new UserPoint;
-                    $points->user_id = $user->id;
-                    $points->type = 'in';
-                    $points->value = $membership->points_review;
-
-                    if ($membership->has_expiration_time == true){
-                        $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
-                    }
-
-                    $points->save();
-                }
-            }
-
-        }
-
         $review->name = $request->name;
         $review->email = $request->email;
         $review->review = $request->review;
@@ -111,6 +89,27 @@ class ReviewController extends Controller
         $review = Review::find($id);
 
         $review->is_approved = true;
+
+
+        $membership = MembershipConfig::where('is_active', true)->first();
+
+        if (!empty($review->user_id)){
+            if (!empty($membership)){
+                if($membership->on_review == true){
+                    $points = new UserPoint;
+                    $points->user_id = $review->user_id;
+                    $points->type = 'in';
+                    $points->value = $membership->points_review;
+
+                    if ($membership->has_expiration_time == true){
+                        $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                    }
+
+                    $points->save();
+                }
+            }
+        }
+
         $review->save();
 
         // Notificación
