@@ -11,6 +11,10 @@ use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Review;
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
+/*Sistema de lealtad*/
+use Nowyouwerkn\WeCommerce\Controllers\MembershipConfig;
+use Nowyouwerkn\WeCommerce\Controllers\UserPoint;
+
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
