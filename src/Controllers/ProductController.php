@@ -239,7 +239,12 @@ class ProductController extends Controller
                     }
 
                     if(isset($request->char_icon)){
-                        $chars->icon = $request->char_icon[$index];
+                        $icon_image = $request->char_icon[$index];
+                        $filename = 'model' . time() . '.' . $icon_image->getClientOriginalExtension();
+                        $location = public_path('img/icons/' . $filename);
+            
+                        Image::make($icon_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);                    
+                        $chars->icon = $filename;
                     }
                     
                     $chars->save();
@@ -576,9 +581,13 @@ class ProductController extends Controller
                     }
 
                     if(isset($request->char_icon)){
-                        $chars->icon = $request->char_icon[$index];
+                        $icon_image = $request->char_icon[$index];
+                        $filename = 'model' . time() . '.' . $icon_image->getClientOriginalExtension();
+                        $location = public_path('img/icons/' . $filename);
+            
+                        Image::make($icon_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);                    
+                        $chars->icon = $filename;
                     }
-                    
                     $chars->save();
 
                     $index++;

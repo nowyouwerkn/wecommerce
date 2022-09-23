@@ -123,6 +123,18 @@
     .digital-btn.active{
         background-color: #dfe6e9;
     }
+
+    .btn-eliminate{
+        width: 20px;
+        height: 20px;
+        background-color: red;
+        color: #fff;
+        display: inline-block;
+        border-radius: 100%;
+        text-align: center;
+        line-height: 20px;
+        font-size: .8em;
+    }
 </style>
 @endpush
 
@@ -1120,7 +1132,14 @@
                             <hr>
                             <ul class="list-unstyled">
                                 @foreach($product->characteristics as $characteristic)
-                                    <li><i class="fas fa-check-circle text-success"></i> {{ $characteristic->title }}</li>
+                                    <li>
+                                        @if($characteristic->icon != NULL)
+                                        <img src="{{ asset('/img/icons/' . $characteristic->icon) }}" class="me-4" alt="icon" width="50">
+                                        @else
+                                        <i class="fas fa-check-circle text-success"></i> 
+                                        @endif
+                                        {{ $characteristic->title }}
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
