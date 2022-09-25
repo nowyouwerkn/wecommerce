@@ -903,12 +903,14 @@ class FrontController extends Controller
             $total_cart = $subscription->price;
         }
 
-        $tax = $total_cart / $tax_rate;
+        if (empty($store_tax)) {
+            $tax = 0;
+        }else{
+            $tax = $total_cart / $tax_rate;
+        }
         $subtotal = ($total_cart) - ($tax);
         $total = $subtotal + $tax;
-
         /*---------------*/
-
         $store_config = $this->store_config;
         $legals = LegalText::all();
         
