@@ -2399,6 +2399,7 @@ class FrontController extends Controller
                     $order->status = 'Sin Completar';
                     $order->payment_method = $payment_method->supplier;
 
+                    $order->subscription_id = $product->id;
                     $order->subscription_status = false;
                     $order->stripe_subscription_id = Str::lower($plan->id);
                     $order->subscription_period_start = Carbon::now();
@@ -2493,6 +2494,8 @@ class FrontController extends Controller
         $order->status = 'Pagado';
         $order->payment_method = $payment_method->supplier;
 
+        $order->subscription_id = $product->id;
+        
         /* Stripe Subscription */
         if($subscription_data['status'] == 'active'){
             $order->subscription_status = true;
@@ -2842,11 +2845,14 @@ class FrontController extends Controller
     public function profile ()
     {
         $total_orders = Order::where('user_id', Auth::user()->id)->get();
+
         $orders = Order::where('user_id', Auth::user()->id)->paginate(4);
+        /*
         $orders->transform(function($order, $key){
             $order->cart = unserialize($order->cart);
             return $order;
         });
+        */
 
         /*SISTEMA DE LEALTAD*/
         $membership = MembershipConfig::where('is_active', true)->first();
