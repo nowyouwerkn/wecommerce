@@ -591,7 +591,6 @@ class FrontController extends Controller
 
     public function checkout()
     {
-
         $membership = MembershipConfig::where('is_active', true)->first();
 
         if (!Session::has('cart')) {
@@ -789,8 +788,6 @@ class FrontController extends Controller
         $total = $subtotal + $tax;
 
         /*---------------*/
-
-
         /*SISTEMA DE LEALTAD*/
         $membership = MembershipConfig::where('is_active', true)->first();
 
@@ -906,7 +903,7 @@ class FrontController extends Controller
             $has_digital_product = true;
         }
 
-        if (!empty($payment_methods)) {
+        if (count($payment_methods) != 0) {
             return view('front.theme.' . $this->theme->get_name() . '.checkout.index')
             ->with('total', $total)
             ->with('points', $points)
@@ -993,10 +990,10 @@ class FrontController extends Controller
         $store_config = $this->store_config;
         $legals = LegalText::all();
 
-        /* Variable proveiene de API MercadoPago */
+        /* Variable proviene de API MercadoPago */
         $preference = NULL;
 
-        if (!empty($payment_methods)) {
+        if (count($payment_methods) != 0) {
             return view('front.theme.' . $this->theme->get_name() . '.checkout.subscription')
             ->with('subscription', $subscription)
             ->with('total', $total)
@@ -1013,9 +1010,8 @@ class FrontController extends Controller
             ->with('legals', $legals)
             ->with('preference', $preference);
         }else{
-            //Session message
+            /* Mensaje de Sesión */
             Session::flash('info', 'No se han configurado métodos de pago en esta tienda. Contacta con un administrador de sistema.');
-
             return redirect()->route('index');
         }
     }

@@ -81,7 +81,6 @@ class MembershipController extends Controller
 
     public function update(Request $request, $id)
     {
-
         $config = MembershipConfig::find($id);
 
         $config->is_active = $request->is_active;
