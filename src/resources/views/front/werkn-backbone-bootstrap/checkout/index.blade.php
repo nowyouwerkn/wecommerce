@@ -164,10 +164,10 @@
             $.ajax({
                 method: 'POST',
                 url: "{{ route('calculate.shipment') }}",
-                data:{ 
+                data:{
                     shipping_input: $(this).attr('price-value'),
                     shipping_option_id: $(this).attr('data-value'),
-                    _token: '{{ Session::token() }}', 
+                    _token: '{{ Session::token() }}',
                 },
                 success: function(msg){
                     console.log(msg['mensaje']);
@@ -179,7 +179,7 @@
                     /* Subtotales */
                     $("#subtotal").text(msg['subtotal']);
                     $("#subtotalInput").val(msg['subtotal']);
-                    
+
                     /* Impuestos */
                     $("#taxValue").text(msg['tax']);
                     $("#taxRate").val(msg['tax']);
@@ -209,6 +209,10 @@
 
             if($('#apply_cuopon').hasClass('select-shipment-first')){
                 $('#apply_cuopon').removeClass('select-shipment-first');
+            }
+
+            if($('#apply_points').hasClass('select-shipment-first')){
+                $('#apply_points').removeClass('select-shipment-first');
             }
         });
     });
@@ -332,7 +336,7 @@
 
                     // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
                     $form.find('button').prop('disabled', true);
-                    
+
                     $('.loader-standby h2').text('Procesando tu tarjeta...');
 
                     Stripe.card.createToken({

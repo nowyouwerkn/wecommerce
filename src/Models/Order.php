@@ -18,7 +18,7 @@ class Order extends Model
     {
         return $this->belongsTo(ShipmentOption::class, 'shipping_option');
     }
-    
+
     public function invoice()
     {
         return $this->hasOne(UserInvoice::class);
@@ -37,6 +37,11 @@ class Order extends Model
     public function trackings()
     {
         return $this->hasMany(OrderTracking::class, 'order_id');
+    }
+
+    public function points()
+    {
+        return $this->hasMany(UserPoint::class);
     }
 
 }

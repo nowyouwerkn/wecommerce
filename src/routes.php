@@ -84,7 +84,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
 
     //Catalog
     Route::resource('products', Nowyouwerkn\WeCommerce\Controllers\ProductController::class); //
-    
+
     Route::get('products/create/digital', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@createDigital',
         'as' => 'products.create.digital',
@@ -282,7 +282,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\PromoController@fetchProducts',
         'as' => 'dynamic.promo.filter',
     ]);
-    
+
     Route::resource('coupons', Nowyouwerkn\WeCommerce\Controllers\CouponController::class); //
     Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class)->except(['store']); //
 
@@ -291,6 +291,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'review.approve',
     ]);
 
+    /*Membresias*/
+    Route::resource('membership', Nowyouwerkn\WeCommerce\Controllers\MembershipController::class);
+
+    Route::put('/membership-status/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\MembershipController@statusUpdate',
+        'as' => 'mem-status.update',
+    ]);
 
     //Administration
     Route::resource('seo', Nowyouwerkn\WeCommerce\Controllers\SEOController::class); //
@@ -529,6 +536,7 @@ Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_acces
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
     Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
     Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
+    Route::get('points', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@points')->name('points');
 
     Route::post('orders/{order_id}/request-invoice/{user_id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@invoiceRequest',

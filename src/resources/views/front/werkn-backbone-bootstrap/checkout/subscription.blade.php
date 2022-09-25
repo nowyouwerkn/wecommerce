@@ -39,7 +39,7 @@
                         @endguest
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_contact')
-                    
+
                     <hr class="responsive-two">
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>

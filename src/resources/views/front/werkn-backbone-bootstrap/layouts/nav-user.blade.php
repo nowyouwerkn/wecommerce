@@ -1,7 +1,14 @@
+@php
+    $membership = Nowyouwerkn\WeCommerce\Models\MembershipConfig::where('is_active', true)->first();
+@endphp
+
 <ul class="list-unstyled">
     <li><a href="{{ route('profile') }}"><ion-icon name="home-outline"></ion-icon> Vista General</a></li>
     <li><a href="{{ route('wishlist') }}"><ion-icon name="heart-outline"></ion-icon> Mi Wishlist</a></li>
     <li><a href="{{ route('shopping') }}"><ion-icon name="bag-handle-outline"></ion-icon> Mis Compras</a></li>
+    @if (!empty($membership))
+    <li><a href="{{ route('points') }}"><ion-icon name="star-outline"></ion-icon> Mi historial de Puntos</a></li>
+    @endif
     <li><a href="{{ route('address') }}"><ion-icon name="compass-outline"></ion-icon> Mis Direcciones</a></li>
 
     <li class="mt-5"><a href="{{ route('account') }}"><ion-icon name="create-outline"></ion-icon> Editar Cuenta</a></li>
@@ -16,3 +23,4 @@
         </a>
     </li>
 </ul>
+

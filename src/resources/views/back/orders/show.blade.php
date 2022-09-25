@@ -113,11 +113,11 @@
                     <div class="status-box btn-{{ Str::slug($order->status) }}">
                         @switch($order->status)
                             @case('Pago Pendiente')
-                                <i class="fas fa-exclamation mr-1"></i> 
+                                <i class="fas fa-exclamation mr-1"></i>
                                 @break
 
                             @case('Pagado')
-                                <i class="fas fa-check mr-1"></i> 
+                                <i class="fas fa-check mr-1"></i>
                                 @break
 
                             @case('Empaquetado')
@@ -125,7 +125,7 @@
                                 @break
 
                             @case('Enviado')
-                                <i class="fas fa-truck mr-1"></i> 
+                                <i class="fas fa-truck mr-1"></i>
                                 @break
 
                             @case('Entregado')
@@ -133,11 +133,11 @@
                                 @break
 
                             @case('Cancelado')
-                                <i class="fas fa-times mr-1"></i> 
+                                <i class="fas fa-times mr-1"></i>
                                 @break
 
                             @case('Expirado')
-                                <i class="fas fa-times mr-1"></i> 
+                                <i class="fas fa-times mr-1"></i>
                                 @break
 
                             @case('Sin Completar')
@@ -145,10 +145,10 @@
                                 @break
 
                             @default
-                                <i class="fas fa-check mr-1"></i> 
+                                <i class="fas fa-check mr-1"></i>
 
                         @endswitch
-                        
+
                         <span>{{ $order->status ?? 'Pagado'}}</span>
                     </div>
 
@@ -188,7 +188,7 @@
                     @if($order->cart == NULL)
                     <p class="alert alert-warning">Esta orden proviene de una importación de otro sistema. Es posible que la información mostrada esté incompleta.</p>
                     @endif
-                    <div class="card-body">  
+                    <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col">
                                 <h6 class="mb-0 mt-0">Total en Carrito:</h6>
@@ -227,7 +227,7 @@
                                 <p class="mb-0" style="font-size: 1.3em;"><strong>${{ number_format($order->discounts, 2) ?? 'N/A' }}</strong></p>
                             </div>
                         </div>
-                          <div class="row align-items-center">
+                        <div class="row align-items-center">
                             <div class="col">
                                 <h6 class="mb-0 mt-0">Cupón usado:</h6>
                             </div>
@@ -237,6 +237,14 @@
                                 @else
                                 <p class="mb-0" style="font-size: 1.3em;"><strong>{{ $order->coupon_id ?? 'n/a' }}</strong></p>
                                 @endif
+                            </div>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="mb-0 mt-0">Puntos usados:</h6>
+                            </div>
+                            <div class="col text-right">
+                                <p class="mb-0" style="font-size: 1.3em;"><strong>{{ ($order->points) ?? 'N/A' }}</strong></p>
                             </div>
                         </div>
 
@@ -324,7 +332,7 @@
                                         @if($order->status == 'Pagado')
                                         <p class="mb-0 text-warning">Pedido pendiente de empaquetado</p>
                                         @endif
-                                        
+
                                         @if($order->status == 'Empaquetado')
                                         <p class="mb-0 text-info">Pedido listo para Entregar</p>
                                         @endif
@@ -340,7 +348,7 @@
                                             <img src="{{ asset('assets/img/delivery_1.svg') }}" alt="Entregado al Cliente" class="mb-4" width="180">
                                         </div>
 
-                                        {{-- 
+                                        {{--
                                         <div class="progress mb-3">
                                             <div class="progress-bar w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
@@ -354,7 +362,7 @@
                                                 <a href="{{ route('order.status.static', [$order->id, 'Empaquetado']) }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase"><i class="fas fa-box mr-2"></i> Marcar como Empaquetado</a>
                                                 <small class="text-mute mt-2 d-block">Se enviará un correo de notificación al comprador.</small>
                                             </div>
-                                            
+
                                             @endif
 
                                             @if($order->status == 'Entregado')
@@ -479,8 +487,8 @@
     <div class="row">
         <div class="col-md-4 mt-3">
             <button id="print" class="btn btn-default btn-primary btn-block btn-lg mt-4" type="button"> <span><i class="fa fa-print"></i> Imprimir Orden</span></button>
-        </div> 
-    </div> 
+        </div>
+    </div>
 
     <div class="modal fade" id="trackingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -590,7 +598,7 @@
             </div>
         </div>
     </div>
- 
+
 @endsection
 
 @push('scripts')

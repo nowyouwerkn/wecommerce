@@ -3,6 +3,8 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
+use Carbon\Carbon;
+
 use Auth;
 use Session;
 
@@ -10,6 +12,10 @@ use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Review;
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
+
+/*Loyalty system*/
+use Nowyouwerkn\WeCommerce\Models\UserPoint;
+use Nowyouwerkn\WeCommerce\Models\MembershipConfig;
 
 use Illuminate\Http\Request;
 
@@ -50,10 +56,6 @@ class ReviewController extends Controller
 
         $review = new Review();
 
-        if (!empty($user)) {
-            $review->user_id = $user->id;
-        }
-
         $review->name = $request->name;
         $review->email = $request->email;
         $review->review = $request->review;
@@ -87,6 +89,27 @@ class ReviewController extends Controller
         $review = Review::find($id);
 
         $review->is_approved = true;
+
+
+        $membership = MembershipConfig::where('is_active', true)->first();
+
+        if (!empty($review->user_id)){
+            if (!empty($membership)){
+                if($membership->on_review == true){
+                    $points = new UserPoint;
+                    $points->user_id = $review->user_id;
+                    $points->type = 'in';
+                    $points->value = $membership->points_review;
+
+                    if ($membership->has_expiration_time == true){
+                        $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                    }
+
+                    $points->save();
+                }
+            }
+        }
+
         $review->save();
 
         // Notificación
@@ -124,7 +147,7 @@ class ReviewController extends Controller
     {
         $review = Review::find($id);
 
-        
+
 
         // Notificación
         $type = 'Reseña';
