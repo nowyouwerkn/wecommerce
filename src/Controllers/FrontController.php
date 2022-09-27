@@ -2023,7 +2023,7 @@ class FrontController extends Controller
 
                 break;
 
-            case 'yearly':
+            case 'annual':
                 $interval = 'year';
                 if($product->time_for_cancellation != NULL){
                     $cancel_at = Carbon::now()->addYears($product->time_for_cancellation)->getTimestamp();

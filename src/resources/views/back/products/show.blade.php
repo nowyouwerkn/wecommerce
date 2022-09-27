@@ -1115,14 +1115,14 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label for="payment_frequency">Cantidad<span class="text-danger">*</span></label>
-                                            <input type="number" class="form-control" name="payment_frequency_qty" value="{{ $product->payment_frequency_qty }}" required>
+                                            <input type="number" id="pay_time" class="form-control" name="payment_frequency_qty" value="{{ $product->payment_frequency_qty }}" required>
                                         </div>
                                         <div class="col-md-8">
                                             <label for="payment_frequency">Frecuencia de Pago <span class="text-danger">*</span></label>
-                                            <select class="custom-select tx-13" name="payment_frequency" required>
+                                            <select class="custom-select tx-13" id="pay_frequency" name="payment_frequency" required>
                                                 <option value="weekly" {{ ($product->payment_frequency == 'weekly') ? 'selected' : '' }}>Semanal</option>
                                                 <option value="monthly" {{ ($product->payment_frequency == 'monthly') ? 'selected' : '' }}>Mensual</option>
-                                                <option value="annual" {{ ($product->payment_frequency == 'annual') ? 'selected' : '' }}>Anual</option>
+                                                <option id="annual" value="annual" {{ ($product->payment_frequency == 'annual') ? 'selected' : '' }}>Anual</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1513,6 +1513,25 @@
 <script type="text/javascript">
     $('#colorpicker').spectrum({
       color: '#17A2B8'
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+
+        if ($('#annual').prop('selected', true)) {
+            $('#pay_time').attr("readonly", true);
+        }
+
+        $("#pay_frequency").change(function(){
+        var values = $("#pay_frequency option:selected").text();
+
+        if (values == 'Anual') {
+            $('#pay_time').val(1);
+            $('#pay_time').attr("readonly", true);
+        }
+
+        });
     });
 </script>
 
