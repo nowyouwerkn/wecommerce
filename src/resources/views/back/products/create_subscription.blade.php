@@ -352,10 +352,6 @@
 
 $(document).ready(function(){
 
-    if ($('#annual').prop('selected', true)) {
-        alert('jejejejejej');
-    }
-
     $("#pay_frequency").change(function(){
     var values = $("#pay_frequency option:selected").text();
 
