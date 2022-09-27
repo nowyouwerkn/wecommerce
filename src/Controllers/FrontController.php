@@ -982,7 +982,7 @@ class FrontController extends Controller
         if (empty($store_tax)) {
             $tax = 0;
         }else{
-            $tax = $total_cart / $tax_rate;
+            $tax = ($total_cart) - ($total_cart / $tax_rate);
         }
         $subtotal = ($total_cart) - ($tax);
         $total = $subtotal + $tax;
@@ -2495,7 +2495,7 @@ class FrontController extends Controller
         $order->payment_method = $payment_method->supplier;
 
         $order->subscription_id = $product->id;
-        
+
         /* Stripe Subscription */
         if($subscription_data['status'] == 'active'){
             $order->subscription_status = true;
@@ -3591,7 +3591,6 @@ class FrontController extends Controller
             $tax_rate = ($store_tax->tax_rate)/100 + 1;
             $has_tax = true;
         }
-
         // Reglas de Envios y Opciones de Envío
         $shipping_rules = ShipmentMethodRule::where('is_active', true)->first();
 
