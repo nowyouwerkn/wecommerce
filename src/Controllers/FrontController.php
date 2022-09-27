@@ -157,6 +157,10 @@ class FrontController extends Controller
         $selected_gender = $request->gender;
         $selected_brand = $request->brand;
         $selected_materials = $request->materials;
+        $selected_color = $request->color;
+        $selected_condition = $request->condition;
+        $selected_age = $request->age;
+        $selected_score = $request->score;
 
         $query = Product::select('*')->where('status', 'Publicado');
 
@@ -182,6 +186,24 @@ class FrontController extends Controller
 
         if (isset($selected_materials)) {
                 $query->whereIn('materials', $selected_materials);
+        }
+
+        if (isset($selected_color)) {
+                $query->whereIn('color', $selected_color);
+        }
+
+        if (isset($selected_condition)) {
+                $query->whereIn('condition', $selected_condition);
+        }
+
+        if (isset($selected_age)) {
+                $query->whereIn('age_group', $selected_age);
+        }
+
+        if (isset($selected_score)) {
+            $query->whereHas('reviews', function ($query) use ($selected_score) {
+                $query->whereIn('rating', $selected_score);
+            });
         }
 
         $products = $query->with('category')->paginate(30)->withQueryString();
@@ -287,6 +309,11 @@ class FrontController extends Controller
                 $catalog = 'Lo más nuevo';
                 break;
 
+            case 'old':
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('created_at', 'asc')->paginate(15);
+                $catalog = 'Lo más antiguo';
+                break;
+
             case 'price_desc':
                 $products = Product::with('category')->where('status', 'Publicado')->orderBy('price', 'asc')->paginate(15);
                 $catalog = 'Precio menor a mayor';
@@ -295,6 +322,21 @@ class FrontController extends Controller
             case 'price_asc':
                 $products = Product::with('category')->where('status', 'Publicado')->orderBy('price', 'desc')->paginate(15);
                 $catalog = 'Precio mayor a menor';
+                break;
+
+            case 'name_asc':
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('name', 'asc')->paginate(15);
+                $catalog = 'Alfabeticamente A a Z';
+                break;
+
+            case 'name_desc':
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('name', 'desc')->paginate(15);
+                $catalog = 'Alfabeticamente Z a A';
+                break;
+
+            case 'promo':
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('discount_price', 'desc')->paginate(15);
+                $catalog = 'Ofertas y descuentos';
                 break;
 
             default:
@@ -3090,6 +3132,15 @@ class FrontController extends Controller
         $address->references = $request->references;
 
         $address->save();
+
+        return redirect()->route('address');
+    }
+
+    public function destroyAddress(Request $request, $id)
+    {
+        // Save request in database
+        $address = UserAddress::find($id);
+        $address->delete();
 
         return redirect()->route('address');
     }
