@@ -6,6 +6,17 @@
 
 @push('stylesheets')
 
+<style>
+    .delete-cuopon{
+        position: absolute;
+        right: -15px;
+        top: 0;
+        color: red;
+        font-weight: 600;
+        display: none;
+    }
+</style>
+
 @endpush
 
 @section('content')
@@ -206,6 +217,13 @@
                     }, 3000);
                 }
             });
+
+            var discount = 0;
+            $('#discountValue').text(parseFloat(discount.toString().replace(/,/g, '')).toFixed(2));
+            $('#discount').val(discount);
+            $('.delete-cuopon').hide();
+            $('#apply_cuopon').removeAttr('disabled', 'disabled');
+            $('.cp-success').fadeOut();
 
             if($('#apply_cuopon').hasClass('select-shipment-first')){
                 $('#apply_cuopon').removeClass('select-shipment-first');

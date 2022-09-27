@@ -6,6 +6,17 @@
 
 @push('stylesheets')
 
+<style>
+    .delete-cuopon{
+        position: absolute;
+        right: -15px;
+        top: 0;
+        color: red;
+        font-weight: 600;
+        display: none;
+    }
+</style>
+
 @endpush
 
 @section('content')
