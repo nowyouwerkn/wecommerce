@@ -386,6 +386,7 @@
             var coupon_code = $('#coupon_code').val();
             var subtotal =  parseFloat($('#subtotalInput').val());
             var shipping = parseFloat($('#shippingInput').val());
+            var tax_rateIn = parseFloat($('#taxRate').val());
             var user_email = $('#email').val();
 
             $('#cp_spinner').fadeIn(500);
@@ -436,10 +437,30 @@
                         var shipping = msg['free_shipping'];
                         $('#shippingRate').text(shipping.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 
-                        var total_count = subtotal - parseFloat(discount.toString().replace(/,/g, '')) + parseFloat(shipping.toString().replace(/,/g, ''));
+                        if (isNaN(shipping)) {
+                            console.log('si es falso');
 
-                        var total = total_count.toString().replace(/,/g, '');
-                        $('#totalPayment').text(total);
+                            var subtotal_tax = subtotal + tax_rateIn;
+
+                            var total_count = subtotal_tax - parseFloat(discount.toString().replace(/,/g, ''));
+
+                            $('#subtotal').text(subtotal_tax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                            $('#subtotalInput').val(subtotal_tax);
+
+                            $('#apply_cuopon').attr('disabled', 'disabled');
+                        } else {
+                            console.log('no es falso');
+
+                            var sub_total_sh = subtotal + tax_rateIn;
+                            $('#subtotal').text(sub_total_sh.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                            $('#subtotalInput').val(sub_total_sh);
+
+                            var total_count = sub_total_sh - parseFloat(discount.toString().replace(/,/g, ''));
+
+                            var total = total_count.toString().replace(/,/g, '');
+                            $('#totalPayment').text(total);
+                            $('#apply_cuopon').attr('disabled', 'disabled');
+                        }
 
                         /* Calculate Tax */
                         var tax_rate = 0;
@@ -523,7 +544,6 @@
                 $("#points_discount").val($points);
 
                 var total_count = final_s - parseFloat($points.toString().replace(/,/g, ''));
-
 
                 var total = total_count.toString().replace(/,/g, '');
                 $('#totalPayment').text(total);

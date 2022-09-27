@@ -79,6 +79,17 @@
 
                                 </select>
                             </div>
+                            <div class="col-md-8">
+                            <div class="form-group mb-3">
+                                <label>Tipo <span class="text-danger">*</span></label>
+                                <select class="form-control" name="type">
+                                    <option {{ ($legal->type == 'Privacy') ? 'selected' : '' }} value="1">Privacidad</option>
+                                    <option {{ ($legal->type == 'Terms') ? 'selected' : '' }} value="1">Términos</option>
+                                    <option {{ ($legal->type == 'Shipment') ? 'selected' : '' }} value="1">Envíos</option>
+                                    <option {{ ($legal->type == 'Returns') ? 'selected' : '' }} value="1">Devoluciones</option>
+                                </select>
+                            </div>
+                        </div>
                         </div>
 
                         <input type="hidden" name="type" value="{{ $legal->type }}">
@@ -139,6 +150,17 @@
                                 <option value="6">6</option>
                                 <option value="7">7</option>
                             </select>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group mb-3">
+                                <label>Tipo <span class="text-danger">*</span></label>
+                                <select class="form-control" name="type" required>
+                                    <option value="Privacy">Privacidad</option>
+                                    <option value="Terms">Términos</option>
+                                    <option value="Shipment">Envíos</option>
+                                    <option value="Returns">Devoluciones</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
