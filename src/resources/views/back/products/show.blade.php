@@ -1529,6 +1529,8 @@
         if (values == 'Anual') {
             $('#pay_time').val(1);
             $('#pay_time').attr("readonly", true);
+        } else{
+            $('#pay_time').attr("readonly", false);
         }
 
         });
