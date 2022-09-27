@@ -2,6 +2,16 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.9.1 - 2022-09-27
+
+- Se resolvío el problema en textos legales
+- Actualización de direcciones para cliente
+- Al borrar o actualizar una categoría se borran las subcategorías
+- Nuevas funcionalidades en Ordenar por
+- Vistas de catálogo estandarizadas
+- Solución de problemas en checkout al agregar cupones y cambiar métodos de envío
+- Agregar más imagenes a suscripciones y delimitar un año para pagos anuales
+
 ## 1.9 - 2022-09-23
 
 - Nueva funcionalidad en el área de Marketing, ahora se puede dar de alta un sistema de lealtad para la tienda en línea.
