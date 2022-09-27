@@ -35,15 +35,15 @@
 @else
     <div class="row">
         <div class="col-lg-12 col-xl-12 mg-t-10">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ route('orders.index') }}">Productos físicos/digitales</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('order.subscriptions.index') }}">Suscripciones</a>
+                </li>
+            </ul>
             <div class="card mg-b-10">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ route('orders.index') }}">Productos físicos/digitales</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('subscriptions') }}">Suscripciones</a>
-                    </li>
-                </ul>
                 @include('wecommerce::back.orders.utilities._order_table')
                 <div class="d-flex align-items-center justify-content-center">
                     {{ $orders->links() }}

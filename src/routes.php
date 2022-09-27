@@ -121,6 +121,25 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         return view('wecommerce::back.products.includes._characteristic_inputs');
     })->name('subscription.inputs');
 
+    Route::get('/characteristic-inputs-update', function () {
+        return view('wecommerce::back.products.includes._characteristic_inputs_update');
+    })->name('subscription.inputs.update');
+
+    Route::post('products/new-characteristic', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeCharacteristic',
+        'as' => 'characteristic.store'
+    ]);
+
+    Route::post('products/update-characteristic/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@updateCharacteristic',
+        'as' => 'characteristic.update'
+    ]);
+
+    Route::delete('products/delete-characteristic/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@destroyCharacteristic',
+        'as' => 'characteristic.destroy'
+    ]);
+
     Route::post('products/new-image', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeImage',
         'as' => 'image.store',
@@ -237,9 +256,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
 
     Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
 
-    Route::get('orders/subscriptions', [
+    Route::get('orders-subscriptions', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@subscriptions',
-        'as' => 'subscriptions',
+        'as' => 'order.subscriptions.index',
     ]);
 
     Route::get('exportar-ordenes', 'Nowyouwerkn\WeCommerce\Controllers\OrderController@export')->name('export.orders');
@@ -349,7 +368,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     ]);
 
     //Country
-    Route::resource('countries', Nowyouwerkn\WeCommerce\Controllers\CountryController::class);
+    //Route::resource('countries', Nowyouwerkn\WeCommerce\Controllers\CountryController::class);
     Route::resource('states', Nowyouwerkn\WeCommerce\Controllers\StateController::class);
     Route::resource('cities', Nowyouwerkn\WeCommerce\Controllers\CityController::class);
     Route::resource('config', Nowyouwerkn\WeCommerce\Controllers\StoreConfigController::class);

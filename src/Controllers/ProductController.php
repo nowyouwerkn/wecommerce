@@ -380,6 +380,49 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
+    public function storeCharacteristic (Request $request)
+    {
+        $chars = new ProductCharacteristic;
+        $chars->product_id = $request->product_id;
+
+        $chars->title = $request->title;
+        $chars->subtitle = $request->subtitle;
+
+        if(isset($request->image)){
+            $model_image = $request->file('image');
+            $filename = 'icon' . time() . '.' . $model_image->getClientOriginalExtension();
+            $location = public_path('img/icons/' . $filename);
+
+            Image::make($model_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $chars->icon = $filename;
+        }
+
+        $chars->save();
+
+        return redirect()->back();
+    }
+
+    public function updateCharacteristic (Resquest $request, $id)
+    {
+        $chars = ProductCharacteristic::find($id);
+        $chars->title = $request->title;
+        $chars->subtitle = $request->subtitle;
+
+        $chars->save();
+
+        return redirect()->back();
+    }
+
+    public function destroyCharacteristic ($id)
+    {
+        $chars = ProductCharacteristic::find($id);
+        $chars->delete();
+        Session::flash('success', 'La característica fue borrada exitosamente');
+
+        return redirect()->back();
+    }
+
     public function storeLifestyle(Request $request)
     {
         //Validar

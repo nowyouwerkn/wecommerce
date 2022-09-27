@@ -258,8 +258,8 @@ class OrderController extends Controller
 
         $order->status = $request->value;
 
-        if($request->value == 'Entregado' && $order->total >= $membership->minimum_purchase){
-             if (!empty($membership)){
+        if (!empty($membership)) {
+            if($request->value == 'Entregado' && $order->total >= $membership->minimum_purchase){
                 $points = new UserPoint;
 
                 $points->user_id = $order->user_id;

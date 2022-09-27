@@ -146,6 +146,20 @@
         text-align: center;
         line-height: 20px;
         font-size: .8em;
+        border: none;
+    }
+
+    .btn-save-2{
+        width: 20px;
+        height: 20px;
+        background-color: green;
+        color: #fff;
+        display: inline-block;
+        border-radius: 100%;
+        text-align: center;
+        line-height: 20px;
+        font-size: .8em;
+        border: none;
     }
 </style>
 @endpush
@@ -1168,37 +1182,6 @@
                         </div>
                     </div>
 
-                    <!-- characteristics -->
-                    <div class="card mg-t-10 mb-4">
-                        <!-- Header -->
-                        <div class="card-header pd-t-20 pd-b-0 bd-b-0">
-                            <h5 class="mg-b-5">Características</h5>
-                            <p class="tx-12 tx-color-03 mg-b-0">Configura esta información para darle a conocer a tus clientes que incluye tu paquete de suscripción.</p>
-                        </div>
-
-                        <!-- Form -->
-                        <div class="card-body">
-                            <div id="charForm">
-
-                            </div>
-                            <hr>
-                            <a href="javascript:void(0)" id="newCharacteristic" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5"><i class="far fa-plus-square"></i> Agrega característica</a>
-                            <hr>
-                            <ul class="list-unstyled">
-                                @foreach($product->characteristics as $characteristic)
-                                    <li>
-                                        @if($characteristic->icon != NULL)
-                                        <img src="{{ asset('/img/icons/' . $characteristic->icon) }}" class="me-4" alt="icon" width="50">
-                                        @else
-                                        <i class="fas fa-check-circle text-success"></i>
-                                        @endif
-                                        {{ $characteristic->title }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-
                     <!-- Inventory -->
                     <input type="hidden" name="stock" class="form-control" value="1">
                 </div>
@@ -1326,7 +1309,6 @@
     @endswitch
 </form>
 
-
 <div class="row">
     <div class="col-md-8">
         @switch($product->type)
@@ -1344,6 +1326,7 @@
             @break
 
             @case('subscription')
+                @include('wecommerce::back.products.partials._characteristics_card')
                 @include('wecommerce::back.products.partials._relationship_card')
             @break
         @endswitch
@@ -1651,13 +1634,23 @@
 
     @case('subscription')
         <script>
+            $(document).ready(function () {
+                $('#char-new').hide();
+            });
+
             $('#newCharacteristic').on('click', function(e){
-                $.get("{{ route('subscription.inputs') }}", function(data) {
-                    $('#charForm').append(data);
-                });
+                $('#char-new').fadeIn();
+            });
+
+            $('.btn-eliminate').on('click', function(e){
+                $('#char-new').fadeOut();
+            });
+
+            $('.btn-save-2').click(function (e) {
+
+                $('#char-u').submit();
             });
         </script>
-
 
     @break
 @endswitch
