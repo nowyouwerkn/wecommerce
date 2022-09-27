@@ -187,7 +187,7 @@
             <div class="d-flex align-items-center justify-content-between">
                 <p>Cupones</p>
 
-                <p>- $ <span id="discountValue">0.00</span></p>
+                <p class="position-relative">- $ <span id="discountValue">0.00</span><a id="delete_cuopon" class="delete-cuopon" href="javascript:voif(0)">X</a></p>
                 <input type="hidden" name="discounts" id="discount" value="">
             </div>
 
@@ -448,6 +448,7 @@
                             $('#subtotalInput').val(subtotal_tax);
 
                             $('#apply_cuopon').attr('disabled', 'disabled');
+                            $('.delete-cuopon').show();
                         } else {
                             console.log('no es falso');
 
@@ -460,6 +461,7 @@
                             var total = total_count.toString().replace(/,/g, '');
                             $('#totalPayment').text(total);
                             $('#apply_cuopon').attr('disabled', 'disabled');
+                            $('.delete-cuopon').show();
                         }
 
                         /* Calculate Tax */
@@ -467,6 +469,7 @@
                         var tax = parseFloat(total_count*tax_rate).toFixed(2);
                         /* Print Tax on Screen */
                         $('#taxValue').text(tax);
+                        $('#taxRate').val(tax);
 
                         // Clean Numbers
                         var total = total_count.toString().replace(/,/g, '');
@@ -493,6 +496,56 @@
         }
     });
 </script>
+
+<script>
+    $('#delete_cuopon').on('click', function(){
+        event.preventDefault();
+        var discount = 0;
+        var coupon_code = $('#coupon_code').val();
+        var subtotal =  parseFloat($('#subtotalInput').val());
+        var shipping = parseFloat($('#shippingInput').val());
+        var tax_rateIn = parseFloat($('#taxRate').val());
+        var subtotal =  parseFloat($('#subtotalInput').val());
+        var final_s = parseFloat($('#finalTotal').val());
+
+        /* Calculate Tax */
+        var tax_rate = (subtotal) - (subtotal / 1.16);
+        var tax = parseFloat(tax_rate).toFixed(2);
+        /* Print Tax on Screen */
+        $('#taxValue').text(tax);
+        $('#taxRate').val(tax);
+
+        console.log(subtotal);
+
+        console.log(tax);
+
+        console.log(subtotal - tax);
+
+        /*Subtotal*/
+        var subtotal_f = parseFloat(subtotal - tax).toFixed(2);
+        $('#subtotal').text(subtotal_f.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+        $('#subtotalInput').val(subtotal_f);
+
+        // Clean Numbers
+        var total_count = subtotal_f;
+        var total = total_count.toString().replace(/,/g, '');
+        var total = parseFloat(total);
+        var tax = parseFloat(tax);
+        var finaltotal = parseFloat(total + tax).toFixed(2);
+
+        $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+        $('#finalTotal').val(parseFloat(finaltotal));
+
+
+        $('#discountValue').text(parseFloat(discount.toString().replace(/,/g, '')).toFixed(2));
+        $('#discount').val(discount);
+        $('.cp-success').fadeOut();
+        $('#coupon_code').val("");
+        $('#apply_cuopon').removeAttr('disabled', 'disabled');
+        $('.delete-cuopon').hide();
+    });
+</script>
+
 <script>
     let rangeInput = document.querySelector(".range-input input");
     let rangeValue = document.querySelector(".range-input .value div");
