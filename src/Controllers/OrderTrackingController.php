@@ -52,7 +52,7 @@ class OrderTrackingController extends Controller
         $tracking->tracking_number = $request->tracking_number;
         $tracking->is_delivered = false;
         $tracking->status = 'En proceso';
- 
+
         $tracking->save();
 
         $order = Order::where('id', $request->order_id)->first();
@@ -85,7 +85,7 @@ class OrderTrackingController extends Controller
 
         config(['mail.driver'=> $mail->mail_driver]);
         config(['mail.host'=>$mail->mail_host]);
-        config(['mail.port'=>$mail->mail_port]);   
+        config(['mail.port'=>$mail->mail_port]);
         config(['mail.username'=>$mail->mail_username]);
         config(['mail.password'=>$mail->mail_password]);
         config(['mail.encryption'=>$mail->mail_encryption]);
@@ -96,7 +96,7 @@ class OrderTrackingController extends Controller
             Mail::send('wecommerce::mail.order_tracking', $data, function($message) use($name, $email, $sender_email, $store_name) {
                 $message->to($email, $name)->subject
                 ('¡Guía de seguimiento de tu compra!');
-                
+
                 $message->from($sender_email, $store_name);
             });
         }
@@ -134,7 +134,7 @@ class OrderTrackingController extends Controller
 
         $tracking->is_delivered = true;
         $tracking->status = 'Completado';
- 
+
         $tracking->save();
 
         $order = Order::where('id', $tracking->order_id)->first();
@@ -150,6 +150,14 @@ class OrderTrackingController extends Controller
 
     public function destroy($id)
     {
-        //
+        $tracking = OrderTracking::find($id);
+
+        $tracking->delete();
+
+        // Mensaje de session
+        Session::flash('success', 'Tu guía de envío se borro correctamente.');
+
+        // Enviar a vista
+        return redirect()->back();
     }
 }

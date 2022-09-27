@@ -71,18 +71,29 @@ class OrderController extends Controller
 
         $orders_month = Order::where('created_at', $dt)->get();
 
-        $orders = Order::orderBy('created_at', 'desc')->paginate(30);
-
-        /*
-        $orders->transform(function($order, $key){
-            $order->cart = unserialize($order->cart);
-            return $order;
-        });
-        */
+        $orders = Order::where('type', 'single_payment')->orderBy('created_at', 'desc')->paginate(30);
 
         $new_orders = Order::where('created_at', '>=', Carbon::now()->subWeek())->count();
 
         return view('wecommerce::back.orders.index')
+        ->with('clients', $clients)
+        ->with('orders', $orders)
+        ->with('new_orders', $new_orders);
+    }
+
+    public function subscriptions()
+    {
+        $dt = Carbon::now()->isCurrentMonth();
+
+        $clients = User::all();
+
+        $orders_month = Order::where('created_at', $dt)->get();
+
+        $orders = Order::where('type', 'recurring_payment')->orderBy('created_at', 'desc')->paginate(30);
+
+        $new_orders = Order::where('created_at', '>=', Carbon::now()->subWeek())->count();
+
+        return view('wecommerce::back.orders.subscriptions')
         ->with('clients', $clients)
         ->with('orders', $orders)
         ->with('new_orders', $new_orders);

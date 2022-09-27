@@ -135,6 +135,18 @@
         line-height: 20px;
         font-size: .8em;
     }
+
+    .btn-save{
+        width: 20px;
+        height: 20px;
+        background-color: green;
+        color: #fff;
+        display: inline-block;
+        border-radius: 100%;
+        text-align: center;
+        line-height: 20px;
+        font-size: .8em;
+    }
 </style>
 @endpush
 
@@ -1032,16 +1044,58 @@
                         <!-- Header -->
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Archivos multimedia</h5>
-                            <!--<p class="tx-12 tx-color-03 mg-b-0">Archivos multimedia.</p>-->
                         </div>
 
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="model_image">Imagen del Servicio <span class="text-success tx-12">Recomendado</span></label>
-                                    <input type="file" name="model_image" class="form-control" accept=".jpg, .jpeg, .png">
+                                <div class="thumbnail-wrap row">
+                                    <div class="col-12 justify-content-center">
+                                        <h5>Imagen principal</h5>
+                                    </div>
+
+                                    <div class="col-md-4 offset-md-4">
+                                        <a href="javascript:void(0)" data-target="#modalChangeImage" data-toggle="modal" class="btn btn-rounded btn-icon btn-info"><i class="fas fa-edit" aria-hidden="true"></i></a>
+                                        <img class="img-fluid mb-4" src="{{ asset('img/products/' . $product->image ) }}" alt="Imagen principal">
+                                    </div>
                                 </div>
+                            </div>
+
+                            <div class="col-12">
+                                <h5>Imagenes extras</h5>
+                            </div>
+
+                            @foreach($product->images as $image)
+                            <div class="col-md-4">
+                                <div class="thumbnail-wrap">
+                                    <button type="button" id="deleteImage_{{ $image->id }}" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
+                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                    </button>
+
+                                    @push('scripts')
+
+                                    <form method="POST" id="deleteImageForm_{{ $image->id }}" action="{{ route('image.destroy', $image->id) }}" style="display: none;">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+                                    </form>
+
+                                    <script type="text/javascript">
+                                        $('#deleteImage_{{ $image->id }}').on('click', function(){
+                                            event.preventDefault();
+                                            $('#deleteImageForm_{{ $image->id }}').submit();
+                                        });
+                                    </script>
+                                    @endpush
+
+                                    <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}" alt="Imagen secundaria">
+                                    <p class="priority-badge" >{{$image->priority}}</p>
+                                    <a style="right: 30px;" href="javascript:void(0)" data-target="#modalEditImage_{{$image->id}}" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imagen"><i class="fas fa-edit" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            @endforeach
+
+                            <div class="col-md-4">
+                                <a href="javascript:void(0)" data-target="#modalNewImage" data-toggle="modal" class="image-btn"><span class="fas fa-plus"></span> Agregar más imágenes</a>
                             </div>
                         </div>
                     </div>
@@ -1136,7 +1190,7 @@
                                         @if($characteristic->icon != NULL)
                                         <img src="{{ asset('/img/icons/' . $characteristic->icon) }}" class="me-4" alt="icon" width="50">
                                         @else
-                                        <i class="fas fa-check-circle text-success"></i> 
+                                        <i class="fas fa-check-circle text-success"></i>
                                         @endif
                                         {{ $characteristic->title }}
                                     </li>

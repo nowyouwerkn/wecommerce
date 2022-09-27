@@ -236,6 +236,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('newsletter', Nowyouwerkn\WeCommerce\Controllers\NewsletterController::class); //
 
     Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
+
+    Route::get('orders/subscriptions', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@subscriptions',
+        'as' => 'subscriptions',
+    ]);
+
     Route::get('exportar-ordenes', 'Nowyouwerkn\WeCommerce\Controllers\OrderController@export')->name('export.orders');
 
     Route::get('/orders/{id}/packing-list', [

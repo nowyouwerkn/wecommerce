@@ -29,8 +29,8 @@
 @if($orders->count() == 0)
     <div class="card card-body text-center" style="padding:80px 0px 100px 0px;">
         <img src="{{ asset('assets/img/group_2.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
-        <h4>Aquí aparecerán las compras que hagan tus clientes.</h4>
-        <p class="mb-4">Actualmente nadie a comprado, regresa pronto.</p>
+        <h4>Aquí aparecerán las Suscripciones que hagan tus clientes.</h4>
+        <p class="mb-4">Actualmente nadie a comprado una suscripción, regresa pronto.</p>
     </div>
 @else
     <div class="row">
@@ -38,13 +38,14 @@
             <div class="card mg-b-10">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ route('orders.index') }}">Productos físicos/digitales</a>
+                        <a class="nav-link" href="{{ route('orders.index') }}">Productos físicos/digitales</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('subscriptions') }}">Suscripciones</a>
+                        <a class="nav-link active" aria-current="page" href="{{ route('subscriptions') }}">Suscripciones</a>
                     </li>
                 </ul>
-                @include('wecommerce::back.orders.utilities._order_table')
+                @include('wecommerce::back.orders.utilities._suscription_table')
+
                 <div class="d-flex align-items-center justify-content-center">
                     {{ $orders->links() }}
                 </div>
