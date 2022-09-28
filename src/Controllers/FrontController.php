@@ -633,8 +633,6 @@ class FrontController extends Controller
 
     public function checkout()
     {
-        $membership = MembershipConfig::where('is_active', true)->first();
-
         if (!Session::has('cart')) {
             return view('front.theme.' . $this->theme->get_name() . '.cart');
         }
@@ -1029,6 +1027,44 @@ class FrontController extends Controller
         $subtotal = ($total_cart) - ($tax);
         $total = $subtotal + $tax;
         /*---------------*/
+
+        /*---------------*/
+        /*SISTEMA DE LEALTAD*/
+        $membership = MembershipConfig::where('is_active', true)->first();
+
+        $points = NULL;
+        $available = NULL;
+        $point_disc = NULL;
+        $valid = NULL;
+        if (!empty($membership)) {
+            if ($total >= $membership->minimum_purchase){
+                $qty = floor($total / $membership->qty_for_points);
+
+                $points = ($qty * $membership->earned_points);
+
+            } else{
+                $points = 0;
+            }
+
+            $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+            $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+
+            $used = 0;
+            $available = 0;
+
+            foreach ($available_points as $a_points) {
+                $available += $a_points->value ;
+            }
+
+            foreach ($used_points as $u_point) {
+                $used += $u_point->value;
+            }
+
+            $valid = $available - $used;
+
+            $point_disc = $membership->point_value;
+        }
+
         $store_config = $this->store_config;
         $legals = LegalText::all();
 
@@ -1039,6 +1075,9 @@ class FrontController extends Controller
             return view('front.theme.' . $this->theme->get_name() . '.checkout.subscription')
             ->with('subscription', $subscription)
             ->with('total', $total)
+            ->with('points', $points)
+            ->with('valid', $valid)
+            ->with('point_disc', $point_disc)
             ->with('final_total', $total)
             ->with('payment_methods', $payment_methods)
             ->with('card_payment', $card_payment)
