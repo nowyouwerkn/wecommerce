@@ -2995,13 +2995,14 @@ class FrontController extends Controller
         $total_orders = Order::where('user_id', Auth::user()->id)->get();
         $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
 
+        /*
         $orders->transform(function($order, $key){
             if($order->cart != 'N/A'){
                 $order->cart = unserialize($order->cart);
             }
             return $order;
         });
-
+        */
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.shopping')
         ->with('total_orders', $total_orders)
         ->with('orders', $orders);
