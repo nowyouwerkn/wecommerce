@@ -130,7 +130,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'characteristic.store'
     ]);
 
-    Route::post('products/update-characteristic/{id}', [
+    Route::put('products/update-characteristic/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@updateCharacteristic',
         'as' => 'characteristic.update'
     ]);

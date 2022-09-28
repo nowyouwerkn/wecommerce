@@ -85,7 +85,7 @@
         .product-btn:hover{
             background-color: #dfe6e9;
         }
-        
+
     </style>
 @endsection
 
@@ -95,7 +95,7 @@
             <img src="{{ asset('assets/img/group_1.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
             <h4>Crea y administra tus productos</h4>
             <p class="mb-4">Empieza a cargar productos en tu plataforma usando el botón superior.</p>
-            <a href="{{ route('products.create') }}" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Nuevo Producto</a>
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#createProductModal" class="btn btn-sm btn-primary btn-uppercase wd-200 ml-auto mr-auto">Nuevo Producto</a>
         </div>
     @else
         <div class="row">
@@ -105,7 +105,7 @@
                     <div class="table-responsive">
                         @include('wecommerce::back.products.utilities._product_table')
                     </div>
-                    
+
                     <div class="d-flex justify-content-center">
                         {{ $products->appends(request()->query())->links() }}
                     </div>
@@ -156,7 +156,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                
+
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-4 pr-2">

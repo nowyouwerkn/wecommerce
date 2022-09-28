@@ -152,7 +152,7 @@
     .btn-save-2{
         width: 20px;
         height: 20px;
-        background-color: green;
+        background-color: rgb(29, 157, 242);
         color: #fff;
         display: inline-block;
         border-radius: 100%;

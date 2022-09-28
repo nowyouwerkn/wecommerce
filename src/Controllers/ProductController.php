@@ -403,7 +403,7 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-    public function updateCharacteristic (Resquest $request, $id)
+    public function updateCharacteristic (Request $request, $id)
     {
         $chars = ProductCharacteristic::find($id);
         $chars->title = $request->title;
