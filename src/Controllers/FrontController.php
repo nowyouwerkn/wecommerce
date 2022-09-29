@@ -599,26 +599,29 @@ class FrontController extends Controller
         $available = NULL;
         $used =  NULL;
         if (!empty($membership)) {
-            $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
-            $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
-
-            foreach ($available_points as $a_point) {
-                $available += $a_point->value;
-            }
-
-            foreach ($used_points as $u_point) {
-                $used += $u_point->value;
-            }
-
-            $valid = $available - $used;
 
             if ($total >= $membership->minimum_purchase){
-                $qty = floor($total / $membership->qty_for_points);
+                $qty = floor($subtotal / $membership->qty_for_points);
 
                 $points = ($qty * $membership->earned_points);
 
             } else{
                 $points = 0;
+            }
+
+            if (!empty(Auth::user())) {
+                $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+
+                foreach ($available_points as $a_point) {
+                    $available += $a_point->value;
+                }
+
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
+
+                $valid = $available - $used;
             }
         }
 
@@ -845,30 +848,34 @@ class FrontController extends Controller
                 $points = 0;
             }
 
-            $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
-            $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+            if (!empty(Auth::user())) {
 
-            $used = 0;
-            $available = 0;
+                $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
 
-            foreach ($available_points as $a_points) {
-                $available += $a_points->value ;
-            }
+                $used = 0;
+                $available = 0;
 
-            foreach ($used_points as $u_point) {
-                $used += $u_point->value;
-            }
+                foreach ($available_points as $a_points) {
+                    $available += $a_points->value ;
+                }
 
-            $valid = $available - $used;
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
 
-            $point_disc = $membership->point_value;
-
-            $point_for_order = $total / $point_disc;
-
-            if ($valid >= $point_for_order) {
-                $valid = $point_for_order;
-            }else{
                 $valid = $available - $used;
+
+                $point_disc = $membership->point_value;
+
+                $point_for_order = $total / $point_disc;
+
+                if ($valid >= $point_for_order) {
+                    $valid = $point_for_order;
+                }else{
+                    $valid = $available - $used;
+                }
+
             }
         }
 
@@ -1054,30 +1061,33 @@ class FrontController extends Controller
                 $points = 0;
             }
 
-            $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
-            $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+            if (!empty(Auth::user())) {
 
-            $used = 0;
-            $available = 0;
+                $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
 
-            foreach ($available_points as $a_points) {
-                $available += $a_points->value ;
-            }
+                $used = 0;
+                $available = 0;
 
-            foreach ($used_points as $u_point) {
-                $used += $u_point->value;
-            }
+                foreach ($available_points as $a_points) {
+                    $available += $a_points->value ;
+                }
 
-            $valid = $available - $used;
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
 
-            $point_disc = $membership->point_value;
-
-            $point_for_order = $total / $point_disc;
-
-            if ($valid >= $point_for_order) {
-                $valid = $point_for_order;
-            }else{
                 $valid = $available - $used;
+
+                $point_disc = $membership->point_value;
+
+                $point_for_order = $total / $point_disc;
+
+                if ($valid >= $point_for_order) {
+                    $valid = $point_for_order;
+                }else{
+                    $valid = $available - $used;
+                }
             }
         }
 

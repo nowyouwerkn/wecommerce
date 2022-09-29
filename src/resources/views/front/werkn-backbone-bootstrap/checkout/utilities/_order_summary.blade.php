@@ -238,80 +238,98 @@
             </div>
             @if(!empty($membership))
 
-            <style>
-                .range-input {
-                padding:10px 20px;
-                display:flex;
-                align-items:center;
-                border-radius:10px;
-                width: 100%;
-                justify-content: space-between
-                }
-                .range-input input {
-                -webkit-appearance:none;
-                width:200px;
-                height:2px;
-                background:#4471ef;
-                border:none;
-                outline:none;
-                }
-                .range-input input::-webkit-slider-thumb {
-                -webkit-appearance:none;
-                width:20px;
-                height:20px;
-                background:#eee;
-                border:2px solid #4471ef;
-                border-radius:50%;
-                }
-                .range-input input::-webkit-slider-thumb:hover {
-                background:#4471ef;
-                }
-                .range-input .value {
-                color:#4471ef;
-                text-align:center;
-                font-weight:600;
-                line-height:40px;
-                height:40px;
-                overflow:hidden;
-                margin-left:10px;
-                }
-                .range-input .value div {
-                transition:all 300ms ease-in-out;
-                }
-            </style>
+                <style>
+                    .range-input {
+                    padding:10px 20px;
+                    display:flex;
+                    align-items:center;
+                    border-radius:10px;
+                    width: 100%;
+                    justify-content: space-between
+                    }
+                    .range-input input {
+                    -webkit-appearance:none;
+                    width:200px;
+                    height:2px;
+                    background:#4471ef;
+                    border:none;
+                    outline:none;
+                    }
+                    .range-input input::-webkit-slider-thumb {
+                    -webkit-appearance:none;
+                    width:20px;
+                    height:20px;
+                    background:#eee;
+                    border:2px solid #4471ef;
+                    border-radius:50%;
+                    }
+                    .range-input input::-webkit-slider-thumb:hover {
+                    background:#4471ef;
+                    }
+                    .range-input .value {
+                    color:#4471ef;
+                    text-align:center;
+                    font-weight:600;
+                    line-height:40px;
+                    height:40px;
+                    overflow:hidden;
+                    margin-left:10px;
+                    }
+                    .range-input .value div {
+                    transition:all 300ms ease-in-out;
+                    }
+                </style>
 
-                @if ($valid < 10)
-                <div class="col-md-12">
-                    <div class="bg-secondary bg-opacity-10">
-                        <div class="p-3">
-                            <h6 class="fw-semiBold">No tienes los puntos suficientes para utilizar en tu compra</h6>
-                        </div>
-                    </div>
-                </div>
-                @else
-                <div class="col-md-12">
-                    <div class="bg-secondary bg-opacity-10">
-                        <div class="p-3">
-                            <h6 class="fw-semiBold">Paga con puntos</h6>
-                        </div>
-                        <div class="range-input">
-                            <input type="range" id="points" min="0" max="{{ $valid }}" value="0" step="10">
-                            <div class="value">
-                                <div></div>
+                @if (!empty(Auth::user()))
+                    @if ($valid < 10)
+                    <div class="col-md-12">
+                        <div class="bg-secondary bg-opacity-10">
+                            <div class="p-3">
+                                <h6 class="fw-semiBold">No tienes los puntos suficientes para utilizar en tu compra</h6>
                             </div>
-                            <button class="we-co--btn-coupon select-shipment-first" id="apply_points" type="button">Canjear</button>
                         </div>
-                        <div class="p-3">
-                            <p>Desliza el slider para determinar los puntos a usar</p>
-                        </div>
-                        <input type="text" name="points_to_apply" id="points_to_apply" hidden>
-                        <input type="text" value="{{ $point_disc }}" id="point_value" hidden>
-                        <input type="text" name="points" hidden id="points_discount">
                     </div>
-                </div>
+                    @else
+                    <div class="col-md-12">
+                        <div class="bg-secondary bg-opacity-10">
+                            <div class="p-3">
+                                <h6 class="fw-semiBold">Paga con puntos</h6>
+                            </div>
+                            <div class="range-input">
+                                <input type="range" id="points" min="0" max="{{ $valid }}" value="0" step="10">
+                                <div class="value">
+                                    <div id="number"></div>
+                                </div>
+                                @if(!empty($products))
+                                    @if($shipment_options->count() != 0)
+                                    <button class="we-co--btn-coupon select-shipment-first" id="apply_points" type="button">Canjear</button>
+                                    @else
+                                    <button class="we-co--btn-coupon" id="apply_points" type="button">Canjear</button>
+                                    @endif
+                                @else
+                                    <button class="we-co--btn-coupon" id="apply_points" type="button">Canjear</button>
+                                @endif
+                            </div>
+                            <div class="p-3">
+                                <p>Desliza el slider para determinar los puntos a usar</p>
+                            </div>
+                            <input type="text" name="points_to_apply" id="points_to_apply" hidden>
+                            <input type="text" value="{{ $point_disc }}" id="point_value" hidden>
+                            <input type="text" name="points" hidden id="points_discount">
+                        </div>
+                    </div>
+                    @endif
+                @else
+                    <div class="col-md-12">
+                        <div class="bg-secondary bg-opacity-10">
+                            <div class="p-3">
+                                <h6 class="fw-semiBold">Inicia sesión para guardar tus puntos acumulables</h6>
+                                <p class="we-co--guest-notice mb-0"><ion-icon name="warning"></ion-icon> ¿Ya tienes cuenta? <a href="{{ route('login') }}">Inicia Sesión aquí</a></p>
+                            </div>
+                        </div>
+                    </div>
                 @endif
             @endif
-
         </div>
 
         {{ csrf_field() }}
@@ -440,7 +458,7 @@
                         if (isNaN(shipping)) {
                             console.log('si es falso');
 
-                            var subtotal_tax = subtotal + tax_rateIn;
+                            var subtotal_tax = parseFloat(subtotal + tax_rateIn).toFixed(2);
 
                             var total_count = subtotal_tax - parseFloat(discount.toString().replace(/,/g, ''));
 
@@ -448,11 +466,12 @@
                             $('#subtotalInput').val(subtotal_tax);
 
                             $('#apply_cuopon').attr('disabled', 'disabled');
+                            $('#apply_cuopon').css('opacity', 0.7);
                             $('.delete-cuopon').show();
                         } else {
                             console.log('no es falso');
 
-                            var sub_total_sh = subtotal + tax_rateIn;
+                            var sub_total_sh = parseFloat(subtotal + tax_rateIn).toFixed(2);
                             $('#subtotal').text(sub_total_sh.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
                             $('#subtotalInput').val(sub_total_sh);
 
@@ -461,6 +480,7 @@
                             var total = total_count.toString().replace(/,/g, '');
                             $('#totalPayment').text(total);
                             $('#apply_cuopon').attr('disabled', 'disabled');
+                            $('#apply_cuopon').css('opacity', 0.7);
                             $('.delete-cuopon').show();
                         }
 
@@ -515,12 +535,6 @@
         $('#taxValue').text(tax);
         $('#taxRate').val(tax);
 
-        console.log(subtotal);
-
-        console.log(tax);
-
-        console.log(subtotal - tax);
-
         /*Subtotal*/
         var subtotal_f = parseFloat(subtotal - tax).toFixed(2);
         $('#subtotal').text(subtotal_f.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
@@ -564,87 +578,310 @@
     });
 </script>
 
-<script>
-    $('#apply_points').on('click', function(){
-        event.preventDefault();
+@if(!empty($products))
+    @if($shipment_options->count() != 0)
+    <script>
+        $('#apply_points').on('click', function(){
+            event.preventDefault();
 
-        if($(this).hasClass('select-shipment-first')){
-            $('.cp-error').text('Selecciona un método de envío primero.');
-            $('.cp-error').fadeIn();
+            if($(this).hasClass('select-shipment-first')){
+                $('.cp-error').text('Selecciona un método de envío primero.');
+                $('.cp-error').fadeIn();
 
-            setTimeout(function () {
-                $('.cp-error').fadeOut();
-            }, 3000);
+                setTimeout(function () {
+                    $('.cp-error').fadeOut();
+                }, 3000);
 
-        }else{
-            var subtotal =  parseFloat($('#subtotalInput').val());
-            var shipping = parseFloat($('#shippingInput').val());
+            }else{
+                var subtotal =  $('#subtotalInput').val();
+                var shipping = parseFloat($('#shippingInput').val());
 
-            var final_s = parseFloat($('#finalTotal').val());
+                var final_s = parseFloat($('#finalTotal').val());
 
-            $use_points = $("#points").val();
-            $point_disc = $("#point_value").val();
-            $points = $use_points * $point_disc;
+                $use_points = $("#points").val();
+                $point_disc = $("#point_value").val();
+                $points = $use_points * $point_disc;
 
-            $("#points_to_apply").val($points);
+                $("#points_to_apply").val($points);
 
-            if ($points > 0) {
-                $("#coupon_code").attr("disabled", true);
-                $("#apply_coupon").attr("disabled", true);
+                if ($points > 0) {
+                    $("#coupon_code").attr("disabled", true);
+                    $("#apply_coupon").attr("disabled", true);
 
-                //CALCULAR DESCUENTO
-                $('#discountValue').text(parseFloat($points.toString().replace(/,/g, '')).toFixed(2));
-                $("#points_discount").val($points);
+                    $('#subtotal').text(final_s.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#subtotal_input').val(parseFloat(final_s));
 
-                var total_count = final_s - parseFloat($points.toString().replace(/,/g, ''));
+                    //CALCULAR DESCUENTO
+                    $('#discountValue').text(parseFloat($points.toString().replace(/,/g, '')).toFixed(2));
+                    $("#points_discount").val($points);
 
-                var total = total_count.toString().replace(/,/g, '');
-                $('#totalPayment').text(total);
+                    var total_count = final_s - parseFloat($points.toString().replace(/,/g, ''));
 
-                /* Calculate Tax */
-                var tax_rate = 0;
-                var tax = parseFloat(total_count*tax_rate).toFixed(2);
-                /* Print Tax on Screen */
-                $('#taxValue').text(tax);
-                $('#taxRate').val(0);
+                    var total = total_count.toString().replace(/,/g, '');
+                    $('#totalPayment').text(total);
 
-                // Clean Numbers
-                var total = total_count.toString().replace(/,/g, '');
-                var total = parseFloat(total);
-                var tax = parseFloat(tax);
-                var finaltotal = parseFloat(total + tax).toFixed(2);
+                    /* Calculate Tax */
+                    var tax_rate = 0;
+                    var tax = parseFloat(total_count*tax_rate).toFixed(2);
+                    /* Print Tax on Screen */
+                    $('#taxValue').text(tax);
+                    $('#taxRate').val(0);
 
-                $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                $('#finalTotal').val(parseFloat(finaltotal));
+                    // Clean Numbers
+                    var total = total_count.toString().replace(/,/g, '');
+                    var total = parseFloat(total);
+                    var tax = parseFloat(tax);
+                    var finaltotal = parseFloat(total + tax).toFixed(2);
 
-            } else {
-                $("#coupon_code").attr("disabled", false);
-                $("#apply_coupon").attr("disabled", false);
+                    $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#finalTotal').val(parseFloat(finaltotal));
 
+                    $(this).text('Reiniciar');
 
-                var total_count = subtotal * 1.16;
+                    $('#points').val(0);
+                    $('#points').attr('disabled', 'disabled');
+                    $('#number').css('margin-top', '0px');
 
-                var total = total_count.toString().replace(/,/g, '');
-                $('#totalPayment').text(total);
+                } else {
+                    $("#coupon_code").attr("disabled", false);
+                    $("#apply_coupon").attr("disabled", false);
 
-                /* Calculate Tax */
-                var tax_rate = 0;
-                var tax = parseFloat(total_count-subtotal).toFixed(2);
-                /* Print Tax on Screen */
-                $('#taxValue').text(tax);
-                $('#taxRate').val(tax);
+                    var discount_init = 0;
+                    //CALCULAR DESCUENTO
+                    $('#discountValue').text(parseFloat(discount_init.toString().replace(/,/g, '')).toFixed(2));
+                    $("#points_discount").val(discount_init);
 
-                // Clean Numbers
-                var total = total_count.toString().replace(/,/g, '');
-                var total = parseFloat(total);
-                var tax = parseFloat(tax);
-                var finaltotal = parseFloat(total_count).toFixed(2);
+                    var total_count = subtotal * 1.16;
+                    var total = total_count.toString().replace(/,/g, '');
+                    $('#totalPayment').text(total);
 
-                $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                $('#finalTotal').val(parseFloat(finaltotal));
+                    /* Calculate Tax */
+                    var tax_rate = 0;
+                    var tax = parseFloat(total_count-subtotal).toFixed(2);
+                    /* Print Tax on Screen */
+                    $('#taxValue').text(tax);
+                    $('#taxRate').val(tax);
+
+                    // Clean Numbers
+                    var total = total_count.toString().replace(/,/g, '');
+                    var total = parseFloat(total);
+                    var tax = parseFloat(tax);
+                    var finaltotal = parseFloat(total_count).toFixed(2);
+
+                    $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#finalTotal').val(parseFloat(finaltotal));
+
+                    var subtotal = parseFloat(finaltotal - tax).toFixed(2);
+
+                    $('#subtotal').text(subtotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#subtotal_input').val(parseFloat(subtotal));
+
+                    $('#points').attr('disabled', false);
+                    $(this).text('Canjear');
+
+                }
             }
+        });
+    </script>
+    @else
+    <script>
+        $('#apply_points').on('click', function(){
+            event.preventDefault();
 
-        }
-    });
-</script>
+            if($(this).hasClass('select-shipment-first')){
+                $('.cp-error').text('Selecciona un método de envío primero.');
+                $('.cp-error').fadeIn();
+
+                setTimeout(function () {
+                    $('.cp-error').fadeOut();
+                }, 3000);
+
+            }else{
+                var subtotal =  parseFloat($('#subtotalInput').val());
+                var shipping = parseFloat($('#shippingInput').val());
+
+                var final_s = parseFloat($('#finalTotal').val());
+
+                $use_points = $("#points").val();
+                $point_disc = $("#point_value").val();
+                $points = $use_points * $point_disc;
+
+                $("#points_to_apply").val($points);
+
+                if ($points > 0) {
+                    $("#coupon_code").attr("disabled", true);
+                    $("#apply_coupon").attr("disabled", true);
+
+                    $('#subtotal').text(final_s.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#subtotal_input').val(parseFloat(final_s));
+
+                    //CALCULAR DESCUENTO
+                    $('#discountValue').text(parseFloat($points.toString().replace(/,/g, '')).toFixed(2));
+                    $("#points_discount").val($points);
+
+                    var total_count = final_s - parseFloat($points.toString().replace(/,/g, ''));
+
+                    var total = total_count.toString().replace(/,/g, '');
+                    $('#totalPayment').text(total);
+
+                    /* Calculate Tax */
+                    var tax_rate = 0;
+                    var tax = parseFloat(total_count*tax_rate).toFixed(2);
+                    /* Print Tax on Screen */
+                    $('#taxValue').text(tax);
+                    $('#taxRate').val(0);
+
+                    // Clean Numbers
+                    var total = total_count.toString().replace(/,/g, '');
+                    var total = parseFloat(total);
+                    var tax = parseFloat(tax);
+                    var finaltotal = parseFloat(total + tax).toFixed(2);
+
+                    $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#finalTotal').val(parseFloat(finaltotal));
+
+                    $(this).text('Reiniciar');
+
+                    $('#points').val(0);
+                    $('#number').css('margin-top', '0px');
+                    $('#points').attr('disabled', 'disabled');
+
+                } else {
+                    $("#coupon_code").attr("disabled", false);
+                    $("#apply_coupon").attr("disabled", false);
+
+                    var discount_init = 0;
+                    //CALCULAR DESCUENTO
+                    $('#discountValue').text(parseFloat(discount_init.toString().replace(/,/g, '')).toFixed(2));
+                    $("#points_discount").val(discount_init);
+
+                    var total_count = subtotal * 1.16;
+
+                    var total = total_count.toString().replace(/,/g, '');
+                    $('#totalPayment').text(total);
+
+                    /* Calculate Tax */
+                    var tax_rate = 0;
+                    var tax = parseFloat(total_count-subtotal).toFixed(2);
+                    /* Print Tax on Screen */
+                    $('#taxValue').text(tax);
+                    $('#taxRate').val(tax);
+
+                    // Clean Numbers
+                    var total = total_count.toString().replace(/,/g, '');
+                    var total = parseFloat(total);
+                    var tax = parseFloat(tax);
+                    var finaltotal = parseFloat(total_count).toFixed(2);
+
+                    $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#finalTotal').val(parseFloat(finaltotal));
+
+
+                    $('#points').attr('disabled', false);
+                    $(this).text('Canjear');
+                }
+            }
+        });
+    </script>
+    @endif
+@else
+    <script>
+        $('#apply_points').on('click', function(){
+            event.preventDefault();
+
+            if($(this).hasClass('select-shipment-first')){
+                $('.cp-error').text('Selecciona un método de envío primero.');
+                $('.cp-error').fadeIn();
+
+                setTimeout(function () {
+                    $('.cp-error').fadeOut();
+                }, 3000);
+
+            }else{
+                var subtotal =  parseFloat($('#subtotalInput').val());
+                var shipping = parseFloat($('#shippingInput').val());
+
+                var final_s = parseFloat($('#finalTotal').val());
+
+                $use_points = $("#points").val();
+                $point_disc = $("#point_value").val();
+                $points = $use_points * $point_disc;
+
+                $("#points_to_apply").val($points);
+
+                if ($points > 0) {
+                    $("#coupon_code").attr("disabled", true);
+                    $("#apply_coupon").attr("disabled", true);
+
+                    $('#subtotal').text(final_s.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#subtotal_input').val(parseFloat(final_s));
+
+                    //CALCULAR DESCUENTO
+                    $('#discountValue').text(parseFloat($points.toString().replace(/,/g, '')).toFixed(2));
+                    $("#points_discount").val($points);
+
+                    var total_count = final_s - parseFloat($points.toString().replace(/,/g, ''));
+
+                    var total = total_count.toString().replace(/,/g, '');
+                    $('#totalPayment').text(total);
+
+                    /* Calculate Tax */
+                    var tax_rate = 0;
+                    var tax = parseFloat(total_count*tax_rate).toFixed(2);
+                    /* Print Tax on Screen */
+                    $('#taxValue').text(tax);
+                    $('#taxRate').val(0);
+
+                    // Clean Numbers
+                    var total = total_count.toString().replace(/,/g, '');
+                    var total = parseFloat(total);
+                    var tax = parseFloat(tax);
+                    var finaltotal = parseFloat(total + tax).toFixed(2);
+
+                    $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#finalTotal').val(parseFloat(finaltotal));
+
+                    $(this).text('Reiniciar');
+
+                    $('#points').val(0);
+                    $('#points').attr('disabled', 'disabled');
+                    $('#number').css('margin-top', '0px')
+
+                } else {
+                    $("#coupon_code").attr("disabled", false);
+                    $("#apply_coupon").attr("disabled", false);
+
+                    var discount_init = 0;
+                    //CALCULAR DESCUENTO
+                    $('#discountValue').text(parseFloat(discount_init.toString().replace(/,/g, '')).toFixed(2));
+                    $("#points_discount").val(discount_init);
+
+                    var total_count = subtotal * 1.16;
+
+                    var total = total_count.toString().replace(/,/g, '');
+                    $('#totalPayment').text(total);
+
+                    /* Calculate Tax */
+                    var tax_rate = 0;
+                    var tax = parseFloat(total_count-subtotal).toFixed(2);
+                    /* Print Tax on Screen */
+                    $('#taxValue').text(tax);
+                    $('#taxRate').val(tax);
+
+                    // Clean Numbers
+                    var total = total_count.toString().replace(/,/g, '');
+                    var total = parseFloat(total);
+                    var tax = parseFloat(tax);
+                    var finaltotal = parseFloat(total_count).toFixed(2);
+
+                    $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#finalTotal').val(parseFloat(finaltotal));
+
+                    $('#points').attr('disabled', false);
+                    $(this).text('Canjear');
+                }
+            }
+        });
+    </script>
+@endif
 @endpush
