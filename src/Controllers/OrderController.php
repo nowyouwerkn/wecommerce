@@ -150,11 +150,17 @@ class OrderController extends Controller
                 $points->user_id = $order->user_id;
                 $points->order_id = $order->id;
                 $points->type = 'in';
-                if ($membership->vip_clients == true && $membership->points_vip_accounts != NULL) {
+
+
+                $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+
+                /*
+                if ($membership->vip_clients == true && $membership->points_vip_accounts == true) {
                     $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
                 } else {
                     $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
                 }
+                */
 
                 if ($membership->has_expiration_time == true){
                     $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
@@ -267,11 +273,17 @@ class OrderController extends Controller
                 $points->user_id = $order->user_id;
                 $points->order_id = $order->id;
                 $points->type = 'in';
-                if ($membership->vip_clients == true && $membership->points_vip_accounts != NULL) {
+
+
+                $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+
+                /*
+                if ($membership->vip_clients == true && $membership->points_vip_accounts == true) {
                     $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
                 } else {
                     $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
                 }
+                */
 
                 if ($membership->has_expiration_time == true){
                     $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');

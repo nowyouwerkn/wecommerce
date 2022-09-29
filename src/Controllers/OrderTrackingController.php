@@ -3,6 +3,8 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
+use Carbon\Carbon;
+
 use Auth;
 use Session;
 use Config;
@@ -17,6 +19,10 @@ use Nowyouwerkn\WeCommerce\Models\OrderTracking;
 
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 use Nowyouwerkn\WeCommerce\Models\StoreTheme;
+
+/*Loyalty system*/
+use Nowyouwerkn\WeCommerce\Models\UserPoint;
+use Nowyouwerkn\WeCommerce\Models\MembershipConfig;
 
 use Illuminate\Http\Request;
 
@@ -131,6 +137,7 @@ class OrderTrackingController extends Controller
     {
         // Guardar datos en la base de datos
         $tracking = OrderTracking::find($id);
+        $membership = MembershipConfig::where('is_active', true)->first();
 
         $tracking->is_delivered = true;
         $tracking->status = 'Completado';
@@ -139,6 +146,33 @@ class OrderTrackingController extends Controller
 
         $order = Order::where('id', $tracking->order_id)->first();
         $order->status = 'Entregado';
+
+        if (!empty($membership)) {
+            if($order->total >= $membership->minimum_purchase){
+                $points = new UserPoint;
+
+                $points->user_id = $order->user_id;
+                $points->order_id = $order->id;
+                $points->type = 'in';
+
+                $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+
+                /*
+                if ($membership->vip_clients == true && $membership->points_vip_accounts == true) {
+                    $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                } else {
+                    $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                }
+                */
+
+                if ($membership->has_expiration_time == true){
+                    $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                }
+
+                $points->save();
+            }
+        }
+
         $order->save();
 
         // Mensaje de session
