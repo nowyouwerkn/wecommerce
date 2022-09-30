@@ -326,12 +326,12 @@ class FrontController extends Controller
 
             case 'name_asc':
                 $products = Product::with('category')->where('status', 'Publicado')->orderBy('name', 'asc')->paginate(15);
-                $catalog = 'Alfabeticamente A a Z';
+                $catalog = 'Alfabéticamente A a Z';
                 break;
 
             case 'name_desc':
                 $products = Product::with('category')->where('status', 'Publicado')->orderBy('name', 'desc')->paginate(15);
-                $catalog = 'Alfabeticamente Z a A';
+                $catalog = 'Alfabéticamente Z a A';
                 break;
 
             case 'promo':

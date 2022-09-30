@@ -333,8 +333,8 @@
             <option value="old">Lo más antiguo</option>
             <option value="price_asc">Precio mayor a menor</option>
             <option value="price_desc">Precio de menor a mayor</option>
-            <option value="name_asc">Alfabeticamente A a Z</option>
-            <option value="name_desc">Alfabeticamente Z a A</option>
+            <option value="name_asc">Alfabéticamente A a Z</option>
+            <option value="name_desc">Alfabéticamente Z a A</option>
             <option value="promo">Ofertas y descuentos</option>
         </select>
     </form>
