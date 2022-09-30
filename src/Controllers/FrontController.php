@@ -3228,6 +3228,14 @@ class FrontController extends Controller
         $user = User::find($id);
 
         $user->name = $request->input('name');
+
+        $user->last_name = $request->lastname;
+        $user->phone = $request->phone;
+        $user->birthday = $request->birthday;
+
+
+
+
         $user->password = bcrypt($request->input('password'));
         $user->save();
 
