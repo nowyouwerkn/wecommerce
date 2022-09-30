@@ -2,6 +2,12 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 1.9.2 - 2022-09-30
+
+- Se añaden los campos Teléfono, Cumpleaños y apellido a la edición de cuenta
+- Se habilita los puntos por cumpleaños en sistema de lealtad
+- Puntos V.i.P para usuarios con cierta cantidad de puntos u órdenes.
+
 ## 1.9.1 - 2022-09-27
 
 - Se resolvío el problema en textos legales
