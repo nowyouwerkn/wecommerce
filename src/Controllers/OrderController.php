@@ -138,11 +138,11 @@ class OrderController extends Controller
     public function changeStatusStatic($id, $status_string)
     {
         $order = Order::find($id);
-
         $membership = MembershipConfig::where('is_active', true)->first();
-
         $order->status = $status_string;
 
+        $available = NULL;
+        $used =  NULL;
         if (!empty($membership)) {
             if($status_string == 'Entregado' && $order->total >= $membership->minimum_purchase){
                 $points = new UserPoint;
@@ -151,16 +151,48 @@ class OrderController extends Controller
                 $points->order_id = $order->id;
                 $points->type = 'in';
 
+                //PUNTOS PARA VIP//
+                $available_points = UserPoint::where('user_id', $order->user->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', $order->user->id)->where('type', 'out')->get();
+                $total_orders = Order::where('user_id', $order->user->id)->get();
 
-                $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
 
-                /*
-                if ($membership->vip_clients == true && $membership->points_vip_accounts == true) {
-                    $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
-                } else {
-                    $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                foreach ($available_points as $a_point) {
+                    $available += $a_point->value;
                 }
-                */
+
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
+
+                $valid = $available - $used;
+
+                $type = 'normal';
+
+                if ($membership->on_vip_account == true) {
+                    if ($membership->has_vip_minimum_points == true && $valid >= $membership->vip_minimum_points){
+                        $type = 'vip_normal';
+                    }
+
+                    if ($membership->has_vip_minimum_orders == true && $total_orders->count() >= $membership->vip_minimum_orders){
+                        $type = 'vip_cool';
+                    }
+                }
+
+                switch ($type) {
+                    case 'vip_normal':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    case 'vip_cool':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    default:
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                        break;
+                }
+
 
                 if ($membership->has_expiration_time == true){
                     $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
@@ -266,6 +298,8 @@ class OrderController extends Controller
 
         $order->status = $request->value;
 
+        $available = NULL;
+        $used =  NULL;
         if (!empty($membership)) {
             if($request->value == 'Entregado' && $order->total >= $membership->minimum_purchase){
                 $points = new UserPoint;
@@ -274,16 +308,47 @@ class OrderController extends Controller
                 $points->order_id = $order->id;
                 $points->type = 'in';
 
+                //PUNTOS PARA VIP//
+                $available_points = UserPoint::where('user_id', $order->user->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', $order->user->id)->where('type', 'out')->get();
+                $total_orders = Order::where('user_id', $order->user->id)->get();
 
-                $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
 
-                /*
-                if ($membership->vip_clients == true && $membership->points_vip_accounts == true) {
-                    $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
-                } else {
-                    $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                foreach ($available_points as $a_point) {
+                    $available += $a_point->value;
                 }
-                */
+
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
+
+                $valid = $available - $used;
+
+                $type = 'normal';
+
+                if ($membership->on_vip_account == true) {
+                    if ($membership->has_vip_minimum_points == true && $valid >= $membership->vip_minimum_points){
+                        $type = 'vip_normal';
+                    }
+
+                    if ($membership->has_vip_minimum_orders == true && $total_orders->count() >= $membership->vip_minimum_orders){
+                        $type = 'vip_cool';
+                    }
+                }
+
+                switch ($type) {
+                    case 'vip_normal':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    case 'vip_cool':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    default:
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                        break;
+                }
 
                 if ($membership->has_expiration_time == true){
                     $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');

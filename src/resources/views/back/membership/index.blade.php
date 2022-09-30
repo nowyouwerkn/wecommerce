@@ -129,7 +129,7 @@
                             <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">MX$</span>
                             </div>
-                            <input type="text" name="minimum_purchase" class="form-control noText" value="{{ $config->minimum_purchase }}">
+                            <input type="number" name="minimum_purchase" class="form-control noText" value="{{ $config->minimum_purchase }}">
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -140,7 +140,7 @@
                             <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">MX$</span>
                             </div>
-                            <input type="text" name="qty_for_points" class="form-control noText" value="{{ $config->qty_for_points }}">
+                            <input type="number" name="qty_for_points" class="form-control noText" value="{{ $config->qty_for_points }}">
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -148,7 +148,7 @@
                     </div>
                     <div class="col-md-2">
                         <div class="input-group mg-b-10">
-                            <input type="text" name="earned_points" class="form-control noText" value="{{ $config->earned_points }}">
+                            <input type="number" name="earned_points" class="form-control noText" value="{{ $config->earned_points }}">
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -159,7 +159,7 @@
                             <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">MX$</span>
                             </div>
-                            <input type="text" name="point_value" class="form-control noText" value="{{ $config->point_value }}">
+                            <input type="number" name="point_value" class="form-control noText" value="{{ $config->point_value }}">
                         </div>
                     </div>
                 </div>
@@ -267,7 +267,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <input type="text" id="pointsVIPi" name="vip_minimum_points" class="form-control noText" value="{{ $config->vip_minimum_points }}">
+                            <input type="number" id="pointsVIPi" name="vip_minimum_points" class="form-control noText" value="{{ $config->vip_minimum_points }}">
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -281,21 +281,21 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <input type="text" id="ordersVIPi" name="vip_minimum_orders" class="form-control noText" value="{{ $config->vip_minimum_orders }}">
+                            <input type="number" id="ordersVIPi" name="vip_minimum_orders" class="form-control noText" value="{{ $config->vip_minimum_orders }}">
                         </div>
                     </div>
                     <div class="col-md-5">
-                        <h4>Puntos para cliente V.I.P:</h4>
+                        <h4>Puntos por compra para cliente V.I.P:</h4>
                     </div>
                     <div class="col-md-3">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch2" value="1" name="on_vip_account" {{ ($config->on_vip_account == '1') ? 'checked' : '' }}>
-                            <label class="custom-control-label" for="customSwitch2"></label>
+                            <input type="checkbox" class="custom-control-input" id="puntosVIPc" value="1" name="on_vip_account" {{ ($config->on_vip_account == '1') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="puntosVIPc"></label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <input type="text" name="points_vip_accounts" class="form-control noText" value="{{ $config->points_vip_accounts }}">
+                            <input type="number" name="points_vip_accounts" id="puntosVIPi" class="form-control noText" value="{{ $config->points_vip_accounts }}">
                         </div>
                     </div>
                 </div>
@@ -330,20 +330,21 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <input type="text" name="points_account_created" class="form-control noText" value="{{ $config->points_account_created }}">
+                            <input type="number" name="points_account_created" class="form-control noText" value="{{ $config->points_account_created }}">
                         </div>
                     </div>
-                    <div class="col-md-5 d-none">
+                    <div class="col-md-5">
                         <h4>Cumpleaños:</h4>
                     </div>
-                    <div class="col-md-3 d-none">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1" name="on_birthday" {{ ($config->on_birthday == '1') ? 'checked' : '' }}>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch10" value="1" name="on_birthday" {{ ($config->on_birthday == '1') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="customSwitch10"></label>
                         </div>
                     </div>
-                    <div class="col-md-4 d-none">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <input type="text" name="points_birthdays" class="form-control noText" value="{{ $config->points_birthdays }}">
+                            <input type="number" name="points_birthdays" class="form-control noText" value="{{ $config->points_birthdays }}">
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -357,7 +358,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <input type="text" name="points_review" class="form-control noText" value="{{ $config->points_review }}">
+                            <input type="number" name="points_review" class="form-control noText" value="{{ $config->points_review }}">
                         </div>
                     </div>
                     <div class="col-md-5 d-none">
@@ -371,7 +372,7 @@
                     </div>
                     <div class="col-md-4 d-none">
                         <div class="form-group">
-                            <input type="text" name="points_review_with_image" class="form-control noText" value="{{ $config->points_review_with_image }}">
+                            <input type="number" name="points_review_with_image" class="form-control noText" value="{{ $config->points_review_with_image }}">
                         </div>
                     </div>
                 </div>
@@ -446,18 +447,23 @@
 
      <script>
       $(document).ready(function() {
+
           $('#clientVIP').click(function() {
               if($(this).prop("checked") == true) {
                 $("#pointsVIPc").attr("disabled", false);
                 $("#pointsVIPi").attr("disabled", false);
                 $("#ordersVIPc").attr("disabled", false);
                 $("#ordersVIPi").attr("disabled", false);
+                $("#puntosVIPc").attr("disabled", false);
+                $("#puntosVIPi").attr("disabled", false);
               }
               else if($(this).prop("checked") == false) {
                 $("#pointsVIPc").attr("disabled", true).prop("checked", false);
                 $("#pointsVIPi").attr("disabled", true).val(null);
                 $("#ordersVIPc").attr("disabled", true).prop("checked", false);
                 $("#ordersVIPi").attr("disabled", true).val(null);
+                $("#puntosVIPc").attr("disabled", true).prop("checked", false);
+                $("#puntosVIPi").attr("disabled", true).val(null);
               }
             });
 
@@ -484,6 +490,19 @@
             })
         });
     </script>
+
+    @if ($config->vip_clients == false)
+        <script>
+            $(document).ready(function () {
+                $("#pointsVIPc").attr("disabled", true).prop("checked", false);
+                $("#pointsVIPi").attr("disabled", true).val(null);
+                $("#ordersVIPc").attr("disabled", true).prop("checked", false);
+                $("#ordersVIPi").attr("disabled", true).val(null);
+                $("#puntosVIPc").attr("disabled", true).prop("checked", false);
+                $("#puntosVIPi").attr("disabled", true).val(null);
+            });
+        </script>
+    @endif
 
 @endpush
 

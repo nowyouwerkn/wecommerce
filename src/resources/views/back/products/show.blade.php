@@ -1499,26 +1499,35 @@
     });
 </script>
 
-<script>
-    $(document).ready(function(){
-
-        if ($('#annual').prop('selected', true)) {
-            $('#pay_time').attr("readonly", true);
-        }
-
-        $("#pay_frequency").change(function(){
-        var values = $("#pay_frequency option:selected").text();
-
-        if (values == 'Anual') {
-            $('#pay_time').val(1);
-            $('#pay_time').attr("readonly", true);
-        } else{
-            $('#pay_time').attr("readonly", false);
-        }
-
+@if ($product->type == 'subscription')
+    @if ($product->payment_frequency == 'annual')
+        <script>
+        $(document).ready(function () {
+            if ($('#annual').prop('selected', true)) {
+                $('#pay_time').attr("readonly", true);
+            }
         });
-    });
-</script>
+    </script>
+    @endif
+
+    <script>
+        $(document).ready(function(){
+
+            $("#pay_frequency").change(function(){
+            var values = $("#pay_frequency option:selected").text();
+
+            if (values == 'Anual') {
+                $('#pay_time').val(1);
+                $('#pay_time').attr("readonly", true);
+            } else{
+                $('#pay_time').attr("readonly", false);
+            }
+
+            });
+        });
+    </script>
+@endif
+
 
 <script type="text/javascript">
     $(document).ready(function() {
