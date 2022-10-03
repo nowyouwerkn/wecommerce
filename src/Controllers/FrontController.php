@@ -3093,6 +3093,34 @@ class FrontController extends Controller
         ->with('pending_orders', $pending_orders);
     }
 
+    /*PUNTOS POR CUMPLEAÑOS*/
+    public function birthdayPoints()
+    {
+        /*SISTEMA DE LEALTAD*/
+        $membership = MembershipConfig::where('is_active', true)->first();
+
+        if (!empty($membership)) {
+
+            if($membership->on_birthday == true){
+
+                if ($user->birthday == Carbon::today()) {
+                    $points = new UserPoint;
+                    $points->user_id = $user->id;
+                    $points->type = 'in';
+                    $points->value = $membership->points_birthdays;
+
+                    if ($membership->has_expiration_time == true){
+                        $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                    }
+
+                    $points->save();
+                }
+
+            }
+
+        }
+    }
+
     public function invoiceRequest(Request $request, $order_id, $user_id)
     {
         //Validation
