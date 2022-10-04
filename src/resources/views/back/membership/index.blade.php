@@ -162,6 +162,16 @@
                             <input type="number" name="point_value" class="form-control noText" value="{{ $config->point_value }}">
                         </div>
                     </div>
+                    <div class="col-md-5">
+                        <h4>Puntos máximos por compra:</h4>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="input-group mg-b-10">
+                            <div class="input-group-prepend">
+                            </div>
+                            <input type="number" name="max_redeem_points" class="form-control noText" value="{{ $config->max_redeem_points }}">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

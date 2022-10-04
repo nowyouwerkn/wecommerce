@@ -89,6 +89,7 @@ class MembershipController extends Controller
         $config->qty_for_points = $request->qty_for_points;
         $config->earned_points = $request->earned_points;
         $config->point_value = $request->point_value;
+        $config->max_redeem_points = $request->max_redeem_points;
 
         $config->has_expiration_time = $request->has_expiration_time;
         $config->point_expiration_time = $request->point_expiration_time;

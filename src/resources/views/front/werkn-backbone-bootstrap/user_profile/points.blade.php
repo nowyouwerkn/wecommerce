@@ -129,7 +129,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium reprehenderit dicta quam rem possimus necessitatibus ullam architecto officia porro qui natus illo quos incidunt dolore velit facilis explicabo, distinctio nihil.
+                <ul>
+                   <li>Cada ${{ $membership->qty_for_points }} gastados = {{ $membership->earned_points }} puntos</li>
+                   <li>1 punto = ${{ $membership->point_value }} peso</li>
+                   <li>Hasta el checkout muestra los puntos a ganar</li>
+                   <li>Se puede descontar hasta {{ $membership->max_redeem_points }} puntos = ${{ $membership->max_redeem_points * $membership->point_value }} pesos</li>
+                   <li>Los puntos estarán disponibles para su uso una vez que el status de la orden cambie a “Entregado” .</li>
+                    <li>Los puntos tienen caducidad máxima de {{ $membership->point_expiration_time }} meses después de haberlos adquirido.</li>
+                </ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

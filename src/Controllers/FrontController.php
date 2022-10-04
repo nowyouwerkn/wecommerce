@@ -868,15 +868,19 @@ class FrontController extends Controller
 
                 $valid = $available - $used;
 
-                $point_disc = $membership->point_value;
+                $point_value = $membership->point_value;
 
-                $point_for_order = $total / $point_disc;
+                $point_for_order = $total / $point_value;
 
-                if ($valid >= $point_for_order) {
-                    $valid = $point_for_order;
+
+                if ($valid >= $membership->max_redeem_points) {
+
+                    $valid = $membership->max_redeem_points;
+
                 }else{
                     $valid = $available - $used;
                 }
+
 
             }
         }
@@ -1085,8 +1089,10 @@ class FrontController extends Controller
 
                 $point_for_order = $total / $point_disc;
 
-                if ($valid >= $point_for_order) {
-                    $valid = $point_for_order;
+                if ($valid >= $membership->max_redeem_points) {
+
+                    $valid = $membership->max_redeem_points;
+
                 }else{
                     $valid = $available - $used;
                 }
