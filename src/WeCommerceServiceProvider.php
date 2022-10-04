@@ -105,5 +105,10 @@ class WeCommerceServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/database/seeders' => database_path('seeders/'),
         ], 'seeder_files');
+
+        // Publica los comandos automatizados de Membresías
+        $this->publishes([
+            __DIR__.'/Console' => app_path('Console/'),
+        ], 'commands');
     }
 }

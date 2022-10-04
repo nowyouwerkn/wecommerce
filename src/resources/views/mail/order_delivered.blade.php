@@ -76,7 +76,7 @@
 
 							@foreach($legals as $legal)
 							<li style="padding:0px 5px;">
-								<a href="{{ route('legal.text' , $legal->type) }}">
+								<a href="{{ route('legal.text' , $legal->slug) }}">
                                     {{ $legal->title }}
                                 </a>
 							</li>

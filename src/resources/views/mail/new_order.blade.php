@@ -76,28 +76,9 @@
 
 							@foreach($legals as $legal)
 							<li style="padding:0px 5px;">
-								<a href="{{ route('legal.text' , $legal->type) }}">
-									@switch($legal->type)
-										@case('Returns')
-											Política de Devoluciones
-											@break
-
-										@case('Privacy')
-											Política de Privacidad
-											@break
-
-										@case('Terms')
-											Términos y Condiciones
-											@break
-
-										@case('Shipment')
-											Política de Envíos
-											@break
-
-										@default
-											Hubo un problema, intenta después.
-									@endswitch 
-								</a>
+								<a href="{{ route('legal.text' , $legal->slug) }}">
+                                    {{ $legal->title }}
+                                </a>
 							</li>
 							@endforeach
 						</ul>

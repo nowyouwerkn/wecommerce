@@ -21,27 +21,10 @@
         @else
         <div class="row">
             <div class="col-xl-3 col-lg-4">
-                
                 @include('front.theme.werkn-backbone-bootstrap.layouts.utilities._filter_sidebar')
             </div>
 
-            <div class="col-xl-9 col-lg-8 pl-4">
-                <div class="shop-top-meta mb-35">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="shop-top-left">
-                                <ul>
-                                    <!--<li><a href="#"><i class="flaticon-menu"></i> FILTER</a></li>-->
-                                    <!--<li>Mostrando 1–9 de 80 resultados</li>-->
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="shop-top-right">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-xl-9 col-lg-8 pl-4 pt-5">
                 <div class="row">
                     @foreach($products as $product_info)
                     <div class="col-xl-4 col-sm-6">

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLegalTextsTable extends Migration
+class CreateCouponExcludedProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateLegalTextsTable extends Migration
      */
     public function up()
     {
-        Schema::create('legal_texts', function (Blueprint $table) {
+        Schema::create('coupon_excluded_products', function (Blueprint $table) {
             $table->id();
 
-            $table->string('slug');
-            $table->string('title')->nullable();
-            $table->longText('description')->nullable();
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('coupon_id')->constrained('coupons')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateLegalTextsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('legal_texts');
+        Schema::dropIfExists('coupon_excluded_products');
     }
 }

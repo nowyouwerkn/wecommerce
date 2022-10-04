@@ -60,28 +60,7 @@
 		            <li class="col-md col-12" ><a href="{{ route('catalog.all') }}">Catálogo</a></li>
 		            @foreach($legals as $legal)
 		            <li class="col-md" >
-		                <a href="{{ route('legal.text' , $legal->type) }}">
-		                    @switch($legal->type)
-		                        @case('Returns')
-		                            Política de Devoluciones
-		                            @break
-
-		                        @case('Privacy')
-		                            Política de Privacidad
-		                            @break
-
-		                        @case('Terms')
-		                            Términos y Condiciones
-		                            @break
-
-		                        @case('Shipment')
-		                            Política de Envíos
-		                            @break
-
-		                        @default
-		                            Hubo un problema, intenta después.
-		                    @endswitch 
-		                </a>
+		                <a href="{{ route('legal.text' , $legal->slug) }}"> {{ $legal->title }}</a>
 		            </li>
 		            @endforeach
 		        </ul>

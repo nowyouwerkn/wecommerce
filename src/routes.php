@@ -603,7 +603,12 @@ Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_acces
     ]);
 });
 
-Route::get('legales/{type}', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@legalText')->name('legal.text');
+Route::get('/legales/{slug}', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@legalText',
+    'as' => 'legal.text',
+])->where('slug', '[\w\d\-\_]+');
+
+
 Route::get('preguntas_frecuentes', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@faqs')->name('faqs.text');
 
 // Orden Completa
