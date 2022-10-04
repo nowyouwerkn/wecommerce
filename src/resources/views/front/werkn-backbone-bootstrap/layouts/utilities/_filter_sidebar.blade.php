@@ -30,8 +30,8 @@
         <div class="filter">
             <div class="accordion">
                 <h4 class="">Filtros</h4>
-                @if(!empty($catalog))
-                    <p>{{ $catalog->name }}</p>
+                @if (!empty($catalog))
+                    <p>{{ $catalog }}</p>
                 @endif
                 <hr>
             </div>
