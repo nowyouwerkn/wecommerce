@@ -129,7 +129,7 @@
                 
                 <div class="form-group mt-2">
                     <label>Excluir categorías</label>
-                    <select class="form-control select2" multiple="" name="categories[]">
+                    <select class="form-control select2" multiple="" name="excluded_categories[]">
                         @php
                             $categories = Nowyouwerkn\WeCommerce\Models\Category::all();
                         @endphp 
@@ -141,7 +141,7 @@
 
                 <div class="form-group mt-2">
                     <label>Excluir Productos</label>
-                    <select class="form-control select2" multiple="" name="products[]">
+                    <select class="form-control select2" multiple="" name="excluded_products[]">
                         @php
                             $products = Nowyouwerkn\WeCommerce\Models\Product::all();
                         @endphp 

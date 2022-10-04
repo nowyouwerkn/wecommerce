@@ -26,8 +26,7 @@ class CouponController extends Controller
 
     public function index()
     {
-        $coupons = Coupon::paginate(10);
-
+        $coupons = Coupon::orderBy('created_at', 'desc')->orderBy('end_date', 'desc')->orderBy('is_active', 'asc')->paginate(10);
         $user_rules = UserRule::all();
 
         return view('wecommerce::back.coupons.index')
@@ -44,7 +43,7 @@ class CouponController extends Controller
     {
         //Validar
         $this -> validate($request, array(
-            'code' => 'required|max:255',
+            'code' => 'required|unique:coupons|max:255',
             'start_date' => 'required',
             'end_date' => 'required',
             'qty' => 'required|max:255'
@@ -73,6 +72,9 @@ class CouponController extends Controller
         $coupon->is_active = true;
 
         $coupon->save();
+
+        $coupon->excludedCategories()->sync($request->excluded_categories);
+        $coupon->excludedProducts()->sync($request->excluded_products);
 
         // Notificación
         $type = 'Cupón';
@@ -145,9 +147,7 @@ class CouponController extends Controller
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
-        //
         $coupon->coupons()->delete();
-
         $coupon->delete();
 
         Session::flash('success', 'Se eliminó el cupón correctamente.');

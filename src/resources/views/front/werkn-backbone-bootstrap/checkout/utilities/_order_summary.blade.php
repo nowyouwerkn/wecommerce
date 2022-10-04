@@ -344,28 +344,7 @@
 <p class="mb-2 we-co--terms-links text-center"><small>
     Al confirmar la orden, aceptas nuestras
     @foreach($legals as $legal)
-    <a href="{{ route('legal.text' , $legal->type) }}">
-        @switch($legal->type)
-            @case('Returns')
-                Política de Devoluciones
-                @break
-
-            @case('Privacy')
-                Política de Privacidad
-                @break
-
-            @case('Terms')
-                Términos y Condiciones
-                @break
-
-            @case('Shipment')
-                Política de Envíos
-                @break
-
-            @default
-                Hubo un problema, intenta después.
-        @endswitch
-    </a>,
+    <a href="{{ route('legal.text' , $legal->slug) }}"> {{ $legal->title }} </a>
     @endforeach
 </small></p>
 
@@ -402,9 +381,9 @@
             }, 3000);
         }else{
             var coupon_code = $('#coupon_code').val();
-            var subtotal =  parseFloat($('#subtotalInput').val());
-            var shipping = parseFloat($('#shippingInput').val());
-            var tax_rateIn = parseFloat($('#taxRate').val());
+            var subtotal =  $('#subtotalInput').val();
+            var shipping = $('#shippingInput').val();
+            var tax_rateIn = $('#taxRate').val();
             var user_email = $('#email').val();
 
             $('#cp_spinner').fadeIn(500);
@@ -446,50 +425,33 @@
                         $('#mp_preference_id').val(mp_preference_id);
 
                         /* Calculate Discount */
+                        //console.log(discount);
                         var discount = msg['discount'];
-                        console.log(discount);
                         $('#discountValue').text(parseFloat(discount.toString().replace(/,/g, '')).toFixed(2));
                         $('#discount').val(discount);
-                        //var subtotal = parseFloat($('#subtotalInput').val());
+
+                        //var subtotal = parseFloat($('#subtotalInput').val().toString().replace(/,/g, '')).toFixed(2)));
 
                         var shipping = msg['free_shipping'];
                         $('#shippingRate').text(shipping.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 
-                        if (isNaN(shipping)) {
-                            console.log('si es falso');
+                        //console.log(subtotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                        //console.log(shipping.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 
-                            var subtotal_tax = parseFloat(subtotal + tax_rateIn).toFixed(2);
+                        var total_count = parseFloat(subtotal.toString().replace(/,/g, '')) - parseFloat(discount.toString().replace(/,/g, '')) + parseFloat(shipping.toString().replace(/,/g, ''));
+                        var total = total_count.toString().replace(/,/g, '');
+                        $('#totalPayment').text(total);
 
-                            var total_count = subtotal_tax - parseFloat(discount.toString().replace(/,/g, ''));
-
-                            $('#subtotal').text(subtotal_tax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                            $('#subtotalInput').val(subtotal_tax);
-
-                            $('#apply_cuopon').attr('disabled', 'disabled');
-                            $('#apply_cuopon').css('opacity', 0.7);
-                            $('.delete-cuopon').show();
-                        } else {
-                            console.log('no es falso');
-
-                            var sub_total_sh = parseFloat(subtotal + tax_rateIn).toFixed(2);
-                            $('#subtotal').text(sub_total_sh.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                            $('#subtotalInput').val(sub_total_sh);
-
-                            var total_count = sub_total_sh - parseFloat(discount.toString().replace(/,/g, ''));
-
-                            var total = total_count.toString().replace(/,/g, '');
-                            $('#totalPayment').text(total);
-                            $('#apply_cuopon').attr('disabled', 'disabled');
-                            $('#apply_cuopon').css('opacity', 0.7);
-                            $('.delete-cuopon').show();
-                        }
+                        //console.log(total_count);
 
                         /* Calculate Tax */
                         var tax_rate = 0;
                         var tax = parseFloat(total_count*tax_rate).toFixed(2);
+
+                        console.log(tax);
+
                         /* Print Tax on Screen */
                         $('#taxValue').text(tax);
-                        $('#taxRate').val(tax);
 
                         // Clean Numbers
                         var total = total_count.toString().replace(/,/g, '');

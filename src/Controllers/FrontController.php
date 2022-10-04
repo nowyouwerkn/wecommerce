@@ -86,21 +86,23 @@ use Nowyouwerkn\WeCommerce\Models\SizeGuide;
 
 /*Newsletter*/
 use Nowyouwerkn\WeCommerce\Models\Newsletter;
-
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
 use Nowyouwerkn\WeCommerce\Models\UserInvoice;
 use Nowyouwerkn\WeCommerce\Models\UserSubscription;
-use Nowyouwerkn\WeCommerce\Models\UserPoint;
+
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-/*Loyalty system*/
+/* Loyalty system */
+use Nowyouwerkn\WeCommerce\Models\UserPoint;
 use Nowyouwerkn\WeCommerce\Models\MembershipConfig;
 
 /* Coupon Models */
 use Nowyouwerkn\WeCommerce\Models\Coupon;
 use Nowyouwerkn\WeCommerce\Models\UserCoupon;
+use Nowyouwerkn\WeCommerce\Models\CouponExcludedCategory;
+use Nowyouwerkn\WeCommerce\Models\CouponExcludedProduct;
 
 /* Notificaciones */
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
@@ -3021,14 +3023,6 @@ class FrontController extends Controller
         $total_orders = Order::where('user_id', Auth::user()->id)->get();
         $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
 
-        /*
-        $orders->transform(function($order, $key){
-            if($order->cart != 'N/A'){
-                $order->cart = unserialize($order->cart);
-            }
-            return $order;
-        });
-        */
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.shopping')
         ->with('total_orders', $total_orders)
         ->with('orders', $orders);
@@ -3046,6 +3040,7 @@ class FrontController extends Controller
         $used =  NULL;
         $used_points =  NULL;
         $last_points =  NULL;
+
         if (!empty($membership)) {
             $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
             $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
@@ -3093,34 +3088,6 @@ class FrontController extends Controller
         ->with('pending_orders', $pending_orders);
     }
 
-    /*PUNTOS POR CUMPLEAÑOS*/
-    public function birthdayPoints()
-    {
-        /*SISTEMA DE LEALTAD*/
-        $membership = MembershipConfig::where('is_active', true)->first();
-
-        if (!empty($membership)) {
-
-            if($membership->on_birthday == true){
-
-                if ($user->birthday == Carbon::today()) {
-                    $points = new UserPoint;
-                    $points->user_id = $user->id;
-                    $points->type = 'in';
-                    $points->value = $membership->points_birthdays;
-
-                    if ($membership->has_expiration_time == true){
-                        $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
-                    }
-
-                    $points->save();
-                }
-
-            }
-
-        }
-    }
-
     public function invoiceRequest(Request $request, $order_id, $user_id)
     {
         //Validation
@@ -3157,7 +3124,7 @@ class FrontController extends Controller
         return redirect()->back();
     }
 
-    public function address ()
+    public function address()
     {
         $addresses = UserAddress::where('user_id', Auth::user()->id)->where('is_billing', false)->paginate(10);
 
@@ -3172,8 +3139,12 @@ class FrontController extends Controller
     public function storeAddress(Request $request)
     {
         // Validate
-        $this -> validate($request, array(
-
+        $this->validate($request, array(
+            'user_id' => 'required',
+            'street' => 'required',
+            'street_num' => 'required',
+            'postal_code' => 'required',
+            'suburb' => 'required',
         ));
 
         // Save request in database
@@ -3206,8 +3177,12 @@ class FrontController extends Controller
     public function updateAddress(Request $request, $id)
     {
         // Validate
-        $this -> validate($request, array(
-
+        $this->validate($request, array(
+            'user_id' => 'required',
+            'street' => 'required',
+            'street_num' => 'required',
+            'postal_code' => 'required',
+            'suburb' => 'required',
         ));
 
         // Save request in database
@@ -3230,7 +3205,7 @@ class FrontController extends Controller
         return redirect()->route('address');
     }
 
-    public function destroyAddress(Request $request, $id)
+    public function destroyAddress($id)
     {
         // Save request in database
         $address = UserAddress::find($id);
@@ -3239,7 +3214,7 @@ class FrontController extends Controller
         return redirect()->route('address');
     }
 
-    public function account ()
+    public function account()
     {
         $user = Auth::user();
 
@@ -3250,7 +3225,7 @@ class FrontController extends Controller
     {
         // Validar los datos
         $this -> validate($request, array(
-
+            'name' => 'required',
         ));
 
         $user = User::find($id);
@@ -3260,11 +3235,8 @@ class FrontController extends Controller
         $user->last_name = $request->lastname;
         $user->phone = $request->phone;
         $user->birthday = $request->birthday;
-
-
-
-
         $user->password = bcrypt($request->input('password'));
+
         $user->save();
 
         // Mensaje de aviso server-side
@@ -3287,8 +3259,7 @@ class FrontController extends Controller
         ));
 
         $user = User::find($id);
-
-        $user->image = $request->user_imagen;
+        //$user->image = $request->user_imagen;
 
         if ($request->hasFile('user_image')) {
             $user_image = $request->file('user_image');
@@ -3318,11 +3289,16 @@ class FrontController extends Controller
         if (!empty($shipping_rules) || $shipping_rules == NULL) {
             // Recuperar codigo del cupon enviado por AJAX
             $coupon_code = $request->get('coupon_code');
-
+            
             // Recuperar el resto de los datos enviados por AJAX
-            $subtotal = $request->get('subtotal');
-            $shipping = $request->get('shipping');
-
+            $subtotal = floatval(preg_replace("/[^-0-9\.]/","",$request->get('subtotal')));
+            
+            if($request->get('shipping') != NULL){
+                $shipping = floatval(preg_replace("/[^-0-9\.]/","",$request->get('shipping')));
+            }else{
+                $shipping = 0;
+            }   
+        
             // Obteniendo datos desde el Request enviado por Ajax a esta ruta
             $coupon = Coupon::where('code', $coupon_code)->first();
 
@@ -3355,24 +3331,77 @@ class FrontController extends Controller
                 $today = Carbon::today();
 
                 if ($today <= $end_date ) {
+                    /* Si está activa la opcion; revisar si existen productos con descuento en el carrito */
                     if ($coupon->exclude_discounted_items == true) {
                         $oldCart = Session::get('cart');
                         $cart = new Cart($oldCart);
 
-                        $subtotal = 0;
+                        $disc_subtotal = 0;
 
                         // Encontrar los productos sin descuentos en el carrito
                         foreach ($cart->items as $product) {
                             if ($product['item']['has_discount'] == false) {
-                                $subtotal += $product['item']['price'];
+                                $disc_subtotal += $product['item']['price'];
                             }
                         }
 
-                        $subtotal;
+                        $disc_subtotal;
 
-                        if ($subtotal == 0) {
+                        if ($disc_subtotal == 0) {
                             // No se puede dar descuento a productos que ya tienen descuento
                             return response()->json(['mensaje' => 'Este cupón no aplica para productos con descuento. Intenta con uno diferente.', 'type' => 'exception'], 200);
+                        }
+                    }
+                    
+                    /* Si existen exclusiones de categoría; revisar si existen productos con esa categoría en el carrito */
+                    $excluded_categories = CouponExcludedCategory::where('coupon_id', $coupon->id)->get();
+                    if ($excluded_categories->count() != 0) {
+                        $oldCart = Session::get('cart');
+                        $cart = new Cart($oldCart);
+
+                        $exc_categories = 0;
+
+                        foreach($excluded_categories as $exc_cat){
+                            if($cart->items != NULL){
+                                // Encontrar los productos con la misma categoria excluida en el carrito
+                                foreach ($cart->items as $product) {
+                                    if ($product['item']['category_id'] == $exc_cat->category_id) {
+                                        $exc_categories++;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if ($exc_categories != 0) {
+                            // No se puede dar descuento a productos que ya tienen descuento
+                            return response()->json(['mensaje' => 'Este cupón no aplica para esta categoría de productos. Revisa las condiciones de tu cupón e intenta nuevamente.', 'type' => 'exception'], 200);
+                        }
+                    }
+
+                    /* Si existen exclusiones de producto; revisar si existen productos con esa nombre en el carrito */
+                    $excluded_products = CouponExcludedProduct::where('coupon_id', $coupon->id)->get();
+                    if ($excluded_products->count() != 0) {
+                        $oldCart = Session::get('cart');
+                        $cart = new Cart($oldCart);
+
+                        $exc_products = 0;
+
+                        foreach($excluded_products as $exc_pro){
+                            if($cart->items != NULL){
+                                // Encontrar los productos excluidos en el carrito
+                                foreach ($cart->items as $product) {
+                                    if ($product['item']['id'] == $exc_pro->id) {
+                                        $exc_products++;
+                                    }
+                                }
+                            }
+                        }
+
+                        $exc_products;
+                        
+                        if ($exc_products == 0) {
+                            // No se puede dar descuento a productos que ya tienen descuento
+                            return response()->json(['mensaje' => 'Este cupón no aplica para algunos productos en tu carrito. Revisa las condiciones de tu cupón e intenta nuevamente.', 'type' => 'exception'], 200);
                         }
                     }
 
@@ -3392,8 +3421,6 @@ class FrontController extends Controller
                             $qty = $coupon->qty;
                             $discount = $qty;
 
-
-
                             break;
 
                         case 'free_shipping':
@@ -3409,7 +3436,6 @@ class FrontController extends Controller
                     }
 
                     // Si cantidad menor al minimo requerido mandar response de error.
-
                     if ($shipping_rules != NULL) {
                         if ($shipping_rules->condition == 'Cantidad Comprada' && $shipping_rules->comparison_operator == '>') {
                             if ($discount <= $shipping_rules->value) {
@@ -3522,9 +3548,9 @@ class FrontController extends Controller
         return view('wecommerce::feeds.xml')->with('items', $items)->with('config', $config);
     }
 
-    public function legalText($type)
+    public function legalText($slug)
     {
-        $text = LegalText::where('type', $type)->first();
+        $text = LegalText::where('slug', $slug)->first();
 
         return view('front.theme.' . $this->theme->get_name() . '.legal')->with('text', $text);
     }
@@ -3672,6 +3698,7 @@ class FrontController extends Controller
         return view('front.theme.' . $this->theme->get_name() . '.purchase_complete')->with('store_config', $store_config);
     }
 
+    /*
     public function reduceStock()
     {
         $order = Order::find(16);
@@ -3689,6 +3716,7 @@ class FrontController extends Controller
 
         return redirect()->back();
     }
+    */
 
     public function orderTracking()
     {

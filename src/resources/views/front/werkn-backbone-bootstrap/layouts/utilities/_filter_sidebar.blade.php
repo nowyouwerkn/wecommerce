@@ -1,7 +1,6 @@
 @push('stylesheets')
 
 @endpush
-
 <div id="sidebar" class="sidebar-filter px-4">
     <form method="get" action="{{ route('dynamic.filter.front') }}" id="product_filter_form">
         @php
@@ -31,8 +30,8 @@
         <div class="filter">
             <div class="accordion">
                 <h4 class="">Filtros</h4>
-                @if (!empty($catalog))
-                    <p>{{ $catalog }}</p>
+                @if(!empty($catalog))
+                    <p>{{ $catalog->name }}</p>
                 @endif
                 <hr>
             </div>
@@ -338,7 +337,6 @@
             <option value="promo">Ofertas y descuentos</option>
         </select>
     </form>
-
 </div>
 
 @push('scripts')

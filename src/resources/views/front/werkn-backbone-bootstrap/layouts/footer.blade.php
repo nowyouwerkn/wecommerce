@@ -94,7 +94,7 @@
                             <li class="mb-3"><strong>Soporte y Ayuda</strong></li>
                             @foreach($legals as $legal)
                             <li>
-                                <a href="{{ route('legal.text' , $legal->type) }}">
+                                <a href="{{ route('legal.text' , $legal->slug) }}">
                                     {{ $legal->title }}
                                 </a>
                             </li>

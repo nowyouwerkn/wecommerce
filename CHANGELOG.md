@@ -2,11 +2,16 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
-## 1.9.2 - 2022-09-30
+## 1.9.2 - 2022-10-04
 
 - Se añaden los campos Teléfono, Cumpleaños y apellido a la edición de cuenta
 - Se habilita los puntos por cumpleaños en sistema de lealtad
 - Puntos V.i.P para usuarios con cierta cantidad de puntos u órdenes.
+- Se modifica las columna de textos legales llamada "type" por "slug. Es importante modificar manualmente la base de datos de las versiones previas para reflejar este nuevo cambio sin afectar registros previos.
+- Agregada funcionalidad de exlusión de productos y categorías para los cupones. Ahora se pueden crear cupones que apliquen a ciertas condiciones o categorías.
+- Agregada validación a la creación de cupones donde el código del cupón debe ser único.
+- Cambiado el orden de la tabla de cupones para que aparezca primero el creado más recientemente y con la fecha de expiración más lejana con el estatus de activo.
+- Se implementa sistema automatizado de comandos. Es importante hacer publish para inyectar los comandos a su carpeta correspondiente. El archivo `Kernel.php` será sobreescrito.
 
 ## 1.9.1 - 2022-09-27
 
