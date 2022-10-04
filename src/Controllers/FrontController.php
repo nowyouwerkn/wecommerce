@@ -3235,7 +3235,11 @@ class FrontController extends Controller
         $user->last_name = $request->lastname;
         $user->phone = $request->phone;
         $user->birthday = $request->birthday;
-        $user->password = bcrypt($request->input('password'));
+
+        if (isset($request->password)) {
+            $user->password = bcrypt($request->input('password'));
+        }
+
 
         $user->save();
 
@@ -3289,16 +3293,16 @@ class FrontController extends Controller
         if (!empty($shipping_rules) || $shipping_rules == NULL) {
             // Recuperar codigo del cupon enviado por AJAX
             $coupon_code = $request->get('coupon_code');
-            
+
             // Recuperar el resto de los datos enviados por AJAX
             $subtotal = floatval(preg_replace("/[^-0-9\.]/","",$request->get('subtotal')));
-            
+
             if($request->get('shipping') != NULL){
                 $shipping = floatval(preg_replace("/[^-0-9\.]/","",$request->get('shipping')));
             }else{
                 $shipping = 0;
-            }   
-        
+            }
+
             // Obteniendo datos desde el Request enviado por Ajax a esta ruta
             $coupon = Coupon::where('code', $coupon_code)->first();
 
@@ -3352,7 +3356,7 @@ class FrontController extends Controller
                             return response()->json(['mensaje' => 'Este cupón no aplica para productos con descuento. Intenta con uno diferente.', 'type' => 'exception'], 200);
                         }
                     }
-                    
+
                     /* Si existen exclusiones de categoría; revisar si existen productos con esa categoría en el carrito */
                     $excluded_categories = CouponExcludedCategory::where('coupon_id', $coupon->id)->get();
                     if ($excluded_categories->count() != 0) {
@@ -3371,7 +3375,7 @@ class FrontController extends Controller
                                 }
                             }
                         }
-                        
+
                         if ($exc_categories != 0) {
                             // No se puede dar descuento a productos que ya tienen descuento
                             return response()->json(['mensaje' => 'Este cupón no aplica para esta categoría de productos. Revisa las condiciones de tu cupón e intenta nuevamente.', 'type' => 'exception'], 200);
@@ -3398,7 +3402,7 @@ class FrontController extends Controller
                         }
 
                         $exc_products;
-                        
+
                         if ($exc_products == 0) {
                             // No se puede dar descuento a productos que ya tienen descuento
                             return response()->json(['mensaje' => 'Este cupón no aplica para algunos productos en tu carrito. Revisa las condiciones de tu cupón e intenta nuevamente.', 'type' => 'exception'], 200);
