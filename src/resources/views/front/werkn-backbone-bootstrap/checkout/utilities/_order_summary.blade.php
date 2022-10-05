@@ -107,7 +107,23 @@
                             @break
 
                             @case('monthly')
-                            mensual, tu siguiente cobro es el {{ Carbon\Carbon::now()->addMonths($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
+                                @switch($subscription->payment_frequency_qty)
+                                    @case(1)
+                                        mensual,
+                                        @break
+                                    @case(2)
+                                        bimestral,
+                                        @break
+                                    @case(3)
+                                        trimestral,
+                                        @break
+                                    @case(6)
+                                        semestral,
+                                        @break
+                                    @default
+                                        mensual,
+                                @endswitch
+                             tu siguiente cobro es el {{ Carbon\Carbon::now()->addMonths($subscription->payment_frequency_qty)->translatedFormat('j \\de F') }}
                             @break
 
                             @case('yearly')
