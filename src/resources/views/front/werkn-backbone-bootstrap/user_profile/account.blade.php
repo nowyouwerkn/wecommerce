@@ -72,7 +72,11 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="birthday">Cumpleaños</label>
-                                            <input type="date" name="birthday" id="birthday" value="{{ $user->birthday }}" class="form-control">
+                                            @if ($user->birthday != NULL)
+                                            <input type="date" name="birthday" id="birthday" value="{{ $user->birthday }}" readonly class="form-control">
+                                            @else
+                                            <input type="date" name="birthday" id="birthday" class="form-control">
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
