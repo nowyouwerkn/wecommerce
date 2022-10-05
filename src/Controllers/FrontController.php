@@ -86,17 +86,23 @@ use Nowyouwerkn\WeCommerce\Models\SizeGuide;
 
 /*Newsletter*/
 use Nowyouwerkn\WeCommerce\Models\Newsletter;
-
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserAddress;
 use Nowyouwerkn\WeCommerce\Models\UserInvoice;
 use Nowyouwerkn\WeCommerce\Models\UserSubscription;
+
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+
+/* Loyalty system */
+use Nowyouwerkn\WeCommerce\Models\UserPoint;
+use Nowyouwerkn\WeCommerce\Models\MembershipConfig;
 
 /* Coupon Models */
 use Nowyouwerkn\WeCommerce\Models\Coupon;
 use Nowyouwerkn\WeCommerce\Models\UserCoupon;
+use Nowyouwerkn\WeCommerce\Models\CouponExcludedCategory;
+use Nowyouwerkn\WeCommerce\Models\CouponExcludedProduct;
 
 /* Notificaciones */
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
@@ -153,6 +159,10 @@ class FrontController extends Controller
         $selected_gender = $request->gender;
         $selected_brand = $request->brand;
         $selected_materials = $request->materials;
+        $selected_color = $request->color;
+        $selected_condition = $request->condition;
+        $selected_age = $request->age;
+        $selected_score = $request->score;
 
         $query = Product::select('*')->where('status', 'Publicado');
 
@@ -178,6 +188,24 @@ class FrontController extends Controller
 
         if (isset($selected_materials)) {
                 $query->whereIn('materials', $selected_materials);
+        }
+
+        if (isset($selected_color)) {
+                $query->whereIn('color', $selected_color);
+        }
+
+        if (isset($selected_condition)) {
+                $query->whereIn('condition', $selected_condition);
+        }
+
+        if (isset($selected_age)) {
+                $query->whereIn('age_group', $selected_age);
+        }
+
+        if (isset($selected_score)) {
+            $query->whereHas('reviews', function ($query) use ($selected_score) {
+                $query->whereIn('rating', $selected_score);
+            });
         }
 
         $products = $query->with('category')->paginate(30)->withQueryString();
@@ -283,6 +311,11 @@ class FrontController extends Controller
                 $catalog = 'Lo más nuevo';
                 break;
 
+            case 'old':
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('created_at', 'asc')->paginate(15);
+                $catalog = 'Lo más antiguo';
+                break;
+
             case 'price_desc':
                 $products = Product::with('category')->where('status', 'Publicado')->orderBy('price', 'asc')->paginate(15);
                 $catalog = 'Precio menor a mayor';
@@ -291,6 +324,21 @@ class FrontController extends Controller
             case 'price_asc':
                 $products = Product::with('category')->where('status', 'Publicado')->orderBy('price', 'desc')->paginate(15);
                 $catalog = 'Precio mayor a menor';
+                break;
+
+            case 'name_asc':
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('name', 'asc')->paginate(15);
+                $catalog = 'Alfabéticamente A a Z';
+                break;
+
+            case 'name_desc':
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('name', 'desc')->paginate(15);
+                $catalog = 'Alfabéticamente Z a A';
+                break;
+
+            case 'promo':
+                $products = Product::with('category')->where('status', 'Publicado')->orderBy('discount_price', 'desc')->paginate(15);
+                $catalog = 'Ofertas y descuentos';
                 break;
 
             default:
@@ -547,12 +595,45 @@ class FrontController extends Controller
         $tax = 0;
         $total = ($cart->totalPrice + $shipping);
 
+        $membership = MembershipConfig::where('is_active', true)->first();
+
+        $points = NULL;
+        $available = NULL;
+        $used =  NULL;
+        if (!empty($membership)) {
+
+            if ($total >= $membership->minimum_purchase){
+                $qty = floor($subtotal / $membership->qty_for_points);
+
+                $points = ($qty * $membership->earned_points);
+
+            } else{
+                $points = 0;
+            }
+
+            if (!empty(Auth::user())) {
+                $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+
+                foreach ($available_points as $a_point) {
+                    $available += $a_point->value;
+                }
+
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
+
+                $valid = $available - $used;
+            }
+        }
+
         return view('front.theme.' . $this->theme->get_name() . '.cart')
         ->with('products', $cart->items)
         ->with('total', $total)
         ->with('tax', $tax)
         ->with('shipping', $shipping)
-        ->with('subtotal', $subtotal);
+        ->with('subtotal', $subtotal)
+        ->with('points', $points);
     }
 
     public function checkout()
@@ -752,6 +833,58 @@ class FrontController extends Controller
         $total = $subtotal + $tax;
 
         /*---------------*/
+        /*SISTEMA DE LEALTAD*/
+        $membership = MembershipConfig::where('is_active', true)->first();
+
+        $points = NULL;
+        $available = NULL;
+        $point_disc = NULL;
+        $valid = NULL;
+        if (!empty($membership)) {
+            if ($total >= $membership->minimum_purchase){
+                $qty = floor($total / $membership->qty_for_points);
+
+                $points = ($qty * $membership->earned_points);
+
+            } else{
+                $points = 0;
+            }
+
+            if (!empty(Auth::user())) {
+
+                $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+
+                $used = 0;
+                $available = 0;
+
+                foreach ($available_points as $a_points) {
+                    $available += $a_points->value ;
+                }
+
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
+
+                $valid = $available - $used;
+
+                $point_disc = $membership->point_value;
+
+                $point_for_order = $total / $point_disc;
+
+
+                if ($valid >= $membership->max_redeem_points) {
+
+                    $valid = $membership->max_redeem_points;
+
+                }else{
+                    $valid = $available - $used;
+                }
+
+
+            }
+        }
+
 
         $store_config = $this->store_config;
         $legals = LegalText::all();
@@ -831,9 +964,12 @@ class FrontController extends Controller
             $has_digital_product = true;
         }
 
-        if (!empty($payment_methods)) {
+        if (count($payment_methods) != 0) {
             return view('front.theme.' . $this->theme->get_name() . '.checkout.index')
             ->with('total', $total)
+            ->with('points', $points)
+            ->with('valid', $valid)
+            ->with('point_disc', $point_disc)
             ->with('final_total', $total)
             ->with('payment_methods', $payment_methods)
             ->with('card_payment', $card_payment)
@@ -859,8 +995,9 @@ class FrontController extends Controller
     }
 
     public function checkoutSubscription($subscription_id)
-    {   
+    {
         $subscription = Product::find($subscription_id);
+        $membership = MembershipConfig::where('is_active', true)->first();
 
         //Facebook Event
         if ($this->store_config->has_pixel() != NULL) {
@@ -869,7 +1006,7 @@ class FrontController extends Controller
             }else{
                 $value = $subscription->price;
             }
-            
+
             $products_sku = $subscription->name;
             $cart_count = 1;
 
@@ -903,22 +1040,78 @@ class FrontController extends Controller
             $total_cart = $subscription->price;
         }
 
-        $tax = $total_cart / $tax_rate;
+        if (empty($store_tax)) {
+            $tax = 0;
+        }else{
+            $tax = ($total_cart) - ($total_cart / $tax_rate);
+        }
         $subtotal = ($total_cart) - ($tax);
         $total = $subtotal + $tax;
+        /*---------------*/
 
         /*---------------*/
+        /*SISTEMA DE LEALTAD*/
+        $membership = MembershipConfig::where('is_active', true)->first();
+
+        $points = NULL;
+        $available = NULL;
+        $point_disc = NULL;
+        $valid = NULL;
+        if (!empty($membership)) {
+            if ($total >= $membership->minimum_purchase){
+                $qty = floor($total / $membership->qty_for_points);
+
+                $points = ($qty * $membership->earned_points);
+
+            } else{
+                $points = 0;
+            }
+
+            if (!empty(Auth::user())) {
+
+                $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+
+                $used = 0;
+                $available = 0;
+
+                foreach ($available_points as $a_points) {
+                    $available += $a_points->value ;
+                }
+
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
+
+                $valid = $available - $used;
+
+                $point_disc = $membership->point_value;
+
+                $point_for_order = $total / $point_disc;
+
+                if ($valid >= $membership->max_redeem_points) {
+
+                    $valid = $membership->max_redeem_points;
+
+                }else{
+                    $valid = $available - $used;
+                }
+            }
+        }
 
         $store_config = $this->store_config;
         $legals = LegalText::all();
-        
-        /* Variable proveiene de API MercadoPago */
+
+        /* Variable proviene de API MercadoPago */
         $preference = NULL;
-        
-        if (!empty($payment_methods)) {
+
+        if (count($payment_methods) != 0) {
             return view('front.theme.' . $this->theme->get_name() . '.checkout.subscription')
             ->with('subscription', $subscription)
             ->with('total', $total)
+            ->with('points', $points)
+            ->with('valid', $valid)
+            ->with('point_disc', $point_disc)
             ->with('final_total', $total)
             ->with('payment_methods', $payment_methods)
             ->with('card_payment', $card_payment)
@@ -932,9 +1125,8 @@ class FrontController extends Controller
             ->with('legals', $legals)
             ->with('preference', $preference);
         }else{
-            //Session message
+            /* Mensaje de Sesión */
             Session::flash('info', 'No se han configurado métodos de pago en esta tienda. Contacta con un administrador de sistema.');
-
             return redirect()->route('index');
         }
     }
@@ -942,6 +1134,8 @@ class FrontController extends Controller
     public function postCheckout(Request $request)
     {
         $currency_value = $this->store_config->get_currency_code();
+
+        $membership = MembershipConfig::where('is_active', true)->first();
 
         if($currency_value == '1'){
             $currency_value = 'USD';
@@ -1139,7 +1333,7 @@ class FrontController extends Controller
                 'city' => 'required',
                 'references' => 'required',
             ), $customMessages);
-            
+
             $street = $request->input('street');
             $street_num = $request->input('street_num');
             $country = $request->input('country');
@@ -1403,8 +1597,8 @@ class FrontController extends Controller
                     if(isset($request->discounts)){
                         $order->discounts = str_replace(',', '', $request->discounts);
                     }
-                        
-                    
+
+
                     $order->total = $request->final_total;
                     $order->payment_total = $request->final_total;
                     /*------------*/
@@ -1633,6 +1827,7 @@ class FrontController extends Controller
         if(isset($request->discounts)){
             $order->discounts = str_replace(',', '', $request->discounts);
         }
+
         $order->coupon_id = 0;
         $order->total = $request->final_total;
         $order->payment_total = $request->final_total;
@@ -1658,8 +1853,31 @@ class FrontController extends Controller
             }
         }
 
+        //Guadar puntos de salida
+        if(isset($request->points)){
+            $order->points = $request->points;
+        }
+
         // Identificar al usuario para guardar sus datos.
         $user->orders()->save($order);
+
+        //Guadar puntos de salida
+
+        if (!empty($membership)){
+            if(isset($request->points)){
+                $points = new UserPoint();
+                $points->type = 'out';
+                $points->value = $request->points_to_apply;
+                $points->order_id = $order->id;
+                $points->user_id = $user->id;
+
+                if ($membership->has_expiration_time == true){
+                    $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                }
+
+                $points->save();
+            }
+        }
 
         // Actualizar existencias del producto
         foreach ($cart->items as $product) {
@@ -1788,6 +2006,7 @@ class FrontController extends Controller
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
 
+
         return redirect()->route('purchase.complete')
         ->with('purchase_value', $purchase_value)
         ->with('deduplication_code', $deduplication_code);
@@ -1900,7 +2119,7 @@ class FrontController extends Controller
                 if($product->time_for_cancellation != NULL){
                     $cancel_at = Carbon::now()->addDays($product->time_for_cancellation)->getTimestamp();
                 }
-                
+
                 break;
 
             case 'weekly':
@@ -1919,7 +2138,7 @@ class FrontController extends Controller
 
                 break;
 
-            case 'yearly':
+            case 'annual':
                 $interval = 'year';
                 if($product->time_for_cancellation != NULL){
                     $cancel_at = Carbon::now()->addYears($product->time_for_cancellation)->getTimestamp();
@@ -2048,22 +2267,22 @@ class FrontController extends Controller
                         'source' => $request->input('stripeToken'),
                     ));
 
-                    $plan = Plan::create(array( 
-                        "product" => [ 
-                            "name" => $product->name 
-                        ], 
-                        "amount" => round($product->price*100), 
-                        "currency" => $currency_value, 
-                        "interval" => $interval, 
+                    $plan = Plan::create(array(
+                        "product" => [
+                            "name" => $product->name
+                        ],
+                        "amount" => round($product->price*100),
+                        "currency" => $currency_value,
+                        "interval" => $interval,
                         "interval_count" => $product->payment_frequency_qty,
-                    )); 
+                    ));
 
-                    $subscription = Subscription::create(array( 
-                        "customer" => $customer->id, 
-                        "items" => array( 
-                            array( 
-                                "plan" => $plan->id, 
-                            ), 
+                    $subscription = Subscription::create(array(
+                        "customer" => $customer->id,
+                        "items" => array(
+                            array(
+                                "plan" => $plan->id,
+                            ),
                         ),
                         "cancel_at" => $cancel_at ?? NULL,
                     ));
@@ -2165,7 +2384,7 @@ class FrontController extends Controller
                     ));
 
                     $callbackUrl = url('/paypal/status');
-                    
+
                     // Set merchant preferences
                     $merchantPreferences = new MerchantPreferences();
                     $merchantPreferences->setReturnUrl($callbackUrl)
@@ -2187,7 +2406,7 @@ class FrontController extends Controller
                         $createdPlan = $plan->create($instance);
                     } catch (PayPal\Exception\PayPalConnectionException $ex) {
                         return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getData() );
-                    } 
+                    }
                     catch (\Exception $e) {
                         return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getData() );
                     }
@@ -2202,7 +2421,7 @@ class FrontController extends Controller
                         $patchRequest->addPatch($patch);
                         $createdPlan->update($patchRequest, $instance);
                         $patchedPlan = PaypalPlan::get($createdPlan->getId(), $instance);
-                        
+
                         // Create new agreement
                         $startDate = date('c', time() + 3600);
                         $agreement = new Agreement();
@@ -2232,7 +2451,7 @@ class FrontController extends Controller
                         */
                         // Create agreement
                         $agreement = $agreement->create($instance);
-                        
+
                     } catch (PayPal\Exception\PayPalConnectionException $ex) {
                         return redirect()->route('checkout.subscription', $product->id)->with('error', $e->getData() );
                     } catch (\Exception $e) {
@@ -2295,6 +2514,7 @@ class FrontController extends Controller
                     $order->status = 'Sin Completar';
                     $order->payment_method = $payment_method->supplier;
 
+                    $order->subscription_id = $product->id;
                     $order->subscription_status = false;
                     $order->stripe_subscription_id = Str::lower($plan->id);
                     $order->subscription_period_start = Carbon::now();
@@ -2344,9 +2564,9 @@ class FrontController extends Controller
             $user = Auth::user();
         }
 
-        // Retrieve subscription data 
-        $subscription_data = $subscription->jsonSerialize(); 
-        
+        // Retrieve subscription data
+        $subscription_data = $subscription->jsonSerialize();
+
         // GUARDAR LA ORDEN
         $order = new Order();
         $order->type = 'recurring_payment';
@@ -2389,15 +2609,19 @@ class FrontController extends Controller
         $order->status = 'Pagado';
         $order->payment_method = $payment_method->supplier;
 
+        $order->subscription_id = $product->id;
+
         /* Stripe Subscription */
         if($subscription_data['status'] == 'active'){
             $order->subscription_status = true;
         }else{
             $order->subscription_status = false;
         }
-        
+
+
+
         $order->stripe_subscription_id = $subscription_data['id'];
-        $order->stripe_customer_id = $subscription_data['customer']; 
+        $order->stripe_customer_id = $subscription_data['customer'];
         $order->stripe_plan_id = $subscription_data['plan']['id'];
         $order->subscription_period_start = Carbon::createFromTimestamp($subscription_data['current_period_start'])->toDateTimeString();
         $order->subscription_period_end = Carbon::createFromTimestamp($subscription_data['current_period_end'])->toDateTimeString();
@@ -2418,6 +2642,67 @@ class FrontController extends Controller
 
         // Identificar al usuario para guardar sus datos.
         $user->orders()->save($order);
+
+        // Guardar puntos
+        $membership = MembershipConfig::where('is_active', true)->first();
+        $available = NULL;
+        $used =  NULL;
+        if (!empty($membership)) {
+                $points = new UserPoint;
+
+                $points->user_id = $order->user_id;
+                $points->order_id = $order->id;
+                $points->type = 'in';
+
+                //PUNTOS PARA VIP//
+                $available_points = UserPoint::where('user_id', $order->user->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', $order->user->id)->where('type', 'out')->get();
+                $total_orders = Order::where('user_id', $order->user->id)->get();
+
+
+                foreach ($available_points as $a_point) {
+                    $available += $a_point->value;
+                }
+
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
+
+                $valid = $available - $used;
+
+                $type = 'normal';
+
+                if ($membership->on_vip_account == true) {
+                    if ($membership->has_vip_minimum_points == true && $valid >= $membership->vip_minimum_points){
+                        $type = 'vip_normal';
+                    }
+
+                    if ($membership->has_vip_minimum_orders == true && $total_orders->count() >= $membership->vip_minimum_orders){
+                        $type = 'vip_cool';
+                    }
+                }
+
+                switch ($type) {
+                    case 'vip_normal':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    case 'vip_cool':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    default:
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                        break;
+                }
+
+
+                if ($membership->has_expiration_time == true){
+                    $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                }
+
+                $points->save();
+        }
 
         // Guardar solicitud de factura si es que existe
         if (isset($request->rfc_num)) {
@@ -2440,7 +2725,7 @@ class FrontController extends Controller
             $model_id = $invoice->id;
 
             $this->notification->send($type, $by ,$data, $model_action, $model_id);
-        }        
+        }
 
         // Correo de confirmación de compra
         $mail = MailConfig::first();
@@ -2738,17 +3023,60 @@ class FrontController extends Controller
     public function profile ()
     {
         $total_orders = Order::where('user_id', Auth::user()->id)->get();
+
         $orders = Order::where('user_id', Auth::user()->id)->paginate(4);
+        /*
         $orders->transform(function($order, $key){
             $order->cart = unserialize($order->cart);
             return $order;
         });
+        */
+
+        /*SISTEMA DE LEALTAD*/
+        $membership = MembershipConfig::where('is_active', true)->first();
+
+        $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+        $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
 
         $addresses = UserAddress::where('user_id', Auth::user()->id)->where('is_billing', false)->get();
+
+        $valid = NULL;
+        $vip_status = NULL;
+        $last_points = NULL;
+
+        if (!empty($membership)) {
+
+            $last_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->get()->last();
+            $used = 0;
+            $available = 0;
+
+            foreach ($available_points as $a_point) {
+                $available += $a_point->value;
+            }
+
+            foreach ($used_points as $u_point) {
+                $used += $u_point->value;
+            }
+
+            $valid = $available - $used;
+            $vip_status = false;
+
+            if ($membership->vip_clients == true && $valid >= $membership->vip_minimum_points){
+                $vip_status = true;
+            }
+
+            if ($membership->vip_clients == true && $orders->count() >= $membership->vip_minimum_orders){
+                $vip_status = true;
+            }
+
+        }
 
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.profile')
         ->with('total_orders', $total_orders)
         ->with('orders', $orders)
+        ->with('last_points', $last_points)
+        ->with('valid', $valid)
+        ->with('vip_status', $vip_status)
         ->with('addresses', $addresses);
     }
 
@@ -2763,17 +3091,70 @@ class FrontController extends Controller
     {
         $total_orders = Order::where('user_id', Auth::user()->id)->get();
         $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
-        
-        $orders->transform(function($order, $key){
-            if($order->cart != 'N/A'){
-                $order->cart = unserialize($order->cart);
-            }
-            return $order;
-        });
 
         return view('front.theme.' . $this->theme->get_name() . '.user_profile.shopping')
         ->with('total_orders', $total_orders)
         ->with('orders', $orders);
+    }
+
+    public function points ()
+    {
+        /*SISTEMA DE LEALTAD*/
+        $membership = MembershipConfig::where('is_active', true)->first();
+
+        $all_points = NULL;
+        $pending = NULL;
+        $pending_orders = NULL;
+        $available = NULL;
+        $used =  NULL;
+        $used_points =  NULL;
+        $last_points =  NULL;
+
+        if (!empty($membership)) {
+            $available_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+            $used_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'out')->get();
+            $orders = Order::where('user_id', Auth::user()->id)->paginate(6);
+            $all_points = UserPoint::where('user_id', Auth::user()->id)->get();
+
+            $last_points = UserPoint::where('user_id', Auth::user()->id)->where('type', 'in')->get()->last();
+
+            $minimum = $membership->minimum_purchase;
+
+            $pending_orders = Order::where('user_id', Auth::user()->id)
+            ->where('payment_total', '>=', $minimum)
+            ->where(function ($query) {
+                $query->where('status', 'Pagado')
+                    ->orWhere('status', 'Empaquetado')
+                    ->orWhere('status', 'Enviado');
+            })
+            ->get();
+
+            foreach ($available_points as $a_point) {
+                $available += $a_point->value;
+            }
+
+            foreach ($used_points as $u_point) {
+                $used += $u_point->value;
+            }
+
+            $valid = $available - $used;
+
+            $pending = 0;
+
+            foreach ($pending_orders as $p_points) {
+                $pending+= floor(($p_points->total / $membership->qty_for_points) * $membership->earned_points);
+            }
+
+        }
+
+        return view('front.theme.' . $this->theme->get_name() . '.user_profile.points')
+        ->with('all_points', $all_points)
+        ->with('available', $available)
+        ->with('membership', $membership)
+        ->with('used_points', $used_points)
+        ->with('last_points', $last_points)
+        ->with('pending', $pending)
+        ->with('pending_orders', $pending_orders);
     }
 
     public function invoiceRequest(Request $request, $order_id, $user_id)
@@ -2812,7 +3193,7 @@ class FrontController extends Controller
         return redirect()->back();
     }
 
-    public function address ()
+    public function address()
     {
         $addresses = UserAddress::where('user_id', Auth::user()->id)->where('is_billing', false)->paginate(10);
 
@@ -2827,8 +3208,12 @@ class FrontController extends Controller
     public function storeAddress(Request $request)
     {
         // Validate
-        $this -> validate($request, array(
-
+        $this->validate($request, array(
+            'user_id' => 'required',
+            'street' => 'required',
+            'street_num' => 'required',
+            'postal_code' => 'required',
+            'suburb' => 'required',
         ));
 
         // Save request in database
@@ -2861,8 +3246,12 @@ class FrontController extends Controller
     public function updateAddress(Request $request, $id)
     {
         // Validate
-        $this -> validate($request, array(
-
+        $this->validate($request, array(
+            'user_id' => 'required',
+            'street' => 'required',
+            'street_num' => 'required',
+            'postal_code' => 'required',
+            'suburb' => 'required',
         ));
 
         // Save request in database
@@ -2885,7 +3274,16 @@ class FrontController extends Controller
         return redirect()->route('address');
     }
 
-    public function account ()
+    public function destroyAddress($id)
+    {
+        // Save request in database
+        $address = UserAddress::find($id);
+        $address->delete();
+
+        return redirect()->route('address');
+    }
+
+    public function account()
     {
         $user = Auth::user();
 
@@ -2896,13 +3294,22 @@ class FrontController extends Controller
     {
         // Validar los datos
         $this -> validate($request, array(
-
+            'name' => 'required',
         ));
 
         $user = User::find($id);
 
         $user->name = $request->input('name');
-        $user->password = bcrypt($request->input('password'));
+
+        $user->last_name = $request->lastname;
+        $user->phone = $request->phone;
+        $user->birthday = $request->birthday;
+
+        if (isset($request->password)) {
+            $user->password = bcrypt($request->input('password'));
+        }
+
+
         $user->save();
 
         // Mensaje de aviso server-side
@@ -2925,8 +3332,7 @@ class FrontController extends Controller
         ));
 
         $user = User::find($id);
-
-        $user->image = $request->user_imagen;
+        //$user->image = $request->user_imagen;
 
         if ($request->hasFile('user_image')) {
             $user_image = $request->file('user_image');
@@ -2958,8 +3364,13 @@ class FrontController extends Controller
             $coupon_code = $request->get('coupon_code');
 
             // Recuperar el resto de los datos enviados por AJAX
-            $subtotal = $request->get('subtotal');
-            $shipping = $request->get('shipping');
+            $subtotal = floatval(preg_replace("/[^-0-9\.]/","",$request->get('subtotal')));
+
+            if($request->get('shipping') != NULL){
+                $shipping = floatval(preg_replace("/[^-0-9\.]/","",$request->get('shipping')));
+            }else{
+                $shipping = 0;
+            }
 
             // Obteniendo datos desde el Request enviado por Ajax a esta ruta
             $coupon = Coupon::where('code', $coupon_code)->first();
@@ -2993,24 +3404,77 @@ class FrontController extends Controller
                 $today = Carbon::today();
 
                 if ($today <= $end_date ) {
+                    /* Si está activa la opcion; revisar si existen productos con descuento en el carrito */
                     if ($coupon->exclude_discounted_items == true) {
                         $oldCart = Session::get('cart');
                         $cart = new Cart($oldCart);
 
-                        $subtotal = 0;
+                        $disc_subtotal = 0;
 
                         // Encontrar los productos sin descuentos en el carrito
                         foreach ($cart->items as $product) {
                             if ($product['item']['has_discount'] == false) {
-                                $subtotal += $product['item']['price'];
+                                $disc_subtotal += $product['item']['price'];
                             }
                         }
 
-                        $subtotal;
+                        $disc_subtotal;
 
-                        if ($subtotal == 0) {
+                        if ($disc_subtotal == 0) {
                             // No se puede dar descuento a productos que ya tienen descuento
                             return response()->json(['mensaje' => 'Este cupón no aplica para productos con descuento. Intenta con uno diferente.', 'type' => 'exception'], 200);
+                        }
+                    }
+
+                    /* Si existen exclusiones de categoría; revisar si existen productos con esa categoría en el carrito */
+                    $excluded_categories = CouponExcludedCategory::where('coupon_id', $coupon->id)->get();
+                    if ($excluded_categories->count() != 0) {
+                        $oldCart = Session::get('cart');
+                        $cart = new Cart($oldCart);
+
+                        $exc_categories = 0;
+
+                        foreach($excluded_categories as $exc_cat){
+                            if($cart->items != NULL){
+                                // Encontrar los productos con la misma categoria excluida en el carrito
+                                foreach ($cart->items as $product) {
+                                    if ($product['item']['category_id'] == $exc_cat->category_id) {
+                                        $exc_categories++;
+                                    }
+                                }
+                            }
+                        }
+
+                        if ($exc_categories != 0) {
+                            // No se puede dar descuento a productos que ya tienen descuento
+                            return response()->json(['mensaje' => 'Este cupón no aplica para esta categoría de productos. Revisa las condiciones de tu cupón e intenta nuevamente.', 'type' => 'exception'], 200);
+                        }
+                    }
+
+                    /* Si existen exclusiones de producto; revisar si existen productos con esa nombre en el carrito */
+                    $excluded_products = CouponExcludedProduct::where('coupon_id', $coupon->id)->get();
+                    if ($excluded_products->count() != 0) {
+                        $oldCart = Session::get('cart');
+                        $cart = new Cart($oldCart);
+
+                        $exc_products = 0;
+
+                        foreach($excluded_products as $exc_pro){
+                            if($cart->items != NULL){
+                                // Encontrar los productos excluidos en el carrito
+                                foreach ($cart->items as $product) {
+                                    if ($product['item']['id'] == $exc_pro->id) {
+                                        $exc_products++;
+                                    }
+                                }
+                            }
+                        }
+
+                        $exc_products;
+
+                        if ($exc_products == 0) {
+                            // No se puede dar descuento a productos que ya tienen descuento
+                            return response()->json(['mensaje' => 'Este cupón no aplica para algunos productos en tu carrito. Revisa las condiciones de tu cupón e intenta nuevamente.', 'type' => 'exception'], 200);
                         }
                     }
 
@@ -3030,8 +3494,6 @@ class FrontController extends Controller
                             $qty = $coupon->qty;
                             $discount = $qty;
 
-
-
                             break;
 
                         case 'free_shipping':
@@ -3047,7 +3509,6 @@ class FrontController extends Controller
                     }
 
                     // Si cantidad menor al minimo requerido mandar response de error.
-
                     if ($shipping_rules != NULL) {
                         if ($shipping_rules->condition == 'Cantidad Comprada' && $shipping_rules->comparison_operator == '>') {
                             if ($discount <= $shipping_rules->value) {
@@ -3160,9 +3621,9 @@ class FrontController extends Controller
         return view('wecommerce::feeds.xml')->with('items', $items)->with('config', $config);
     }
 
-    public function legalText($type)
+    public function legalText($slug)
     {
-        $text = LegalText::where('type', $type)->first();
+        $text = LegalText::where('slug', $slug)->first();
 
         return view('front.theme.' . $this->theme->get_name() . '.legal')->with('text', $text);
     }
@@ -3170,7 +3631,7 @@ class FrontController extends Controller
     public function faqs()
     {
         $faqs = FAQ::all();
-        
+
         return view('front.theme.' . $this->theme->get_name() . '.faqs')->with('faqs', $faqs);
     }
 
@@ -3310,6 +3771,7 @@ class FrontController extends Controller
         return view('front.theme.' . $this->theme->get_name() . '.purchase_complete')->with('store_config', $store_config);
     }
 
+    /*
     public function reduceStock()
     {
         $order = Order::find(16);
@@ -3327,6 +3789,7 @@ class FrontController extends Controller
 
         return redirect()->back();
     }
+    */
 
     public function orderTracking()
     {
@@ -3382,7 +3845,6 @@ class FrontController extends Controller
             $tax_rate = ($store_tax->tax_rate)/100 + 1;
             $has_tax = true;
         }
-
         // Reglas de Envios y Opciones de Envío
         $shipping_rules = ShipmentMethodRule::where('is_active', true)->first();
 
@@ -3590,7 +4052,7 @@ class FrontController extends Controller
             'tax' => number_format($tax, 2),
             'total' => number_format($total, 2),
             'final_total' => $total,
-            'mp_preference_id' => $mp_preference_id, 
+            'mp_preference_id' => $mp_preference_id,
             'mp_preference' => $mp_preference
         ], 200);
     }

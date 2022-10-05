@@ -158,14 +158,14 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label for="payment_frequency">Cantidad<span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" name="payment_frequency_qty" value="1" required>
+                                        <input type="number" id="pay_time" class="form-control" name="payment_frequency_qty" value="1" required>
                                     </div>
                                     <div class="col-md-8">
                                         <label for="payment_frequency">Frecuencia de Pago <span class="text-danger">*</span></label>
-                                        <select class="custom-select tx-13" name="payment_frequency" required>
+                                        <select class="custom-select tx-13" id="pay_frequency" name="payment_frequency" required>
                                             <option value="weekly">Semanal</option>
                                             <option value="monthly" selected="">Mensual</option>
-                                            <option value="annual">Anual</option>
+                                            <option id="annual" value="annual">Anual</option>
                                         </select>
                                     </div>
                                 </div>
@@ -207,9 +207,9 @@
                                     <input type="date" id="discount_end" name="discount_end" value="{{ old('discount_end') }}" class="form-control">
                                 </div>
                             </div>
-                            
 
-                            
+
+
                         </div>
                     </div>
                 </div>
@@ -347,6 +347,25 @@
 
 @push('scripts')
 <script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
+
+<script>
+
+$(document).ready(function(){
+
+    $("#pay_frequency").change(function(){
+    var values = $("#pay_frequency option:selected").text();
+
+    if (values == 'Anual') {
+        $('#pay_time').val(1);
+        $('#pay_time').attr("readonly", true);
+    } else {
+        $('#pay_time').attr("readonly", false);
+    }
+
+    });
+});
+
+</script>
 
 <script type="text/javascript">
     $(document).ready(function() {

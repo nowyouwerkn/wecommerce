@@ -6,6 +6,17 @@
 
 @push('stylesheets')
 
+<style>
+    .delete-cuopon{
+        position: absolute;
+        right: -15px;
+        top: 0;
+        color: red;
+        font-weight: 600;
+        display: none;
+    }
+</style>
+
 @endpush
 
 @section('content')
@@ -39,7 +50,7 @@
                         @endguest
                     </div>
                     @include('front.theme.werkn-backbone-bootstrap.checkout.utilities._order_contact')
-                    
+
                     <hr class="responsive-two">
                     <div class="we-co--title d-flex align-items-center justify-content-between">
                         <h4><span class="we-co--progress-indicator"></span> Pago</h4>

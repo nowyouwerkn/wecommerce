@@ -94,7 +94,7 @@ class ProductController extends Controller
                 'sku' => 'required',
             ));
         }
-        
+
 
         /* Crear categoría si usuario activó opción */
         if ($request->category_name != NULL) {
@@ -115,7 +115,7 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->materials = $request->materials ?? NULL;
         $product->terms_conditions = $request->terms_conditions ?? NULL;
-        
+
         $product->color = $request->color;
         $product->hex_color = $request->hex_color;
         $product->pattern = $request->pattern;
@@ -125,7 +125,7 @@ class ProductController extends Controller
         $product->price = $request->price;
         $product->discount_price = $request->discount_price;
         $product->production_cost = $request->production_cost;
-        
+
         $product->has_discount = $request->has_discount;
         $product->discount_start = Carbon::now()->format('Y-m-d');
         $product->discount_end = $request->discount_end;
@@ -159,7 +159,7 @@ class ProductController extends Controller
         $product->availability = $request->availability;
         $product->visibility = $request->visibility;
         $product->condition = $request->condition;
-        
+
         $product->type = $request->type;
 
         $product->fb_product_category = $request->fb_product_category;
@@ -187,7 +187,7 @@ class ProductController extends Controller
             if ($request->hasFile('doc_file')) {
                 $archivo = $request->file('doc_file');
                 $filename = $nameslug . '.' . $archivo->getClientOriginalExtension();
-                
+
                 $location = public_path('files/products/');
                 $archivo->move($location, $filename);
 
@@ -197,7 +197,7 @@ class ProductController extends Controller
             if ($request->hasFile('image_file')) {
                 $archivo = $request->file('image_file');
                 $filename = $nameslug . '.' . $archivo->getClientOriginalExtension();
-                
+
                 $location = public_path('files/products/');
                 $archivo->move($location, $filename);
 
@@ -220,11 +220,11 @@ class ProductController extends Controller
             $product->sku = (Str::slug($request->name) . '-' .$code_gen);
             $product->barcode = (Str::slug($request->name) . '-' . $code_gen);
             $product->stock = '1';
-            
+
             // Guardar Características de producto configuradas
             if(isset($request->char_title)){
                 $product->save();
-            
+
                 $characteristics = $request->char_title;
 
                 $index = 0;
@@ -239,15 +239,20 @@ class ProductController extends Controller
                     }
 
                     if(isset($request->char_icon)){
-                        $chars->icon = $request->char_icon[$index];
+                        $icon_image = $request->char_icon[$index];
+                        $filename = 'model' . time() . '.' . $icon_image->getClientOriginalExtension();
+                        $location = public_path('img/icons/' . $filename);
+
+                        Image::make($icon_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+                        $chars->icon = $filename;
                     }
-                    
+
                     $chars->save();
                     $index++;
                 }
             }
         }
-        
+
         $product->save();
         $product->subCategory()->sync($request->subcategory);
 
@@ -375,6 +380,49 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
+    public function storeCharacteristic (Request $request)
+    {
+        $chars = new ProductCharacteristic;
+        $chars->product_id = $request->product_id;
+
+        $chars->title = $request->title;
+        $chars->subtitle = $request->subtitle;
+
+        if(isset($request->image)){
+            $model_image = $request->file('image');
+            $filename = 'icon' . time() . '.' . $model_image->getClientOriginalExtension();
+            $location = public_path('img/icons/' . $filename);
+
+            Image::make($model_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $chars->icon = $filename;
+        }
+
+        $chars->save();
+
+        return redirect()->back();
+    }
+
+    public function updateCharacteristic (Request $request, $id)
+    {
+        $chars = ProductCharacteristic::find($id);
+        $chars->title = $request->title;
+        $chars->subtitle = $request->subtitle;
+
+        $chars->save();
+
+        return redirect()->back();
+    }
+
+    public function destroyCharacteristic ($id)
+    {
+        $chars = ProductCharacteristic::find($id);
+        $chars->delete();
+        Session::flash('success', 'La característica fue borrada exitosamente');
+
+        return redirect()->back();
+    }
+
     public function storeLifestyle(Request $request)
     {
         //Validar
@@ -450,7 +498,7 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->materials = $request->materials ?? NULL;
         $product->terms_conditions = $request->terms_conditions ?? NULL;
-        
+
         $product->color = $request->color;
         $product->hex_color = $request->hex_color;
         $product->pattern = $request->pattern;
@@ -460,7 +508,7 @@ class ProductController extends Controller
         $product->price = $request->price;
         $product->discount_price = $request->discount_price;
         $product->production_cost = $request->production_cost;
-        
+
         $product->has_discount = $request->has_discount;
         $product->discount_start = Carbon::now()->format('Y-m-d');
         $product->discount_end = $request->discount_end;
@@ -494,7 +542,7 @@ class ProductController extends Controller
         $product->availability = $request->availability;
         $product->visibility = $request->visibility;
         $product->condition = $request->condition;
-        
+
         //$product->type = $request->type;
 
         $product->fb_product_category = $request->fb_product_category;
@@ -524,7 +572,7 @@ class ProductController extends Controller
             if ($request->hasFile('doc_file')) {
                 $archivo = $request->file('doc_file');
                 $filename = $nameslug . '.' . $archivo->getClientOriginalExtension();
-                
+
                 $location = public_path('files/products/');
                 $archivo->move($location, $filename);
 
@@ -534,7 +582,7 @@ class ProductController extends Controller
             if ($request->hasFile('image_file')) {
                 $archivo = $request->file('image_file');
                 $filename = $nameslug . '.' . $archivo->getClientOriginalExtension();
-                
+
                 $location = public_path('files/products/');
                 $archivo->move($location, $filename);
 
@@ -557,11 +605,11 @@ class ProductController extends Controller
             $product->sku = (Str::slug($request->name) . '-' .$code_gen);
             $product->barcode = (Str::slug($request->name) . '-' . $code_gen);
             $product->stock = '1';
-            
+
             // Guardar Características de producto configuradas
             if(isset($request->char_title)){
                 $product->save();
-            
+
                 $characteristics = $request->char_title;
 
                 $index = 0;
@@ -576,17 +624,21 @@ class ProductController extends Controller
                     }
 
                     if(isset($request->char_icon)){
-                        $chars->icon = $request->char_icon[$index];
+                        $icon_image = $request->char_icon[$index];
+                        $filename = 'model' . time() . '.' . $icon_image->getClientOriginalExtension();
+                        $location = public_path('img/icons/' . $filename);
+
+                        Image::make($icon_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+                        $chars->icon = $filename;
                     }
-                    
                     $chars->save();
 
                     $index++;
                 }
             }
-            
+
         }
-        
+
         $product->save();
 
         if (isset($request->subcategory)) {
@@ -619,7 +671,7 @@ class ProductController extends Controller
                 $var->delete();
             }
         }
-    
+
         $relations = ProductRelationship::where('product_id', $product->id)->orWhere('base_product_id', $product->id)->get();
         if($relations->count() != 0){
             foreach($relations as $rel){

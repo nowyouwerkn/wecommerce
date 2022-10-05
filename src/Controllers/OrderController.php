@@ -50,6 +50,10 @@ use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Exception\PayPalConnectionException;
 
+/*Loyalty system*/
+use Nowyouwerkn\WeCommerce\Models\UserPoint;
+use Nowyouwerkn\WeCommerce\Models\MembershipConfig;
+
 class OrderController extends Controller
 {
     private $notification;
@@ -67,18 +71,32 @@ class OrderController extends Controller
 
         $orders_month = Order::where('created_at', $dt)->get();
 
-        $orders = Order::orderBy('created_at', 'desc')->paginate(30);
-        
-        /*
-        $orders->transform(function($order, $key){
-            $order->cart = unserialize($order->cart);
-            return $order;
-        });
-        */
+        $orders = Order::where('type', 'single_payment')->orderBy('created_at', 'desc')->paginate(30);
+
+        $subs = Order::where('type', 'recurring_payment')->orderBy('created_at', 'desc')->paginate(30);
 
         $new_orders = Order::where('created_at', '>=', Carbon::now()->subWeek())->count();
 
         return view('wecommerce::back.orders.index')
+        ->with('clients', $clients)
+        ->with('orders', $orders)
+        ->with('subs', $subs)
+        ->with('new_orders', $new_orders);
+    }
+
+    public function subscriptions()
+    {
+        $dt = Carbon::now()->isCurrentMonth();
+
+        $clients = User::all();
+
+        $orders_month = Order::where('created_at', $dt)->get();
+
+        $orders = Order::where('type', 'recurring_payment')->orderBy('created_at', 'desc')->paginate(30);
+
+        $new_orders = Order::where('created_at', '>=', Carbon::now()->subWeek())->count();
+
+        return view('wecommerce::back.orders.subscriptions')
         ->with('clients', $clients)
         ->with('orders', $orders)
         ->with('new_orders', $new_orders);
@@ -87,11 +105,12 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::find($id);
+        $membership = MembershipConfig::where('is_active', true)->first();
 
         if($order->cart != 'N/A'){
             $order->cart = unserialize($order->cart);
         }
-        
+
         $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
         $shipping_method = '0';
 
@@ -99,12 +118,13 @@ class OrderController extends Controller
 
         return view('wecommerce::back.orders.show')
         ->with('order', $order)
+        ->with('membership', $membership)
         ->with('payment_method', $payment_method)
         ->with('shipping_method', $shipping_method)
         ->with('shipping_option', $shipping_option);
     }
 
-    public function packingList($id) 
+    public function packingList($id)
     {
         $order = Order::find($id);
         $order->cart = unserialize($order->cart);
@@ -121,8 +141,70 @@ class OrderController extends Controller
     public function changeStatusStatic($id, $status_string)
     {
         $order = Order::find($id);
-
+        $membership = MembershipConfig::where('is_active', true)->first();
         $order->status = $status_string;
+
+        $available = NULL;
+        $used =  NULL;
+        if (!empty($membership)) {
+            if($status_string == 'Entregado' && $order->total >= $membership->minimum_purchase){
+                $points = new UserPoint;
+
+                $points->user_id = $order->user_id;
+                $points->order_id = $order->id;
+                $points->type = 'in';
+
+                //PUNTOS PARA VIP//
+                $available_points = UserPoint::where('user_id', $order->user->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', $order->user->id)->where('type', 'out')->get();
+                $total_orders = Order::where('user_id', $order->user->id)->get();
+
+
+                foreach ($available_points as $a_point) {
+                    $available += $a_point->value;
+                }
+
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
+
+                $valid = $available - $used;
+
+                $type = 'normal';
+
+                if ($membership->on_vip_account == true) {
+                    if ($membership->has_vip_minimum_points == true && $valid >= $membership->vip_minimum_points){
+                        $type = 'vip_normal';
+                    }
+
+                    if ($membership->has_vip_minimum_orders == true && $total_orders->count() >= $membership->vip_minimum_orders){
+                        $type = 'vip_cool';
+                    }
+                }
+
+                switch ($type) {
+                    case 'vip_normal':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    case 'vip_cool':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    default:
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                        break;
+                }
+
+
+                if ($membership->has_expiration_time == true){
+                    $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                }
+
+                $points->save();
+            }
+        }
+
         $order->save();
 
         if($status_string == 'Cancelado'){
@@ -134,7 +216,7 @@ class OrderController extends Controller
                 if ($product['item']['has_variants'] == true) {
                     $variant = Variant::where('value', $product['variant'])->first();
                     $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
-                    
+
                     $product_variant->stock = $product_variant->stock + $product['qty'];
                     $product_variant->save();
                 }else{
@@ -148,9 +230,10 @@ class OrderController extends Controller
 
                     $product_stock->stock = $product_stock->stock + $product['qty'];
                     $product_stock->save();
+
                       $this->notification->orderDelivered($order->id);
                 }
-                
+
             }
         }
 
@@ -161,7 +244,7 @@ class OrderController extends Controller
 
                 config(['mail.driver'=> $mail->mail_driver]);
                 config(['mail.host'=>$mail->mail_host]);
-                config(['mail.port'=>$mail->mail_port]);   
+                config(['mail.port'=>$mail->mail_port]);
                 config(['mail.username'=>$mail->mail_username]);
                 config(['mail.password'=>$mail->mail_password]);
                 config(['mail.encryption'=>$mail->mail_encryption]);
@@ -186,7 +269,7 @@ class OrderController extends Controller
                     Mail::send('wecommerce::mail.order_ready_for_pickup', $data, function($message) use($name, $email, $sender_email, $store_name) {
                         $message->to($email, $name)->subject
                         ('¡Tu pedido está listo para recolección!');
-                        
+
                         $message->from($sender_email, $store_name);
                     });
                 } catch (Exception $e) {
@@ -214,7 +297,70 @@ class OrderController extends Controller
     {
         $order = Order::find($id);
 
+        $membership = MembershipConfig::where('is_active', true)->first();
+
         $order->status = $request->value;
+
+        $available = NULL;
+        $used =  NULL;
+        if (!empty($membership)) {
+            if($request->value == 'Entregado' && $order->total >= $membership->minimum_purchase){
+                $points = new UserPoint;
+
+                $points->user_id = $order->user_id;
+                $points->order_id = $order->id;
+                $points->type = 'in';
+
+                //PUNTOS PARA VIP//
+                $available_points = UserPoint::where('user_id', $order->user->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', $order->user->id)->where('type', 'out')->get();
+                $total_orders = Order::where('user_id', $order->user->id)->get();
+
+
+                foreach ($available_points as $a_point) {
+                    $available += $a_point->value;
+                }
+
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
+
+                $valid = $available - $used;
+
+                $type = 'normal';
+
+                if ($membership->on_vip_account == true) {
+                    if ($membership->has_vip_minimum_points == true && $valid >= $membership->vip_minimum_points){
+                        $type = 'vip_normal';
+                    }
+
+                    if ($membership->has_vip_minimum_orders == true && $total_orders->count() >= $membership->vip_minimum_orders){
+                        $type = 'vip_cool';
+                    }
+                }
+
+                switch ($type) {
+                    case 'vip_normal':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    case 'vip_cool':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    default:
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                        break;
+                }
+
+                if ($membership->has_expiration_time == true){
+                    $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                }
+
+                $points->save();
+            }
+        }
+
         $order->save();
 
         if($request->value == 'Cancelado'){
@@ -225,7 +371,7 @@ class OrderController extends Controller
                 if ($product['item']['has_variants'] == true) {
                     $variant = Variant::where('value', $product['variant'])->first();
                     $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
-                    
+
                     $product_variant->stock = $product_variant->stock + $product['qty'];
                     $product_variant->save();
                 }else{
@@ -235,13 +381,15 @@ class OrderController extends Controller
                     $product_stock->save();
                 }
                 if($request->value == 'Entregado'){
-                     $product_stock = Product::find($product['item']['id']);
+
+                    $product_stock = Product::find($product['item']['id']);
 
                     $product_stock->stock = $product_stock->stock + $product['qty'];
                     $product_stock->save();
-                      $this->notification->orderDelivered($order->id);
+
+                    $this->notification->orderDelivered($order->id);
                 }
-                
+
             }
         }
 
@@ -252,7 +400,7 @@ class OrderController extends Controller
 
                 config(['mail.driver'=> $mail->mail_driver]);
                 config(['mail.host'=>$mail->mail_host]);
-                config(['mail.port'=>$mail->mail_port]);   
+                config(['mail.port'=>$mail->mail_port]);
                 config(['mail.username'=>$mail->mail_username]);
                 config(['mail.password'=>$mail->mail_password]);
                 config(['mail.encryption'=>$mail->mail_encryption]);
@@ -277,7 +425,7 @@ class OrderController extends Controller
                     Mail::send('wecommerce::mail.order_ready_for_pickup', $data, function($message) use($name, $email, $sender_email, $store_name) {
                         $message->to($email, $name)->subject
                         ('¡Tu pedido está listo para recolección!');
-                        
+
                         $message->from($sender_email, $store_name);
                     });
                 } catch (Exception $e) {
@@ -298,13 +446,27 @@ class OrderController extends Controller
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
         return response()->json([
-            'mensaje' => 'Estado cambiado exitosamente', 
+            'mensaje' => 'Estado cambiado exitosamente',
             'status' => $request->value
         ], 200);
 
     }
 
-    public function export() 
+    public function givePoints($order)
+    {
+        // Funcion para dar puntos y notificar por correo al usuario
+        $points = new UserPoint;
+
+        $points->user_id = $order->user_id;
+        $points->order_id = $order->id;
+        $points->type = 'in';
+        $points->value = ($order->total / $membership->qty_for_points) * $membership->earned_points;
+
+        $points->save();
+
+    }
+
+    public function export()
     {
         return Excel::download(new OrderExport, 'ordenes.xlsx');
     }
@@ -312,12 +474,12 @@ class OrderController extends Controller
     public function query(Request $request)
     {
         $search_query = $request->input('query');
-        
+
         $orders = Order::where('client_name', 'LIKE', "%{$search_query}%")
         ->orWhere('id', 'LIKE', "%{$search_query}%")
         ->orWhere('payment_id', 'LIKE', "%{$search_query}%")
         ->paginate(30);
-    
+
         $clients = User::all();
 
          return view('wecommerce::back.orders.index')
@@ -336,7 +498,7 @@ class OrderController extends Controller
         else{
             $orders = Order::orderBy($filter, $order)->paginate(30);
         }
-        
+
         $clients = User::all();
 
          return view('wecommerce::back.orders.index')
@@ -345,10 +507,10 @@ class OrderController extends Controller
     }
 
 
-    public function cancelSubscription($id) 
+    public function cancelSubscription($id)
     {
         $order = Order::find($id);
-        
+
         $payment_method = PaymentMethod::where('is_active', true)->where('type', 'card')->first();
 
         if ($payment_method->supplier == 'Stripe') {
@@ -360,7 +522,7 @@ class OrderController extends Controller
             Stripe::setApiKey($private_key_stripe);
 
             /* Actualizar suscripción */
-            $subscription = Subscription::update( 
+            $subscription = Subscription::update(
                 $order->stripe_subscription_id,
                 array(
                     "cancel_at_period_end" => true,

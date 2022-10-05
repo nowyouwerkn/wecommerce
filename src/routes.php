@@ -84,7 +84,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
 
     //Catalog
     Route::resource('products', Nowyouwerkn\WeCommerce\Controllers\ProductController::class); //
-    
+
     Route::get('products/create/digital', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@createDigital',
         'as' => 'products.create.digital',
@@ -120,6 +120,25 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::get('/characteristic-inputs', function () {
         return view('wecommerce::back.products.includes._characteristic_inputs');
     })->name('subscription.inputs');
+
+    Route::get('/characteristic-inputs-update', function () {
+        return view('wecommerce::back.products.includes._characteristic_inputs_update');
+    })->name('subscription.inputs.update');
+
+    Route::post('products/new-characteristic', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeCharacteristic',
+        'as' => 'characteristic.store'
+    ]);
+
+    Route::put('products/update-characteristic/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@updateCharacteristic',
+        'as' => 'characteristic.update'
+    ]);
+
+    Route::delete('products/delete-characteristic/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@destroyCharacteristic',
+        'as' => 'characteristic.destroy'
+    ]);
 
     Route::post('products/new-image', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeImage',
@@ -236,6 +255,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('newsletter', Nowyouwerkn\WeCommerce\Controllers\NewsletterController::class); //
 
     Route::resource('orders', Nowyouwerkn\WeCommerce\Controllers\OrderController::class); //
+
+    Route::get('orders-subscriptions', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@subscriptions',
+        'as' => 'order.subscriptions.index',
+    ]);
+
     Route::get('exportar-ordenes', 'Nowyouwerkn\WeCommerce\Controllers\OrderController@export')->name('export.orders');
 
     Route::get('/orders/{id}/packing-list', [
@@ -282,7 +307,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\PromoController@fetchProducts',
         'as' => 'dynamic.promo.filter',
     ]);
-    
+
     Route::resource('coupons', Nowyouwerkn\WeCommerce\Controllers\CouponController::class); //
     Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class)->except(['store']); //
 
@@ -291,6 +316,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'review.approve',
     ]);
 
+    /*Membresias*/
+    Route::resource('membership', Nowyouwerkn\WeCommerce\Controllers\MembershipController::class);
+
+    Route::put('/membership-status/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\MembershipController@statusUpdate',
+        'as' => 'mem-status.update',
+    ]);
 
     //Administration
     Route::resource('seo', Nowyouwerkn\WeCommerce\Controllers\SEOController::class); //
@@ -336,7 +368,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     ]);
 
     //Country
-    Route::resource('countries', Nowyouwerkn\WeCommerce\Controllers\CountryController::class);
+    //Route::resource('countries', Nowyouwerkn\WeCommerce\Controllers\CountryController::class);
     Route::resource('states', Nowyouwerkn\WeCommerce\Controllers\StateController::class);
     Route::resource('cities', Nowyouwerkn\WeCommerce\Controllers\CityController::class);
     Route::resource('config', Nowyouwerkn\WeCommerce\Controllers\StoreConfigController::class);
@@ -529,6 +561,7 @@ Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_acces
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
     Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
     Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
+    Route::get('points', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@points')->name('points');
 
     Route::post('orders/{order_id}/request-invoice/{user_id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@invoiceRequest',
@@ -570,7 +603,12 @@ Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_acces
     ]);
 });
 
-Route::get('legales/{type}', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@legalText')->name('legal.text');
+Route::get('/legales/{slug}', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@legalText',
+    'as' => 'legal.text',
+])->where('slug', '[\w\d\-\_]+');
+
+
 Route::get('preguntas_frecuentes', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@faqs')->name('faqs.text');
 
 // Orden Completa

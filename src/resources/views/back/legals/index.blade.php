@@ -68,21 +68,17 @@
                             <div class="col-md-4">
                                 <label>Prioridad <span class="text-info">(Opcional)</span></label>
                                 <select class="form-control" name="priority">
-
-                                      <option {{ ($legal->priority == '1') ? 'selected' : '' }} value="1">1</option>
-                                      <option {{ ($legal->priority == '2') ? 'selected' : '' }} value="2">2</option>
-                                      <option {{ ($legal->priority == '3') ? 'selected' : '' }} value="3">3</option>
-                                      <option {{ ($legal->priority == '4') ? 'selected' : '' }} value="4">4</option>
-                                      <option {{ ($legal->priority == '5') ? 'selected' : '' }} value="5">5</option>
-                                      <option {{ ($legal->priority == '6') ? 'selected' : '' }} value="6">6</option>
-                                      <option {{ ($legal->priority == '7') ? 'selected' : '' }} value="7">7</option>
-
+                                    <option {{ ($legal->priority == '1') ? 'selected' : '' }} value="1">1</option>
+                                    <option {{ ($legal->priority == '2') ? 'selected' : '' }} value="2">2</option>
+                                    <option {{ ($legal->priority == '3') ? 'selected' : '' }} value="3">3</option>
+                                    <option {{ ($legal->priority == '4') ? 'selected' : '' }} value="4">4</option>
+                                    <option {{ ($legal->priority == '5') ? 'selected' : '' }} value="5">5</option>
+                                    <option {{ ($legal->priority == '6') ? 'selected' : '' }} value="6">6</option>
+                                    <option {{ ($legal->priority == '7') ? 'selected' : '' }} value="7">7</option>
                                 </select>
                             </div>
                         </div>
 
-                        <input type="hidden" name="type" value="{{ $legal->type }}">
-                        <!--<textarea name="description" id="" class="form-control" cols="30" rows="10">{!! $legal->description ?? '' !!}</textarea>-->
                         <div id="editor-container-{{ $legal->id }}" class="ht-350 mb-4">
                             {!! $legal->description ?? '' !!}
                         </div>
@@ -187,26 +183,6 @@
       var justHtml_{{ $legal->id }} = editor_{{ $legal->id }}.root.innerHTML;
       justHtmlContent_{{ $legal->id }}.innerHTML = justHtml_{{ $legal->id }};
     });
-
-
-    /*
-    $(function(){
-        'use strict'
-
-        var quill = new Quill('#editor-container-{{ $legal->id }}', {
-          modules: {
-            toolbar: [
-                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                ['bold', 'italic'],
-                ['link'],
-                [{ list: 'ordered' }, { list: 'bullet' }]
-            ]
-          },
-          placeholder: 'Comienza a escribir aqui...',
-          theme: 'snow'
-        });
-    });
-    */
 </script>
 @endforeach
 <script type="text/javascript">

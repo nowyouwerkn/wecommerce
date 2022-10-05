@@ -50,7 +50,7 @@
 
                     <div class="col-md-6">
                         <div class="center mb-3">
-                            <div class="card-wrapper"></div>    
+                            <div class="card-wrapper"></div>
                         </div>
                     </div>
 
@@ -106,8 +106,8 @@
                                                 <option value="México" selected="">México</option>
                                             </select>
                                         </div>
-                                    </div> 
-                                    
+                                    </div>
+
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label" for="state">Estado <span class="text-danger">*</span></label>
@@ -123,7 +123,7 @@
                                                     @endif
                                                 @endforeach
                                             </select>
-                                            <!--      
+                                            <!--
                                             <input type="text" class="form-control" id="state" name="state" value=""/>
                                             -->
                                         </div>
@@ -224,7 +224,7 @@
                                 <option value="G03 Gastos en General" selected="">G03 Gastos en General</option>
                             </select>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </div>
         </div>
@@ -258,7 +258,7 @@
                     $('#cardInfo').fadeOut();
                     $('#cardInfo').find('input').prop('disabled', true);
                     $('input[name=method]').val('Pago con Paypal');
-                    
+
                     $('#paymentMethod').text('Paypal');
 
                     break;
@@ -268,7 +268,7 @@
                     $('#cardInfo').fadeOut();
                     $('#cardInfo').find('input').prop('disabled', true);
                     $('input[name=method]').val('Pago con MercadoPago');
-                    
+
                     $('#paymentMethod').text('MercadoPago');
 
                     break;

@@ -17,6 +17,10 @@ use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserRule;
 use Nowyouwerkn\WeCommerce\Models\Coupon;
 
+/*Membresias*/
+use Nowyouwerkn\WeCommerce\Models\MembershipConfig;
+use Nowyouwerkn\WeCommerce\Models\UserPoint;
+
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
@@ -65,7 +69,25 @@ class CreateNewUser implements CreatesNewUsers
 
             $coupon->made_for_user = $user->id;
 
-            $coupon->save();   
+            $coupon->save();
+        }
+
+        $membership = MembershipConfig::where('is_active', true)->first();
+
+        if (!empty($membership)){
+
+            if($membership->on_account_creation == true){
+                $points = new UserPoint;
+                $points->user_id = $user->id;
+                $points->type = 'in';
+                $points->value = $membership->points_account_created;
+
+                if ($membership->has_expiration_time == true){
+                    $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                }
+
+                $points->save();
+            }
         }
 
         $user->assignRole('customer');

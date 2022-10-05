@@ -72,7 +72,7 @@
                             @csrf
 
                         <div class="form-group row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }} <span class="text-danger">*</span></label>
 
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
@@ -110,7 +110,7 @@
                         <div class="form-group pl-4">
                             <input class="form-check-input" type="checkbox" name="accept" id="accept" required="">
                             <label style="text-transform: uppercase; font-weight: bold; font-size: .8em; display: inline-block; margin-bottom: 10px; margin-top: 5px;" for="accept">
-                                Al registrar tu cuenta con nosotros aceptas nuestro  
+                                Al registrar tu cuenta con nosotros aceptas nuestro
                                 @foreach($legals as $legal)
                                 <a style="font-size: 1em !important;" href="#">
                                     @switch($legal->type)
@@ -132,7 +132,7 @@
 
                                         @default
                                             Hubo un problema, intenta después.
-                                    @endswitch 
+                                    @endswitch
                                 </a>
                                 @endforeach
                                 . Solo mandamos correos de <strong>notificación</strong> de compra o <strong>seguimiento</strong> de orden.

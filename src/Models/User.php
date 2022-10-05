@@ -100,4 +100,9 @@ class User extends Authenticatable
 
         return true;
     }
+
+    public function points()
+    {
+        return $this->hasMany(UserPoint::class);
+    }
 }

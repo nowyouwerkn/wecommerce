@@ -25,4 +25,14 @@ class Coupon extends Model
     {
         return $this->hasOne(User::class, 'made_for_user');
     }
+
+    public function excludedCategories()
+    {
+        return $this->belongsToMany(Coupon::class, 'coupon_excluded_categories', 'category_id', 'coupon_id');
+    }
+
+    public function excludedProducts()
+    {
+        return $this->belongsToMany(Coupon::class, 'coupon_excluded_products', 'coupon_id', 'product_id');
+    }
 }

@@ -16,6 +16,10 @@ use Nowyouwerkn\WeCommerce\Models\UserAddress;
 use Nowyouwerkn\WeCommerce\Models\Wishlist;
 use Nowyouwerkn\WeCommerce\Models\Coupon;
 
+/*Loyalty system*/
+use Nowyouwerkn\WeCommerce\Models\MembershipConfig;
+use Nowyouwerkn\WeCommerce\Models\UserPoint;
+
 /* Exportar Info */
 use Maatwebsite\Excel\Facades\Excel;
 use Nowyouwerkn\WeCommerce\Exports\ClientExport;
@@ -33,7 +37,7 @@ class ClientController extends Controller
     {
         $this->notification = new NotificationController;
     }
-    
+
     public function index()
     {
         $today = Carbon::now();
@@ -88,18 +92,29 @@ class ClientController extends Controller
 
     public function show($id)
     {
+
+        $membership = MembershipConfig::where('is_active', true)->first();
+
+
         $client = User::find($id);
         $wishlist = Wishlist::where('user_id', $client->id)->get();
         $addresses = UserAddress::where('user_id', $client->id)->get();
 
+        $points = UserPoint::where('user_id', $client->id)->get();
+
         $orders = $client->orders;
-        
+
         $orders->transform(function($order, $key){
             $order->cart = unserialize($order->cart);
             return $order;
         });
 
-        return view('wecommerce::back.clients.show')->with('client', $client)->with('wishlist', $wishlist)->with('addresses', $addresses)->with('orders', $orders);
+        return view('wecommerce::back.clients.show')->with('client', $client)
+        ->with('wishlist', $wishlist)
+        ->with('addresses', $addresses)
+        ->with('orders', $orders)
+        ->with('points', $points)
+        ->with('membership', $membership);
     }
 
     public function indexWishlist()
@@ -125,15 +140,15 @@ class ClientController extends Controller
         return redirect()->route('address')->with('status', 'Se ha agregado la dirección');
     }
 
-    public function export() 
+    public function export()
     {
         return Excel::download(new ClientExport, 'clientes.xlsx');
     }
 
-    public function import(Request $request) 
+    public function import(Request $request)
     {
         Excel::import(new ClientImport, $request->import_file);
-        
+
         return redirect()->back()->with('success', 'Información guardad exitosamente.');
     }
 
@@ -142,7 +157,7 @@ class ClientController extends Controller
         $search_query = $request->input('query');
          $client = User::where('name', 'LIKE', "%{$search_query}%")
         ->orWhere('email', 'LIKE', "%{$search_query}%")->paginate(30);
-    
+
 
         return view('wecommerce::back.clients.index')
         ->with('clients', $client);

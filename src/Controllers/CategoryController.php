@@ -134,6 +134,10 @@ class CategoryController extends Controller
         // Guardar datos en la base de datos
         $category = Category::find($id);
 
+        foreach($category->children as $sub){
+            $sub->delete();
+        }
+
         $category->name = $request->name;
 
         if (empty($check_if_exists)) {

@@ -27,22 +27,51 @@
 @section('content')
 
 @if($orders->count() == 0)
-    <div class="card card-body text-center" style="padding:80px 0px 100px 0px;">
-        <img src="{{ asset('assets/img/group_2.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
-        <h4>Aquí aparecerán las compras que hagan tus clientes.</h4>
-        <p class="mb-4">Actualmente nadie a comprado, regresa pronto.</p>
-    </div>
+
+    @if ($subs->count() == 0)
+        <div class="card card-body text-center" style="padding:80px 0px 100px 0px;">
+            <img src="{{ asset('assets/img/group_2.svg') }}" class="wd-20p ml-auto mr-auto mb-5">
+            <h4>Aquí aparecerán las compras que hagan tus clientes.</h4>
+            <p class="mb-4">Actualmente nadie a comprado, regresa pronto.</p>
+        </div>
+    @else
+        <div class="row">
+            <div class="col-lg-12 col-xl-12 mg-t-10">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ route('orders.index') }}">Productos físicos/digitales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('order.subscriptions.index') }}">Suscripciones</a>
+                    </li>
+                </ul>
+                <div class="card mg-b-10">
+                    @include('wecommerce::back.orders.utilities._order_table')
+                    <div class="d-flex align-items-center justify-content-center">
+                        {{ $orders->links() }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endif
 @else
     <div class="row">
         <div class="col-lg-12 col-xl-12 mg-t-10">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ route('orders.index') }}">Productos físicos/digitales</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('order.subscriptions.index') }}">Suscripciones</a>
+                </li>
+            </ul>
             <div class="card mg-b-10">
                 @include('wecommerce::back.orders.utilities._order_table')
-                
-
                 <div class="d-flex align-items-center justify-content-center">
                     {{ $orders->links() }}
                 </div>
-                
+
             </div>
         </div>
     </div>

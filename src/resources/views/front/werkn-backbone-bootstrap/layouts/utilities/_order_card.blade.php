@@ -1,4 +1,4 @@
-<div class="card card-body card-order mb-5">  
+<div class="card card-body card-order mb-5">
     <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex justify-content-between">
             <p class="text-primary mb-0 d-flex align-items-center">
@@ -26,6 +26,9 @@
         @if($order->cart == NULL)
             <p class="alert alert-warning">Esta orden proviene de una importación de otro sistema. El "módulo carrito" no es compatible con la información y no puede mostrar los detalles.</p>
         @else
+            @php
+            $order->cart = unserialize($order->cart);
+            @endphp
             @foreach($order->cart->items as $item)
             <div class="card order-card-product py-0 px-3 mb-3 ps-1">
                 <div class="d-flex align-items-center justify-content-between">
@@ -55,12 +58,12 @@
 
         <div class="d-flex justify-content-between order-card-info">
             <p class="mb-0" style="width: 55%;">
-                <ion-icon name="navigate-circle-outline"></ion-icon> 
+                <ion-icon name="navigate-circle-outline"></ion-icon>
                 <strong>Dirección de Envío:</strong>
             </p>
 
             <p class="mb-0 text-end">{{ $order->street }} {{ $order->street_num }}, {{ $order->city }} {{ $order->state }}, {{ $order->country }}, C.P {{ $order->postal_code }}</p>
-        </div>       
+        </div>
         <hr>
         <div class="order-card-info">
             <div class="row align-items-center">
@@ -143,10 +146,10 @@
                     <a href="javascript:void(0)" class="btn btn-dark btn-sm d-flex align-items-center disabled" style="font-size: .8em;"><ion-icon name="document-text-outline" class="me-2"></ion-icon> Solicitar factura</a>
                     <p class="mb-0 mt-2" style="font-size:.8em;">Para solicitar factura inicia sesión <a href="{{ route('login') }}">aquí.</a></p>
                 </div>
-                
+
             </div>
             @else
-            
+
                 @if($order->invoice == NULL)
                 <div class="d-flex justify-content-end">
                     <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#invoiceModal_{{ $order->id }}" class="btn btn-dark btn-sm d-flex align-items-center" style="font-size: .8em;"><ion-icon name="document-text-outline" class="me-2"></ion-icon> Solicitar factura</a>
@@ -154,7 +157,7 @@
                 @else
                 <div class="d-flex justify-content-between order-card-info">
                     <p class="mb-0"><strong><ion-icon name="checkbox-outline"></ion-icon> Factura solicitada</strong></p>
-                    
+
                     <p class="mb-0">
                         Estado:
                         @switch($order->invoice->status)
@@ -197,7 +200,7 @@
                     </ul>
                 </div>
                 @endif
-            
+
             @endguest
         @endif
 
@@ -234,11 +237,11 @@
             </div>
             @endif
         </div>
-        
+
         @if($order->trackings->count())
         <div class="d-flex order-card-info mt-4">
             <p class="mb-0 me-3">
-                <ion-icon name="navigate-circle-outline"></ion-icon> 
+                <ion-icon name="navigate-circle-outline"></ion-icon>
                 <strong>Guía de rastreo:</strong>
             </p>
 
@@ -307,7 +310,7 @@
                 </p>
             </div>
         </div>
-        {{--  
+        {{--
         <hr>
         <div class="d-flex justify-content-end">
             <a href="javascript:void(0)" class="btn btn-danger btn-sm d-flex align-items-center" style="font-size: .8em;"><ion-icon name="close-circle-outline" class="me-2"></ion-icon> Cancelar Suscripción</a>
@@ -347,7 +350,7 @@
                             <option value="G03 Gastos en General" selected="">G03 Gastos en General</option>
                         </select>
                     </div>
-                </div> 
+                </div>
             </div>
           </div>
 

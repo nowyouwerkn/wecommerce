@@ -83,6 +83,11 @@
 
 					<li class="nav-item" role="presentation"><a data-toggle="tab" href="#addresses" aria-controls="addresses"
 					role="tab" class="nav-link">Direcciones <span class="badge badge-danger">{{ $addresses->count() }}</span></a></li>
+
+                    @if(!empty($membership))
+                    <li class="nav-item" role="presentation"><a data-toggle="tab" href="#points" aria-controls="points"
+					role="tab" class="nav-link">Puntos</a></li>
+                    @endif
 				</ul>
 
 				<div class="tab-content">
@@ -161,6 +166,56 @@
 						</div>
 						@endif
 					</div>
+
+                    @if(!empty($membership))
+                    <div class="tab-pane" id="points" role="tabpanel">
+						@if($points->count())
+						<div class="mt-3">
+                            <table class="table table-dashboard">
+                                <thead>
+                                    <tr>
+                                        <th>Movimiento</th>
+                                        <th>Estado</th>
+                                        <th>Puntos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($points as $point)
+                                    <tr>
+                                        <td>
+                                            @switch($point->order_id)
+                                                @case(NULL)
+                                                Sistema
+                                                    @break
+                                                @default
+                                                <a href="{{ route('orders.show', $point->order->id) }}"> Compra de ${{ $point->order->total }}</a>
+                                            @endswitch
+                                            </td>
+                                        <td>
+                                            @switch($point->type)
+                                                @case('in')
+                                                    <span class="badge rounded-pill bg-success">Ganado</span>
+                                                    @break
+                                                @case('out')
+                                                    <span class="badge rounded-pill bg-danger">Usado</span>
+                                                    @break
+                                                @default
+                                            @endswitch
+                                        </td>
+                                        <td>{{ $point->value }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+						</div>
+						@else
+						<div class="text-center mt-5">
+							<h4 class="mb-0">{{ $client->name }} no ha ningun punto.</h4>
+						</div>
+						@endif
+					</div>
+                    @endif
+
 				</div>
 			</div>
 		</div>

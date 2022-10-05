@@ -16,7 +16,7 @@ class CreateLegalTextsTable extends Migration
         Schema::create('legal_texts', function (Blueprint $table) {
             $table->id();
 
-            $table->enum('type', ['Returns', 'Privacy', 'Terms', 'Shipment']);
+            $table->string('slug');
             $table->string('title')->nullable();
             $table->longText('description')->nullable();
             $table->timestamps();

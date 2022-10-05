@@ -81,6 +81,7 @@
                   <li><a href="{{ route('newsletter.index') }}">Newsletter</a></li>
                   <li><a href="{{ route('promos.index') }}">Promociones</a></li>
                   <li><a href="{{ route('coupons.index') }}">Cupones</a></li>
+                  <li><a href="{{ route('membership.index') }}">Sistema de Lealtad</a></li>
                 </ul>
             </li>
 

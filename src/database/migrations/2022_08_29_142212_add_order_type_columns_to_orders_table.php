@@ -15,9 +15,9 @@ class AddOrderTypeColumnsToOrdersTable extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->string('type')->after('id')->default('single_payment')->nullable();
-            $table->boolean('suscription_status')->after('status')->nullable();
+            $table->boolean('subscription_status')->after('status')->nullable();
 
-            $table->integer('suscription_id')->after('cart')->nullable();
+            $table->integer('subscription_id')->after('cart')->nullable();
 
             $table->string('stripe_subscription_id')->after('payment_id')->nullable();
             $table->string('stripe_customer_id')->after('client_name')->nullable();
@@ -38,6 +38,7 @@ class AddOrderTypeColumnsToOrdersTable extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table->dropColumn('type');
             $table->dropColumn('subscription_status');
+            $table->dropColumn('subscription_id');
             $table->dropColumn('stripe_subscription_id');
             $table->dropColumn('stripe_customer_id');
             $table->dropColumn('stripe_plan_id');

@@ -14,11 +14,10 @@ use Illuminate\Http\Request;
 
 class LegalTextController extends Controller
 {
-
     public function index()
     {
         $legals = LegalText::orderBy('priority','asc')->get();
-
+        
         return view('wecommerce::back.legals.index')->with('legals', $legals);
     }
 
@@ -37,7 +36,7 @@ class LegalTextController extends Controller
         // Guardar datos en la base de datos
         $legal = new LegalText;
 
-        $legal->type = $request->type;
+        $legal->slug = Str::slug($request->title);
         $legal->title = Purifier::clean($request->title);
         $legal->description = Purifier::clean($request->description);
         $legal->priority = $request->priority;
@@ -59,7 +58,6 @@ class LegalTextController extends Controller
     public function edit($id)
     {
         $legal = LegalText::find($id);
-
         return view('wecommerce::back.legals.edit')->with('legal', $legal);
     }
 
@@ -75,6 +73,7 @@ class LegalTextController extends Controller
         // Guardar datos en la base de datos
         $legal = LegalText::find($id);
 
+        $legal->slug = Str::slug($request->title);
         $legal->title = Purifier::clean($request->title);
         $legal->description = Purifier::clean($request->description);
         $legal->priority = $request->priority;
@@ -90,10 +89,9 @@ class LegalTextController extends Controller
     public function destroy($id)
     {
         $legal = LegalText::find($id);
-
         $legal->delete();
 
-        Session::flash('success', 'The legal was succesfully deleted.');
+        Session::flash('success', 'El texto legal fue eliminado correctamente del sistema.');
 
         return redirect()->back();
     }
