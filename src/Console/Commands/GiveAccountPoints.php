@@ -51,7 +51,7 @@ class GiveAccountPoints extends Command
         if (!empty($membership)) {
             if($membership->on_birthday == true){
                 foreach($users as $user){
-                    if (Carbon::parse($user->info->birthday)->format('d m') == Carbon::today()->format('d m')) {
+                    if (Carbon::parse($user->birthday)->format('d m') == Carbon::today()->format('d m')) {
                         $points = new UserPoint;
                         $points->user_id = $user->id;
                         $points->type = 'in';
@@ -65,7 +65,7 @@ class GiveAccountPoints extends Command
 
                         $this->info('Puntos otorgados.');
                     }
-                }    
+                }
             }
         }
 
