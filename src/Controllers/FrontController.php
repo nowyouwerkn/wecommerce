@@ -2618,6 +2618,8 @@ class FrontController extends Controller
             $order->subscription_status = false;
         }
 
+
+
         $order->stripe_subscription_id = $subscription_data['id'];
         $order->stripe_customer_id = $subscription_data['customer'];
         $order->stripe_plan_id = $subscription_data['plan']['id'];
@@ -2640,6 +2642,67 @@ class FrontController extends Controller
 
         // Identificar al usuario para guardar sus datos.
         $user->orders()->save($order);
+
+        // Guardar puntos
+        $membership = MembershipConfig::where('is_active', true)->first();
+        $available = NULL;
+        $used =  NULL;
+        if (!empty($membership)) {
+                $points = new UserPoint;
+
+                $points->user_id = $order->user_id;
+                $points->order_id = $order->id;
+                $points->type = 'in';
+
+                //PUNTOS PARA VIP//
+                $available_points = UserPoint::where('user_id', $order->user->id)->where('type', 'in')->where('valid_until', '>=', Carbon::now())->get();
+                $used_points = UserPoint::where('user_id', $order->user->id)->where('type', 'out')->get();
+                $total_orders = Order::where('user_id', $order->user->id)->get();
+
+
+                foreach ($available_points as $a_point) {
+                    $available += $a_point->value;
+                }
+
+                foreach ($used_points as $u_point) {
+                    $used += $u_point->value;
+                }
+
+                $valid = $available - $used;
+
+                $type = 'normal';
+
+                if ($membership->on_vip_account == true) {
+                    if ($membership->has_vip_minimum_points == true && $valid >= $membership->vip_minimum_points){
+                        $type = 'vip_normal';
+                    }
+
+                    if ($membership->has_vip_minimum_orders == true && $total_orders->count() >= $membership->vip_minimum_orders){
+                        $type = 'vip_cool';
+                    }
+                }
+
+                switch ($type) {
+                    case 'vip_normal':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    case 'vip_cool':
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        break;
+
+                    default:
+                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                        break;
+                }
+
+
+                if ($membership->has_expiration_time == true){
+                    $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                }
+
+                $points->save();
+        }
 
         // Guardar solicitud de factura si es que existe
         if (isset($request->rfc_num)) {

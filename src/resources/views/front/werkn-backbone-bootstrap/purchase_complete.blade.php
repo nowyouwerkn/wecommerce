@@ -97,7 +97,7 @@
                         @else
                             <h2>Gracias por tu compra</h2>
                         @endif
-                        <img src="{{ asset('img/modal-image.jpg') }}">    
+                        <img src="{{ asset('img/modal-image.jpg') }}">
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -128,27 +128,8 @@
                         <ul>
                             @foreach($legals as $legal)
                             <li>
-                                <a href="{{ route('legal.text' , $legal->type) }}">
-                                    @switch($legal->type)
-                                        @case('Returns')
-                                            Política de Devoluciones
-                                            @break
-
-                                        @case('Privacy')
-                                            Política de Privacidad
-                                            @break
-
-                                        @case('Terms')
-                                            Términos y Condiciones
-                                            @break
-
-                                        @case('Shipment')
-                                            Política de Envíos
-                                            @break
-
-                                        @default
-                                            Hubo un problema, intenta después.
-                                    @endswitch 
+                                <a href="{{ route('legal.text' , $legal->slug) }}">
+                                    {{ $legal->title }}
                                 </a>
                             </li>
                             @endforeach

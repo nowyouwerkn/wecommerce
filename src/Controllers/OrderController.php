@@ -73,11 +73,14 @@ class OrderController extends Controller
 
         $orders = Order::where('type', 'single_payment')->orderBy('created_at', 'desc')->paginate(30);
 
+        $subs = Order::where('type', 'recurring_payment')->orderBy('created_at', 'desc')->paginate(30);
+
         $new_orders = Order::where('created_at', '>=', Carbon::now()->subWeek())->count();
 
         return view('wecommerce::back.orders.index')
         ->with('clients', $clients)
         ->with('orders', $orders)
+        ->with('subs', $subs)
         ->with('new_orders', $new_orders);
     }
 

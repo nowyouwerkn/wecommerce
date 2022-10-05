@@ -10,6 +10,8 @@ use Purifier;
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserRule;
 use Nowyouwerkn\WeCommerce\Models\Coupon;
+use Nowyouwerkn\WeCommerce\Models\CouponExcludedCategory;
+use Nowyouwerkn\WeCommerce\Models\CouponExcludedProduct;
 use Nowyouwerkn\WeCommerce\Controllers\NotificationController;
 
 use Illuminate\Http\Request;
@@ -73,8 +75,30 @@ class CouponController extends Controller
 
         $coupon->save();
 
+        // Categorías excluidas
+        $categories = $request->input('excluded_categories');
+        foreach($categories as $cat) {
+            $exc_cat = new CouponExcludedCategory;
+
+            $exc_cat->category_id = $cat;
+            $exc_cat->coupon_id = $coupon->id;
+            $exc_cat->save();
+        }
+
+        // Productos Excluidos
+        $products = $request->input('excluded_products');
+        foreach($products as $prod) {
+            $exc_pro = new CouponExcludedProduct;
+
+            $exc_pro->product_id = $prod;
+            $exc_pro->coupon_id = $coupon->id;
+            $exc_pro->save();
+        }
+
+        /*
         $coupon->excludedCategories()->sync($request->excluded_categories);
         $coupon->excludedProducts()->sync($request->excluded_products);
+        */
 
         // Notificación
         $type = 'Cupón';
@@ -146,6 +170,18 @@ class CouponController extends Controller
         $model_id = $coupon->id;
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
+
+        // Eliminar cupon con sus exlusiones de categoría
+        $coupon_cat = CouponExcludedCategory::where('coupon_id', $id)->get();
+        foreach ($coupon_cat as $cat){
+            $cat->delete();
+        }
+
+        // Eliminar cupon con sus exlusiones de producto
+        $coupon_pro = CouponExcludedProduct::where('coupon_id', $id)->get();
+        foreach ($coupon_pro as $pro){
+            $pro->delete();
+        }
 
         $coupon->coupons()->delete();
         $coupon->delete();
