@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('wecommerce:account:points')
-            ->daily()->withoutOverlapping();
+            ->daily()->withoutOverlapping()->at('14:00');
     }
 
     /**
