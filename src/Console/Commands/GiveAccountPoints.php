@@ -51,19 +51,23 @@ class GiveAccountPoints extends Command
         if (!empty($membership)) {
             if($membership->on_birthday == true){
                 foreach($users as $user){
-                    if (Carbon::parse($user->birthday)->format('d m') == Carbon::today()->format('d m')) {
-                        $points = new UserPoint;
-                        $points->user_id = $user->id;
-                        $points->type = 'in';
-                        $points->value = $membership->points_birthdays;
 
-                        if ($membership->has_expiration_time == true){
-                            $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                    if ($user->birthday != NULL) {
+                        if (Carbon::parse($user->birthday)->format('d m') == Carbon::now()->format('d m')) {
+
+                            $points = new UserPoint;
+                            $points->user_id = $user->id;
+                            $points->type = 'in';
+                            $points->value = $membership->points_birthdays;
+
+                            if ($membership->has_expiration_time == true){
+                                $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                            }
+
+                            $points->save();
+
+                            $this->info('Puntos otorgados.');
                         }
-
-                        $points->save();
-
-                        $this->info('Puntos otorgados.');
                     }
                 }
             }
