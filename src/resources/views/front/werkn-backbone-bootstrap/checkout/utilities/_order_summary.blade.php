@@ -203,7 +203,12 @@
             <div class="d-flex align-items-center justify-content-between">
                 <p>Cupones</p>
 
-                <p class="position-relative">- $ <span id="discountValue">0.00</span><a id="delete_cuopon" class="delete-cuopon" href="javascript:voif(0)">X</a></p>
+                <p class="position-relative">- $ <span id="discountValue">0.00</span>
+                    @if(!empty($products))
+                    <a id="delete_cuopon" class="delete-cuopon" href="javascript:void(0)">X</a></p>
+                    @else
+                    <a id="delete_cuopon_mem" class="delete-cuopon" href="javascript:void(0)">X</a></p>
+                    @endif
                 <input type="hidden" name="discounts" id="discount" value="">
             </div>
 
@@ -213,7 +218,9 @@
                 <h4>Total</h4>
 
                 <h4>$ <span id="totalPayment">{{ number_format($total,2) }}</span></h4>
-                <input type="hidden" name="final_total" value="{{ $final_total }}" id="finalTotal">
+                <input type="hidden" name="final_total" value="{{ $total }}" id="finalTotal">
+
+                <input type="hidden" name="final_base" value="{{ $total }}" id="finalBase">
             </div>
 
             @php
@@ -360,7 +367,7 @@
 <p class="mb-2 we-co--terms-links text-center"><small>
     Al confirmar la orden, aceptas nuestras
     @foreach($legals as $legal)
-    <a href="{{ route('legal.text' , $legal->slug) }}"> {{ $legal->title }} </a>
+    <a href="{{ route('legal.text' , $legal->type) }}"> {{ $legal->title }} </a>
     @endforeach
 </small></p>
 
@@ -397,7 +404,7 @@
             }, 3000);
         }else{
             var coupon_code = $('#coupon_code').val();
-            var subtotal =  $('#subtotalInput').val();
+            var subtotal =  $('#finalBase').val();
             var shipping = $('#shippingInput').val();
             var tax_rateIn = $('#taxRate').val();
             var user_email = $('#email').val();
@@ -419,7 +426,7 @@
                         $('.cp-success').hide();
                         $('#cp_spinner').fadeOut(200);
 
-                        console.log(msg);
+                        //console.log(msg);
 
                         $('.cp-error').text(msg['mensaje']);
                         $('.cp-error').fadeIn();
@@ -428,8 +435,18 @@
                             $('.cp-error').fadeOut();
                         }, 3000);
                     }else{
+
+                        $('#delete_cuopon').show();
+                        $('#delete_cuopon_mem').show();
+                        $('#apply_cuopon').attr('disabled', 'disabled');
+                        $('#apply_points').attr('disabled', 'disabled');
+                        $('#points').attr('disabled', 'disabled');
+                        $('#points').css('opacity', '.4');
+                        $('#apply_points').css('opacity', '.4');
+
+
                         $('#cp_spinner').fadeOut(200);
-                        console.log(msg['mensaje']);
+                        //console.log(msg['mensaje']);
                         $('.cp-error').hide();
                         $('.cp-success').fadeIn();
                         $('.cp-success').text(msg['mensaje']);
@@ -441,10 +458,11 @@
                         $('#mp_preference_id').val(mp_preference_id);
 
                         /* Calculate Discount */
-                        //console.log(discount);
                         var discount = msg['discount'];
                         $('#discountValue').text(parseFloat(discount.toString().replace(/,/g, '')).toFixed(2));
                         $('#discount').val(discount);
+
+                       // console.log(discount);
 
                         //var subtotal = parseFloat($('#subtotalInput').val().toString().replace(/,/g, '')).toFixed(2)));
 
@@ -464,8 +482,6 @@
                         var tax_rate = 0;
                         var tax = parseFloat(total_count*tax_rate).toFixed(2);
 
-                        console.log(tax);
-
                         /* Print Tax on Screen */
                         $('#taxValue').text(tax);
 
@@ -475,6 +491,11 @@
                         var tax = parseFloat(tax);
                         var finaltotal = parseFloat(total + tax).toFixed(2);
 
+                        var descuento = parseFloat($("#discount").val());
+                        var sub_total = total + descuento;
+                        var subtotalFinal = parseFloat(sub_total).toFixed(2);
+
+                        $('#subtotal').text(subtotalFinal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
                         $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
                         $('#finalTotal').val(parseFloat(finaltotal));
                     }
@@ -499,22 +520,90 @@
     $('#delete_cuopon').on('click', function(){
         event.preventDefault();
         var discount = 0;
-        var coupon_code = $('#coupon_code').val();
+        var finalBase = parseFloat($('#finalBase').val())
+        var coupon_disc = parseFloat($('#discount').val());
         var subtotal =  parseFloat($('#subtotalInput').val());
         var shipping = parseFloat($('#shippingInput').val());
         var tax_rateIn = parseFloat($('#taxRate').val());
-        var subtotal =  parseFloat($('#subtotalInput').val());
         var final_s = parseFloat($('#finalTotal').val());
 
         /* Calculate Tax */
-        var tax_rate = (subtotal) - (subtotal / 1.16);
+        if (shipping == 0) {
+            var tax_rate = (finalBase) - (finalBase / 1.16);
+            var tax = parseFloat(tax_rate).toFixed(2);
+            /* Print Tax on Screen */
+            $('#taxValue').text(tax);
+            $('#taxRate').val(tax);
+
+
+            /*Subtotal*/
+            var sub_totalB = finalBase - tax_rate;
+            var subtotal_f = parseFloat(sub_totalB).toFixed(2);
+            $('#subtotal').text(subtotal_f.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            $('#subtotalInput').val(subtotal_f);
+
+            // Clean Numbers
+            var total_count = subtotal_f;
+            var total = total_count.toString().replace(/,/g, '');
+            var total = parseFloat(total);
+            var tax = parseFloat(tax);
+            var finaltotal = parseFloat(total + tax).toFixed(2);
+
+            $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            $('#finalTotal').val(parseFloat(finaltotal));
+        } else {
+            var finalEnvio = finalBase + shipping;
+            var final = parseFloat(finalEnvio).toFixed(2);
+            $('#totalPayment').text(final.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            $('#finalTotal').val(parseFloat(final));
+
+            var tax_rate = (finalEnvio) - (finalEnvio / 1.16);
+            var tax = parseFloat(tax_rate).toFixed(2);
+            /* Print Tax on Screen */
+            $('#taxValue').text(tax);
+            $('#taxRate').val(tax);
+
+            var subtotalEnvio = finalEnvio - tax;
+            var subtotal_f = parseFloat(subtotalEnvio).toFixed(2);
+            $('#subtotal').text(subtotal_f.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            $('#subtotalInput').val(subtotal_f);
+        }
+
+        $('#discountValue').text(parseFloat(discount.toString().replace(/,/g, '')).toFixed(2));
+        $('#discount').val(discount);
+        $('.cp-success').fadeOut();
+        $('#coupon_code').val("");
+        $('#apply_cuopon').removeAttr('disabled', 'disabled');
+        $('.delete-cuopon').hide();
+
+        $('#apply_points').removeAttr('disabled', 'disabled');
+        $('#points').removeAttr('disabled', 'disabled');
+        $('#points').css('opacity', '1');
+        $('#apply_points').css('opacity', '1');
+    });
+</script>
+
+<script>
+    $('#delete_cuopon_mem').on('click', function(){
+        event.preventDefault();
+        var discount = 0;
+        var finalBase = parseFloat($('#finalBase').val())
+        var coupon_disc = parseFloat($('#discount').val());
+        var subtotal =  parseFloat($('#subtotalInput').val());
+        var shipping = parseFloat($('#shippingInput').val());
+        var tax_rateIn = parseFloat($('#taxRate').val());
+        var final_s = parseFloat($('#finalTotal').val());
+
+        var tax_rate = (finalBase) - (finalBase / 1.16);
         var tax = parseFloat(tax_rate).toFixed(2);
         /* Print Tax on Screen */
         $('#taxValue').text(tax);
         $('#taxRate').val(tax);
 
+
         /*Subtotal*/
-        var subtotal_f = parseFloat(subtotal - tax).toFixed(2);
+        var sub_totalB = finalBase - tax_rate;
+        var subtotal_f = parseFloat(sub_totalB).toFixed(2);
         $('#subtotal').text(subtotal_f.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
         $('#subtotalInput').val(subtotal_f);
 
@@ -535,6 +624,11 @@
         $('#coupon_code').val("");
         $('#apply_cuopon').removeAttr('disabled', 'disabled');
         $('.delete-cuopon').hide();
+
+        $('#apply_points').removeAttr('disabled', 'disabled');
+        $('#points').removeAttr('disabled', 'disabled');
+        $('#points').css('opacity', '1');
+        $('#apply_points').css('opacity', '1');
     });
 </script>
 
@@ -556,6 +650,8 @@
     });
 </script>
 
+
+<!--/*Puntos*/-->
 @if(!empty($products))
     @if($shipment_options->count() != 0)
     <script>
@@ -571,16 +667,23 @@
                 }, 3000);
 
             }else{
-                var subtotal =  $('#subtotalInput').val();
+                var subtotal =  parseFloat($('#subtotalInput').val());
                 var shipping = parseFloat($('#shippingInput').val());
 
+               // console.log('subtotal', subtotal);
+                // console.log('envío', shipping);
+
                 var final_s = parseFloat($('#finalTotal').val());
+
+                //console.log('final', final_s);
 
                 $use_points = $("#points").val();
                 $point_disc = $("#point_value").val();
                 $points = $use_points * $point_disc;
 
                 $("#points_to_apply").val($points);
+
+                //console.log($point_disc);
 
                 if ($points > 0) {
                     $("#coupon_code").attr("disabled", true);
