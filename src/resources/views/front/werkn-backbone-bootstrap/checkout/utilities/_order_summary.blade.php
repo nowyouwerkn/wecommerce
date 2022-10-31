@@ -439,6 +439,11 @@
                         $('#delete_cuopon').show();
                         $('#delete_cuopon_mem').show();
                         $('#apply_cuopon').attr('disabled', 'disabled');
+                        $('#apply_points').attr('disabled', 'disabled');
+                        $('#points').attr('disabled', 'disabled');
+                        $('#points').css('opacity', '.4');
+                        $('#apply_points').css('opacity', '.4');
+
 
                         $('#cp_spinner').fadeOut(200);
                         //console.log(msg['mensaje']);
@@ -573,6 +578,11 @@
         $('#coupon_code').val("");
         $('#apply_cuopon').removeAttr('disabled', 'disabled');
         $('.delete-cuopon').hide();
+
+        $('#apply_points').removeAttr('disabled', 'disabled');
+        $('#points').removeAttr('disabled', 'disabled');
+        $('#points').css('opacity', '1');
+        $('#apply_points').css('opacity', '1');
     });
 </script>
 
@@ -617,6 +627,11 @@
         $('#coupon_code').val("");
         $('#apply_cuopon').removeAttr('disabled', 'disabled');
         $('.delete-cuopon').hide();
+
+        $('#apply_points').removeAttr('disabled', 'disabled');
+        $('#points').removeAttr('disabled', 'disabled');
+        $('#points').css('opacity', '1');
+        $('#apply_points').css('opacity', '1');
     });
 </script>
 
