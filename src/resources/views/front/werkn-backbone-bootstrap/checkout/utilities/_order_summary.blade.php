@@ -462,7 +462,7 @@
                         $('#discountValue').text(parseFloat(discount.toString().replace(/,/g, '')).toFixed(2));
                         $('#discount').val(discount);
 
-                        console.log(discount);
+                       // console.log(discount);
 
                         //var subtotal = parseFloat($('#subtotalInput').val().toString().replace(/,/g, '')).toFixed(2)));
 
@@ -492,11 +492,10 @@
                         var finaltotal = parseFloat(total + tax).toFixed(2);
 
                         var descuento = parseFloat($("#discount").val());
-                        console.log(descuento + total);
-                        var subT = total + descuento;
-                        var subtotalF = parseFloat(subT).toFixed(2);
+                        var sub_total = total + descuento;
+                        var subtotalFinal = parseFloat(sub_total).toFixed(2);
 
-                        $('#subtotal').text(subtotalF.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                        $('#subtotal').text(subtotalFinal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
                         $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
                         $('#finalTotal').val(parseFloat(finaltotal));
                     }
@@ -528,8 +527,6 @@
         var tax_rateIn = parseFloat($('#taxRate').val());
         var final_s = parseFloat($('#finalTotal').val());
 
-
-        console.log(shipping);
         /* Calculate Tax */
         if (shipping == 0) {
             var tax_rate = (finalBase) - (finalBase / 1.16);
@@ -673,12 +670,12 @@
                 var subtotal =  parseFloat($('#subtotalInput').val());
                 var shipping = parseFloat($('#shippingInput').val());
 
-                console.log('subtotal', subtotal);
-                console.log('envío', shipping);
+               // console.log('subtotal', subtotal);
+                // console.log('envío', shipping);
 
                 var final_s = parseFloat($('#finalTotal').val());
 
-                console.log('final', final_s);
+                //console.log('final', final_s);
 
                 $use_points = $("#points").val();
                 $point_disc = $("#point_value").val();
@@ -686,7 +683,7 @@
 
                 $("#points_to_apply").val($points);
 
-                console.log($point_disc);
+                //console.log($point_disc);
 
                 if ($points > 0) {
                     $("#coupon_code").attr("disabled", true);
