@@ -336,9 +336,9 @@
                             <div class="p-3">
                                 <p>Desliza el slider para determinar los puntos a usar</p>
                             </div>
-                            <input type="text" name="points_to_apply" id="points_to_apply" hidden>
-                            <input type="text" value="{{ $point_disc }}" id="point_value" hidden>
-                            <input type="text" name="points" hidden id="points_discount">
+                            <input type="hidden" name="points_to_apply" id="points_to_apply" value="">
+                            <input type="hidden" value="{{ $point_disc }}" id="point_value" value="">
+                            <input type="hidden" name="points" id="points_discount" value="">
                         </div>
                     </div>
                     @endif
@@ -482,20 +482,15 @@
                         var tax_rate = 0;
                         var tax = parseFloat(total_count*tax_rate).toFixed(2);
 
-                        /* Print Tax on Screen */
-                        $('#taxValue').text(tax);
-
                         // Clean Numbers
                         var total = total_count.toString().replace(/,/g, '');
                         var total = parseFloat(total);
                         var tax = parseFloat(tax);
                         var finaltotal = parseFloat(total + tax).toFixed(2);
 
-                        var descuento = parseFloat($("#discount").val());
-                        var sub_total = total + descuento;
-                        var subtotalFinal = parseFloat(sub_total).toFixed(2);
+                        var tax_descuento = subtotal - (subtotal / 1.16);
+                        var tax_final = parseFloat(tax_descuento).toFixed(2);
 
-                        $('#subtotal').text(subtotalFinal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
                         $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
                         $('#finalTotal').val(parseFloat(finaltotal));
                     }

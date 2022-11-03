@@ -603,10 +603,7 @@ class FrontController extends Controller
         if (!empty($membership)) {
 
             if ($total >= $membership->minimum_purchase){
-                $qty = floor($subtotal / $membership->qty_for_points);
-
-                $points = ($qty * $membership->earned_points);
-
+                $points = round($subtotal / $membership->qty_for_points, -1, PHP_ROUND_HALF_UP) * $membership->earned_points;
             } else{
                 $points = 0;
             }
@@ -842,10 +839,9 @@ class FrontController extends Controller
         $valid = NULL;
         if (!empty($membership)) {
             if ($total >= $membership->minimum_purchase){
-                $qty = floor($total / $membership->qty_for_points);
+                //$points = number_format($total / $membership->qty_for_points);
 
-                $points = ($qty * $membership->earned_points);
-
+                $points = round($total / $membership->qty_for_points, -1, PHP_ROUND_HALF_UP)  * $membership->earned_points;
             } else{
                 $points = 0;
             }
@@ -1059,10 +1055,7 @@ class FrontController extends Controller
         $valid = NULL;
         if (!empty($membership)) {
             if ($total >= $membership->minimum_purchase){
-                $qty = floor($total / $membership->qty_for_points);
-
-                $points = ($qty * $membership->earned_points);
-
+                $points = round($total / $membership->qty_for_points, -1, PHP_ROUND_HALF_UP)  * $membership->earned_points;
             } else{
                 $points = 0;
             }

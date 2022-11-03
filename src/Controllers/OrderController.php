@@ -184,15 +184,15 @@ class OrderController extends Controller
 
                 switch ($type) {
                     case 'vip_normal':
-                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        $points->value = round($order->total / $membership->qty_for_points, -1, PHP_ROUND_HALF_UP) * $membership->points_vip_accounts;
                         break;
 
                     case 'vip_cool':
-                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        $points->value = round($order->total / $membership->qty_for_points, -1, PHP_ROUND_HALF_UP) * $membership->points_vip_accounts;
                         break;
 
                     default:
-                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                        $points->value = round($order->total / $membership->qty_for_points, -1, PHP_ROUND_HALF_UP) * $membership->earned_points;
                         break;
                 }
 
@@ -341,15 +341,15 @@ class OrderController extends Controller
 
                 switch ($type) {
                     case 'vip_normal':
-                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        $points->value = round($order->total / $membership->qty_for_points, -1, PHP_ROUND_HALF_UP) * $membership->points_vip_accounts;
                         break;
 
                     case 'vip_cool':
-                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->points_vip_accounts);
+                        $points->value = round($order->total / $membership->qty_for_points, -1, PHP_ROUND_HALF_UP) * $membership->points_vip_accounts;
                         break;
 
                     default:
-                        $points->value = floor(($order->total / $membership->qty_for_points) * $membership->earned_points);
+                        $points->value = round($order->total / $membership->qty_for_points, -1, PHP_ROUND_HALF_UP) * $membership->earned_points;
                         break;
                 }
 
