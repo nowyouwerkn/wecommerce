@@ -336,8 +336,8 @@
                             <div class="p-3">
                                 <p>Desliza el slider para determinar los puntos a usar</p>
                             </div>
-                            <input type="hidden" name="points_to_apply" id="points_to_apply" >
-                            <input type="hidden" value="{{ $point_disc }}" id="point_value" >
+                            <input type="hidden" name="points_to_apply" id="points_to_apply" value="">
+                            <input type="hidden" value="{{ $point_disc }}" id="point_value" value="">
                             <input type="hidden" name="points" id="points_discount" value="">
                         </div>
                     </div>
