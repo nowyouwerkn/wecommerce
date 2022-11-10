@@ -16,6 +16,8 @@ use Nowyouwerkn\WeCommerce\Models\ProductCharacteristic;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 use Nowyouwerkn\WeCommerce\Models\ProductRelationship;
 
+use Nowyouwerkn\WeCommerce\Models\Wishlist;
+
 /* Exportar Info */
 use Maatwebsite\Excel\Facades\Excel;
 use Nowyouwerkn\WeCommerce\Exports\ProductExport;
@@ -676,6 +678,13 @@ class ProductController extends Controller
         if($relations->count() != 0){
             foreach($relations as $rel){
                 $rel->delete();
+            }
+        }
+
+        $wishlists = Wishlist::where('product_id', $product->id)->get();
+        if($wishlists->count() != 0){
+            foreach($wishlists as $wish){
+                $wish->delete();
             }
         }
 
