@@ -1966,10 +1966,10 @@ class FrontController extends Controller
             });
         }
         catch (\Exception $e) {
-            Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
+            Session::flash('info', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
         }
         catch(\Swift_TransportException $e){
-            Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
+            Session::flash('info', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
         }
 
         $purchase_value = $cart->totalPrice;
@@ -2570,6 +2570,11 @@ class FrontController extends Controller
         // Retrieve subscription data
         $subscription_data = $subscription->jsonSerialize();
 
+        if($subscription_data['status'] != 'active'){
+            Session::flash('info', 'No se pudo completar tu compra, contacta con tu entidad financiera o intenta con otra tarjeta.');
+            return redirect()->back();
+        }
+
         // GUARDAR LA ORDEN
         $order = new Order();
         $order->type = 'recurring_payment';
@@ -2769,10 +2774,10 @@ class FrontController extends Controller
             });
         }
         catch (\Exception $e) {
-            Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
+            Session::flash('info', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
         }
         catch(\Swift_TransportException $e){
-            Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
+            Session::flash('info', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
         }
 
         $purchase_value = $product->price;
