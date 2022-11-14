@@ -104,10 +104,12 @@ class ClientController extends Controller
 
         $orders = $client->orders;
 
+        /*
         $orders->transform(function($order, $key){
             $order->cart = unserialize($order->cart);
             return $order;
         });
+        */
 
         return view('wecommerce::back.clients.show')->with('client', $client)
         ->with('wishlist', $wishlist)

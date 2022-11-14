@@ -627,6 +627,8 @@
     });
 </script>
 
+@if ($valid < 10)
+@else
 <script>
     let rangeInput = document.querySelector(".range-input input");
     let rangeValue = document.querySelector(".range-input .value div");
@@ -644,6 +646,7 @@
         rangeValue.style.marginTop = top+"px";
     });
 </script>
+@endif
 
 
 <!--/*Puntos*/-->
