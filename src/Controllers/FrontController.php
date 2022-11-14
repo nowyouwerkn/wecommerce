@@ -2980,8 +2980,8 @@ class FrontController extends Controller
                 $value = $purchase_value;
                 $customer_name = $request->name;
                 $customer_lastname = $request->last_name;
-                $customer_email = $user->email;
-                $customer_phone = $user->name;
+                $customer_email = $order->user->email;
+                $customer_phone = $order->user->name;
 
                 $collection = collect();
 
