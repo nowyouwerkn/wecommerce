@@ -1709,7 +1709,7 @@ class FrontController extends Controller
 
                     $order->status = 'Sin Completar';
 
-                    $order->payment_id = $request->mp_preference_external;
+                    $order->payment_id = $request->mp_preference_id;
 
                     $order->payment_method = $payment_method->supplier;
 
