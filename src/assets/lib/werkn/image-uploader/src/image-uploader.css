@@ -39,8 +39,9 @@
 /* Base style */
 .image-uploader {
     min-height: 10rem;
-    border: 1px solid #d9d9d9;
+    border: 3px dotted #d9d9d9;
     position: relative;
+    border-radius: 15px;
 }
 
 /* Style on hover */

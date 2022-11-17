@@ -3,6 +3,7 @@
 @push('stylesheets')
 <link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
 <link href="{{ asset('lib/spectrum-colorpicker/spectrum.css') }}" rel="stylesheet">
+<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
 
 <style>
     .save-bar{
@@ -160,6 +161,14 @@
         line-height: 20px;
         font-size: .8em;
         border: none;
+    }
+
+    .dropzone{
+        min-height: 10rem;
+        border: 3px dotted #d9d9d9;
+        position: relative;
+        border-radius: 15px;
+        margin-bottom: 20px;
     }
 </style>
 @endpush
@@ -322,14 +331,17 @@
                         <div class="card-body row">
                             <div class="col-md-12">
                                 <div id="dropzoneForm" class="dropzone">
-
+                                    <div class="dz-message" data-dz-message><span>
+                                        <i class="fas fa-cloud-upload-alt" style="font-size: 3em; margin-bottom:10px;"></i><br>
+                                        Arrastra y suelta aqui tus archivos o da click para buscar
+                                    </span></div>
                                 </div>
                                 <div align="center">
                                     <button type="button" class="btn btn-info" id="submit-all">Subir</button>
                                 </div>
                                 <hr>
 
-                                <h4>Imagenes</h4>
+                                <h5 class="mg-b-5">Imagenes Asociadas</h5>
                                 <div id="uploaded_image">
           
                                 </div>
@@ -712,57 +724,44 @@
                             <h5 class="mg-b-5">Archivos multimedia</h5>
                         </div>
 
-                        <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
-                                <div class="thumbnail-wrap row">
-                                    <div class="col-12 justify-content-center">
-                                        <h5>Imagen principal</h5>
-                                    </div>
+                                <div id="dropzoneForm" class="dropzone">
+                                    <div class="dz-message" data-dz-message><span>
+                                        <i class="fas fa-cloud-upload-alt" style="font-size: 3em; margin-bottom:10px;"></i><br>
+                                        Arrastra y suelta aqui tus archivos o da click para buscar
+                                    </span></div>
+                                </div>
+                                <div align="center">
+                                    <button type="button" class="btn btn-info" id="submit-all">Subir</button>
+                                </div>
+                                <hr>
 
-                                    <div class="col-md-4 offset-md-4">
-                                        <a href="javascript:void(0)" data-target="#modalChangeImage" data-toggle="modal" class="btn btn-rounded btn-icon btn-info"><i class="fas fa-edit" aria-hidden="true"></i></a>
-                                        <img class="img-fluid mb-4" src="{{ asset('img/products/' . $product->image ) }}" alt="Imagen principal">
-                                    </div>
+                                <h5 class="mg-b-5">Imagenes Asociadas</h5>
+                                <div id="uploaded_image">
+          
                                 </div>
                             </div>
 
-                            <div class="col-12">
-                                <h5>Imagenes extras</h5>
+                            <div class="form-group col-md-12">
+                                <label for="link">Identificador del Video <span class="text-info">(Opcional)</span></label>
+                                <input type="text" class="form-control video-input" name="video_background" value="{{ $product->video_link }}" />
+        
+                                <p class="mb-0 mt-2">Ejemplo:</p>
+                                <p class="example-url">https://www.youtube.com/watch?v=<span class="video-identifier">SMKP21GW083c</span></p>
                             </div>
-
-                            @foreach($product->images as $image)
-                            <div class="col-md-4">
-                                <div class="thumbnail-wrap">
-                                    <button type="button" id="deleteImage_{{ $image->id }}" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
-                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                    </button>
-
-                                    @push('scripts')
-
-                                    <form method="POST" id="deleteImageForm_{{ $image->id }}" action="{{ route('image.destroy', $image->id) }}" style="display: none;">
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
-                                    </form>
-
-                                    <script type="text/javascript">
-                                        $('#deleteImage_{{ $image->id }}').on('click', function(){
-                                            event.preventDefault();
-                                            $('#deleteImageForm_{{ $image->id }}').submit();
-                                        });
-                                    </script>
-                                    @endpush
-
-                                    <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}" alt="Imagen secundaria">
-                                    <p class="priority-badge" >{{$image->priority}}</p>
-                                    <a style="right: 30px;" href="javascript:void(0)" data-target="#modalEditImage_{{$image->id}}" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imagen"><i class="fas fa-edit" aria-hidden="true"></i></a>
-                                </div>
-                            </div>
-                            @endforeach
-
-                            <div class="col-md-4">
-                                <a href="javascript:void(0)" data-target="#modalNewImage" data-toggle="modal" class="image-btn"><span class="fas fa-plus"></span> Agregar más imágenes</a>
-                            </div>
+        
+                            <style type="text/css">
+                                .video-identifier{
+                                    display: inline-block;
+                                    padding: 3px 3px;
+                                    border: 2px solid red;
+                                }
+        
+                                .example-url{
+                                    font-size: .8em;
+                                }
+                            </style>
                         </div>
                     </div>
 
@@ -1074,13 +1073,44 @@
                             <h5 class="mg-b-5">Archivos multimedia</h5>
                         </div>
 
-                        <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
                                 <div id="dropzoneForm" class="dropzone">
+                                    <div class="dz-message" data-dz-message><span>
+                                        <i class="fas fa-cloud-upload-alt" style="font-size: 3em; margin-bottom:10px;"></i><br>
+                                        Arrastra y suelta aqui tus archivos o da click para buscar
+                                    </span></div>
+                                </div>
+                                <div align="center">
+                                    <button type="button" class="btn btn-info" id="submit-all">Subir</button>
+                                </div>
+                                <hr>
 
+                                <h5 class="mg-b-5">Imagenes Asociadas</h5>
+                                <div id="uploaded_image">
+          
                                 </div>
                             </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="link">Identificador del Video <span class="text-info">(Opcional)</span></label>
+                                <input type="text" class="form-control video-input" name="video_background" value="{{ $product->video_link }}" />
+        
+                                <p class="mb-0 mt-2">Ejemplo:</p>
+                                <p class="example-url">https://www.youtube.com/watch?v=<span class="video-identifier">SMKP21GW083c</span></p>
+                            </div>
+        
+                            <style type="text/css">
+                                .video-identifier{
+                                    display: inline-block;
+                                    padding: 3px 3px;
+                                    border: 2px solid red;
+                                }
+        
+                                .example-url{
+                                    font-size: .8em;
+                                }
+                            </style>
                         </div>
                     </div>
 
@@ -1325,7 +1355,6 @@
 <script src="{{ asset('lib/spectrum-colorpicker/spectrum.js') }}"></script>
 
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
-<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript">
     function slugify(str){

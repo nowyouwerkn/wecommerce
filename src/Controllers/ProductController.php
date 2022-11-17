@@ -16,6 +16,8 @@ use Nowyouwerkn\WeCommerce\Models\ProductCharacteristic;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 use Nowyouwerkn\WeCommerce\Models\ProductRelationship;
 
+use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
+
 use Nowyouwerkn\WeCommerce\Models\Wishlist;
 
 /* Exportar Info */
@@ -883,5 +885,32 @@ class ProductController extends Controller
 
         return redirect()->back();
     }
+    
+    public function preview($id)
+    {
+        $product = Product::where('id', '=', $id)->with('category')->firstOrFail();
 
+        /* Double Variant System */
+        $product_relationships = ProductRelationship::where('base_product_id', $product->id)->orWhere('product_id', $product->id)->get();
+
+        if ($product_relationships->count() == NULL) {
+            $base_product = NULL;
+            $all_relationships = NULL;
+        }else{
+            $base_product = $product_relationships->take(1)->first();
+            $all_relationships = ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
+        }
+
+        $shipment_option = ShipmentOption::where('is_primary', true)->first();
+
+        if (empty($product)) {
+            return redirect()->back();
+        }else{
+            return view('wecommerce::back.products.preview')
+            ->with('product', $product)
+            ->with('base_product', $base_product)
+            ->with('all_relationships', $all_relationships)
+            ->with('shipment_option', $shipment_option);
+        }
+    }
 }

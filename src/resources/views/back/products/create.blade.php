@@ -41,7 +41,6 @@
 </style>
 
 <link type="text/css" rel="stylesheet" href="{{ asset('lib/werkn/image-uploader/src/image-uploader.css') }}">
-
 @endpush
 
 @section('title')
@@ -87,10 +86,20 @@
                 </div>
 
                 <div class="card-body row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="name">Nombre <span class="text-danger">*</span></label>
-                            <input type="text" name="name" class="form-control" value="{{ old('name') }}" required="">
+                            <input type="text" name="name" id="nameInput" class="form-control" value="{{ old('name') }}" required="">
+                        </div>
+                      </div>
+
+                    <div class="col-md-6">
+                        <label for="slug" class="form-label">Ruta Estática <span class="text-danger">*</span></label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="slug-addon">{{ url("") }}</span>
+                            <input type="text" class="form-control" id="slug" aria-describedby="slug-addon">
+
+                            <small>Esta ruta se genera automáticamente pero puedes modificarla para alinearla a tu estrategia SEO.</small>
                         </div>
                     </div>
 
@@ -299,7 +308,6 @@
             <div class="card mg-t-10 mb-4">
                 <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                     <h5 class="mg-b-5">Inventario</h5>
-                    <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
                 </div>
 
                 <div class="card-body row">
@@ -332,8 +340,6 @@
                     </div>
                 </div>
             </div>
-
-            {{-- @include('wecommerce::back.products.partials._variant_card') --}}
         </div>
 
         <div class="col-md-4">
@@ -520,6 +526,23 @@
 </script>
   
 <script type="text/javascript">
+    function slugify(str){
+        str = str.replace(/^\s+|\s+$/g, '');
+        str = str.toLowerCase();
+
+        var from = "ÁÄÂÀÃÅČÇĆĎÉĚËÈÊẼĔȆÍÌÎÏŇÑÓÖÒÔÕØŘŔŠŤÚŮÜÙÛÝŸŽáäâàãåčçćďéěëèêẽĕȇíìîïňñóöòôõøðřŕšťúůüùûýÿžþÞĐđßÆa·/_,:;";
+        var to   = "AAAAAACCCDEEEEEEEEIIIINNOOOOOORRSTUUUUUYYZaaaaaacccdeeeeeeeeiiiinnooooooorrstuuuuuyyzbBDdBAa------";
+        for (var i=0, l=from.length ; i<l ; i++) {
+            str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
+
+        str = str.replace(/[^a-z0-9 -]/g, '') 
+        .replace(/\s+/g, '-') 
+        .replace(/-+/g, '-'); 
+
+        return str;
+    }
+    
     $(document).ready(function() {
         $('.select2').select2({
             placeholder: "Selecciona una opción..."
@@ -527,6 +550,12 @@
     });
 
     // Value Checker
+    $('#nameInput').keyup(function(){
+        event.preventDefault();
+        var name = $('#nameInput').val();
+        $('#slug').val(slugify(name));
+    });
+
     $('.value-checker').keyup(function(){
         event.preventDefault();
 
