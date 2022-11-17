@@ -38,11 +38,8 @@
             <p>Tu tienda puede vincularse con: </p>
 
             <ul>
+                <li>Configuración Manual</li>
                 <li>UPS (Cálculo de Envío Solo Estados Unidos)</li>
-                <li>FedEx <span class="badge badge-info">PRÓXIMAMENTE</span></li>
-                <li>Estafeta <span class="badge badge-info">PRÓXIMAMENTE</span></li>
-                <li>DHL <span class="badge badge-info">PRÓXIMAMENTE</span></li>
-                <li>Gearcom <span class="badge badge-info">PRÓXIMAMENTE</span></li>
             </ul>
         </div>    
     </div>
@@ -121,6 +118,9 @@
                                 @foreach($shipment_options as $option)
                                 <tr>
                                     <td>
+                                        @if($option->is_primary == true)
+                                        <i data-toggle="tooltip" data-placement="top" title="Principal" class="fas fa-star text-warning mr-2"></i>
+                                        @endif
                                         @switch($option->type)
                                             @case('delivery')
                                             Envío a Domicilio
@@ -431,11 +431,22 @@
                                 <textarea name="location" class="form-control" rows="4">{{ $option->location ?? '' }}</textarea>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="custom-control custom-checkbox mb-3">
-                        <input type="checkbox" class="custom-control-input" id="is_active_{{ $option->id }}" name="is_active" value="1" {{ ($option->is_active == '1') ? 'checked' : '' }}>
-                        <label class="custom-control-label" for="is_active_{{ $option->id }}"> Activado</label>
+                        <div class="col-md-6">
+                            <div class="custom-control custom-checkbox mb-3">
+                                <input type="checkbox" class="custom-control-input" id="is_active_{{ $option->id }}" name="is_active" value="1" {{ ($option->is_active == '1') ? 'checked' : '' }}>
+                                <label class="custom-control-label" for="is_active_{{ $option->id }}"> Activado</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="is_primary_{{ $option->id }}" name="is_primary" value="1" {{ ($option->is_primary == '1') ? 'checked' : '' }}>
+                                <label class="custom-control-label" for="is_primary_{{ $option->id }}"> Es principal</label>
+                            </div>
+
+                            <small class="d-block mb-4">Al seleccionar este como principal se le quitará el estado a cualquier otro elemento que lo tenga.</small>
+                        </div>                        
                     </div>
 
                     <div class="alert alert-warning">
@@ -523,11 +534,22 @@
                                 <textarea name="location" class="form-control" rows="4"></textarea>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="custom-control custom-checkbox mb-3">
-                        <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" value="1" checked>
-                        <label class="custom-control-label" for="is_active"> Activado</label>
+                        <div class="col-md-6">
+                            <div class="custom-control custom-checkbox mb-3">
+                                <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" value="1" checked>
+                                <label class="custom-control-label" for="is_active"> Activado</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="is_primary" name="is_primary" value="1">
+                                <label class="custom-control-label" for="is_primary"> Es principal</label>
+                            </div>
+
+                            <small class="d-block mb-4">Al seleccionar este como principal se le quitará el estado a cualquier otro elemento que lo tenga.</small>
+                        </div>
                     </div>
 
                     <div class="alert alert-warning">

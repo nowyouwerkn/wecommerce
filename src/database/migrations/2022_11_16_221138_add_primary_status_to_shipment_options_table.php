@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddMaxRedeemPointsToTableMembershipConfigs extends Migration
+class AddPrimaryStatusToShipmentOptionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddMaxRedeemPointsToTableMembershipConfigs extends Migration
      */
     public function up()
     {
-        Schema::table('membership_configs', function (Blueprint $table) {
-            $table->string('max_redeem_points')->after('point_value')->nullable();
+        Schema::table('shipment_options', function (Blueprint $table) {
+            $table->boolean('is_primary')->default(false)->after('location')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddMaxRedeemPointsToTableMembershipConfigs extends Migration
      */
     public function down()
     {
-        Schema::table('membership_configs', function (Blueprint $table) {
-            $table->dropColumn('max_redeem_points');
+        Schema::table('shipment_options', function (Blueprint $table) {
+            $table->dropColumn('is_primary');
         });
     }
 }

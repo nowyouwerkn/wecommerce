@@ -413,6 +413,8 @@ class FrontController extends Controller
             $deduplication_code = NULL;
         }
 
+        $shipment_option = ShipmentOption::where('is_primary', true)->first();
+
         if (empty($product)) {
             return redirect()->back();
         }else{
@@ -425,7 +427,8 @@ class FrontController extends Controller
             ->with('last_product', $last_product)
             ->with('base_product', $base_product)
             ->with('all_relationships', $all_relationships)
-            ->with('deduplication_code', $deduplication_code);
+            ->with('deduplication_code', $deduplication_code)
+            ->with('shipment_option', $shipment_option);
         }
     }
 
@@ -629,13 +632,16 @@ class FrontController extends Controller
             }
         }
 
+        $shipment_option = ShipmentOption::where('is_primary', true)->first();
+
         return view('front.theme.' . $this->theme->get_name() . '.cart')
         ->with('products', $cart->items)
         ->with('total', $total)
         ->with('tax', $tax)
         ->with('shipping', $shipping)
         ->with('subtotal', $subtotal)
-        ->with('points', $points);
+        ->with('points', $points)
+        ->with('shipment_option', $shipment_option);
     }
 
     public function checkout()

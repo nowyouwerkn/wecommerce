@@ -90,6 +90,21 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'products.create.digital',
     ]);
 
+    /* Multimedia del Producto */
+    Route::post('dropzone/upload/{id}', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@uploadImage')->name('dropzone.upload');
+    Route::get('dropzone/fetch/{id}', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@fetchImage')->name('dropzone.fetch');
+    Route::get('dropzone/delete/{id}', 'Nowyouwerkn\WeCommerce\Controllers\ProductController@deleteImage')->name('dropzone.delete');
+
+    Route::post('products/duplicate/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@duplicate',
+        'as' => 'products.duplicate',
+    ]);
+
+    Route::get('products/preview/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@preview',
+        'as' => 'products.show.preview',
+    ]);
+
     Route::get('products/create/subscription', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@createSubscription',
         'as' => 'products.create.subscription',
@@ -99,10 +114,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@search',
         'as' => 'products.query',
     ]);
+
     Route::get('productsfilter/{filter}/{order}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@filter',
         'as' => 'filter.products',
     ]);
+
     Route::get('productspromotions', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@promotions',
         'as' => 'products.promotions',

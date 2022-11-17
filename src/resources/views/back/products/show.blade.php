@@ -184,9 +184,49 @@
                 {{ method_field('DELETE') }}
             </form>
 
+            <a href="{{ route('products.duplicate', $product->id) }}" data-toggle="modal" data-target="#duplicateModal" class="btn btn-sm pd-x-15 btn-outline-secondary btn-uppercase mg-l-5">
+                <i class="far fa-copy mr-1"></i> Duplicar Producto
+            </a>
+
+            <a href="{{ route('products.show.preview', $product->id) }}" class="btn btn-sm pd-x-15 btn-outline-secondary btn-uppercase mg-l-5">
+                <i class="far fa-eye"></i> Vista Previa
+            </a>
+
             <a href="{{ route('products.index') }}" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
                 <i class="fas fa-undo mr-1"></i> Regresar al listado
             </a>
+        </div>
+    </div>
+
+    <div class="modal fade" id="duplicateModal" tabindex="-1" aria-labelledby="duplicateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Duplicar {{ $product->name }}</h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{{ route('products.duplicate', $product->id) }}" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    <div class="modal-body">
+                        <div class="form-group mb-4">
+                            <label for="name">Nombre del nuevo producto <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" value="{{ $product->name }} (Copia)">
+                        </div>
+
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="duplicate_images" name="duplicate_images" value="1">
+                            <label class="custom-control-label" for="duplicate_images">Duplicar fotos</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="far fa-copy mr-1"></i> Duplicar</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 @endsection
@@ -279,57 +319,41 @@
                             <h5 class="mg-b-5">Archivos multimedia</h5>
                         </div>
 
-                        <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
-                                <div class="thumbnail-wrap row">
-                                    <div class="col-12 justify-content-center">
-                                        <h5>Imagen principal</h5>
-                                    </div>
+                                <div id="dropzoneForm" class="dropzone">
 
-                                    <div class="col-md-4 offset-md-4">
-                                        <a href="javascript:void(0)" data-target="#modalChangeImage" data-toggle="modal" class="btn btn-rounded btn-icon btn-info"><i class="fas fa-edit" aria-hidden="true"></i></a>
-                                        <img class="img-fluid mb-4" src="{{ asset('img/products/' . $product->image ) }}" alt="Imagen principal">
-                                    </div>
+                                </div>
+                                <div align="center">
+                                    <button type="button" class="btn btn-info" id="submit-all">Subir</button>
+                                </div>
+                                <hr>
+
+                                <h4>Imagenes</h4>
+                                <div id="uploaded_image">
+          
                                 </div>
                             </div>
 
-                            <div class="col-12">
-                                <h5>Imagenes extras</h5>
+                            <div class="form-group col-md-12">
+                                <label for="link">Identificador del Video <span class="text-info">(Opcional)</span></label>
+                                <input type="text" class="form-control video-input" name="video_background" value="{{ $product->video_link }}" />
+        
+                                <p class="mb-0 mt-2">Ejemplo:</p>
+                                <p class="example-url">https://www.youtube.com/watch?v=<span class="video-identifier">SMKP21GW083c</span></p>
                             </div>
-
-                            @foreach($product->images as $image)
-                            <div class="col-md-4">
-                                <div class="thumbnail-wrap">
-                                    <button type="button" id="deleteImage_{{ $image->id }}" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
-                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                    </button>
-
-                                    @push('scripts')
-
-                                    <form method="POST" id="deleteImageForm_{{ $image->id }}" action="{{ route('image.destroy', $image->id) }}" style="display: none;">
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
-                                    </form>
-
-                                    <script type="text/javascript">
-                                        $('#deleteImage_{{ $image->id }}').on('click', function(){
-                                            event.preventDefault();
-                                            $('#deleteImageForm_{{ $image->id }}').submit();
-                                        });
-                                    </script>
-                                    @endpush
-
-                                    <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}" alt="Imagen secundaria">
-                                    <p class="priority-badge" >{{$image->priority}}</p>
-                                    <a style="right: 30px;" href="javascript:void(0)" data-target="#modalEditImage_{{$image->id}}" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imagen"><i class="fas fa-edit" aria-hidden="true"></i></a>
-                                </div>
-                            </div>
-                            @endforeach
-
-                            <div class="col-md-4">
-                                <a href="javascript:void(0)" data-target="#modalNewImage" data-toggle="modal" class="image-btn"><span class="fas fa-plus"></span> Agregar más imágenes</a>
-                            </div>
+        
+                            <style type="text/css">
+                                .video-identifier{
+                                    display: inline-block;
+                                    padding: 3px 3px;
+                                    border: 2px solid red;
+                                }
+        
+                                .example-url{
+                                    font-size: .8em;
+                                }
+                            </style>
                         </div>
                     </div>
 
@@ -422,7 +446,6 @@
                             <h5 class="mg-b-5">Inventario</h5>
                         </div>
 
-                        <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -466,14 +489,12 @@
                     </div>
                 </div>
 
-                <!-- Second -->
                 <div class="col-md-4">
                     <div class="card mg-t-10 mb-4">
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Estatus</h5>
                         </div>
 
-                        <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -489,14 +510,11 @@
                         </div>
                     </div>
 
-                    <!-- Estatus product -->
                     <div class="card mg-t-10 mb-4">
-                        <!-- Header -->
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Categorización</h5>
                         </div>
 
-                        <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
                                 <div class="form-group mb-3">
@@ -591,13 +609,10 @@
                     </div>
 
                     <div class="card mg-t-10 mb-4">
-                        <!-- Header -->
                         <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                             <h5 class="mg-b-5">Características de Envío</h5>
-                            <!--<p class="tx-12 tx-color-03 mg-b-0">Inventario.</p>-->
                         </div>
 
-                        <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -635,7 +650,6 @@
                         </button>
                     </div>
                 </div>
-                <!-- Button -->
             </div>
         @break
 
@@ -1063,53 +1077,9 @@
                         <!-- Form -->
                         <div class="card-body row">
                             <div class="col-md-12">
-                                <div class="thumbnail-wrap row">
-                                    <div class="col-12 justify-content-center">
-                                        <h5>Imagen principal</h5>
-                                    </div>
+                                <div id="dropzoneForm" class="dropzone">
 
-                                    <div class="col-md-4 offset-md-4">
-                                        <a href="javascript:void(0)" data-target="#modalChangeImage" data-toggle="modal" class="btn btn-rounded btn-icon btn-info"><i class="fas fa-edit" aria-hidden="true"></i></a>
-                                        <img class="img-fluid mb-4" src="{{ asset('img/products/' . $product->image ) }}" alt="Imagen principal">
-                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="col-12">
-                                <h5>Imagenes extras</h5>
-                            </div>
-
-                            @foreach($product->images as $image)
-                            <div class="col-md-4">
-                                <div class="thumbnail-wrap">
-                                    <button type="button" id="deleteImage_{{ $image->id }}" class="btn btn-rounded btn-icon btn-danger" data-toggle="tooltip" data-original-title="Borrar">
-                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                    </button>
-
-                                    @push('scripts')
-
-                                    <form method="POST" id="deleteImageForm_{{ $image->id }}" action="{{ route('image.destroy', $image->id) }}" style="display: none;">
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
-                                    </form>
-
-                                    <script type="text/javascript">
-                                        $('#deleteImage_{{ $image->id }}').on('click', function(){
-                                            event.preventDefault();
-                                            $('#deleteImageForm_{{ $image->id }}').submit();
-                                        });
-                                    </script>
-                                    @endpush
-
-                                    <img class="img-fluid mb-4" src="{{ asset('img/products/' . $image->image )  }}" alt="Imagen secundaria">
-                                    <p class="priority-badge" >{{$image->priority}}</p>
-                                    <a style="right: 30px;" href="javascript:void(0)" data-target="#modalEditImage_{{$image->id}}" data-toggle="modal" class="btn btn-rounded btn-icon btn-info" data-toggle="tooltip" data-original-title="Cambiar Imagen"><i class="fas fa-edit" aria-hidden="true"></i></a>
-                                </div>
-                            </div>
-                            @endforeach
-
-                            <div class="col-md-4">
-                                <a href="javascript:void(0)" data-target="#modalNewImage" data-toggle="modal" class="image-btn"><span class="fas fa-plus"></span> Agregar más imágenes</a>
                             </div>
                         </div>
                     </div>
@@ -1313,7 +1283,6 @@
     <div class="col-md-8">
         @switch($product->type)
             @case('physical')
-                <!-- Inventory -->
                 @if($product->has_variants == true)
                     @include('wecommerce::back.products.partials._variant_card')
                 @endif
@@ -1349,149 +1318,91 @@
         </div>
     </div>
 </div>
-
-<!-- Modal -->
-<div class="modal fade" id="modalNewImage" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="modalCreateLabel">Nueva Imágen</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-            <form method="POST" action="{{ route('image.store') }}" enctype="multipart/form-data">
-                {{ csrf_field() }}
-
-                <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                <div class="form-group">
-                    <label for="image">Imagen <span class="text-danger">*</span></label>
-                    <input type="file" name="image" class="form-control" accept=".jpg, .jpeg, .png">
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label" for="description">Descripción <span class="text-info tx-12">(Opcional)</span></label>
-                    <textarea class="form-control" name="description" rows="5"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="description">Prioridad </label><span class="text-danger">*</span>
-                    <select class="form-control" name="priority">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                    </select>
-                </div>
-
-                <div class="text-right">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Guardar Imagen</button>
-                </div>
-            </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="modalChangeImage" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="modalCreateLabel">Cambiar Imágen de Modelo</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-            <form method="POST" action="{{ route('image.store') }}" enctype="multipart/form-data">
-                {{ csrf_field() }}
-
-                <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                <div class="form-group">
-                    <label for="model_image">Imagen de Modelo</label>
-                    <input type="file" name="model_image" class="form-control" accept=".jpg, .jpeg, .png">
-                </div>
-
-                <div class="text-right">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Guardar Imagen</button>
-                </div>
-            </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-@foreach($product->images as $image)
-<div class="modal fade" id="modalEditImage_{{$image->id}}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="modalCreateLabel">Editar prioridad y descripción</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-            <form method="POST" action="{{ route('image.update') }}" enctype="multipart/form-data">
-                {{ csrf_field() }}
-
-                <input type="hidden" name="id" value="{{ $image->id }}">
-
-                <div class="form-group">
-                    <label class="control-label" for="description">Descripción <span class="text-info tx-12">(Opcional)</span></label>
-                    <textarea class="form-control" name="description" rows="5">{{$image->description}}</textarea>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="description">Prioridad</label><span class="text-danger">*</span>
-                    <select class="form-control" name="priority">
-                        <option {{ ($image->priority == '1') ? 'selected' : '' }} value="1">1</option>
-                        <option {{ ($image->priority == '2') ? 'selected' : '' }} value="2">2</option>
-                        <option {{ ($image->priority == '3') ? 'selected' : '' }} value="3">3</option>
-                        <option {{ ($image->priority == '4') ? 'selected' : '' }} value="4">4</option>
-                        <option {{ ($image->priority == '5') ? 'selected' : '' }} value="5">5</option>
-                        <option {{ ($image->priority == '6') ? 'selected' : '' }} value="6">6</option>
-                        <option {{ ($image->priority == '7') ? 'selected' : '' }} value="7">7</option>
-                        <option {{ ($image->priority == '8') ? 'selected' : '' }} value="8">8</option>
-                        <option {{ ($image->priority == '9') ? 'selected' : '' }} value="9">9</option>
-                        <option {{ ($image->priority == '10') ? 'selected' : '' }} value="10">10</option>
-                        <option {{ ($image->priority == '11') ? 'selected' : '' }} value="11">11</option>
-                        <option {{ ($image->priority == '12') ? 'selected' : '' }} value="12">12</option>
-                        <option {{ ($image->priority == '13') ? 'selected' : '' }} value="13">13</option>
-                        <option {{ ($image->priority == '14') ? 'selected' : '' }} value="14">14</option>
-                        <option {{ ($image->priority == '15') ? 'selected' : '' }} value="15">15</option>
-                    </select>
-                </div>
-
-                <div class="text-right">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Guardar Imagen</button>
-                </div>
-            </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
 @endsection
 
 @push('scripts')
 <script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('lib/spectrum-colorpicker/spectrum.js') }}"></script>
+
+<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    function slugify(str){
+        str = str.replace(/^\s+|\s+$/g, '');
+        str = str.toLowerCase();
+
+        var from = "ÁÄÂÀÃÅČÇĆĎÉĚËÈÊẼĔȆÍÌÎÏŇÑÓÖÒÔÕØŘŔŠŤÚŮÜÙÛÝŸŽáäâàãåčçćďéěëèêẽĕȇíìîïňñóöòôõøðřŕšťúůüùûýÿžþÞĐđßÆa·/_,:;";
+        var to   = "AAAAAACCCDEEEEEEEEIIIINNOOOOOORRSTUUUUUYYZaaaaaacccdeeeeeeeeiiiinnooooooorrstuuuuuyyzbBDdBAa------";
+        for (var i=0, l=from.length ; i<l ; i++) {
+            str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
+
+        str = str.replace(/[^a-z0-9 -]/g, '') 
+        .replace(/\s+/g, '-') 
+        .replace(/-+/g, '-'); 
+
+        return str;
+    }
+
+    var myDropzone = new Dropzone("#dropzoneForm", {
+        url: "{{ route('dropzone.upload', $product->id) }}",
+        headers: {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        },
+        autoProcessQueue : false,
+        parallelUploads: 20,
+        acceptedFiles : ".png,.jpg,.gif,.bmp,.jpeg",
+        autoDiscover:false,
+        maxFilesize: 2,
+        addRemoveLinks: true,
+        init:function(){
+            var submitButton = document.querySelector("#submit-all");
+            myDropzone = this;
+
+            submitButton.addEventListener('click', function(){
+                myDropzone.processQueue();
+            });
+
+            this.on("complete", function(){
+                if(this.getQueuedFiles().length == 0 && this.getUploadingFiles().length == 0)
+                {
+                var _this = this;
+                _this.removeAllFiles();
+                }
+                load_images();
+            });
+
+        },
+    });
+
+    load_images();
+
+    function load_images()
+    {
+        $.ajax({
+            url:"{{ route('dropzone.fetch', $product->id) }}",
+            success:function(data)
+            {
+                $('#uploaded_image').html(data);
+            }
+        })
+    }
+
+    $(document).on('click', '.remove_image', function(){
+        var name = $(this).attr('id');
+        $.ajax({
+            url:"{{ route('dropzone.delete', $product->id) }}",
+            data:{
+                name : name
+            },
+            success:function(data){
+                load_images();
+            }
+        })
+    });
+
+</script>
 
 <script type="text/javascript">
     $('#colorpicker').spectrum({

@@ -286,6 +286,8 @@
                             @endif
                         @endif
                     </div>
+
+                    <p class="text-primary mt-4"><ion-icon name="bag-handle-outline"></ion-icon> Récibelo en {{ $shipment_option->delivery_time }} al seleccionar <br> {{ $shipment_option->name }} en tu Checkout.</p>
                 </div>
             </div>
         </div>

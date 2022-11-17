@@ -39,9 +39,6 @@
         display: none;
     }
 </style>
-
-<link type="text/css" rel="stylesheet" href="{{ asset('lib/werkn/image-uploader/src/image-uploader.css') }}">
-
 @endpush
 
 @section('title')
@@ -153,42 +150,22 @@
 
             <!-- Multimedia Elements -->
             <div class="card mg-t-10 mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center pd-t-20 pd-b-0 bd-b-0">
+                <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                     <h5 class="mg-b-5">Archivos multimedia</h5>
-                    <a class="tx-12 text-info mg-b-0" data-toggle="modal" data-target="#tipsPhoto"><i class="fas fa-camera-retro"></i> Consejos para tomar fotos como un experto</a>
-                    
-                    <!-- Modal -->
-                    <div class="modal fade" id="tipsPhoto" tabindex="-1" aria-labelledby="tipsPhotoLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <img src="{{ asset('assets/img/group_11.svg') }}" alt="" width="250px" style="margin: 20px auto; display:block;">
-                                <h4 class="text-center mt-5 mb-4"> ¿Cómo lograr una buena foto de producto? </h4>
-                                <ul>
-                                    <li>Para que la cuadricula de productos se vea pareja, sube todas las fotos del mismo tamaño.</li>
-                                    <li>Obten imágenes de mejor calidad usando luz natural y evitando el flash.</li>
-                                    <li>Haz que tu producto sea el protagonista de la imagen eligiendo un fondo simple.</li>
-                                </ul>
-                            </div>
-                            <div class="modal-footer justify-content-center">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Seguir editando mi producto</button>
-                                <a href="#" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Ver más consejos</a>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
+                    <!--<p class="tx-12 tx-color-03 mg-b-0">Archivos multimedia.</p>-->
                 </div>
 
                 <div class="card-body row">
-                    <div class="col-md-12 mb-4">
-                        <div class="input-images"></div>
+                    <div class="col-md-12">
+                        {{--  
+                        <div class="form-group">
+                            <label for="model_image">Imagen de Modelo <span class="text-success tx-12">Recomendado</span></label>
+                            <input type="file" name="model_image" class="form-control" accept=".jpg, .jpeg, .png">
+                        </div>
+                        --}}
+                        <div id="dropzoneForm" class="dropzone">
 
-                        <small class="mt-2 d-block">Tamaño mínimo recomendado: <i class="fas fa-arrows-alt-h mr-1 ml-2"></i> 960px <i class="fas fa-arrows-alt-v ml-2 mr-1"></i> 960px</small>
+                        </div>
                     </div>
 
                     <div class="form-group col-md-12">
@@ -514,9 +491,78 @@
 
 @push('scripts')
 <script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('lib/werkn/image-uploader/src/image-uploader.js') }}"></script>
+
+<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+
 <script type="text/javascript">
-    $('.input-images').imageUploader();
+    // Slugify a string
+    function slugify(str)
+    {
+        str = str.replace(/^\s+|\s+$/g, '');
+
+        // Make the string lowercase
+        str = str.toLowerCase();
+
+        // Remove accents, swap ñ for n, etc
+        var from = "ÁÄÂÀÃÅČÇĆĎÉĚËÈÊẼĔȆÍÌÎÏŇÑÓÖÒÔÕØŘŔŠŤÚŮÜÙÛÝŸŽáäâàãåčçćďéěëèêẽĕȇíìîïňñóöòôõøðřŕšťúůüùûýÿžþÞĐđßÆa·/_,:;";
+        var to   = "AAAAAACCCDEEEEEEEEIIIINNOOOOOORRSTUUUUUYYZaaaaaacccdeeeeeeeeiiiinnooooooorrstuuuuuyyzbBDdBAa------";
+        for (var i=0, l=from.length ; i<l ; i++) {
+            str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
+
+        // Remove invalid chars
+        str = str.replace(/[^a-z0-9 -]/g, '') 
+        // Collapse whitespace and replace by -
+        .replace(/\s+/g, '-') 
+        // Collapse dashes
+        .replace(/-+/g, '-'); 
+
+        return str;
+    }
+
+
+    var myDropzone = new Dropzone("#dropzoneForm", {
+        url: "{{ route('dropzone.upload') }}",
+        headers: {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        },
+        autoProcessQueue : true,
+        parallelUploads:1,
+        acceptedFiles : ".png,.jpg,.gif,.bmp,.jpeg",
+        autoDiscover:false,
+        maxFilesize: 2, // MB
+        addRemoveLinks: false,
+        init: function () {
+            this.on("addedfile", function(file) {
+                var removeButton = Dropzone.createElement("<button>ELIMINAR ESTA MADRE</button>");
+                var _this = this;
+                removeButton.addEventListener("click", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                _this.removeFile(file);
+                    console.log(file.id);
+
+                    $.ajax({
+                        url:"{{ route('dropzone.delete') }}",
+                        data:{name : file.id},
+                        success:function(data){
+                            console.log('borrado con puro exito');
+                        }
+                    });
+                });
+
+                file.previewElement.appendChild(removeButton);
+            });
+
+            this.on("success", function (file, response) {
+                console.log("success > " + response.success);
+                /* Esto envia la información del producto a la función de borrado */
+                file.id = response.success;
+            });
+        },
+    });
 </script>
   
 <script type="text/javascript">
