@@ -50,7 +50,7 @@
                 <div class="d-flex align-items-start justify-content-between mb-3">
                     <div style="width: 50%">
                         <h6 class="text-uppercase mb-2">Configuración Manual</h6>
-                        <p class="mb-0" ">Guarda tu configuración de envíos en tu plataforma. El valor predeterminado es $0.00</p>
+                        <p class="mb-0">Guarda tu configuración de envíos en tu plataforma. El valor predeterminado es $0.00</p>
                     </div>
 
                     <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateOption" class="btn btn-sm pd-x-15 btn-outline-primary btn-uppercase mg-l-5"><i class="fas fa-plus"></i> Crear nueva opción de envío</a>

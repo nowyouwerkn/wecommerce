@@ -84,48 +84,7 @@
             </div>
         </div>
     </div>
-
-    <div id="modalSaleChannels" class="modal fade">
-        <div class="modal-dialog modal-dialog-vertical-center" role="document">
-            <div class="modal-content bd-0 tx-14">
-                <div class="modal-header">
-                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Agregar Nuevo Canal de Venta</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body pd-25">
-                    <div class="media align-items-center mb-5">
-                        <img src="{{ asset('assets/img/brands/amazon.jpg') }}" class="wd-100 rounded mg-r-20" alt="">
-                        <div class="media-body">
-                            <span class="badge badge-warning">PRÓXIMAMENTE</span>
-                            <h5 class="mg-b-15 tx-inverse">Amazon</h5>
-                            Uno de las empresas más grandes de venta por internet. Conecta tu catálogo por medio de la API para aprovechar sus beneficios.
-                        </div>
-                    </div>
-
-                    <div class="media align-items-center mb-5">
-                        <img src="{{ asset('assets/img/brands/mercadolibre.png') }}" class="wd-100 rounded mg-r-20" alt="">
-                        <div class="media-body">
-                            <span class="badge badge-warning">PRÓXIMAMENTE</span>
-                            <h5 class="mg-b-15 tx-inverse">MercadoLibre</h5>
-                            El portal latinoamericano de ventas. Conecta tu catálogo por medio de la API para aprovechar sus beneficios.
-                        </div>
-                    </div>
-
-                    <div class="card-footer">
-                        <div class="d-block pt-4">
-                            <h5>¿No encuentras a tu proveedor?</h5>
-                            <p>Nosotros podemos ayudarte a integrar la API.</p>
-                        </div>
-                        
-                        <a href="javascript:void()" class="btn btn-outline-secondary disabled btn-block">Solicita una integración</a>
-                    </div>
-                </div>
-            </div>
-        </div><!-- modal-dialog -->
-    </div><!-- modal -->
-
+    
     <script src="{{ asset('lib/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('lib/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('lib/feather-icons/feather.min.js') }}"></script>

@@ -409,7 +409,6 @@
     $('.input-images').imageUploader();
 </script>
   
-
 <script>
     function slugify(str){
         str = str.replace(/^\s+|\s+$/g, '');

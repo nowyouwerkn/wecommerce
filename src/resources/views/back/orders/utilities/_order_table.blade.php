@@ -10,8 +10,11 @@
                         <i class="icon ion-md-arrow-down"></i></a>
                 </div>
             </th>
+
             <th>Tipo</th>
+
             <th>ID Pago</th>
+
             <th style="width: 80px;">
                <div class="d-flex align-items-center">
                     <span class="table-title">Método</span>
@@ -21,6 +24,7 @@
                         <i class="icon ion-md-arrow-down"></i></a>
                 </div>
             </th>
+
             <th>
                 <div class="d-flex align-items-center">
                     <span class="table-title">Comprador</span>
@@ -30,6 +34,7 @@
                         <i class="icon ion-md-arrow-down"></i></a>
                 </div>
             </th>
+
             <th style="min-width: 200px;">
                 <div class="d-flex align-items-center">
                     <span class="table-title">Fecha de compra</span>
@@ -50,6 +55,9 @@
                 </div>
             </th>
 
+            <th>
+                Acción Recomendada
+            </th>
             <th>
                 <div class="d-flex align-items-center">
                     <span class="table-title">Estatus</span>
@@ -132,7 +140,72 @@
             </td>
 
             <td><strong>${{ number_format($order->payment_total, 2) }}</strong><i class="far fa-question-circle ml-1" style="font-size:.7em;" data-toggle="tooltip" data-placement="top" title="Esta es la cantidad total pagada por el cliente en la compra."></i> </td>
+            
+            <td>
+                @switch($order->status)
+                    @case('Pago Pendiente')
+                        <i class="fas fa-exclamation mr-1"></i> 
+                        @break
 
+                    @case('Pagado')
+                        <div class="alert alert-primary d-flex" role="alert">
+                            <i class="fas fa-box mr-3" style="position:relative; top:3px;"></i>
+                            <div>
+                            <strong>Excelente</strong> tu cliente ya pagó. Ahora empaqueta el producto. Nosotros le mandaremos automáticamente un correo con su estado.
+                            </div>
+                        </div>
+                        @break
+
+                    @case('Empaquetado')
+                        <div class="alert alert-warning d-flex" role="alert">
+                            <i class="fas fa-truck mr-3" style="position:relative; top:3px;"></i> 
+                            <div>
+                            <strong>Asegurate de enviar el paquete</strong>. Genera una guía para la orden e imprime la lista de empaque <a href="{{ route('order.packing.list', $order->id) }}">desde aquí.</a>
+                            </div>
+                        </div>
+                        @break
+
+                    @case('Enviado')
+                        <div class="alert alert-success d-flex" role="alert">
+                            <i class="fas fa-dolly mr-3" style="position:relative; top:3px;"></i> 
+                            <div>
+                            <strong>¡Perfecto!</strong> Asegurate de actualizar a "Entregado" en cuanto sepas que tu cliente recibió su paquete.
+                            </div>
+                        </div>
+                        @break
+
+                    @case('Cancelado')
+                        
+                        @break
+
+                    @case('Expirado')
+                        <div class="alert alert-secondary d-flex" role="alert">
+                            <i class="fas fa-truck mr-3" style="position:relative; top:3px;"></i> 
+                            <div>
+                            <strong>¡No te desanimes!</strong> Algunas ordenes no se pueden completar por falta de fondos de tu cliente o tuvo problemas con su tarjeta. Le mandaremos un correo más adelante para invitarlo al sitio nuevamente.
+                            </div>
+                        </div>
+                        @break
+
+                    @case('Sin Completar')
+                        <div class="alert alert-secondary d-flex" role="alert">
+                            <i class="fas fa-check mr-3" style="position:relative; top:3px;"></i> 
+                            <div>
+                            <strong>¡No te desanimes!</strong> Algunas ordenes no se pueden completar por falta de fondos de tu cliente o tuvo problemas con su tarjeta. Le mandaremos un correo más adelante para invitarlo al sitio nuevamente.
+                            </div>
+                        </div>
+                        @break
+
+                    @default
+                        <div class="alert alert-success d-flex" role="alert">
+                            <i class="fas fa-check mr-3" style="position:relative; top:3px;"></i> 
+                            <div>
+                            <strong>¡Excelente trabajo!</strong>
+                            </div>
+                        </div>
+
+                @endswitch
+            </td>
             <td>
                 @if($order->type != 'recurring_payment')
                 <div id="orderStatus_{{ $order->id }}" class="dropdown order-status">
@@ -306,7 +379,6 @@
 
                                     $('#orderStatus_{{ $order->id }} .order-info span').text(msg['status']);
                                     $('#orderStatus_{{ $order->id }} .btn').addClass('btn-' + status);
-
 
                                     switch(status) {
                                         case 'pendiente':

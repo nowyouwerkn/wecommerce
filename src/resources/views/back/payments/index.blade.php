@@ -113,7 +113,7 @@
                     <img src="{{ asset('assets/img/brands/paypal.png') }}" width="120" style="margin: 10px 0px;">
                     <h4>Express Checkout</h4>
                     <p class="mb-4">Un botón que les permite a los clientes utilizar PayPal directamente desde tu pantalla de pago.</p>
-                    <a href="" data-toggle="modal" data-target="#modalCreatePaypal" class="btn btn-outline-primary btn-sm">Configurar Paypal Checkout</a>
+                    <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreatePaypal" class="btn btn-outline-primary btn-sm">Configurar Paypal Checkout</a>
                      @if($paypal_method->is_active == true)
                         <a href="{{ route('payments.status', $paypal_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar método de pago">Desactivar método de pago</a>  
                     @endif
