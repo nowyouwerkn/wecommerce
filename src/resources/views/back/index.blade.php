@@ -261,7 +261,6 @@
               <p class="tx-color-03 mg-b-10">Promociona tus productos para llegar a mas gente interesada.</p>
             </div>
           </div>
-          
           @else 
           <div class="chart-container chart">
               <canvas id="salesChart" style="height:310px;"></canvas>

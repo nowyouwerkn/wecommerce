@@ -75,6 +75,7 @@ class StockController extends Controller
         $stock->new_price = $request->price_variant;
         $stock->sku = $request->sku_variant;
         $stock->barcode = $request->barcode_variant;
+        $stock->branch_id = $request->branch_id;
 
         $stock->save();
 
@@ -134,6 +135,7 @@ class StockController extends Controller
         $stock->stock = $request->stock_variant;
         $stock->new_price = $request->price_variant;
         $stock->sku = $request->sku_variant;
+        $stock->branch_id = $request->branch_id;
         $stock->save();
 
         // Mensaje de session

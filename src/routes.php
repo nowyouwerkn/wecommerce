@@ -207,6 +207,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('channels', Nowyouwerkn\WeCommerce\Controllers\ChannelController::class);
     Route::resource('branches', Nowyouwerkn\WeCommerce\Controllers\BranchController::class);
 
+    Route::put('/branches/update-stock/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\BranchController@stockUpdate',
+        'as' => 'branch.stock.update',
+    ]);
+
     Route::post('size/add', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\SizeChartController@createsize',
         'as' => 'size.add',

@@ -36,7 +36,11 @@
         <div class="col-md-8">
             <div class="card card-body mb-4">
                 <div class="form-group mt-2">
-                    <label>Código de Descuento <span class="text-danger">*</span></label>
+                    <div class="d-flex justify-content-between mb-3">
+                        <label class="mb-0">Código de Descuento <span class="text-danger">*</span></label>
+                        <a href="javascript:void(0)" id="createCode" class="btn btn-link p-0"><i class="fas fa-random"></i> Crear código aleatorio</a>
+                    </div>
+                    
                     <input type="text" class="form-control" id="code" name="code" required="" />
                     <small>Los clientes introducirán este código de descuento en la pantalla de pago.</small>
                 </div>
@@ -162,13 +166,23 @@
                             <input type="date" class="form-control" name="start_date" value="" required="" />
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col date-wrap">
                         <div class="form-group mt-2">
                             <label>Fecha de Finalización <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="end_date" value="" required="" />
+                            <input type="date" class="form-control" id="end_date" name="end_date" value="" required="" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group mt-2">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="doesnt_expire" name="doesnt_expire" value="1">
+                                <label class="custom-control-label" for="doesnt_expire">Este cupón no tiene caducidad</label>
+                            </div>
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
 
@@ -182,26 +196,23 @@
 
 @push('scripts')
 <script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
- <script src="{{ asset('lib/cleave.js/cleave.min.js') }}"></script>
-    <script type="text/javascript">
-        var cleaveA = new Cleave('#qty', {
-          numeral: true,
-          numeralThousandsGroupStyle: 'thousand'
-        });
+<script src="{{ asset('lib/cleave.js/cleave.min.js') }}"></script>
+<script type="text/javascript">
+    var cleaveA = new Cleave('#qty', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand'
+    });
 
-        var cleaveC = new Cleave('#usage_limit_per_code', {
-          numeral: true,
-          numeralThousandsGroupStyle: 'thousand'
-        });
+    var cleaveC = new Cleave('#usage_limit_per_code', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand'
+    });
 
-        var cleaveD = new Cleave('#usage_limit_per_user', {
-          numeral: true,
-          numeralThousandsGroupStyle: 'thousand'
-        });
-
-
-
-    </script>
+    var cleaveD = new Cleave('#usage_limit_per_user', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand'
+    });
+</script>
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -223,5 +234,36 @@
             $('#qtyForm .form-control').attr('required', false);
         }
     });
+
+    $('#doesnt_expire').on('click', function(e){
+        if($(this).is(':checked')){
+            $('#end_date').fadeOut();
+            $('#end_date').attr('disabled', true);
+            $('.date-wrap').fadeOut();
+        }else{
+            $('#end_date').fadeIn();
+            $('#end_date').attr('disabled', false);
+            $('.date-wrap').fadeIn();
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    $("#createCode").on("click", function() {
+        var string = generateRandomString(10);
+        $("#code").val(string);
+    });
+
+    function generateRandomString(length) {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < length; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        return text;
+    }
+
 </script>
 @endpush

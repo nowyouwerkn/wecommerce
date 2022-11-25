@@ -29,6 +29,8 @@ class CreateBranchesTable extends Migration
             $table->string('state')->nullable();
             $table->string('phone')->nullable();
 
+            $table->boolean('is_default')->default(false);
+
             $table->timestamps();
         });
     }

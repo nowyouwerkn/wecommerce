@@ -170,6 +170,106 @@
         border-radius: 15px;
         margin-bottom: 20px;
     }
+
+    .icon-box{
+        text-align: center;
+        padding: 10px;
+        height: 100%;
+        border:1px dotted grey;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    .icon-box i{
+        color: grey;
+    }
+
+    .price-discounted{
+        text-decoration: line-through;
+        color: rgba(0, 0, 0, 0.8);
+        font-size: .9em;
+    }
+
+    .circle-icon{
+        border-radius: 100%;
+        text-align: center;
+        width: 22px;
+        height: 22px;
+        display: inline-flex;
+        padding: 4px 5px;
+    }
+
+    .success-update{
+        background-color: #10b759;
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        height: 100%;
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+        z-index: 2;
+        color: #fff;
+        opacity: .7;
+        padding: 27px 0px;
+        display: none;
+    }
+
+    .error-update{
+        background-color: #ff7675;
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        height: 100%;
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+        z-index: 2;
+        color: #fff;
+        opacity: .9;
+        padding: 27px 0px;
+        display: none;
+    }
+
+    .child-row{
+        position: relative;
+        overflow: hidden;
+    }
+
+    .filter-btn{
+        border: none;
+        background-color: transparent;
+        color: rgba(27, 46, 75, 0.7);
+        font-size: 12px;
+        padding: 0px 2px;
+    }
+
+    .table .table-title{
+        margin-right: 6px;
+    }
+
+    .filter-btn:hover{
+        color: #000;
+    }
+
+    .btn-stock{
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        line-height: 16px;
+        border-radius: 100%;
+        margin: 0 5px;
+        border: 1px solid #c0ccda;
+        text-align: center;
+        color: #000;
+    }
+
+    .btn-stock:hover{
+        background-color: #c0ccda;
+        color: #000;
+    }
 </style>
 @endpush
 
@@ -459,6 +559,7 @@
                         </div>
 
                         <div class="card-body row">
+                            @if($branches->count() == 0)
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="stock">Cantidad <span class="text-danger">*</span></label>
@@ -469,20 +570,124 @@
                                     @endif
                                 </div>
                             </div>
+                            @endif
 
-                            <div class="col-md-4">
+                            <div class="col">
                                 <div class="form-group">
                                     <label for="sku">SKU (Stock Keeping Unit) <span class="text-danger">*</span></label>
                                     <input type="text" name="sku" class="form-control" value="{{ $product->sku }}" required>
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col">
                                 <div class="form-group">
                                     <label for="barcode">Código de Barras (ISBN, UPC, GTIN, etc) <span class="text-info">(Opcional)</span></label>
                                     <input type="text" name="barcode" class="form-control" value="{{ $product->barcode }}">
                                 </div>
                             </div>
+
+                            @if($branches->count() != 0)
+                            <div class="col-md-12">
+                                <hr>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h6 class="mg-b-5 text-uppercase">Cantidad <span class="text-danger">*</span></h6>
+                            </div>
+
+                            <div class="col-md-6 text-right">
+                                <a href="{{ route('branches.index') }}">Editar Sucursales</a>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="table-responsive mt-3 mb-4">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Sucursal</th>
+                                                <th>Entrante</th>
+                                                <th>Comprometido</th>
+                                                <th>Disponible</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($branches as $branch)
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div>
+                                                            <div class="icon-box">
+                                                                <i class="fas fa-map-marker-alt"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <strong>{{ $branch->name }}</strong><br>
+                                                            <small>{{ $branch->street . ' ' . $branch->street_num . ' ' . $branch->postal_code . ' ' . $branch->city . ' ' . $branch->state . ', ' . $branch->country_id }}</small>
+                                                        </div>
+                                                    </div>
+
+                                                    <span id="success-update-p{{ $product->id }}" class="success-update"><i class="fas fa-check mr-2"></i> Actualización exitosa </span>
+                                                    <span id="error-update-p{{ $product->id }}" class="error-update"><i class="fas fa-times mr-2"></i> Problema de datos. Inicia sesión nuevamente o refresca la pantalla. </span>
+                                                </td>
+                
+                                                <td>
+                                                    <input type="number" style="width:80px" name="stock" class="form-control" value="0" required>
+                                                </td>
+                                                    
+                                                <td>
+                                                    <input type="number" style="width:80px" name="stock" class="form-control" value="0" required>
+                                                </td>
+
+                                                <td>
+                                                    <input type="number" style="width:80px" name="stock" id="branchStock_{{ $branch->id }}" class="form-control" value="{{ $branch->inventory->stock ?? '0'}}" required>
+                                                </td>
+                                                <td>
+                                                    <button id="branchStockUpdate{{ $branch->id }}" class="btn btn-sm pd-x-15 btn-outline-success btn-uppercase mg-l-5">
+                                                        <i class="fas fa-sync mr-1" aria-hidden="true"></i> Actualizar
+                                                    </button>
+                                                </td>
+                                            </tr>
+
+                                            @push('scripts')
+                                            <script type="text/javascript">
+                                                $('#branchStockUpdate{{ $branch->id }}').on('click', function(){
+                                                    event.preventDefault();
+
+                                                    $.ajax({
+                                                        method: 'POST',
+                                                        url: "{{ route('branch.stock.update', $branch->id) }}",
+                                                        data:{
+                                                            stock: $('#branchStock_{{ $branch->id }}').val(),
+                                                            product_id: '{{ $product->id }}',
+                                                            _method: "PUT",
+                                                            _token: "{{ Session::token() }}", 
+                                                        },
+                                                        success: function(msg){
+                                                            console.log(msg['mensaje']);
+
+                                                            $('#success-update-p{{ $product->id }}').fadeIn();
+
+                                                            setTimeout(function () {
+                                                                $('#success-update-p{{ $product->id }}').fadeOut();
+                                                            }, 500);
+                                                        },
+                                                        error: function(msg){
+                                                            $('#error-update-p{{ $product->id }}').fadeIn();
+
+                                                            console.log(msg);        
+                                                        }
+                                                    });
+                                                });
+                                            </script>
+                                            @endpush
+                                            
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            @endif
 
                             <div class="col-md-12 mb-4">
                                 @if($product->has_variants == true)

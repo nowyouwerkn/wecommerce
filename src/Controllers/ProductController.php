@@ -18,6 +18,7 @@ use Nowyouwerkn\WeCommerce\Models\ProductRelationship;
 
 use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
 
+use Nowyouwerkn\WeCommerce\Models\Branch;
 use Nowyouwerkn\WeCommerce\Models\Wishlist;
 
 /* Exportar Info */
@@ -329,6 +330,8 @@ class ProductController extends Controller
             $all_relationships = ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
         }
 
+        $branches = Branch::all();
+
         return view('wecommerce::back.products.show')
         ->with('product', $product)
         ->with('variant_stock', $variant_stock)
@@ -336,7 +339,8 @@ class ProductController extends Controller
         ->with('total_qty', $total_qty)
         ->with('related_products', $related_products)
         ->with('base_product', $base_product)
-        ->with('all_relationships', $all_relationships);
+        ->with('all_relationships', $all_relationships)
+        ->with('branches', $branches);
     }
 
     public function storeImage(Request $request)

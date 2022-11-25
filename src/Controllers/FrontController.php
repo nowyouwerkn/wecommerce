@@ -3414,10 +3414,15 @@ class FrontController extends Controller
                 }
 
                 // Revisión de caducidad
-                $end_date = Carbon::parse($coupon->end_date);
+                if($coupon->end_date == null){
+                    $end_date = 0;
+                }else{
+                    $end_date = Carbon::parse($coupon->end_date);
+                }
+
                 $today = Carbon::today();
 
-                if ($today <= $end_date ) {
+                if ($today <= $end_date || $end_date == 0) {
                     /* Si está activa la opcion; revisar si existen productos con descuento en el carrito */
                     if ($coupon->exclude_discounted_items == true) {
                         $oldCart = Session::get('cart');

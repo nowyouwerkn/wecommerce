@@ -165,16 +165,8 @@
                         <div class="form-group">
                             <label for="name">País / Región</label>
                             <select class="form-control" name="country_id">
-                                <option value="{{ $config->country_id }}" selected>
-                                    @if($config->country_id=='1')
-                                        United states of America
-                                        @endif
-                                       @if($config->country_id=='2')
-                                       Mexico
-                                    @endif
-                                </option>
                                 @foreach($countries as $country)
-                                <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                <option {{ ($config->country_id == $country->id) ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
                                 @endforeach
                             </select>
                         </div>

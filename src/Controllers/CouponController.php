@@ -47,7 +47,6 @@ class CouponController extends Controller
         $this -> validate($request, array(
             'code' => 'required|unique:coupons|max:255',
             'start_date' => 'required',
-            'end_date' => 'required',
             'qty' => 'required|max:255'
         ));
 
@@ -70,36 +69,35 @@ class CouponController extends Controller
         }
 
         $coupon->start_date = $request->start_date;
-        $coupon->end_date = $request->end_date;
+        $coupon->end_date = $request->end_date ?? null;
         $coupon->is_active = true;
 
         $coupon->save();
 
         // Categorías excluidas
-        $categories = $request->input('excluded_categories');
-        foreach($categories as $cat) {
-            $exc_cat = new CouponExcludedCategory;
+        if(isset($request->excluded_categories)){
+            $categories = $request->input('excluded_categories');
+            foreach($categories as $cat) {
+                $exc_cat = new CouponExcludedCategory;
 
-            $exc_cat->category_id = $cat;
-            $exc_cat->coupon_id = $coupon->id;
-            $exc_cat->save();
+                $exc_cat->category_id = $cat;
+                $exc_cat->coupon_id = $coupon->id;
+                $exc_cat->save();
+            }
         }
 
-        // Productos Excluidos
-        $products = $request->input('excluded_products');
-        foreach($products as $prod) {
-            $exc_pro = new CouponExcludedProduct;
+        if(isset($request->excluded_products)){
+            // Productos Excluidos
+            $products = $request->input('excluded_products');
+            foreach($products as $prod) {
+                $exc_pro = new CouponExcludedProduct;
 
-            $exc_pro->product_id = $prod;
-            $exc_pro->coupon_id = $coupon->id;
-            $exc_pro->save();
+                $exc_pro->product_id = $prod;
+                $exc_pro->coupon_id = $coupon->id;
+                $exc_pro->save();
+            }
         }
-
-        /*
-        $coupon->excludedCategories()->sync($request->excluded_categories);
-        $coupon->excludedProducts()->sync($request->excluded_products);
-        */
-
+        
         // Notificación
         $type = 'Cupón';
         $by = Auth::user();

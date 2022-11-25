@@ -63,7 +63,11 @@
                                     @endif 
                                 </td>
                                 <td>
+                                    @if($cup->end_date != null)
                                     <span class="text-muted"><i class="far fa-clock"></i> {{ Carbon\Carbon::parse($cup->end_date)->diffForHumans() }}</span>
+                                    @else
+                                    <span class="text-muted">No Expira</span>
+                                    @endif
                                 </td>
 
                                 <td>
