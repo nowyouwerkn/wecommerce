@@ -352,6 +352,11 @@ class DashboardController extends Controller
         ->with('total_cancelado', $total_cancelado);
     }
 
+    public function analytics ()
+    {
+        return view('wecommerce::back.analytics');
+    }
+    
     public function configuration ()
     {
         return view('wecommerce::back.configuration');

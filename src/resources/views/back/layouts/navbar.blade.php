@@ -64,8 +64,15 @@
         <ul class="nav nav-aside">
             <li class="nav-label">General</li>
             <li class="nav-item active">
-                <a href="{{ route('dashboard') }}" class="nav-link"><i data-feather="pie-chart"></i> <span>Vista General</span></a>
+                <a href="{{ route('dashboard') }}" class="nav-link"><i data-feather="sun"></i> <span>Vista General</span></a>
             </li>
+
+            <li class="nav-item">
+                <a href="{{ route('analytics.index') }}" class="nav-link">
+                    <i data-feather="pie-chart"></i> <span>Analítica</span>
+                </a>
+            </li>
+
             <li class="nav-item with-sub">
                 <a href="" class="nav-link"><i data-feather="image"></i> <span> Contenido</span></a>
                 <ul>

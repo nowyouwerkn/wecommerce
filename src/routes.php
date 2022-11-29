@@ -39,6 +39,8 @@ Route::prefix('/instalador')->group(function () {
 Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']], function(){
     //Dashboard
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@index')->name('dashboard'); //
+    Route::get('/kpis-analitica', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@analytics')->name('analytics.index');
+    
     Route::get('/change-color', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@changeColor',
         'as' => 'change.color',

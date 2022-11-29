@@ -7,6 +7,19 @@
     .hidden{
         display: none;
     }
+
+    .select2{
+        width: 100% !important;
+        display: block;
+    }
+
+    .select2-container .select2-selection--single{
+        height: 36px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered{
+        height: 36px !important;
+    }
 </style>
 @endpush
 
@@ -81,7 +94,6 @@
                     <label>Cantidad minima de artículos</label>
                     <input type="text" class="form-control" name="minimun_requirements_value" id="minimun_requirements_value" value="10" />
                 </div>
-
             </div>
             --}}
 
@@ -98,7 +110,6 @@
                             <small>Este cupón solo podrá ser usado una vez por usuario.</small>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="row">
@@ -129,35 +140,58 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mt-2">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="for_single" name="for_single" value="1">
+                                <label class="custom-control-label" for="for_single">Este cupón es solo para un producto</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group mt-2">
-                    <label>Excluir categorías</label>
-                    <select class="form-control select2" multiple="" name="excluded_categories[]">
-                        @php
-                            $categories = Nowyouwerkn\WeCommerce\Models\Category::all();
-                        @endphp
-                        @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->slug }}</option>
-                        @endforeach
-                    </select>
+                @php
+                    $products = Nowyouwerkn\WeCommerce\Models\Product::all();
+                @endphp
+
+                <div id="singleProductWrap" style="display: none;">
+                    <div class="form-group mt-2">
+                        <label>Producto</label>
+                        <select class="form-control select2" name="single_product">
+                            @foreach($products as $pro)
+                            <option value="{{ $pro->id }}">{{ $pro->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group mt-2">
-                    <label>Excluir Productos</label>
-                    <select class="form-control select2" multiple="" name="excluded_products[]">
-                        @php
-                            $products = Nowyouwerkn\WeCommerce\Models\Product::all();
-                        @endphp
-                        @foreach($products as $pro)
-                        <option value="{{ $pro->id }}">{{ $pro->name }}</option>
-                        @endforeach
-                    </select>
+                <div id="excludeProductWrap">
+                    <div class="form-group mt-2">
+                        <label>Excluir Productos</label>
+                        <select class="form-control select2" multiple="" name="excluded_products[]">
+                            @foreach($products as $pro)
+                            <option value="{{ $pro->id }}">{{ $pro->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label>Excluir categorías</label>
+                        <select class="form-control select2" multiple="" name="excluded_categories[]">
+                            @php
+                                $categories = Nowyouwerkn\WeCommerce\Models\Category::all();
+                            @endphp
+                            @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}">{{ $cat->slug }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
 
             <div class="card card-body mb-4">
-                <h3>Periodo de duración</h3>
+                <h6 class="text-uppercase">Periodo de Duración</h6>
 
                 <div class="row">
                     <div class="col">
@@ -182,7 +216,6 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
         </div>
 
@@ -244,6 +277,18 @@
             $('#end_date').fadeIn();
             $('#end_date').attr('disabled', false);
             $('.date-wrap').fadeIn();
+        }
+    });
+
+    $('#for_single').on('click', function(e){
+        if($(this).is(':checked')){
+            $('#singleProductWrap').fadeIn();
+            $('#singleProductWrap select').attr('disabled', false);
+            $('#excludeProductWrap').fadeOut();
+        }else{
+            $('#singleProductWrap').fadeOut();
+            $('#singleProductWrap select').attr('disabled', true);
+            $('#excludeProductWrap').fadeIn();
         }
     });
 </script>

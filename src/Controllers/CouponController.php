@@ -7,6 +7,7 @@ use Session;
 use Auth;
 use Purifier;
 
+use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\User;
 use Nowyouwerkn\WeCommerce\Models\UserRule;
 use Nowyouwerkn\WeCommerce\Models\Coupon;
@@ -96,6 +97,19 @@ class CouponController extends Controller
                 $exc_pro->coupon_id = $coupon->id;
                 $exc_pro->save();
             }
+        }
+
+        if(isset($request->for_single)){
+            // Productos Excluidos
+            $products = Product::where('id', '!=', $request->single_product)->get();
+
+            foreach($products as $prod) {
+                $exc_pro = new CouponExcludedProduct;
+
+                $exc_pro->product_id = $prod->id;
+                $exc_pro->coupon_id = $coupon->id;
+                $exc_pro->save();
+            } 
         }
         
         // Notificación
