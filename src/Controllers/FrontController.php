@@ -432,6 +432,17 @@ class FrontController extends Controller
         }
     }
 
+    public function reviewFilter($id, $filter)
+    {
+        $product = Product::find($id);
+
+        $reviews = $product->approved_reviews()->where('rating', $filter)->get();
+        
+        return view('front.theme.' . $this->theme->get_name() . '.review_filter')
+        ->with('product', $product)
+        ->with('reviews', $reviews);
+    }
+    
     /*
     * Checkout
     * Lógica de carrito, checkout y compra exitosa

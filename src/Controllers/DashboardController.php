@@ -15,6 +15,7 @@ use Nowyouwerkn\WeCommerce\Models\ShipmentMethod;
 use Nowyouwerkn\WeCommerce\Models\Category;
 use Nowyouwerkn\WeCommerce\Models\Order;
 use Nowyouwerkn\WeCommerce\Models\User;
+use Nowyouwerkn\WeCommerce\Models\Query;
 
 use Illuminate\Http\Request;
 
@@ -354,7 +355,13 @@ class DashboardController extends Controller
 
     public function analytics ()
     {
-        return view('wecommerce::back.analytics');
+        $year_start = Carbon::now()->startOfYear();
+        $year_end = Carbon::now()->endOfYear();
+
+        $queries = Query::whereBetween('created_at', [$year_start, $year_end])->get();
+
+        return view('wecommerce::back.analytics')
+        ->with('queries', $queries);
     }
     
     public function configuration ()

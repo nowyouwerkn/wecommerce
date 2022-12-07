@@ -287,7 +287,7 @@
                         @endif
                     </div>
 
-                    <p class="text-primary mt-4"><ion-icon name="bag-handle-outline"></ion-icon> Récibelo en {{ $shipment_option->delivery_time }} al seleccionar <br> {{ $shipment_option->name }} en tu Checkout.</p>
+                    <p class="text-primary mt-4"><ion-icon name="bag-handle-outline"></ion-icon> Récibelo de {{ $shipment_option->delivery_time }} al seleccionar <br> {{ $shipment_option->name }} en tu Checkout.</p>
                 </div>
             </div>
         </div>
@@ -327,135 +327,252 @@
                                 </div>
                             </div>
                           <div class="tab-pane fade" id="materials" role="tabpanel" aria-labelledby="materials-tab"><p>{{ $product->materials }}</p></div>
-                          <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">   
-                            @if($product->approved_reviews->count() != 0)
-                                @foreach($product->approved_reviews as $review)
-                                    <div class="media">
 
-                                        @if($review->user != NULL)
-                                            @if($review->user->image == NULL)
-                                                <img class="mr-3 rounded-circle" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim( $review->email))) . '?d=retro&s=100' }}" alt="{{ $review->name }}" width="50">
-                                            @else
-                                                <img class="mr-3 rounded-circle" src="{{ asset('img/users/' . $review->user->image ) }}" alt="{{ $review->name }}" width="50">
-                                            @endif
-                                        @endif
+                            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @if($product->approved_reviews->count() != 0)
+                                        <h5>Opiniones de clientes</h5>
 
-                                           <div class="rating d-flex mt-2">
-                                                @if($review->rating == 0)
-                                                <ion-icon name="star-outline"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
+                                        <div class="d-flex">
+                                            <div class="rating d-flex mt-2">
+                                                @if(round($product->approved_reviews->avg('rating'), 0) == 0)
+                                                    <ion-icon name="star-outline"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
                                                 @endif
-                                                  @if($review->rating == 1)
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
+    
+                                                @if(round($product->approved_reviews->avg('rating'), 0) == 1)
+                                                    <ion-icon name="sta"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
                                                 @endif
-                                                  @if($review->rating == 2)
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
+                                                
+                                                @if(round($product->approved_reviews->avg('rating'), 0) == 2)
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
                                                 @endif
-                                                  @if($review->rating == 3)
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
+    
+                                                @if(round($product->approved_reviews->avg('rating'), 0) == 3)
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
                                                 @endif
-                                                  @if($review->rating == 4)
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star-outline"></ion-icon>
+    
+                                                @if(round($product->approved_reviews->avg('rating'), 0) == 4)
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star-outline"></ion-icon>
                                                 @endif
-                                                  @if($review->rating == 5)
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star"></ion-icon>
-                                                <ion-icon name="star"></ion-icon>
+                                                
+                                                @if(round($product->approved_reviews->avg('rating'), 0) == 5)
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star"></ion-icon>
+                                                    <ion-icon name="star"></ion-icon>
                                                 @endif
                                             </div>
-                                        <div class="media-body">
-                                            <h5 class="mt-0 mb-0">{{ $review->name }}</h5>
-                                            <p class="mb-2"><small><i>Publicado: {{ date( 'd, m, Y' ,strtotime($review->created_at)) }}</i></small></p>
-                                            <p>{{ $review->review }}</p>
+
+                                            <p>{{ round($product->approved_reviews->avg('rating')) }} de 5</p>
                                         </div>
+                                        
+                                        <p>{{ $product->approved_reviews->count() }} califaciones globales</p>
+
+                                        <ul class="list-group list-group-flush">
+                                            <a href="{{ route('reviews.filter', [$product->id, '5']) }}" class="list-group-item d-flex justify-content-between align-items-center ">
+                                                <p class="mb-0">5 estrellas</p>
+                                                <div class="progress mb-0 mt-0" style="width: 50%;">
+                                                    <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: {{ ($product->approved_reviews->where('rating', 5)->count() * 100) / $product->approved_reviews->count() }}%" aria-valuenow="{{ ($product->approved_reviews->where('rating', 5)->count() * 100) / $product->approved_reviews->count() }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <p class="mb-0">{{ ($product->approved_reviews->where('rating', 5)->count() * 100) / $product->approved_reviews->count() }}%</p>
+                                            </a>
+                                            <a href="{{ route('reviews.filter', [$product->id, '4']) }}" class="list-group-item d-flex justify-content-between align-items-center">
+                                                <p class="mb-0">4 estrellas</p>
+                                                <div class="progress mb-0 mt-0" style="width: 50%;">
+                                                    <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: {{ ($product->approved_reviews->where('rating', 4)->count() * 100) / $product->approved_reviews->count() }}%" aria-valuenow="{{ ($product->approved_reviews->where('rating', 4)->count() * 100) / $product->approved_reviews->count() }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                               <p class="mb-0">{{ ($product->approved_reviews->where('rating', 4)->count() * 100) / $product->approved_reviews->count() }}%</p>
+                                            </a>
+                                            <a href="{{ route('reviews.filter', [$product->id, '3']) }}" class="list-group-item d-flex justify-content-between align-items-center">
+                                                <p class="mb-0">3 estrellas</p>
+                                                <div class="progress mb-0 mt-0" style="width: 50%;">
+                                                    <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: {{ ($product->approved_reviews->where('rating', 3)->count() * 100) / $product->approved_reviews->count() }}%" aria-valuenow="{{ ($product->approved_reviews->where('rating', 3)->count() * 100) / $product->approved_reviews->count() }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                               <p class="mb-0">{{ ($product->approved_reviews->where('rating', 3)->count() * 100) / $product->approved_reviews->count() }}%</p>
+                                            </a>
+                                            <a href="{{ route('reviews.filter', [$product->id, '2']) }}" class="list-group-item d-flex justify-content-between align-items-center">
+                                                <p class="mb-0">2 estrellas</p>
+                                                <div class="progress mb-0 mt-0" style="width: 50%;">
+                                                    <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: {{ ($product->approved_reviews->where('rating', 2)->count() * 100) / $product->approved_reviews->count() }}%" aria-valuenow="{{ ($product->approved_reviews->where('rating', 2)->count() * 100) / $product->approved_reviews->count() }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                               <p class="mb-0">{{ ($product->approved_reviews->where('rating', 2)->count() * 100) / $product->approved_reviews->count() }}%</p>
+                                            </a>
+                                            <a href="{{ route('reviews.filter', [$product->id, '1']) }}" class="list-group-item d-flex justify-content-between align-items-center">
+                                                <p class="mb-0">1 estrellas</p>
+                                                <div class="progress mb-0 mt-0" style="width: 50%;">
+                                                    <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: {{ ($product->approved_reviews->where('rating', 1)->count() * 100) / $product->approved_reviews->count() }}%" aria-valuenow="{{ ($product->approved_reviews->where('rating', 1)->count() * 100) / $product->approved_reviews->count() }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                               <p class="mb-0">{{ ($product->approved_reviews->where('rating', 1)->count() * 100) / $product->approved_reviews->count() }}%</p>
+                                            </a>
+                                        </ul>
+                                    @else
+                                        <p>No hay reseñas para este producto todavía. Se el primero en hablar de "{{ $product->name }}"</p>
+                                    @endif
+                                    
                                     </div>
 
-                                    <hr>
-                                @endforeach
-                            @else
-                                <p class="">No hay reseñas para este producto todavía. Se el primero en hablar de "{{ $product->name }}"</p>
-                            @endif
-                                <form action="{{ route('reviews.store', $product->id) }}" method="POST" class="comment-form review-form">
-                                {{ csrf_field() }}
+                                    <div class="col-md-8">
+                                        <form action="{{ route('reviews.store', $product->id) }}" method="POST" class="comment-form review-form">
+                                            {{ csrf_field() }}
+            
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+            
+            
+                                            <h5 class="mb-2">Tu reseña <span class="text-danger ">*</span></h5>
+                                            
+                                            <div class="rate">
+                                                <input type="radio" id="star5" name="rating" value="5" />
+                                                <label for="star5" title="text">5 estrellas</label>
+                                                <input type="radio" id="star4" name="rating" value="4" />
+                                                <label for="star4" title="text">4 estrellas</label>
+                                                <input type="radio" id="star3" name="rating" value="3" />
+                                                <label for="star3" title="text">3 estrellas</label>
+                                                <input type="radio" id="star2" name="rating" value="2" />
+                                                <label for="star2" title="text">2 estrellas</label>
+                                                <input type="radio" id="star1" name="rating" value="1" />
+                                                <label for="star1" title="text">1 estrella</label>
+                                            </div>
+            
+                                            <textarea id="review" name="review" rows="4" class="form-control mb-4" placeholder="Este producto es genial..."></textarea>
+            
+                                            @guest
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="mb-2">Tu nombre <span class="text-danger ">*</span></h5>
+                                                    <input type="text" name="name" placeholder="Nombre Apellido" required="">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5 class="mb-2">Tu correo <span class="text-danger ">*</span></h5>
+                                                    <input type="email" name="email" placeholder="correo@correo.com" required="">
+                                                </div>
+                                            </div>
+                                            @else
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="mb-2">Tu nombre <span class="text-danger ">*</span></h5>
+                                                    <input type="text" name="name" placeholder="Nombre Apellido" required="" value="{{ Auth::user()->name }}" readonly="">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5 class="mb-2">Tu correo <span class="text-danger ">*</span></h5>
+                                                    <input type="email" name="email" placeholder="correo@correo.com" required="" value="{{ Auth::user()->email }}" readonly="">
+                                                </div>
+            
+                                            </div>
+                                            <div class="justify-content-center">
+                                                <small class="d-block mb-4">Tienes sesión iniciada como {{ Auth::user()->name }} 
+                                            </small>
+                                            </div>
+                                        
+                                            @endguest
+            
+                                            <!--
+                                            <div class="comment-check-box">
+                                                <input type="checkbox" id="comment-check">
+                                                <label for="comment-check">Save my name and email in this browser for the next time I comment.</label>
+                                            </div>
+                                            -->
+                                            <button type="submit" class="btn btn-primary mt-5">Publicar Reseña</button>
+                                        </form>
 
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        @if($product->approved_reviews->count() != 0)
+                                            @foreach($product->approved_reviews as $review)
+                                                <div class="media">
+                                                    @if($review->user != NULL)
+                                                        @if($review->user->image == NULL)
+                                                            <img class="mr-3 rounded-circle" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim( $review->email))) . '?d=retro&s=100' }}" alt="{{ $review->name }}" width="50">
+                                                        @else
+                                                            <img class="mr-3 rounded-circle" src="{{ asset('img/users/' . $review->user->image ) }}" alt="{{ $review->name }}" width="50">
+                                                        @endif
+                                                    @endif
 
+                                                    <div class="rating d-flex mt-2">
+                                                        @if($review->rating == 0)
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        @endif
+                                                        
+                                                        @if($review->rating == 1)
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        @endif
+                                                        
+                                                        @if($review->rating == 2)
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        @endif
+                                                        
+                                                        @if($review->rating == 3)
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        @endif
+                                                        
+                                                        @if($review->rating == 4)
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star-outline"></ion-icon>
+                                                        @endif
+                                                        
+                                                        @if($review->rating == 5)
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star"></ion-icon>
+                                                        <ion-icon name="star"></ion-icon>
+                                                        @endif
+                                                    </div>
 
-                                <h5 class="mb-2">Tu reseña <span class="text-danger ">*</span></h5>
-                                <div class="rate">
-                                <input type="radio" id="star5" name="rating" value="5" />
-                                <label for="star5" title="text">5 stars</label>
-                                <input type="radio" id="star4" name="rating" value="4" />
-                                <label for="star4" title="text">4 stars</label>
-                                <input type="radio" id="star3" name="rating" value="3" />
-                                <label for="star3" title="text">3 stars</label>
-                                <input type="radio" id="star2" name="rating" value="2" />
-                                <label for="star2" title="text">2 stars</label>
-                                <input type="radio" id="star1" name="rating" value="1" />
-                                <label for="star1" title="text">1 star</label>
-                              </div>
-                                <textarea id="review" name="review" rows="4" class="form-control mb-4" placeholder="Este producto es genial..."></textarea>
+                                                    <div class="media-body">
+                                                        <h5 class="mt-0 mb-0">{{ $review->name }}</h5>
+                                                        <p class="mb-2"><small><i>Publicado: {{ date( 'd, m, Y' ,strtotime($review->created_at)) }}</i></small></p>
+                                                        <p>{{ $review->review }}</p>
+                                                    </div>
+                                                </div>
 
-                                @guest
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h5 class="mb-2">Tu nombre <span class="text-danger ">*</span></h5>
-                                        <input type="text" name="name" placeholder="Nombre Apellido" required="">
+                                                <hr>
+                                            @endforeach
+                                        @else
+                                            <p>No hay reseñas para este producto todavía. Se el primero en hablar de "{{ $product->name }}"</p>
+                                        @endif
                                     </div>
-                                    <div class="col-md-6">
-                                        <h5 class="mb-2">Tu correo <span class="text-danger ">*</span></h5>
-                                        <input type="email" name="email" placeholder="correo@correo.com" required="">
-                                    </div>
-                                </div>
-                                @else
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h5 class="mb-2">Tu nombre <span class="text-danger ">*</span></h5>
-                                        <input type="text" name="name" placeholder="Nombre Apellido" required="" value="{{ Auth::user()->name }}" readonly="">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h5 class="mb-2">Tu correo <span class="text-danger ">*</span></h5>
-                                        <input type="email" name="email" placeholder="correo@correo.com" required="" value="{{ Auth::user()->email }}" readonly="">
-                                    </div>
+                                </div>    
+                            </div>
 
-                                </div>
-                                <div class="justify-content-center">
-                                      <small class="d-block mb-4">Tienes sesión iniciada como {{ Auth::user()->name }} 
-                                </small>
-                                </div>
-                              
-                                @endguest
-
-                                <!--
-                                <div class="comment-check-box">
-                                    <input type="checkbox" id="comment-check">
-                                    <label for="comment-check">Save my name and email in this browser for the next time I comment.</label>
-                                </div>
-                                -->
-                                <button type="submit" class="btn btn-primary mt-5">Publicar Reseña</button>
-                            </form>
-                        </div>
                              <div class="tab-pane fade show " id="sizes" role="tabpanel" aria-labelledby="reviews-tab">
 
                                 <table class="table table-hover table-responsive mt-2 mb-4">

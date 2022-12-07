@@ -534,6 +534,11 @@ Route::post('/catalog/{id}/review', [
     'as' => 'reviews.store',
 ]);
 
+Route::get('/catalog/{id}/review/{filter}', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@reviewFilter',
+    'as' => 'reviews.filter',
+]);
+
 /* Newsletter */
 Route::post('registro-newsletter', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@newsletter')->name('newsletter_front.store');
 

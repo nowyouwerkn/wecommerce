@@ -3,6 +3,7 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
+use Nowyouwerkn\WeCommerce\Models\Query;
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Category;
 use Nowyouwerkn\WeCommerce\Models\Variant;
@@ -54,6 +55,10 @@ class SearchController extends Controller
         ->where('name', 'LIKE', "%{$request->search}%")
         ->orWhere('search_tags', 'LIKE', "%{$request->search}%")
         ->where('status', 'Publicado')->get()->take(6);
+
+        $query = new Query;
+        $query->query = $request->search;
+        $query->save();  
 
         return view('front.theme.' . $this->theme->get_name() . '.search.query', compact('results'))
         ->with(['search' => $request->search])->render();

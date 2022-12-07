@@ -57,7 +57,7 @@
                     @endforeach
                 </div>
                 <div class="pagination-wrap">
-                    {{ $products->links() }}
+                    {{ $products->appends(request()->query())->links() }}
                 </div>
             </div>
             
