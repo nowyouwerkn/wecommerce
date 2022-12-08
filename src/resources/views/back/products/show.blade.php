@@ -632,11 +632,11 @@
                                                 </td>
                 
                                                 <td>
-                                                    <input type="number" style="width:80px" name="stock" class="form-control" value="0" required>
+                                                    <input type="number" style="width:80px" name="entry_stock" class="form-control" value="{{ $branch->inventory->entry_stock ?? '0'}}" required>
                                                 </td>
                                                     
                                                 <td>
-                                                    <input type="number" style="width:80px" name="stock" class="form-control" value="0" required>
+                                                    <input type="number" style="width:80px" name="commited_stock" class="form-control" value="{{ $branch->inventory->commited_stock ?? '0'}}" required>
                                                 </td>
 
                                                 <td>

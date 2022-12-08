@@ -20,12 +20,16 @@ class CreateBranchInventoriesTable extends Migration
             $table->integer('product_id')->unsigned();
 
             $table->string('stock')->nullable();
+            $table->string('entry_stock')->nullable();
+            $table->string('commited_stock')->nullable();
 
             $table->timestamps();
         });
 
         Schema::table('product_variants', function (Blueprint $table) {
             $table->string('branch_id')->after('id')->nullable();
+            $table->string('entry_stock')->after('stock')->nullable();
+            $table->string('commited_stock')->after('stock')->nullable();
         });
     }
 
@@ -40,6 +44,8 @@ class CreateBranchInventoriesTable extends Migration
 
         Schema::table('product_variants', function (Blueprint $table) {
             $table->dropColumn('branch_id');
+            $table->dropColumn('entry_stock');
+            $table->dropColumn('commited_stock');
         });
     }
 }

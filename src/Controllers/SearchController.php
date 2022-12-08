@@ -40,6 +40,10 @@ class SearchController extends Controller
         $categories = Category::where('parent_id', 0)->orWhere('parent_id', NULL)->get();
         $variants = Variant::orderBy('value', 'asc')->get(['value']);
 
+        $query = new Query;
+        $query->query = $search_query;
+        $query->save();  
+
         return view('front.theme.' . $this->theme->get_name() . '.search.general_query')
         ->with('products', $products)
         ->with('popular_products', $popular_products)

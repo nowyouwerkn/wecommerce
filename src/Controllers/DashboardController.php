@@ -315,8 +315,6 @@ class DashboardController extends Controller
             $percent_diff_orders = number_format(($diff_orders / $avg_ord) * 100,2);
         }
 
-
-
         return view('wecommerce::back.index')
         ->with('product', $product)
         ->with('payment', $payment)
@@ -358,9 +356,28 @@ class DashboardController extends Controller
         $year_start = Carbon::now()->startOfYear();
         $year_end = Carbon::now()->endOfYear();
 
-        $queries = Query::whereBetween('created_at', [$year_start, $year_end])->get();
+        //$queries = Query::whereBetween('created_at', [$year_start, $year_end])->get();
+
+        // Ordenes
+        $orders = Order::whereBetween('created_at', [$year_start, $year_end])
+        ->where('state', '!=', 'N/A')
+        ->where('state', '!=', 'Tienda')
+        ->selectRaw('state, SUM(payment_total) as sales, COUNT(state) as qty')
+        ->groupBy('state')
+        ->orderBy('sales', 'desc')
+        ->get('sales', 'state', 'qty');
+
+        //dd($orders);
+
+        // Busquedas
+        $queries = Query::whereBetween('created_at', [$year_start, $year_end])
+        ->selectRaw('query, COUNT(query) as count')
+        ->groupBy('query')
+        ->orderBy('count', 'desc')
+        ->pluck('count', 'query');
 
         return view('wecommerce::back.analytics')
+        ->with('orders', $orders)
         ->with('queries', $queries);
     }
     

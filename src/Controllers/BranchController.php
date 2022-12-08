@@ -117,9 +117,13 @@ class BranchController extends Controller
             $stock->branch_id = $branch->id;
             $stock->product_id = $request->product_id;
             $stock->stock = $request->stock;
+            $stock->entry_stock = $request->entry_stock;
+            $stock->commited_stock = $request->commited_stock;
             $stock->save();
         }else{
             $inventory->stock = $request->stock;
+            $stock->entry_stock = $request->entry_stock;
+            $stock->commited_stock = $request->commited_stock;
             $inventory->save();
         }
         
