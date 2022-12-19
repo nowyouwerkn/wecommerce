@@ -36,11 +36,11 @@ Route::prefix('/instalador')->group(function () {
 });
 
 // Back-End Views
-Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']], function(){
+Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']], function () {
     //Dashboard
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@index')->name('dashboard'); //
     Route::get('/kpis-analitica', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@analytics')->name('analytics.index');
-    
+
     Route::get('/change-color', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@changeColor',
         'as' => 'change.color',
@@ -65,8 +65,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'popups.status',
     ]);
 
-     Route::resource('band', Nowyouwerkn\WeCommerce\Controllers\HeaderbandController::class);
-       Route::post('/band/status/{id}', [
+    Route::resource('band', Nowyouwerkn\WeCommerce\Controllers\HeaderbandController::class);
+    Route::post('/band/status/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\HeaderbandController@status',
         'as' => 'band.status',
     ]);
@@ -74,12 +74,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     //Configuration
     Route::get('/configuration', 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@configuration')->name('configuration'); //
 
-    Route::get('/bienvenido/paso-1',[
+    Route::get('/bienvenido/paso-1', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@configStep1',
         'as' => 'config.step1',
     ]);
 
-    Route::get('/bienvenido/paso-2/{id}',[
+    Route::get('/bienvenido/paso-2/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@configStep2',
         'as' => 'config.step2',
     ]);
@@ -263,7 +263,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
 
     Route::resource('user-rules', Nowyouwerkn\WeCommerce\Controllers\UserRuleController::class);
 
-    Route::get('/user-rules/change-status/{id}',[
+    Route::get('/user-rules/change-status/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\UserRuleController@changeStatus',
         'as' => 'user-rules.status',
     ]);
@@ -328,6 +328,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'order.cancel.subscription',
     ]);
 
+    Route::get('/orders/{id}/refund', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\OrderController@refundOrder',
+        'as' => 'order.refund',
+    ]);
+
     Route::resource('promos', Nowyouwerkn\WeCommerce\Controllers\PromoController::class); //
 
     Route::post('/get-promo-products', [
@@ -338,7 +343,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('coupons', Nowyouwerkn\WeCommerce\Controllers\CouponController::class); //
     Route::resource('reviews', Nowyouwerkn\WeCommerce\Controllers\ReviewController::class)->except(['store']); //
 
-    Route::get('/reviews/aprobar/{id}',[
+    Route::get('/reviews/aprobar/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ReviewController@approve',
         'as' => 'review.approve',
     ]);
@@ -357,7 +362,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('faq', Nowyouwerkn\WeCommerce\Controllers\FAQController::class);
     Route::resource('taxes', Nowyouwerkn\WeCommerce\Controllers\StoreTaxController::class)->except(['create']); //
 
-    Route::get('/taxes/create/{country_id}',[
+    Route::get('/taxes/create/{country_id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StoreTaxController@create',
         'as' => 'taxes.create',
     ]);
@@ -370,18 +375,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('mail', Nowyouwerkn\WeCommerce\Controllers\MailController::class)->except(['show, create, index']);
     Route::resource('notifications', Nowyouwerkn\WeCommerce\Controllers\NotificationController::class)->except(['show']); //
 
-    Route::get('/notifications/all',[
+    Route::get('/notifications/all', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\NotificationController@all',
         'as' => 'notifications.all',
     ]);
 
-    Route::get('/notifications/all/mark-as-read',[
+    Route::get('/notifications/all/mark-as-read', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\NotificationController@markAsRead',
         'as' => 'notifications.mark.read',
     ]);
 
     Route::resource('payments', Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController::class);
-    Route::get('/payments/change-status/{id}',[
+    Route::get('/payments/change-status/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\PaymentMethodController@changeStatus',
         'as' => 'payments.status',
     ]);
@@ -389,7 +394,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('shipments-rules', Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodRuleController::class);
     Route::resource('shipping-options', Nowyouwerkn\WeCommerce\Controllers\ShipmentOptionsController::class);
 
-    Route::get('/shipments-rule/change-status/{id}',[
+    Route::get('/shipments-rule/change-status/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ShipmentMethodRuleController@changeStatus',
         'as' => 'shipments-rules.status',
     ]);
@@ -400,13 +405,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::resource('cities', Nowyouwerkn\WeCommerce\Controllers\CityController::class);
     Route::resource('config', Nowyouwerkn\WeCommerce\Controllers\StoreConfigController::class);
 
-    Route::post('config-api-token',[
+    Route::post('config-api-token', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\StoreConfigController@apiToken',
         'as' => 'api.token.store',
     ]);
 
     Route::resource('integrations', Nowyouwerkn\WeCommerce\Controllers\IntegrationController::class);
-    Route::get('general-preferences',[
+    Route::get('general-preferences', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\IntegrationController@index',
         'as' => 'general.config',
     ]);
@@ -417,7 +422,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'as' => 'themes.status',
     ]);
 
-    Route::post('store-logo',[
+    Route::post('store-logo', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\IntegrationController@storeLogo',
         'as' => 'store.logo',
     ]);
@@ -441,31 +446,30 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\DashboardController@generalSearch',
         'as' => 'back.search.query',
     ]);
-
 });
 
 // Shopping Cart
-Route::get('/cart/{id}/{variant}',[
+Route::get('/cart/{id}/{variant}', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@addCart',
     'as' => 'add-cart',
 ]);
 
-Route::get('/cart',[
+Route::get('/cart', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@cart',
     'as' => 'cart',
 ]);
 
-Route::get('/substract/{id}/{variant}',[
+Route::get('/substract/{id}/{variant}', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@substractOne',
     'as' => 'cart.substract',
 ]);
 
-Route::get('/add/{id}/{variant}/{qty}',[
+Route::get('/add/{id}/{variant}/{qty}', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@addMore',
     'as' => 'cart.add-more',
 ]);
 
-Route::get('/delete/{id}/{variant}',[
+Route::get('/delete/{id}/{variant}', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\CartController@deleteItem',
     'as' => 'cart.delete',
 ]);
@@ -556,22 +560,22 @@ Route::get('/checkout', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@chec
 
 Route::get('/checkout/subscription/{subscription_id}', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@checkoutSubscription')->name('checkout.subscription');
 
-Route::post('/checkout',[
+Route::post('/checkout', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckout',
     'as' => 'checkout.store',
 ]);
 
-Route::post('/checkout/subscription/{subscription_id}',[
+Route::post('/checkout/subscription/{subscription_id}', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@postCheckoutSubscription',
     'as' => 'checkout.subscription.store',
 ]);
 
-Route::get('/zip_codes/get',[
+Route::get('/zip_codes/get', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@zipCodeGet',
     'as' => 'zipcode.get',
 ]);
 
-Route::get('/paypal/status',[
+Route::get('/paypal/status', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@payPalStatus',
     'as' => 'paypal.status',
 ]);
@@ -589,7 +593,7 @@ Route::post('/calculate-shipment-options', [
 ]);
 
 //Profile
-Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_access']], function(){
+Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_access']], function () {
     Route::get('/', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@profile')->name('profile');
     Route::get('wishlist', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@wishlist')->name('wishlist');
     Route::get('orders', 'Nowyouwerkn\WeCommerce\Controllers\FrontController@shopping')->name('shopping');
@@ -624,12 +628,12 @@ Route::group(['prefix' => 'profile', 'middleware' => ['web', 'can:customer_acces
         'as' => 'address.destroy',
     ]);
 
-    Route::get('/user/change-image',[
+    Route::get('/user/change-image', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@editImage',
         'as' => 'profile.image',
     ]);
 
-    Route::put('/user/change-image/{id}',[
+    Route::put('/user/change-image/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@updateImage',
         'as' => 'profile.image.update',
     ]);
@@ -666,17 +670,17 @@ Route::get('reducir-stock', [
 ]);
 
 /* Webhooks */
-Route::get('/webhook',[
+Route::get('/webhook', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WebhookController@testJson',
     'as' => 'webhook.test',
 ]);
 
-Route::post('/webhook/orden_action',[
+Route::post('/webhook/orden_action', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WebhookController@order',
     'as' => 'webhook.order.oxxo',
 ]);
 
-Route::post('/webhook/mercadopago_status',[
+Route::post('/webhook/mercadopago_status', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WebhookController@orderMercadoPago',
     'as' => 'webhook.order.mercadopago',
 ]);
