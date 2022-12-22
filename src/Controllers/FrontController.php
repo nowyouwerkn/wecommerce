@@ -1802,7 +1802,7 @@ class FrontController extends Controller
         }
         */
 
-        if ($payment_method->supplier != 'MercadoPago' or $payment_method->supplier != 'Paypal') {
+        if ($payment_method->supplier == 'Pago con Tarjeta') {
 
             // GUARDAR LA ORDEN
             $order = new Order();
