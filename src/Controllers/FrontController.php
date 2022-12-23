@@ -1802,85 +1802,82 @@ class FrontController extends Controller
         }
         */
 
-        if ($payment_method->supplier == 'Pago con Tarjeta') {
+        // GUARDAR LA ORDEN
+        $order = new Order();
 
-            // GUARDAR LA ORDEN
-            $order = new Order();
+        $order->cart = serialize($cart);
+        $order->street = $street;
+        $order->street_num = $street_num;
+        $order->country = $country;
+        $order->state = $state;
+        $order->postal_code = $postal_code;
+        $order->city = $city;
+        $order->phone = $phone;
+        $order->suburb = $suburb;
+        $order->references = $references;
+        $order->shipping_option = $request->shipping_option;
 
-            $order->cart = serialize($cart);
-            $order->street = $street;
-            $order->street_num = $street_num;
-            $order->country = $country;
-            $order->state = $state;
-            $order->postal_code = $postal_code;
-            $order->city = $city;
-            $order->phone = $phone;
-            $order->suburb = $suburb;
-            $order->references = $references;
-            $order->shipping_option = $request->shipping_option;
+        if (isset($billing_shipping_id)) {
+            $order->billing_shipping_id = $billing_shipping_id->id;
+        }
 
-            if (isset($billing_shipping_id)) {
-                $order->billing_shipping_id = $billing_shipping_id->id;
+        /* Money Info */
+        $order->cart_total = $cart->totalPrice;
+        $order->shipping_rate = str_replace(',', '', $request->shipping_rate);
+        $order->sub_total = str_replace(',', '', $request->sub_total);
+        $order->tax_rate = str_replace(',', '', $request->tax_rate);
+        if (isset($request->discounts)) {
+            $order->discounts = str_replace(',', '', $request->discounts);
+        }
+
+        $order->coupon_id = 0;
+        $order->total = $request->final_total;
+        $order->payment_total = $request->final_total;
+        /*------------*/
+        $order->card_digits = Str::substr($request->card_number, 15);
+        $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
+        $order->payment_id = $charge->id;
+        $order->is_completed = true;
+        $order->status = 'Pagado';
+        $order->payment_method = $payment_method->supplier;
+
+        if (isset($request->coupon_code)) {
+            $coupon = Coupon::where('code', $request->coupon_code)->where('is_active', true)->orderBy('created_at', 'desc')->first();
+
+            if (!empty($coupon)) {
+                $order->coupon_id = $coupon->id;
+
+                // Guardar Uso de cupón para el usuario
+                $used = new UserCoupon;
+                $used->user_id = $user->id;
+                $used->coupon_id = $coupon->id;
+                $used->save();
             }
+        }
 
-            /* Money Info */
-            $order->cart_total = $cart->totalPrice;
-            $order->shipping_rate = str_replace(',', '', $request->shipping_rate);
-            $order->sub_total = str_replace(',', '', $request->sub_total);
-            $order->tax_rate = str_replace(',', '', $request->tax_rate);
-            if (isset($request->discounts)) {
-                $order->discounts = str_replace(',', '', $request->discounts);
-            }
+        //Guadar puntos de salida
+        if (isset($request->points)) {
+            $order->points = $request->points;
+        }
 
-            $order->coupon_id = 0;
-            $order->total = $request->final_total;
-            $order->payment_total = $request->final_total;
-            /*------------*/
-            $order->card_digits = Str::substr($request->card_number, 15);
-            $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
-            $order->payment_id = $charge->id;
-            $order->is_completed = true;
-            $order->status = 'Pagado';
-            $order->payment_method = $payment_method->supplier;
+        // Identificar al usuario para guardar sus datos.
+        $user->orders()->save($order);
 
-            if (isset($request->coupon_code)) {
-                $coupon = Coupon::where('code', $request->coupon_code)->where('is_active', true)->orderBy('created_at', 'desc')->first();
+        //Guadar puntos de salida
 
-                if (!empty($coupon)) {
-                    $order->coupon_id = $coupon->id;
-
-                    // Guardar Uso de cupón para el usuario
-                    $used = new UserCoupon;
-                    $used->user_id = $user->id;
-                    $used->coupon_id = $coupon->id;
-                    $used->save();
-                }
-            }
-
-            //Guadar puntos de salida
+        if (!empty($membership)) {
             if (isset($request->points)) {
-                $order->points = $request->points;
-            }
+                $points = new UserPoint();
+                $points->type = 'out';
+                $points->value = $request->points_to_apply;
+                $points->order_id = $order->id;
+                $points->user_id = $user->id;
 
-            // Identificar al usuario para guardar sus datos.
-            $user->orders()->save($order);
-
-            //Guadar puntos de salida
-
-            if (!empty($membership)) {
-                if (isset($request->points)) {
-                    $points = new UserPoint();
-                    $points->type = 'out';
-                    $points->value = $request->points_to_apply;
-                    $points->order_id = $order->id;
-                    $points->user_id = $user->id;
-
-                    if ($membership->has_expiration_time == true) {
-                        $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
-                    }
-
-                    $points->save();
+                if ($membership->has_expiration_time == true) {
+                    $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
                 }
+
+                $points->save();
             }
         }
 
