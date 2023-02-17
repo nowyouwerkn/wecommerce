@@ -3663,11 +3663,12 @@ class FrontController extends Controller
                 }
             }
 
-            $oldCart = Session::get('cart');
-            $cart = new Cart($oldCart);
-
+            //$oldCart = Session::get('cart');
+            //$cart = new Cart($oldCart);
+            $order->cart = unserialize($order->cart);
+            
             // Actualizar existencias del producto
-            foreach ($cart->items as $product) {
+            foreach ($order->cart->items as $product) {
 
                 if ($product['item']['has_variants'] == true) {
                     $variant = Variant::where('value', $product['variant'])->first();
