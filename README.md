@@ -57,12 +57,8 @@
 
 <!-- ABOUT THE PROJECT -->
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnowyouwerkn%2Fwecommerce.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnowyouwerkn%2Fwecommerce?ref=badge_large)
-
 ## Acerca del Proyecto
-
 [![Product Name Screen Shot][product-screenshot]](https://werkn.mx/wecommerce)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnowyouwerkn%2Fwecommerce.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnowyouwerkn%2Fwecommerce?ref=badge_shield)
 
 ### Tecnologías
 
