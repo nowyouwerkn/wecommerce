@@ -55,9 +55,12 @@
                 </div>
             </th>
 
+            {{--  
             <th>
                 Acción Recomendada
             </th>
+            --}}
+
             <th>
                 <div class="d-flex align-items-center">
                     <span class="table-title">Estatus</span>
@@ -146,6 +149,7 @@
                         data-placement="top" title="Esta es la cantidad total pagada por el cliente en la compra."></i>
                 </td>
 
+                {{--  
                 <td>
                     @switch($order->status)
                         @case('Pago Pendiente')
@@ -226,6 +230,8 @@
                             </div>
                     @endswitch
                 </td>
+                --}}
+                
                 <td>
                     @if ($order->type != 'recurring_payment')
                         <div id="orderStatus_{{ $order->id }}" class="dropdown order-status">
