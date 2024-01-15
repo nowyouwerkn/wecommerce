@@ -2,6 +2,16 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 2.0 - 2024-01-15
+
+- Nuevo sistema de sucursales en la plataforma.
+- Actualización de las dependencias de Facebook/Meta para anuncios dinámicos
+- Cambios en el sistema de cupones para tener cupones sin vigencia y creación de código de cupón automática
+- Nueva funcionalidad de canales de venta.
+- Cambios en el listado de ordenes
+- Agregando mejores prácticas SEO en el detalle de producto
+- Se permite ahora duplicar productos y subir imágenes en tiempo real al catálogo.
+
 ## 1.9.2 - 2022-10-04
 
 - Se añaden los campos Teléfono, Cumpleaños y apellido a la edición de cuenta
