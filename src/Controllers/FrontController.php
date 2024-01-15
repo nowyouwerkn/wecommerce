@@ -1626,6 +1626,11 @@ class FrontController extends Controller
                     $order->payment_id = Str::lower($payment->id);
                     $order->payment_method = $payment_method->supplier;
 
+                    //Guadar puntos de salida
+                    if (isset($request->points)) {
+                        $order->points = $request->points;
+                    }
+
                     // Identificar al usuario para guardar sus datos.
                     $user->orders()->save($order);
 
@@ -1719,6 +1724,11 @@ class FrontController extends Controller
                     $order->payment_id = $request->mp_preference_id;
 
                     $order->payment_method = $payment_method->supplier;
+
+                    //Guadar puntos de salida
+                    if (isset($request->points)) {
+                        $order->points = $request->points;
+                    }
 
                     // Identificar al usuario para guardar sus datos.
                     $user->orders()->save($order);
@@ -2556,13 +2566,11 @@ class FrontController extends Controller
 
         // Retrieve subscription data
         if ($payment_method->supplier == 'Conekta') {
-
             if ($subscription->status != 'active') {
                 Session::flash('info', 'No se pudo completar tu compra, contacta con tu entidad financiera o intenta con otra tarjeta.');
                 return redirect()->back();
             }
         } else {
-
             $subscription_data = $subscription->jsonSerialize();
 
             if ($subscription_data['status'] != 'active') {
@@ -2887,6 +2895,8 @@ class FrontController extends Controller
 
     public function payPalStatus(Request $request)
     {
+        $membership = MembershipConfig::where('is_active', true)->first();
+
         $config = $this->getPaypalInstance();
 
         $paymentId = $request->input('paymentId');
@@ -2911,6 +2921,22 @@ class FrontController extends Controller
             $order->status = 'Pagado';
 
             $order->save();
+
+            if (!empty($membership)) {
+                if (!empty($order->points)) {
+                    $points = new UserPoint();
+                    $points->type = 'out';
+                    $points->value = $order->points;
+                    $points->order_id = $order->id;
+                    $points->user_id = $order->user_id;
+
+                    if ($membership->has_expiration_time == true) {
+                        $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                    }
+
+                    $points->save();
+                }
+            }
 
             $oldCart = Session::get('cart');
             $cart = new Cart($oldCart);
@@ -3653,6 +3679,8 @@ class FrontController extends Controller
 
     public function purchaseComplete(Request $request)
     {
+        $membership = MembershipConfig::where('is_active', true)->first();
+
         $store_config = $this->store_config;
 
         if (!empty($request->preference_id)) {
@@ -3662,11 +3690,28 @@ class FrontController extends Controller
 
             $order->save();
 
-            $oldCart = Session::get('cart');
-            $cart = new Cart($oldCart);
+            if (!empty($membership)) {
+                if (!empty($order->points)) {
+                    $points = new UserPoint();
+                    $points->type = 'out';
+                    $points->value = $order->points;
+                    $points->order_id = $order->id;
+                    $points->user_id = $order->user_id;
 
+                    if ($membership->has_expiration_time == true) {
+                        $points->valid_until = Carbon::now()->addMonths($membership->point_expiration_time)->format('Y-m-d');
+                    }
+
+                    $points->save();
+                }
+            }
+
+            //$oldCart = Session::get('cart');
+            //$cart = new Cart($oldCart);
+            $order->cart = unserialize($order->cart);
+            
             // Actualizar existencias del producto
-            foreach ($cart->items as $product) {
+            foreach ($order->cart->items as $product) {
 
                 if ($product['item']['has_variants'] == true) {
                     $variant = Variant::where('value', $product['variant'])->first();

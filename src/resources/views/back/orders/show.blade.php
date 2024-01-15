@@ -259,10 +259,11 @@
                     </div>
                     <div class="row align-items-center">
                         <div class="col">
-                            <h6 class="mb-0 mt-0">Puntos usados:</h6>
+                            <h6 class="mb-0 mt-0">Valor de puntos:</h6>
                         </div>
                         <div class="col text-right">
-                            <p class="mb-0" style="font-size: 1.3em;"><strong>{{ $order->points ?? 'N/A' }}</strong>
+                            <p class="mb-0" style="font-size: 1.3em;">
+                                <strong>${{ number_format($order->points, 2) ?? 'N/A' }}</strong>
                             </p>
                         </div>
                     </div>
@@ -293,13 +294,13 @@
                 </div>
                 <!--<a class="btn btn-sm btn-block btn-primary" href="https://dashboard.stripe.com/payments/{{ $order->payment_id }}" target="_blank">See this Summary on Stripe <i class="icon-link ml-1"></i></a>-->
             </div>
-
+        </div>
             @if ($order->type == 'single_payment' && $order->status == 'Pagado')
                 <a href="{{ route('order.refund', $order->id) }}" class="nav-link text-danger"><i
                         class="fas fa-ban mr-2"></i> Reembolsar orden</a>
             @endif
         </div>
-
+        
         <div class="col-md-8">
             @if ($order->type == 'single_payment')
                 <div class="card mb-4">'
