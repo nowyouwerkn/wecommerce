@@ -108,11 +108,30 @@
                 </div>
             </a>
         </div>
-         <div class="col-md-4 mb-4">
+
+        <div class="col-md-4 mb-4">
+            <a href="{{ route('branches.index') }}">
+                <div class="card card-body h-100">
+                    <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">Sucursales</h3>
+                    <h6 class="tx-12 tx-color-03 mg-b-0 mt-2">Gestiona los lugares donde conservas inventario, preparas pedidos y vendes productos.</h6>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
             <a href="{{ route('faq.index') }}">
                 <div class="card card-body h-100">
                     <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">Preguntas frecuentes</h3>
                     <h6 class="tx-12 tx-color-03 mg-b-0 mt-2">Administra las preguntas frecuentes que apareceran en tu página</h6>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a href="{{ route('channels.index') }}">
+                <div class="card card-body h-100">
+                    <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">Canales de Venta</h3>
+                    <h6 class="tx-12 tx-color-03 mg-b-0 mt-2">Conecta "marketplaces" de terceros en tu plataforma para ver las ordenes que surgen de tus otros canales y verlas centralizadas aqui.</h6>
                 </div>
             </a>
         </div>

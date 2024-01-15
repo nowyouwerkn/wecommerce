@@ -22,6 +22,12 @@ class ShipmentOptionsController extends Controller
             'price' => 'required'
         ));
 
+        if(isset($request->is_primary)){
+            $op = ShipmentOption::where('is_primary', true)->first();
+            $op->is_primary = false;
+            $op->save();
+        }
+
         // Guardar datos en la base de datos
         $option = new ShipmentOption;
 
@@ -31,6 +37,7 @@ class ShipmentOptionsController extends Controller
         $option->is_active = $request->is_active;
         $option->price = $request->price;
         $option->location = $request->location;
+        $option->is_primary = $request->is_primary;
 
         if ($request->hasFile('icon')) {
             $icon = $request->file('icon');
@@ -61,6 +68,12 @@ class ShipmentOptionsController extends Controller
             'price' => 'required'
         ));
 
+        if(isset($request->is_primary)){
+            $op = ShipmentOption::where('is_primary', true)->first();
+            $op->is_primary = false;
+            $op->save();
+        }
+
         // Guardar datos en la base de datos
         $option = ShipmentOption::find($id);
 
@@ -70,7 +83,8 @@ class ShipmentOptionsController extends Controller
         $option->is_active = $request->is_active;
         $option->price = $request->price;
         $option->location = $request->location;
-
+        $option->is_primary = $request->is_primary;
+        
         if ($request->hasFile('icon')) {
             $icon = $request->file('icon');
             $filename = 'option_' . time() . '.' . $icon->getClientOriginalExtension();

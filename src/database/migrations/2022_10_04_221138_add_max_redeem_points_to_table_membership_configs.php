@@ -14,9 +14,7 @@ class AddMaxRedeemPointsToTableMembershipConfigs extends Migration
     public function up()
     {
         Schema::table('membership_configs', function (Blueprint $table) {
-
             $table->string('max_redeem_points')->after('point_value')->nullable();
-
         });
     }
 

@@ -68,6 +68,37 @@
 		  </div><!-- col -->
 		</div><!-- row -->
 
+		@if(!empty($shipping_option) && $shipping_option->type == 'pickup')
+		<div class="row justify-content-between mt-4 mb-5">
+			<div class="col-sm-6 col-lg-6 order-2 order-sm-0 mg-t-40 mg-sm-t-0 mt-3">
+				<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Recolección en Sucursal</label>
+				<ul class="list-unstyled lh-7">
+				<li class="d-flex justify-content-between">
+					<span>{{ $shipping_option->name }}</span>
+				</li>
+				</ul>
+			</div>
+		</div>
+		@else
+			@if($order->trackings->count())
+			<div class="row justify-content-between mt-4 mb-5">
+				<div class="col-sm-6 col-lg-6 order-2 order-sm-0 mg-t-40 mg-sm-t-0 mt-3">
+					<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Guía de Seguimiento</label>
+					<ul class="list-unstyled lh-7">
+						<li class="d-flex justify-content-between">
+							@foreach($order->trackings as $tracking)
+								<p class="small-title">Número de Guía</p>
+								<div class="tracking-number">
+									<h4 class="mb-0">{{ $tracking->tracking_number }}</h4>
+								</div>
+							@endforeach
+						</li>
+					</ul>
+				</div>
+			</div>
+			@endif
+		@endif
+		
 		@if($order->cart == NULL)
 		<div class="table-responsive mg-t-40">
 		  <table class="table table-invoice bd-b">
@@ -116,45 +147,37 @@
 		</div>
 		@endif
 
-		<div class="row justify-content-between mt-4">
-		  <div class="col-sm-6 col-lg-6 order-2 order-sm-0 mg-t-40 mg-sm-t-0 mt-3">
-		    <label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Información Adicional</label>
-		    <ul class="list-unstyled lh-7">
-		      <li class="d-flex justify-content-between">
-		        <span>Fecha de Compra</span>
-		        <span>{{ Carbon\Carbon::parse($order->created_at)->translatedFormat('d M Y - h:ia') }}</span>
-		      </li>
-		      <li class="d-flex justify-content-between">
-		        <span>Empaquetado:</span>
-		        <span>{{ Carbon\Carbon::now()->translatedFormat('d M Y - h:ia') }}</span>
-		      </li>
-		    </ul>
-		  </div><!-- col -->
+		<div class="row justify-content-between mt-4 mb-5">
+			<div class="col-sm-6 col-lg-6 order-2 order-sm-0 mg-t-40 mg-sm-t-0 mt-3">
+				<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Información Adicional</label>
+				<ul class="list-unstyled lh-7">
+				<li class="d-flex justify-content-between">
+					<span>Fecha de Compra</span>
+					<span>{{ Carbon\Carbon::parse($order->created_at)->translatedFormat('d M Y - h:ia') }}</span>
+				</li>
+				<li class="d-flex justify-content-between">
+					<span>Empaquetado:</span>
+					<span>{{ Carbon\Carbon::now()->translatedFormat('d M Y - h:ia') }}</span>
+				</li>
+				</ul>
+			</div><!-- col -->
 
-		  <div class="col-sm-6 col-lg-4 order-1 order-sm-0">
-		  	<!--
-		    <ul class="list-unstyled lh-7 pd-r-10">
-		      <li class="d-flex justify-content-between">
-		        <span>Sub-Total</span>
-		        <span>$5,750.00</span>
-		      </li>
-		      <li class="d-flex justify-content-between">
-		        <span>Tax (5%)</span>
-		        <span>$287.50</span>
-		      </li>
-		      <li class="d-flex justify-content-between">
-		        <span>Discount</span>
-		        <span>-$50.00</span>
-		      </li>
-		      <li class="d-flex justify-content-between">
-		        <strong>Total Due</strong>
-		        <strong>$5,987.50</strong>
-		      </li>
-		    </ul>
-			-->
-		  </div>
-		</div>
-		</div>
+			<div class="col-sm-6 col-lg-4 order-1 order-sm-0">
+				<ul class="list-unstyled lh-7 pd-r-10">
+				<li class="d-flex justify-content-between">
+					<span>Subtotal</span>
+					<span>${{ number_format($order->sub_total,2) }}</span>
+				</li>
+				<li class="d-flex justify-content-between">
+					<span>Descuentos</span>
+					<span>-${{ number_format($order->discounts ?? '0',2) }}</span>
+				</li>
+				<li class="d-flex justify-content-between">
+					<strong>Total</strong>
+					<strong>${{ number_format($order->payment_total,2) }}</strong>
+				</li>
+				</ul>
+			</div>
 		</div>
 
 		<button id="print" class="btn btn-sm pd-x-15 btn-dark btn-uppercase mg-l-5 btn-block p-3" type="button"> <span><i class="fa fa-print"></i> Imprimir Lista de Empaque</span></button>

@@ -16,6 +16,9 @@ use Nowyouwerkn\WeCommerce\Models\ProductCharacteristic;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 use Nowyouwerkn\WeCommerce\Models\ProductRelationship;
 
+use Nowyouwerkn\WeCommerce\Models\ShipmentOption;
+
+use Nowyouwerkn\WeCommerce\Models\Branch;
 use Nowyouwerkn\WeCommerce\Models\Wishlist;
 
 /* Exportar Info */
@@ -167,7 +170,9 @@ class ProductController extends Controller
         $product->fb_product_category = $request->fb_product_category;
         $product->google_product_category = $request->google_product_category;
         $product->available_date_start = $request->available_date_start;
+        $product->image = null;
 
+        /*
         if ($request->hasFile('model_image')) {
             $model_image = $request->file('model_image');
             $filename = 'model' . time() . '.' . $model_image->getClientOriginalExtension();
@@ -177,6 +182,7 @@ class ProductController extends Controller
 
             $product->image = $filename;
         }
+        */
 
         /* Características Productos Digitales */
         if($request->type == 'digital'){
@@ -258,6 +264,27 @@ class ProductController extends Controller
         $product->save();
         $product->subCategory()->sync($request->subcategory);
 
+        if(isset($request->images)){
+            $images = $request->images;
+            $i = 1;
+
+            foreach($images as $image){
+                // Guardar datos en la base de datos
+                $var_imagen = new ProductImage;
+                $var_imagen->product_id = $product->id;
+                $var_imagen->priority = $i;
+
+                $imagen = $image;
+                $nombre_archivo = Str::random(8) . '_productitem' . '.' . $imagen->getClientOriginalExtension();
+                $ubicacion = public_path('img/products/' . $nombre_archivo);
+                Image::make($imagen)->resize(960,null, function($constraint){ $constraint->aspectRatio(); })->save($ubicacion);
+
+                $var_imagen->image = $nombre_archivo;
+                $var_imagen->save();
+                $i++;
+            }
+        }
+
         // Notificación
         $type = 'Producto';
         $by = Auth::user();
@@ -303,6 +330,8 @@ class ProductController extends Controller
             $all_relationships = ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
         }
 
+        $branches = Branch::all();
+
         return view('wecommerce::back.products.show')
         ->with('product', $product)
         ->with('variant_stock', $variant_stock)
@@ -310,7 +339,8 @@ class ProductController extends Controller
         ->with('total_qty', $total_qty)
         ->with('related_products', $related_products)
         ->with('base_product', $base_product)
-        ->with('all_relationships', $all_relationships);
+        ->with('all_relationships', $all_relationships)
+        ->with('branches', $branches);
     }
 
     public function storeImage(Request $request)
@@ -359,15 +389,12 @@ class ProductController extends Controller
 
     public function updateImage(Request $request)
     {
-
         $var_imagen = ProductImage::find($request->id);
         $var_imagen->priority = $request->priority;
         $var_imagen->description = $request->description;
-
         $var_imagen->save();
-
+        
         Session::flash('success', 'La imagen fue actualizada exitosamente');
-
 
         return redirect()->back();
     }
@@ -460,13 +487,10 @@ class ProductController extends Controller
 
     public function destroyLifestyle($id)
     {
-
         $var_imagen = ProductLifestyle::find($id);
-
         $var_imagen->delete();
 
         Session::flash('success', 'Imagen eliminada exitosamente.');
-
 
         return redirect()->back();
     }
@@ -716,7 +740,7 @@ class ProductController extends Controller
         return Excel::download(new ProductExport, 'productos.xlsx');
     }
 
-      public function export_inventory_changes()
+    public function export_inventory_changes()
     {
         return Excel::download(new InventoryExport, 'inventario.xlsx');
     }
@@ -733,19 +757,20 @@ class ProductController extends Controller
         // Guardar datos en la base de datos
         $product = Product::find($id);
         $by = Auth::user();
+
         if ($product->stock != $request->stock_variant) {
-             $values = array('action_by' => $by->id,'initial_value' => $product->stock, 'final_value' => $request->stock_variant, 'product_id' => $id);
+            $values = array('action_by' => $by->id,'initial_value' => $product->stock, 'final_value' => $request->stock_variant, 'product_id' => $id);
+            
             DB::table('inventory_record')->insert($values);
         }
 
         $product->stock = $request->stock_variant;
 
-          // Notificación
+        // Notificación
         $type = 'Producto';
         $data = 'Actualizó el inventario del producto:' . $product->name;
         $model_action = "update";
         $model_id = $product->id;
-
 
         $this->notification->send($type, $by ,$data, $model_action, $model_id);
 
@@ -796,6 +821,100 @@ class ProductController extends Controller
         }
 
         return view('wecommerce::back.products.index')->with('products', $products);
+    }
 
+    function uploadImage(Request $request, $id)
+    {   
+        // Guardar datos en la base de datos
+        $var_imagen = new ProductImage;
+        $var_imagen->product_id = $id;
+
+        $imagen = $request->file('file');
+        $nombre_archivo = Str::random(8) . '_productitem' . '.' . $imagen->getClientOriginalExtension();
+        $ubicacion = public_path('img/products/' . $nombre_archivo);
+        Image::make($imagen)->resize(960,null, function($constraint){ $constraint->aspectRatio(); })->save($ubicacion);
+        $var_imagen->image = $nombre_archivo;
+        $var_imagen->save();
+        
+        return response()->json(['success' => $image_name]);
+    }
+
+    function fetchImage($id)
+    {
+        $product = Product::find($id);
+        
+        $output = '<div class="row">';
+        foreach($product->images as $image)
+        {
+        $output .= '
+        <div class="col-md-2" style="margin-bottom:16px;" align="center">
+        <img src="'.asset('img/products/' . $image->image).'" class="img-thumbnail" width="175" />
+        <button type="button" class="btn btn-link remove_image" id="'.$image->image.'">Eliminar</button>
+        </div>
+        ';
+        }
+        $output .= '</div>';
+        echo $output;
+    }
+
+    function deleteImage(Request $request)
+    {
+        $image = ProductImage::where('image', $request->name)->first();
+        $image->delete();
+
+        if($request->get('name')){
+            \File::delete(public_path('img/products/' . $request->get('name')));
+        }
+    }
+
+    public function duplicate(Request $request, $id)
+    {
+        $product = Product::find($id);
+        $new_product = $product->replicate();
+        $new_product->name = $request->name;
+        $new_product->slug = Str::slug($request->name);
+        $new_product->created_at = Carbon::now();
+        $new_product->save();
+
+        if(isset($request->duplicate_images)){
+            foreach($product->images as $image){
+                $var_image = ProductImage::find($image->id);
+                $new_image = $var_image->replicate();
+                $new_image->product_id = $new_product->id;
+                $new_image->save();
+            }
+        }   
+
+        Session::flash('success', 'El producto se duplicó exitosamente, podrás encontrarlo en el listado general.');
+
+        return redirect()->back();
+    }
+    
+    public function preview($id)
+    {
+        $product = Product::where('id', '=', $id)->with('category')->firstOrFail();
+
+        /* Double Variant System */
+        $product_relationships = ProductRelationship::where('base_product_id', $product->id)->orWhere('product_id', $product->id)->get();
+
+        if ($product_relationships->count() == NULL) {
+            $base_product = NULL;
+            $all_relationships = NULL;
+        }else{
+            $base_product = $product_relationships->take(1)->first();
+            $all_relationships = ProductRelationship::where('base_product_id', $base_product->base_product_id)->get();
+        }
+
+        $shipment_option = ShipmentOption::where('is_primary', true)->first();
+
+        if (empty($product)) {
+            return redirect()->back();
+        }else{
+            return view('wecommerce::back.products.preview')
+            ->with('product', $product)
+            ->with('base_product', $base_product)
+            ->with('all_relationships', $all_relationships)
+            ->with('shipment_option', $shipment_option);
+        }
     }
 }

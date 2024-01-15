@@ -69,6 +69,8 @@
         background-color: #dfe6e9;
     }
 </style>
+
+<link type="text/css" rel="stylesheet" href="{{ asset('lib/werkn/image-uploader/src/image-uploader.css') }}">
 @endpush
 
 @section('title')
@@ -111,10 +113,20 @@
 
                     <!-- Form -->
                     <div class="card-body row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="name">Nombre <span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control" value="{{ old('name') }}" required="">
+                            </div>
+                        </div> 
+
+                        <div class="col-md-6">
+                            <label for="slug" class="form-label">Ruta Estática <span class="text-danger">*</span></label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="slug-addon">{{ url("") }}</span>
+                                <input type="text" class="form-control" id="slug" aria-describedby="slug-addon">
+    
+                                <small>Esta ruta se genera automáticamente pero puedes modificarla para alinearla a tu estrategia SEO.</small>
                             </div>
                         </div>
 
@@ -151,20 +163,63 @@
 
                 <!-- Multimedia Elements -->
                 <div class="card mg-t-10 mb-4">
-                    <!-- Header -->
-                    <div class="card-header pd-t-20 pd-b-0 bd-b-0">
+                    <div class="card-header d-flex justify-content-between align-items-center pd-t-20 pd-b-0 bd-b-0">
                         <h5 class="mg-b-5">Archivos multimedia</h5>
-                        <!--<p class="tx-12 tx-color-03 mg-b-0">Archivos multimedia.</p>-->
-                    </div>
-
-                    <!-- Form -->
-                    <div class="card-body row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="model_image">Imagen de Modelo <span class="text-success tx-12">Recomendado</span></label>
-                                <input type="file" name="model_image" class="form-control" accept=".jpg, .jpeg, .png">
+                        <a class="tx-12 text-info mg-b-0" data-toggle="modal" data-target="#tipsPhoto"><i class="fas fa-camera-retro"></i> Consejos para tomar fotos como un experto</a>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="tipsPhoto" tabindex="-1" aria-labelledby="tipsPhotoLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="{{ asset('assets/img/group_11.svg') }}" alt="" width="250px" style="margin: 20px auto; display:block;">
+                                    <h4 class="text-center mt-5 mb-4"> ¿Cómo lograr una buena foto de producto? </h4>
+                                    <ul>
+                                        <li>Para que la cuadricula de productos se vea pareja, sube todas las fotos del mismo tamaño.</li>
+                                        <li>Obten imágenes de mejor calidad usando luz natural y evitando el flash.</li>
+                                        <li>Haz que tu producto sea el protagonista de la imagen eligiendo un fondo simple.</li>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Seguir editando mi producto</button>
+                                    <a href="#" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Ver más consejos</a>
+                                </div>
+                            </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="card-body row">
+                        <div class="col-md-12 mb-4">
+                            <div class="input-images"></div>
+
+                            <small class="mt-2 d-block">Tamaño mínimo recomendado: <i class="fas fa-arrows-alt-h mr-1 ml-2"></i> 960px <i class="fas fa-arrows-alt-v ml-2 mr-1"></i> 960px</small>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label for="link">Identificador del Video <span class="text-info">(Opcional)</span></label>
+                            <input type="text" class="form-control video-input" name="video_background" />
+
+                            <p class="mb-0 mt-2">Ejemplo:</p>
+                            <p class="example-url">https://www.youtube.com/watch?v=<span class="video-identifier">SMKP21GW083c</span></p>
+                        </div>
+
+                        <style type="text/css">
+                            .video-identifier{
+                                display: inline-block;
+                                padding: 3px 3px;
+                                border: 2px solid red;
+                            }
+
+                            .example-url{
+                                font-size: .8em;
+                            }
+                        </style>
                     </div>
                 </div>
 
@@ -414,7 +469,42 @@
 @push('scripts')
 <script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
 
+<script type="text/javascript" src="{{ asset('lib/werkn/image-uploader/src/image-uploader.js') }}"></script>
 <script type="text/javascript">
+    $('.input-images').imageUploader();
+</script>
+  
+<script type="text/javascript">
+    function slugify(str){
+        str = str.replace(/^\s+|\s+$/g, '');
+        str = str.toLowerCase();
+
+        var from = "ÁÄÂÀÃÅČÇĆĎÉĚËÈÊẼĔȆÍÌÎÏŇÑÓÖÒÔÕØŘŔŠŤÚŮÜÙÛÝŸŽáäâàãåčçćďéěëèêẽĕȇíìîïňñóöòôõøðřŕšťúůüùûýÿžþÞĐđßÆa·/_,:;";
+        var to   = "AAAAAACCCDEEEEEEEEIIIINNOOOOOORRSTUUUUUYYZaaaaaacccdeeeeeeeeiiiinnooooooorrstuuuuuyyzbBDdBAa------";
+        for (var i=0, l=from.length ; i<l ; i++) {
+            str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
+
+        str = str.replace(/[^a-z0-9 -]/g, '') 
+        .replace(/\s+/g, '-') 
+        .replace(/-+/g, '-'); 
+
+        return str;
+    }
+    
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Selecciona una opción..."
+        });
+    });
+
+    // Value Checker
+    $('#nameInput').keyup(function(){
+        event.preventDefault();
+        var name = $('#nameInput').val();
+        $('#slug').val(slugify(name));
+    });
+
     $(document).ready(function() {
         $('.select2').select2({
             placeholder: "Selecciona una opción..."

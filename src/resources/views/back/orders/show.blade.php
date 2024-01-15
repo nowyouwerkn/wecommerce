@@ -292,11 +292,15 @@
                         </div>
                     </div>
                 </div>
-
                 <!--<a class="btn btn-sm btn-block btn-primary" href="https://dashboard.stripe.com/payments/{{ $order->payment_id }}" target="_blank">See this Summary on Stripe <i class="icon-link ml-1"></i></a>-->
             </div>
         </div>
-
+            @if ($order->type == 'single_payment' && $order->status == 'Pagado')
+                <a href="{{ route('order.refund', $order->id) }}" class="nav-link text-danger"><i
+                        class="fas fa-ban mr-2"></i> Reembolsar orden</a>
+            @endif
+        </div>
+        
         <div class="col-md-8">
             @if ($order->type == 'single_payment')
                 <div class="card mb-4">'

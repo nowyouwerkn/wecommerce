@@ -413,6 +413,8 @@ class FrontController extends Controller
             $deduplication_code = NULL;
         }
 
+        $shipment_option = ShipmentOption::where('is_primary', true)->first();
+
         if (empty($product)) {
             return redirect()->back();
         } else {
@@ -425,8 +427,20 @@ class FrontController extends Controller
                 ->with('last_product', $last_product)
                 ->with('base_product', $base_product)
                 ->with('all_relationships', $all_relationships)
-                ->with('deduplication_code', $deduplication_code);
+                ->with('deduplication_code', $deduplication_code)
+                ->with('shipment_option', $shipment_option);
         }
+    }
+
+    public function reviewFilter($id, $filter)
+    {
+        $product = Product::find($id);
+
+        $reviews = $product->approved_reviews()->where('rating', $filter)->get();
+
+        return view('front.theme.' . $this->theme->get_name() . '.review_filter')
+            ->with('product', $product)
+            ->with('reviews', $reviews);
     }
 
     /*
@@ -627,13 +641,16 @@ class FrontController extends Controller
             }
         }
 
+        $shipment_option = ShipmentOption::where('is_primary', true)->first();
+
         return view('front.theme.' . $this->theme->get_name() . '.cart')
             ->with('products', $cart->items)
             ->with('total', $total)
             ->with('tax', $tax)
             ->with('shipping', $shipping)
             ->with('subtotal', $subtotal)
-            ->with('points', $points);
+            ->with('points', $points)
+            ->with('shipment_option', $shipment_option);
     }
 
     public function checkout()
@@ -2203,53 +2220,45 @@ class FrontController extends Controller
                     }
                 } else {
                     try {
-                        $charge = \Conekta\Order::create(
+
+                        $plan = \Conekta\Plan::create(
                             array(
-                                "line_items" => $products,
-
-                                "shipping_lines" => array(
-                                    array(
-                                        "amount" => 0 . '00',
-                                        "carrier" => "N/A"
-                                    )
-                                ),
-
-                                "shipping_contact" => array(
-                                    "address" => array(
-                                        "street1" => $street,
-                                        "street2" => $street_num,
-                                        "postal_code" => $postal_code,
-                                        "city" => $city,
-                                        "state" => $state,
-                                        "country" => $country
-                                    ),
-                                    "phone" => $request->phone,
-                                    "receiver" => $client_name,
-                                ),
-
-                                "currency" => $currency_value,
-                                "description" => "Pago de Orden",
-
-                                "customer_info" => array(
-                                    'name' => $client_name,
-                                    'phone' => $request->phone,
-                                    'email' => $request->email
-                                ),
-
-                                "charges" => array(
-                                    array(
-                                        "payment_method" => array(
-                                            "type" => "card",
-                                            "token_id" => $request->conektaTokenId,
-                                        )
-                                    )
-                                ),
+                                "name" => $product->name,
+                                "amount" => ($product->price * 100),
+                                "currency" => "MXN",
+                                "interval" => $interval,
+                                "frequency" => $product->payment_frequency_qty,
                             )
                         );
+
+                        $client = \Conekta\Customer::create(
+                            array(
+                                "email" => $request->email,
+                                "name" => $client_name,
+                                "phone" => $request->phone,
+                                "subscription" => array(
+                                    array(
+                                        "plan" => $plan->name,
+                                    )
+                                )
+                            )
+                        );
+
+                        $customer = \Conekta\Customer::find($client->id);
+
+                        $source = $customer->createPaymentSource([
+                            "type" => "card",
+                            "token_id" => $request->conektaTokenId,
+                        ]);
+
+                        $subscription = $customer->createSubscription([
+                            "plan_id" => $plan->id,
+                            "card_id" => $customer->payment_sources[0]->id,
+                        ]);
                     } catch (\Conekta\ParameterValidationError $error) {
-                        return redirect()->back()->with('error', $error->getMessage());
+                        return redirect()->route('checkout.subscription', $product->id)->with('error', $error->getMessage());
                     } catch (\Conekta\Handler $error) {
-                        return redirect()->back()->with('error', $error->getMessage());
+                        return redirect()->route('checkout.subscription', $product->id)->with('error', $error->getMessage());
                     }
                 }
 
@@ -2556,11 +2565,18 @@ class FrontController extends Controller
         }
 
         // Retrieve subscription data
-        $subscription_data = $subscription->jsonSerialize();
+        if ($payment_method->supplier == 'Conekta') {
+            if ($subscription->status != 'active') {
+                Session::flash('info', 'No se pudo completar tu compra, contacta con tu entidad financiera o intenta con otra tarjeta.');
+                return redirect()->back();
+            }
+        } else {
+            $subscription_data = $subscription->jsonSerialize();
 
-        if ($subscription_data['status'] != 'active') {
-            Session::flash('info', 'No se pudo completar tu compra, contacta con tu entidad financiera o intenta con otra tarjeta.');
-            return redirect()->back();
+            if ($subscription_data['status'] != 'active') {
+                Session::flash('info', 'No se pudo completar tu compra, contacta con tu entidad financiera o intenta con otra tarjeta.');
+                return redirect()->back();
+            }
         }
 
         // GUARDAR LA ORDEN
@@ -2600,7 +2616,7 @@ class FrontController extends Controller
         /*------------*/
         $order->card_digits = Str::substr($request->card_number, 15);
         $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
-        $order->payment_id = $charge->id ?? $subscription_data['id'];
+        $order->payment_id = $charge->id ?? $subscription_data['id'] ?? $subscription->id;
         $order->is_completed = true;
         $order->status = 'Pagado';
         $order->payment_method = $payment_method->supplier;
@@ -2608,19 +2624,41 @@ class FrontController extends Controller
         $order->subscription_id = $product->id;
 
         /* Stripe Subscription */
-        if ($subscription_data['status'] == 'active') {
-            $order->subscription_status = true;
-        } else {
-            $order->subscription_status = false;
+        if ($payment_method->supplier == 'Stripe') {
+            if ($subscription_data['status'] == 'active') {
+                $order->subscription_status = true;
+            } else {
+                $order->subscription_status = false;
+            }
+
+            $order->stripe_subscription_id = $subscription_data['id'];
+            $order->stripe_customer_id = $subscription_data['customer'];
+            $order->stripe_plan_id = $subscription_data['plan']['id'];
+            $order->subscription_period_start = Carbon::createFromTimestamp($subscription_data['current_period_start'])->toDateTimeString();
+            $order->subscription_period_end = Carbon::createFromTimestamp($subscription_data['current_period_end'])->toDateTimeString();
+        }
+
+        /*Conekta Subscription */
+        if ($payment_method->supplier == 'Conekta') {
+            if ($subscription->status == 'active') {
+                $order->subscription_status = true;
+            } else {
+                $order->subscription_status = false;
+            }
+
+            $order->conekta_subscription_id = $subscription->id;
+            $order->customer_id = $subscription->customer->id;
+            $order->plan_id = $subscription->plan_id;
+
+            $product->plan_id = $subscription->plan_id;
+
+            $product->save();
+
+            $order->subscription_period_start = Carbon::createFromTimestamp($subscription->billing_cycle_start)->toDateTimeString();
+            $order->subscription_period_end = Carbon::createFromTimestamp($subscription->billing_cycle_end)->toDateTimeString();
         }
 
 
-
-        $order->stripe_subscription_id = $subscription_data['id'];
-        $order->stripe_customer_id = $subscription_data['customer'];
-        $order->stripe_plan_id = $subscription_data['plan']['id'];
-        $order->subscription_period_start = Carbon::createFromTimestamp($subscription_data['current_period_start'])->toDateTimeString();
-        $order->subscription_period_end = Carbon::createFromTimestamp($subscription_data['current_period_end'])->toDateTimeString();
 
         if (isset($request->coupon_code)) {
             $coupon = Coupon::where('code', $request->coupon_code)->where('is_active', true)->orderBy('created_at', 'desc')->first();
@@ -3399,10 +3437,15 @@ class FrontController extends Controller
                 }
 
                 // Revisión de caducidad
-                $end_date = Carbon::parse($coupon->end_date);
+                if ($coupon->end_date == null) {
+                    $end_date = 0;
+                } else {
+                    $end_date = Carbon::parse($coupon->end_date);
+                }
+
                 $today = Carbon::today();
 
-                if ($today <= $end_date) {
+                if ($today <= $end_date || $end_date == 0) {
                     /* Si está activa la opcion; revisar si existen productos con descuento en el carrito */
                     if ($coupon->exclude_discounted_items == true) {
                         $oldCart = Session::get('cart');

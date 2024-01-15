@@ -36,17 +36,14 @@
 
                 <h3>Search Engine Optimization (SEO)</h3>
                 <p>Esta información te permite aparecer más efectivamente en los buscadores en Internet.</p>
-                <!--<p>Al usar estas plantillas, aceptas que has leído y aceptado el descargo de responsabilidad.</p>-->
 
                 <button type="submit" class="btn btn-primary btn-lg">Guardar Cambios <i class="far fa-save"></i></button>
             </div>
         </div>
         <div class="col-md-8">
-
             <div class="card mb-4">
                 <div class="card-body">
-
-                <h6 class="text-uppercase mb-3">Información General</h6>
+                    <h6 class="text-uppercase mb-3">Información General</h6>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -76,6 +73,14 @@
                             <small class="form-text text-muted">Separa cada elemento con una coma o los robots de busqueda no podrán identificar las palabras.</small>
                         </div>
 
+                        <div class="col-md-12 mt-3 mb-3">
+                            <label for="page_metas">Etiquetas meta</label>
+
+                            <textarea name="page_metas" id="" cols="30" rows="10" class="form-control"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="INDEX,FOLLOW,NOARCHIVE"></textarea>
+                            <small class="form-text text-muted">Separa cada elemento con un espacio. Puedes agregar todos los metas que quieras.</small>
+                        </div>
+
                         <div class="col-md-12">
                             <label for="page_theme_color_hex">Color (Tema)</label>
                             <input type="text" class="form-control" id="page_theme_color_hex" name="page_theme_color_hex" value="{{ $seo->page_theme_color_hex ?? '' }}"/>
@@ -89,7 +94,7 @@
                     <div class="form-group">
                         <label for="image">Archivo Robots.txt</label>
                         <input type="file" id="image" name="image" id="image" />
-                        <small class="form-text text-muted">Upload your text file with the proper configurations for robots. We'll take care of the rest.</small>
+                        <small class="form-text text-muted">Sube tu documento de robots.txt con las configuraciones que desees. Nosotros nos encargamos de los demás.</small>
                     </div>
 
                     <hr>

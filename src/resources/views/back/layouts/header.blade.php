@@ -20,7 +20,7 @@
                     Notificaciones
 
                     <div>
-                        <a href="{{ route('notifications.mark.read') }}" data-placement="bottom" data-toggle="tooltip" data-original-title="Marcar todas como leídas" ><i class="fas fa-inbox"></i></a>
+                        <a href="{{ route('notifications.mark.read') }}" data-placement="bottom" data-toggle="tooltip" data-original-title="Marcar todas como leídas"><i class="fas fa-inbox"></i></a>
                     </div>
                 </div>
 

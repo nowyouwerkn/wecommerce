@@ -60,11 +60,14 @@
 	                    <th class="text-right">Valor</th>
 	                    <th class="text-right">Precio</th>
 	                    <th class="text-right">Cantidad</th>
+						@if($branches->count() != 0)
+						<th class="text-right">Sucursal</th>
+						@endif
 	                    <th class="text-right">Código SKU</th>
 	                </tr>
 	            </thead>
 	            <tbody>
-	                <tr>
+	                <tr style="position: relative;">
 	                    <td class="tx-color-03 tx-normal">
 	                    	<select name="type_id" id="type" class="form-control">
 	                            <option value="Talla">Talla</option>
@@ -81,6 +84,15 @@
 	                    <td class="text-right">
 	                        <input type="number" name="stock_variant" id="stock_variant" class="form-control">
 	                    </td>
+						@if($branches->count() != 0)
+						<td class="text-right">
+	                        <select class="custom-select tx-13 old-cat" id="branch_id" name="branch_id">
+								@foreach ($branches as $branch)
+									<option value="{{ $branch->id }}">{{ $branch->name }}</option>
+								@endforeach
+							</select>
+	                    </td>
+						@endif	
 	                    <td class="text-right">
 	                        <input type="text" name="sku_variant" id="sku_variant" class="form-control">
 	                    </td>
@@ -104,6 +116,9 @@
 	                <th class="text-right">Valor</th>
 	                <th class="text-right">Precio</th>
 	                <th class="text-right">Cantidad</th>
+					@if($branches->count() != 0)
+					<th class="text-right">Sucursal</th>
+					@endif
 	                <th class="text-right">Código SKU</th>
 	                <th class="text-right">Acciones</th>
 	            </tr>
@@ -114,25 +129,36 @@
 	                {{ csrf_field() }}
 	                {{ method_field('PUT') }}
 	            
-		            <tr>
+		            <tr style="position: relative;">
 		                <td>{{ $variant->variants->type ?? 'Talla'}}</td>
 		                <td class="text-right">{{ $variant->variants->value }}</td>
 		                <td class="text-right">
-		                	<div class="input-group" style="min-width: 80px;">
+		                	<div class="input-group" style="min-width: 120px;">
 		                		<div class="input-group-prepend">
 								    <span class="input-group-text" id="basic-addon1" style="height:36px">$</span>
 								 </div>
 			                
 			                    @if($variant->new_price == NULL)
-			                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $product->price }}" style="width:50px;">
+			                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $product->price }}" style="width:80px;">
 			                    @else
-			                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $variant->new_price }}" style="width:50px;">
+			                    <input type="text" name="price_variant" class="form-control variant-form-control" value="{{ $variant->new_price }}" style="width:80px;">
 			                    @endif
 		                    </div>
 		                </td>
 		                <td class="text-right">
-		                	<input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $variant->stock }}" style="width:80px;">
+		                	<input type="number" name="stock_variant" class="form-control variant-form-control" value="{{ $variant->stock }}" style="width:70px;">
 		                </td>
+
+						@if($branches->count() != 0)
+						<td class="text-right">
+							<select class="custom-select tx-13 old-cat" id="branch_id" name="branch_id">
+								@foreach ($branches as $branch)
+									<option {{ ($branch->id == $variant->branch_id) ? 'selected' : '' }} value="{{ $branch->id }}">{{ $branch->name }}</option>
+								@endforeach
+							</select>
+		                </td>
+						@endif
+
 		                <td class="text-right">
 		                	<input type="text" name="sku_variant" class="form-control variant-form-control" value="{{ $variant->sku }}">
 		                </td>
