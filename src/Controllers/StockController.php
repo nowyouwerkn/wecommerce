@@ -26,7 +26,6 @@ class StockController extends Controller
         $inventory_value = 0;
 
         foreach ($all_products as $pr) {
-
             if($pr->variants_stock->count() == 0){
                 $size_total += $pr->stock;
             }else{

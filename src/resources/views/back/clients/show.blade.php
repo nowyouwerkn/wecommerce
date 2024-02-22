@@ -210,7 +210,7 @@
 						</div>
 						@else
 						<div class="text-center mt-5">
-							<h4 class="mb-0">{{ $client->name }} no ha ningun punto.</h4>
+							<h4 class="mb-0">{{ $client->name }} no ha ganado ningún punto.</h4>
 						</div>
 						@endif
 					</div>
