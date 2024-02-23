@@ -3642,7 +3642,7 @@ class FrontController extends Controller
 
     public function paymentPreference(Request $request)
     {
-        $request->unit_price = $unit_price;
+        $unit_price = $request->unit_price;
 
         /* Renovar Preferencia de Pago de Mercado Pago */
         $mercado_payment = PaymentMethod::where('supplier', 'MercadoPago')->where('is_active', true)->first();
