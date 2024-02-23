@@ -586,6 +586,13 @@ Route::post('/apply-cuopon', [
     'as' => 'apply.cuopon',
 ]);
 
+/* Recalcular puntos */
+// Esta funcion solo aplica para los pagos con mercadopago
+Route::post('/payment-preference', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@paymentPreference',
+    'as' => 'payment.preference',
+]);
+
 /* Recalculate Shipping Options on Checkout */
 Route::post('/calculate-shipment-options', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\FrontController@calculateTotalWithOptions',
