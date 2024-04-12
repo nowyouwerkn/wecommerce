@@ -1,6 +1,6 @@
 MIT License
 
-Copyright © 2022 Werken S.A de C.V
+Copyright © 2024 Werken Lab S.A de C.V
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

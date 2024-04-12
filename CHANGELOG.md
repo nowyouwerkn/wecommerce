@@ -2,7 +2,11 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
-## 2.0 - 2024-01-15
+## 2.0 - 2024-04-12
+
+- Actualizando composer.json para Laravel 11 en adelante.
+
+## 1.9.3 - 2024-01-15
 
 - Nuevo sistema de sucursales en la plataforma.
 - Actualización de las dependencias de Facebook/Meta para anuncios dinámicos

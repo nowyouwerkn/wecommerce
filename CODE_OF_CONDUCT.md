@@ -1,4 +1,4 @@
-# Código de Conducta Werken S.A de C.V
+# Código de Conducta Werken Lab S.A de C.V
 
 ## Nuestra Promesa
 Este código de conducta brinda orientación sobre la participación en los equipos de Werkn y describe el proceso para denunciar comportamientos inaceptables. Como organización y comunidad, estamos comprometidos a brindar un entorno inclusivo para todos, libre de acoso, independientemente de la edad, el tamaño del cuerpo, la discapacidad, el origen étnico, las características sexuales, la identidad y expresión de género, el nivel de experiencia, la educación, el estado socioeconómico, la nacionalidad, la apariencia personal, raza, religión o identidad y orientación sexual. 
