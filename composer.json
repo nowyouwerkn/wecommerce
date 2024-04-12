@@ -43,7 +43,7 @@
     "require":{
         "php": "^8.0",
         "ext-fileinfo": "*",
-        "laravel/framework": "^11.0.8",
+        "laravel/framework": "^9.52.*",
         "conekta/conekta-php": "^4.3",
         "facebook/php-business-sdk": "19.0.*",
         "gabrielbull/ups-api": "^2.0",

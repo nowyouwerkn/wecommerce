@@ -4,7 +4,7 @@ Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
 ## 2.0 - 2024-04-12
 
-- Actualizando composer.json para Laravel 11 en adelante.
+- Actualizando composer.json para Laravel 9 en adelante para mantener soporte de la API de Paypal
 
 ## 1.9.3 - 2024-01-15
 
