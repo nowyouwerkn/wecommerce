@@ -48,7 +48,7 @@
         "facebook/php-business-sdk": "19.0.*",
         "gabrielbull/ups-api": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "laravel/fortify": "^1.21.1",
+        "laravel/fortify": "^1.11",
         "mews/purifier": "^3.4.2",
         "openpay/sdk": "2.1.1",
         "paypal/rest-api-sdk-php": "^1.14",
