@@ -183,13 +183,13 @@
                     <div id="imageType" class="row">
                         <div class="form-group col-md-12">
                             <label for="image">Imagen de banner escritorio</label>
-                            <input type="file" id="image" class="form-control" name="image" onchange="loadFile(event)" />
+                            <input type="file" id="image" class="form-control" name="image" />
 
                             <small class="d-block mt-2">Escritorio = Computadoras y Monitores grandes</small>
                         </div>
                         <div class="form-group col-md-12">
                             <label for="image">Imagen de banner responsivo</label>
-                            <input type="file" id="image_responsive" class="form-control"  name="image_responsive" onchange="loadFile(event)" />
+                            <input type="file" id="image_responsive" class="form-control"  name="image_responsive" />
 
                             <small class="d-block mt-2">Responsivo = Dispositivos móviles</small>
                         </div>
@@ -245,15 +245,5 @@
             $('#videoType .video-input').attr('required', true);
         }
     });
-
-    var loadFile = function(event) {
-        var reader = new FileReader();
-        reader.onload = function(){
-            var output = document.getElementById('output');
-            output.src = "";
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    };
 </script>
 @endpush

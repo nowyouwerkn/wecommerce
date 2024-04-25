@@ -13,6 +13,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Banners</li>
                 </ol>
             </nav>
+            
             <h4 class="mg-b-0 tx-spacing--1">Banners</h4>
         </div>
     </div>
@@ -162,18 +163,18 @@
                     <div id="imageType" class="row">
                         <div class="form-group col-md-12">
                             <label for="image">Imagen de banner escritorio <span class="text-danger">*</span></label>
-                            <input type="file" id="image" class="form-control" name="image" onchange="loadFile(event)" required="" />
+                            <input type="file" id="image" class="form-control" name="image" required="" />
 
                             <small class="d-block mt-2">Escritorio = Computadoras y Monitores grandes</small>
                         </div>
+
                         <div class="form-group col-md-12">
                             <label for="image">Imagen de banner responsivo <span class="text-danger">*</span></label>
-                            <input type="file" id="image_responsive" class="form-control"  name="image_responsive" onchange="loadFile(event)" required="" />
+                            <input type="file" id="image_responsive" class="form-control"  name="image_responsive" required="" />
 
                             <small class="d-block mt-2">Responsivo = Dispositivos móviles</small>
                         </div>
                     </div>
-                    
 
                     {{-- 
                     <h4>Vista Previa</h4>
@@ -199,7 +200,6 @@
         </div>
     </div>
 </form>
-
 @endsection
 
 
@@ -226,15 +226,5 @@
             $('#videoType .video-input').attr('required', true);
         }
     });
-
-    var loadFile = function(event) {
-        var reader = new FileReader();
-        reader.onload = function(){
-            var output = document.getElementById('output');
-            output.src = "";
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    };
 </script>
 @endpush
