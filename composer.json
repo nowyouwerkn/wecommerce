@@ -56,7 +56,7 @@
         "spatie/laravel-permission": "^6.2.0",
         "stevebauman/location": "^6.5",
         "stripe/stripe-php": "^14.1.0",
-        "intervention/image": "^3.5.1",
+        "intervention/image": "^2.7.2",
         "mercadopago/dx-php": "2.5.3",
         "maatwebsite/excel": "^3.1"
     },

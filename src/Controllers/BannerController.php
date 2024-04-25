@@ -56,7 +56,6 @@ class BannerController extends Controller
 
         // Video en Banner
         $banner->video_background = $request->video_background;
-
         $banner->video_autoplay = $request->video_autoplay;
         $banner->video_controls = $request->video_controls;
         $banner->video_loop = $request->video_loop;
@@ -69,12 +68,10 @@ class BannerController extends Controller
             $location = public_path('img/banners/' . $filename);
 
             Image::make($image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
-
             $banner->image_desktop = $filename;
         }
 
         // Imagen responsiva en Banner
-
         if ($request->hasFile('image_responsive')) {
             $image = $request->file('image_responsive');
             $filename = 'bannerresponsive' . time() . '.' . $image->getClientOriginalExtension();
@@ -111,8 +108,8 @@ class BannerController extends Controller
     {
         //Validar
         $this -> validate($request, array(
-            'image' => 'sometimes|min:10|max:2100',
-            'image_responsive' => 'sometimes|min:10|max:2100'
+            'image' => 'sometimes',
+            'image_responsive' => 'sometimes'
         ));
 
         // Guardar datos en la base de datos
@@ -135,7 +132,6 @@ class BannerController extends Controller
 
         // Video en Banner
         $banner->video_background = $request->video_background;
-
         $banner->video_autoplay = $request->video_autoplay;
         $banner->video_controls = $request->video_controls;
         $banner->video_loop = $request->video_loop;
