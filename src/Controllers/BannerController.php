@@ -32,8 +32,8 @@ class BannerController extends Controller
             'title' => 'unique:banners|required|max:255',
             'subtitle' => 'nullable',
             'link' => 'nullable',
-            'image' => 'sometimes',
-            'image_responsive' => 'sometimes'
+            'image' => 'required|max:1500',
+            'image_responsive' => 'required|max:1500'
         ));
 
         // Guardar datos en la base de datos
@@ -108,8 +108,8 @@ class BannerController extends Controller
     {
         //Validar
         $this -> validate($request, array(
-            'image' => 'sometimes',
-            'image_responsive' => 'sometimes'
+            'image' => 'sometimes|max:1500',
+            'image_responsive' => 'sometimes|max:1500'
         ));
 
         // Guardar datos en la base de datos
