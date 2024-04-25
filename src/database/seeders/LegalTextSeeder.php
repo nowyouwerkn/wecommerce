@@ -15,28 +15,27 @@ class LegalTextSeeder extends Seeder
     public function run()
     {
         LegalText::create([
-            'type' => 'Returns',
             'title' => 'Cambios y Devoluciones',
-            'slug' => 'cambios-y-devoluciones'
+            'slug' => 'cambios-y-devoluciones',
+            'description' => 'Lorem Ipsum'
         ]);
 
         LegalText::create([
-            'type' => 'Privacy',
             'title' => 'Aviso de Privacidad',
-            'slug' => 'aviso-de-privacidad'
+            'slug' => 'aviso-de-privacidad',
+            'description' => 'Lorem Ipsum'
         ]);
 
         LegalText::create([
-            'type' => 'Terms',
             'title' => 'Términos y Condiciones',
-            'slug' => 'terminos-y-condiciones'
+            'slug' => 'terminos-y-condiciones',
+            'description' => 'Lorem Ipsum'
         ]);
 
         LegalText::create([
-            'type' => 'Shipment',
             'title' => 'Política de Envíos',
-            'slug' => 'politica-de-envios'
+            'slug' => 'politica-de-envios',
+            'description' => 'Lorem Ipsum'
         ]);
-
     }
 }

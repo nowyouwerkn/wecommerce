@@ -211,14 +211,11 @@ Es necesario agregar proveedores al proyecto para poder utilizar todas las funci
 'providers' => [
     // ...
     Nowyouwerkn\WeCommerce\WeCommerceServiceProvider::class,
-    Intervention\Image\ImageServiceProvider::class,
     Maatwebsite\Excel\ExcelServiceProvider::class,
-    App\Providers\FortifyServiceProvider::class,
 ];
 
 'aliases' => [
     // ...
-    'Image' => Intervention\Image\Facades\Image::class,
     'Excel' => Maatwebsite\Excel\Facades\Excel::class
 ];
 ```
@@ -253,6 +250,11 @@ use App\Models\User;
 cambiar por...
 
 use Nowyouwerkn\WeCommerce\Models\User;
+```
+
+Actualiza tu archivo `app.php` con el proveedor de Fortify Esto se agrega en el archivo `config/app.php` 
+```
+    App\Providers\FortifyServiceProvider::class,
 ```
 
 Limpia el caché de tu configuración
@@ -404,7 +406,7 @@ Revisa los [tickets abiertos](https://github.com/nowyouwerkn/wecommerce/issues) 
 
 MIT License
 
-Copyright (c) [2022] [Werken S.A de C.V]
+Copyright (c) [2024] [Werken Lab S.A de C.V]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -427,7 +429,7 @@ SOFTWARE.
 <!-- CONTACT -->
 ## Contacto
 
-Werkn S.A de C.V - [@nowyouwerkn](https://instagram.com/nowyouwerkn) - hey@werkn.mx
+Werken Lab S.A de C.V - [@nowyouwerkn](https://instagram.com/werken.mx) - rca@werken.mx
 Link de Proyecto: [https://github.com/nowyouwerkn/wecommerce](https://github.com/nowyouwerkn/wecommerce)
 
 

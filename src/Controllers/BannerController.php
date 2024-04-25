@@ -31,10 +31,9 @@ class BannerController extends Controller
         $this -> validate($request, array(
             'title' => 'unique:banners|required|max:255',
             'subtitle' => 'nullable',
-            'text_button' => 'required',
             'link' => 'nullable',
-            'image' => 'sometimes|min:10|max:2100',
-            'image_responsive' => 'sometimes|min:10|max:2100'
+            'image' => 'sometimes',
+            'image_responsive' => 'sometimes'
         ));
 
         // Guardar datos en la base de datos
@@ -86,7 +85,6 @@ class BannerController extends Controller
         }
 
         $banner->save();
-
 
         // Mensaje de session
         Session::flash('success', 'Se creo el banner con exito.');
