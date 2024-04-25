@@ -13,7 +13,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Banners</li>
                 </ol>
             </nav>
-            
+
             <h4 class="mg-b-0 tx-spacing--1">Banners</h4>
         </div>
     </div>
@@ -166,6 +166,7 @@
                             <input type="file" id="image" class="form-control" name="image" required="" />
 
                             <small class="d-block mt-2">Escritorio = Computadoras y Monitores grandes</small>
+                            <p class="text-danger">Tamaño máximo: 1.5MB</p>
                         </div>
 
                         <div class="form-group col-md-12">
@@ -173,6 +174,7 @@
                             <input type="file" id="image_responsive" class="form-control"  name="image_responsive" required="" />
 
                             <small class="d-block mt-2">Responsivo = Dispositivos móviles</small>
+                            <p class="text-danger">Tamaño máximo: 1.5MB</p>
                         </div>
                     </div>
 
