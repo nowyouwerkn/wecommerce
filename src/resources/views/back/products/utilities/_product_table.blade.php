@@ -58,7 +58,12 @@
         @foreach($products as $product)
         <tr>
             <td style="width: 150px; position: relative;">
+                @if($product->image != NULL)
                 <img style="width: 100%;" src="{{ asset('img/products/' . $product->image ) }}" alt="{{ $product->name }}">
+                @else
+                <img style="width: 100%;" src="{{ asset('img/products/' . $product->images()->first()->image ) }}" alt="{{ $product->name }}">
+                @endif
+            
                 <div class="text-center margin-top-10">
 
                     <small>

@@ -76,13 +76,13 @@
 	                        </select>  
 	                    </td>
 	                    <td class="text-right">
-	                        <input type="text" name="variant" id="variant" class="form-control">
+	                        <input type="text" name="variant" id="variant" class="form-control" required>
 	                    </td>
 	                    <td class="text-right">
-	                        <input type="number" name="price_variant" id="price_variant" class="form-control">
+	                        <input type="number" name="price_variant" id="price_variant" class="form-control" required>
 	                    </td>
 	                    <td class="text-right">
-	                        <input type="number" name="stock_variant" id="stock_variant" class="form-control">
+	                        <input type="number" name="stock_variant" id="stock_variant" class="form-control" required>
 	                    </td>
 						@if($branches->count() != 0)
 						<td class="text-right">
@@ -94,16 +94,22 @@
 	                    </td>
 						@endif	
 	                    <td class="text-right">
-	                        <input type="text" name="sku_variant" id="sku_variant" class="form-control">
+	                        <input type="text" name="sku_variant" id="sku_variant" class="form-control" required>
 	                    </td>
 	                </tr>
 	            </tbody>
 	        </table>
 
 	        <div class="col-md-12 my-3">
+				<button type="submit" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
+	                Guardar Variante
+	           	</button>
+
+				{{--  
 	            <button type="button" id="saveVariant" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
 	                Guardar Variante
 	           	</button>
+				--}}
 	        </div>
 	    </form>
     </div>
