@@ -456,6 +456,7 @@ class FrontController extends Controller
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
 
+
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $store_shipping = ShipmentMethod::where('is_active', true)->first();
 
@@ -614,6 +615,7 @@ class FrontController extends Controller
         $points = NULL;
         $available = NULL;
         $used =  NULL;
+
         if (!empty($membership)) {
 
             if ($total >= $membership->minimum_purchase) {
@@ -643,6 +645,37 @@ class FrontController extends Controller
 
         $shipment_option = ShipmentOption::where('is_primary', true)->first();
 
+        /* SPECIAL PRICE PROMO FUNCTIONALITY */
+        $getPromo = Session::get('promo');
+        $promo_cta = false;
+        $promo_alert = false;
+
+        if($getPromo == 'true'){
+            $productCount = 0;
+
+            foreach($cart->items as $cart_product){
+                $productCount += $cart_product['qty'];
+            }
+
+            if ($productCount >= 2) {
+                if ($productCount % 2 === 0) {
+                    // Múltiplo de dos
+                    $subtotal = 1299 * ($productCount / 2);
+                    $total = $subtotal;
+                } elseif ($productCount % 3 === 0) {
+                    // Múltiplo de tres
+                    $subtotal = 1799 * ($productCount / 3);
+                    $total = $subtotal;
+                } else {
+                    // No es múltiplo de dos ni de tres
+                    $subtotal;
+                    $promo_alert = true;
+                }
+            } else {
+                $promo_cta = true;
+            }
+        }
+
         return view('front.theme.' . $this->theme->get_name() . '.cart')
             ->with('products', $cart->items)
             ->with('total', $total)
@@ -650,6 +683,8 @@ class FrontController extends Controller
             ->with('shipping', $shipping)
             ->with('subtotal', $subtotal)
             ->with('points', $points)
+            ->with('promo_cta', $promo_cta)
+            ->with('promo_alert', $promo_alert)
             ->with('shipment_option', $shipment_option);
     }
 
@@ -903,9 +938,39 @@ class FrontController extends Controller
             }
         }
 
-
         $store_config = $this->store_config;
         $legals = LegalText::all();
+
+        /* SPECIAL PRICE PROMO FUNCTIONALITY */
+        $getPromo = Session::get('promo');
+        $promo_cta = false;
+        $promo_alert = false;
+
+        if($getPromo == 'true'){
+            $productCount = 0;
+
+            foreach($cart->items as $cart_product){
+                $productCount += $cart_product['qty'];
+            }
+
+            if ($productCount >= 2) {
+                if ($productCount % 2 === 0) {
+                    // Múltiplo de dos
+                    $subtotal = (1299 * ($productCount / 2))  - ($tax);
+                    $total =  $subtotal + $tax;
+                } elseif ($productCount % 3 === 0) {
+                    // Múltiplo de tres
+                    $subtotal = (1799 * ($productCount / 3))  - ($tax);;
+                    $total =  $subtotal + $tax;
+                } else {
+                    // No es múltiplo de dos ni de tres
+                    $subtotal;
+                    $promo_alert = true;
+                }
+            } else {
+                $promo_cta = true;
+            }
+        }
 
         if (empty($mercado_payment)) {
             $preference = NULL;
@@ -1003,6 +1068,8 @@ class FrontController extends Controller
                 ->with('store_config', $store_config)
                 ->with('legals', $legals)
                 ->with('preference', $preference)
+                ->with('promo_cta', $promo_cta)
+                ->with('promo_alert', $promo_alert)
                 ->with('has_digital_product', $has_digital_product);
         } else {
             //Session message

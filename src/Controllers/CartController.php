@@ -10,6 +10,7 @@ use Auth;
 use Carbon\Carbon;
 
 use Nowyouwerkn\WeCommerce\Models\StoreConfig;
+use Nowyouwerkn\WeCommerce\Models\StoreTheme;
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Cart;
 
@@ -24,6 +25,7 @@ class CartController extends Controller
     {
         $this->middleware('web');
         $this->store_config = new StoreConfig;
+        $this->theme = new StoreTheme;
     }
 
     public function addCart(Request $request, $id, $variant)
@@ -44,6 +46,13 @@ class CartController extends Controller
         //$request->session()->put('cart', $cart);
         Session::put('cart', $cart);
 
+        /* Special Price Rules */
+        /* This just applies to project Sator */
+        $current_theme = $this->theme->get_name();
+        if($current_theme == 'sator'){
+            Session::put('promo', 'true');
+        }
+        
         //Facebook Event
         if ($this->store_config->has_pixel() != NULL) {
             if($product->has_discount == true)
@@ -71,6 +80,13 @@ class CartController extends Controller
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
 
         $cart = new Cart($oldCart);
+
+        /* Special Price Rules */
+        /* This just applies to project Sator */
+        $current_theme = $this->theme->get_name();
+        if($current_theme == 'sator'){
+            Session::put('promo', 'true');
+        }
 
         // Validador de Existencias
         $current_stock = $product->stock;
@@ -115,8 +131,6 @@ class CartController extends Controller
             return redirect()->back();
             //return response()->json(['mensaje' => 'Sumado 1 producto al carrito.', 'qty' => $qty, 'price' => $price , 'totalQty' => $totalQty, 'totalPrice' => $totalPrice], 200);
         }
-
-
     }
 
     public function substractOne($id, $variant)
