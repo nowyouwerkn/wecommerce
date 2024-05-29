@@ -1367,6 +1367,9 @@ class FrontController extends Controller
             MercadoPago\SDK::setAccessToken($private_key_mercadopago);
         }
 
+        /* Definición de Opción de Envío */
+        $shipment_option = ShipmentOption::where('type', 'pickup')->where('id', $request->shipping_option)->first();
+
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
 
@@ -1382,10 +1385,13 @@ class FrontController extends Controller
             $count++;
         }
 
-        $client_name = $request->name . ' ' . $request->last_name;
+        $products[$count++] = array(
+            'name' => 'Tarifa de envío',
+            'unit_price' => ($request->shipping_rate . '00') ?? '0.00',
+            'quantity' => '1'
+        );
 
-        /* Definición de Opción de Envío */
-        $shipment_option = ShipmentOption::where('type', 'pickup')->where('id', $request->shipping_option)->first();
+        $client_name = $request->name . ' ' . $request->last_name;
 
         if (!empty($shipment_option)) {
             // Si el método de envio es de Recolección (pickup)
@@ -1509,7 +1515,7 @@ class FrontController extends Controller
                                 ),
 
                                 "currency" => $currency_value,
-                                "description" => "Pago de Orden",
+                                "description" => "Pago de Orden de tu Tienda en Línea",
 
                                 "customer_info" => array(
                                     'name' => $client_name,
@@ -3412,7 +3418,6 @@ class FrontController extends Controller
         if (isset($request->password)) {
             $user->password = bcrypt($request->input('password'));
         }
-
 
         $user->save();
 
