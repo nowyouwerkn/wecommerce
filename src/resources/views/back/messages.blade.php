@@ -15,7 +15,7 @@
 @endsection
 
 @section('content')
-<iframe src="https://werkn.mx" style="width:100%; height: 650px;">
+<iframe src="https://werken.mx" style="width:100%; height: 650px;">
 	
 </iframe>
 @endsection
