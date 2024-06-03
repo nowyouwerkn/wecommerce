@@ -1374,6 +1374,8 @@ class FrontController extends Controller
         $cart = new Cart($oldCart);
 
         $products = array();
+
+        /*
         $count = 0;
         foreach ($cart->items as $product) {
             $products[$count] = array(
@@ -1386,6 +1388,19 @@ class FrontController extends Controller
         }
 
         $products[$count++] = array(
+            'name' => 'Tarifa de envío',
+            'unit_price' => ($request->shipping_rate . '00') ?? '0.00',
+            'quantity' => '1'
+        );
+        */
+
+        $products[0] = array(
+            'name' => 'Orden en tu Tienda en Línea',
+            'unit_price' => ($request->final_total . '00'),
+            'quantity' => '1'
+        );
+
+        $products[1] = array(
             'name' => 'Tarifa de envío',
             'unit_price' => ($request->shipping_rate . '00') ?? '0.00',
             'quantity' => '1'
