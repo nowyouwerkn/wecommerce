@@ -4233,7 +4233,33 @@ class FrontController extends Controller
             $shipping = $shipment_option->price;
         }
 
-        $total_cart = $cart->totalPrice;
+        /* SPECIAL PRICE PROMO FUNCTIONALITY */
+        $getPromo = Session::get('promo');
+
+        if($getPromo == 'true'){
+            $productCount = 0;
+
+            foreach($cart->items as $cart_product){
+                $productCount += $cart_product['qty'];
+            }
+
+            if ($productCount >= 2) {
+                if ($productCount % 2 === 0) {
+                    // Múltiplo de dos
+                    $total_cart = 1299 * ($productCount / 2);
+                } elseif ($productCount % 3 === 0) {
+                    // Múltiplo de tres
+                    $total_cart = 1799 * ($productCount / 3);
+                } else {
+                    // No es múltiplo de dos ni de tres
+                    $total_cart = $cart->totalPrice;
+                }
+            } else {
+                $total_cart = $cart->totalPrice;
+            }
+        }
+
+        //$total_cart = $cart->totalPrice;
 
         $tax = ($total_cart + $shipping) - (($total_cart + $shipping) / $tax_rate);
         $subtotal = ($total_cart + $shipping) - ($tax);
