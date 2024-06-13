@@ -742,7 +742,9 @@ class ProductController extends Controller
 
     public function export_inventory_changes()
     {
-        return Excel::download(new InventoryExport, 'inventario.xlsx');
+        // Enviar datos al modelo Inventory export y generar la vista
+        // La vista será procesada a un documento de excel para su descarga
+        return Excel::download(new InventoryExport, 'movimientos_de_inventario.xlsx');
     }
 
     public function import(Request $request)
@@ -759,7 +761,15 @@ class ProductController extends Controller
         $by = Auth::user();
 
         if ($product->stock != $request->stock_variant) {
-            $values = array('action_by' => $by->id,'initial_value' => $product->stock, 'final_value' => $request->stock_variant, 'product_id' => $id);
+            $by = Auth::user();
+            
+            $values = array(
+                'action_by' => $by->id,
+                'initial_value' => $product->stock, 
+                'final_value' => $request->stock_variant, 
+                'product_id' => $id,
+                'created_at' => Carbon::now(),
+            );
             
             DB::table('inventory_record')->insert($values);
         }

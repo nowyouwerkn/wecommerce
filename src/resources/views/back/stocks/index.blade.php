@@ -18,9 +18,52 @@
                 <button class="btn" type="submit"><i class="fas fa-search"></i></button>
             </form>
 
+            <div class="dropdown">
+                <button class="btn pd-x-15 btn-white btn-uppercase dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-file-export"></i> Exportar Movimientos
+                </button>
+                <div class="dropdown-menu mr-5" aria-labelledby="dropdownMenuButton">
+                    <form class="form-horizontal px-4 py-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="mb-0 text-uppercase text-info">Rango:</p>
+                                <hr class="mt-1">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="filter">Inicio <span class="text-danger">*</span></label>
+                                            <input type="date" class="form-control" name="event_date_start">
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="filter">Final <span class="text-danger">*</span></label>
+                                            <input type="date" class="form-control" name="event_date_end">
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-md-12 mb-3">
+                                        <small>Horario de Inicio 00:00 / Horario Final 23:59</small>
+                                    </div>
+                                </div>  
+                            </div>
+        
+                            <div class="col-md-12 text-right mt-3">
+                                <input type="submit" class="btn btn-success" formaction="{{ route('inventory.clients') }}" value="Descargar Reporte Excel"/>
+
+                                <!--<button type="submit" class="btn btn-primary"><i class="far fa-copy"></i> Generar Reporte</button>-->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {{--  
             <a href="{{ route('inventory.clients') }}" class="btn btn-sm pd-x-15 btn-white btn-uppercase">
                 <i class="fas fa-file-export"></i> Exportar Movimientos
             </a>
+            --}}
         </div>
     </div>
 

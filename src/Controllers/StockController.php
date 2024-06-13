@@ -127,7 +127,13 @@ class StockController extends Controller
         $stock = ProductVariant::find($id);
         $by = Auth::user();
 
-        $values = array('action_by' => $by->id, 'initial_value' => $stock->stock, 'final_value' => $request->stock_variant, 'product_id' => $id);
+        $values = array(
+            'action_by' => $by->id, 
+            'initial_value' => $stock->stock, 
+            'final_value' => $request->stock_variant, 
+            'product_id' => $id,
+            'created_at' => Carbon::now(),
+        );
 
         DB::table('inventory_record')->insert($values);
 
