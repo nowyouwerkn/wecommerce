@@ -1402,7 +1402,7 @@ class FrontController extends Controller
 
         $products[1] = array(
             'name' => 'Tarifa de envío',
-            'unit_price' => (int) $request->shipping_rate ?? '0',
+            'unit_price' => number_format($request->shipping_rate ?? '0', 0, '', ''),
             'quantity' => '1'
         );
 
