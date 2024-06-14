@@ -4,6 +4,7 @@ namespace Nowyouwerkn\WeCommerce\Controllers;
 
 use App\Http\Controllers\Controller;
 
+use DB;
 use Session;
 use Auth;
 use Image;
@@ -1396,13 +1397,13 @@ class FrontController extends Controller
 
         $products[0] = array(
             'name' => 'Orden en tu Tienda en Línea',
-            'unit_price' => $request->final_total,
+            'unit_price' => ($request->final_total . '.00'),
             'quantity' => '1'
         );
 
         $products[1] = array(
             'name' => 'Tarifa de envío',
-            'unit_price' => number_format($request->shipping_rate ?? '0', 0, '', ''),
+            'unit_price' => ($request->shipping_rate . '.00') ?? '0.00',
             'quantity' => '1'
         );
 
