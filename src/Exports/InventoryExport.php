@@ -2,8 +2,6 @@
 
 namespace Nowyouwerkn\WeCommerce\Exports;
 
-
-
 // Ayudantes
 use DB;
 use Str;
@@ -29,8 +27,8 @@ class InventoryExport implements FromView, ShouldAutoSize
         $request = request()->all();
 
         /* Defining Dates */
-        $date_start = $request['event_date_start'];
-        $date_end = $request['event_date_end'];
+        $date_start = Carbon::parse($request['event_date_start'])->startOfDay();
+        $date_end = Carbon::parse($request['event_date_end'])->endOfDay();
 
         $movements = StockRecord::whereBetween('created_at', [$date_start, $date_end])->get();
         //$movements = StockRecord::where('id', '>', '9000')->get();

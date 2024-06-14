@@ -1396,13 +1396,13 @@ class FrontController extends Controller
 
         $products[0] = array(
             'name' => 'Orden en tu Tienda en Línea',
-            'unit_price' => ($request->final_total . '00'),
+            'unit_price' => number_format($request->final_total,2),
             'quantity' => '1'
         );
 
         $products[1] = array(
             'name' => 'Tarifa de envío',
-            'unit_price' => ($request->shipping_rate . '00') ?? '0.00',
+            'unit_price' => number_format($request->shipping_rate) ?? '0.00',
             'quantity' => '1'
         );
 
