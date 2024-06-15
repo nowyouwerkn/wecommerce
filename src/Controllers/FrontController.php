@@ -4234,6 +4234,8 @@ class FrontController extends Controller
             $shipping = $shipment_option->price;
         }
 
+        $total_cart = $cart->totalPrice;
+        
         /* SPECIAL PRICE PROMO FUNCTIONALITY */
         $getPromo = Session::get('promo');
 
