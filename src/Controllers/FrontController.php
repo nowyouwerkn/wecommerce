@@ -1401,12 +1401,6 @@ class FrontController extends Controller
             'quantity' => '1'
         );
 
-        $products[1] = array(
-            'name' => 'Tarifa de envío',
-            'unit_price' => number_format($request->shipping_rate, 0, '.', '') . '00',
-            'quantity' => '1'
-        );
-
         $client_name = $request->name . ' ' . $request->last_name;
 
         if (!empty($shipment_option)) {
