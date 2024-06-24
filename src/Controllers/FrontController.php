@@ -1988,10 +1988,8 @@ class FrontController extends Controller
                 $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
 
                 /* Proceso de Reducción de Stock */
-                $by = Auth::user();
-                
                 $values = array(
-                    'action_by' => $by->id,
+                    'action_by' => $user->id,
                     'initial_value' => $product_variant->stock, 
                     'final_value' => $product_variant->stock - $product['qty'], 
                     'product_id' => $product_variant->id,
