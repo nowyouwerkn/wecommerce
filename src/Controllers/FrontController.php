@@ -3045,10 +3045,8 @@ class FrontController extends Controller
                     $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
 
                     /* Proceso de Reducción de Stock */
-                    $by = Auth::user();
-                    
                     $values = array(
-                        'action_by' => $by->id,
+                        'action_by' => $order->user_id,
                         'initial_value' => $product_variant->stock, 
                         'final_value' => $product_variant->stock - $product['qty'], 
                         'product_id' => $product_variant->id,
@@ -3894,24 +3892,22 @@ class FrontController extends Controller
 
                 if ($product['item']['has_variants'] == true) {
                     $variant = Variant::where('value', $product['variant'])->first();
-                $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
+                    $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
 
-                /* Proceso de Reducción de Stock */
-                $by = Auth::user();
-                
-                $values = array(
-                    'action_by' => $by->id,
-                    'initial_value' => $product_variant->stock, 
-                    'final_value' => $product_variant->stock - $product['qty'], 
-                    'product_id' => $product_variant->id,
-                    'created_at' => Carbon::now(),
-                );
+                    /* Proceso de Reducción de Stock */
+                    $values = array(
+                        'action_by' => $order->user_id,
+                        'initial_value' => $product_variant->stock, 
+                        'final_value' => $product_variant->stock - $product['qty'], 
+                        'product_id' => $product_variant->id,
+                        'created_at' => Carbon::now(),
+                    );
 
-                DB::table('inventory_record')->insert($values);
+                    DB::table('inventory_record')->insert($values);
 
-                /* Guardado completo de existencias */
-                $product_variant->stock = $product_variant->stock - $product['qty'];
-                $product_variant->save();
+                    /* Guardado completo de existencias */
+                    $product_variant->stock = $product_variant->stock - $product['qty'];
+                    $product_variant->save();
                 } else {
                     $product_stock = Product::find($product['item']['id']);
 
