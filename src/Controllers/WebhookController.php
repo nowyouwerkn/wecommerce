@@ -115,7 +115,7 @@ class WebhookController extends Controller
 			$order->save();
 			*/
 
-			return response()->json(['message' => 'The payment was approved by Kueski Pay'], 200);
+			return response()->json(['status' => 'approved'], 200);
 		}
 
 		if($data['status'] == 'denied'){
@@ -131,7 +131,7 @@ class WebhookController extends Controller
 			$order->save();
 			*/
 
-			return response()->json(['message' => 'El pago fue rechazado por Kueski.'], 200);
+			return response()->json(['status' => 'denied'], 200);
 		}
 
 		if($data['status'] == 'canceled'){
@@ -147,7 +147,7 @@ class WebhookController extends Controller
 			$order->save();
 			*/
 
-			return response()->json(['message' => 'Pago cancelado.'], 200);
+			return response()->json(['status' => 'canceled'], 200);
 		}
 	}
 }
