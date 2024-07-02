@@ -3,7 +3,18 @@
 namespace Nowyouwerkn\WeCommerce\Controllers;
 use App\Http\Controllers\Controller;
 
-use Mail;
+use Carbon\Carbon;
+
+use DB;
+use Config;
+use Auth;
+use Session;
+
+use Nowyouwerkn\WeCommerce\Models\User;
+use Nowyouwerkn\WeCommerce\Models\Order;
+use Nowyouwerkn\WeCommerce\Models\Product;
+use Nowyouwerkn\WeCommerce\Models\ProductVariant;
+use Nowyouwerkn\WeCommerce\Models\Variant;
 
 class WebhookController extends Controller
 {
@@ -103,53 +114,127 @@ class WebhookController extends Controller
 		http_response_code(200); 
 
 		if($data['status'] == 'approved'){
-			/*
-			// Obtener usuario de la orden de MercadoPago
-			$user = User::where('email', $data['payer']['email'])->first();
-			// Encontrar la orden de mercadopago realizada por este usuario
-			$orders = Order::where('user_id', $user->id)->where('payment_method', 'MercadoPago')->where('status', 'Sin Completar')->first();
-			$reference = $data['id'];
+			// Encontrar la orden de Kueski realizada por este usuario
+			$order = Order::where('payment_id', $data['payment_id'])->first();
 
-			$order->is_completed = 0;
-			$order->status = 1;
-			$order->save();
-			*/
+			if($order != NULL){
+				$order->is_completed = 1;
+				$order->status = 'Pagado';
+				$order->save();
+	
+				$cart = unserialize($order->cart);
+	
+				// Actualizar existencias del producto
+				foreach ($cart->items as $product) {
+					if ($product['item']['has_variants'] == true) {
+						$variant = Variant::where('value', $product['variant'])->first();
+						$product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
+		
+						/* Proceso de Reducción de Stock */
+						$values = array(
+							'action_by' => $user->id,
+							'initial_value' => $product_variant->stock, 
+							'final_value' => $product_variant->stock - $product['qty'], 
+							'product_id' => $product_variant->id,
+							'created_at' => Carbon::now(),
+						);
+		
+						DB::table('inventory_record')->insert($values);
+		
+						/* Guardado completo de existencias */
+						$product_variant->stock = $product_variant->stock - $product['qty'];
+						$product_variant->save();
+						
+					} else {
+						$product_stock = Product::find($product['item']['id']);
+		
+						$product_stock->stock = $product_stock->stock - $product['qty'];
+						$product_stock->save();
+					}
+				}
+			}else{
+				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago','status' => 'approved'], 200);
+			}
 
 			return response()->json(['status' => 'approved'], 200);
 		}
 
 		if($data['status'] == 'denied'){
-			/*
-			// Obtener usuario de la orden de MercadoPago
-			$user = User::where('email', $data['payer']['email'])->first();
-			// Encontrar la orden de mercadopago realizada por este usuario
-			$orders = Order::where('user_id', $user->id)->where('payment_method', 'MercadoPago')->where('status', 'Sin Completar')->first();
-			$reference = $data['id'];
+			// Encontrar la orden de Kueski realizada por este usuario
+			$order = Order::where('payment_id', $data['payment_id'])->first();
 
-			$order->is_completed = 0;
-			$order->status = 1;
-			$order->save();
-			*/
+			if($order != NULL){
+				$order->status = 'Prestamo Denegado';
+				$order->save();
 
+				$cart = unserialize($order->cart);
+
+				// Actualizar existencias del producto
+				foreach ($cart->items as $product) {
+					if ($product['item']['has_variants'] == true) {
+						$variant = Variant::where('value', $product['variant'])->first();
+						$product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
+
+						$product_variant->stock = $product_variant->stock + $product['qty'];
+						$product_variant->save();
+					} else {
+						$product_stock = Product::find($product['item']['id']);
+
+						$product_stock->stock = $product_stock->stock + $product['qty'];
+						$product_stock->save();
+					}
+					if ($request->value == 'Entregado') {
+						$product_stock = Product::find($product['item']['id']);
+
+						$product_stock->stock = $product_stock->stock + $product['qty'];
+						$product_stock->save();
+					}
+				}
+			}else{
+				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago','status' => 'denied'], 200);
+			}
+				
 			return response()->json(['status' => 'denied'], 200);
 		}
 
 		if($data['status'] == 'canceled'){
-			/*
-			// Obtener usuario de la orden de MercadoPago
-			$user = User::where('email', $data['payer']['email'])->first();
-			// Encontrar la orden de mercadopago realizada por este usuario
-			$orders = Order::where('user_id', $user->id)->where('payment_method', 'MercadoPago')->where('status', 'Sin Completar')->first();
-			$reference = $data['id'];
+			// Encontrar la orden de Kueski realizada por este usuario
+			$order = Order::where('payment_id', $data['payment_id'])->first();
 
-			$order->is_completed = 0;
-			$order->status = 1;
-			$order->save();
-			*/
+			if($order != NULL){
+				$order->status = 'Cancelado';
+				$order->save();
+
+				$cart = unserialize($order->cart);
+
+				// Actualizar existencias del producto
+				foreach ($cart->items as $product) {
+					if ($product['item']['has_variants'] == true) {
+						$variant = Variant::where('value', $product['variant'])->first();
+						$product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
+
+						$product_variant->stock = $product_variant->stock + $product['qty'];
+						$product_variant->save();
+					} else {
+						$product_stock = Product::find($product['item']['id']);
+
+						$product_stock->stock = $product_stock->stock + $product['qty'];
+						$product_stock->save();
+					}
+					if ($request->value == 'Entregado') {
+						$product_stock = Product::find($product['item']['id']);
+
+						$product_stock->stock = $product_stock->stock + $product['qty'];
+						$product_stock->save();
+					}
+				}
+			}else{
+				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago', 'status' => 'canceled'], 200);
+			}
 
 			return response()->json(['status' => 'canceled'], 200);
 		}
 
-		return response('Evento recibido con éxito.', 200);
+		return response()->json(['Evento recibido con éxito.'], 200);
 	}
 }
