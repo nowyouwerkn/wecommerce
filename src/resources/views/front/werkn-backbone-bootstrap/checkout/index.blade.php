@@ -17,7 +17,6 @@
 @endpush
 
 @section('content')
-
     <!-- Checkout -->
     <section class="mt-5 mb-5 container we-co--checkout-container">
         <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" data-parsley-validate=""
@@ -557,6 +556,31 @@
                         setTimeout(function() {
                             $form.get(0).submit();
                         }, 2000);
+                    }
+                });
+            });
+        </script>
+    @endif
+
+    @if (!empty($kueski_payment))
+        <script type="text/javascript">
+            var $form = $('#checkout-form');
+
+            $(function() {
+                $('#checkout-form').parsley().on('field:validated', function() {
+                    var ok = $('.parsley-error').length === 0;
+                    $('.bs-callout-info').toggleClass('hidden', !ok);
+                    $('.bs-callout-warning').toggleClass('hidden', ok);
+                })
+                $('#btnBuy').on('click', function() {
+                    if ($('input[name=method]').val() === 'Pago con Kueski') {
+                        // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
+                        $form.find('button').prop('disabled', true);
+                        $('.loader-standby h2').text('Creando Orden en Kueski...');
+                        $('.loader-standby').removeClass('loader-hidden');
+                        //console.log(response.id);
+
+                        $form.get(0).submit();
                     }
                 });
             });

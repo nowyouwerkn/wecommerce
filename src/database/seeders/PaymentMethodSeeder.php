@@ -57,5 +57,11 @@ class PaymentMethodSeeder extends Seeder
             'mercadopago_oxxo' => 'oxxo',
             'mercadopago_paypal' => 'paypal'
         ]);
+
+        PaymentMethod::create([
+            'type' => 'card',
+            'supplier' => 'Kueski',
+            'is_active' => false
+        ]);
     }
 }

@@ -49,6 +49,9 @@
     #sandbox-keys-paypal{
         display: none;
     }
+    #sandbox-keys-kueski{
+        display: none;
+    }
 
     .change-sandbox {
         color: white !important;
@@ -91,6 +94,10 @@
 
                 <li>Paypal</li>
                 <li>MercadoPago</li>
+                <li>Kueski Pay</li>
+                <ul>
+                    <li>Sistema de créditos personales.</li>
+                </ul>
             </ul>
         </div>
         
@@ -119,6 +126,7 @@
                     @endif
                 </div>
             </div>
+
             <div class="col-md-6">
                 <div class="card card-body payment-methods h-100">
                     @if($mercadopago_method->is_active == false)
@@ -141,8 +149,30 @@
                     @endif
                 </div>
             </div>
+
+            <div class="col-md-6 mt-4">
+                <div class="card card-body payment-methods h-100">
+                    @if($kueski_method->is_active == false)
+                    <span class="badge badge-danger">Desactivado</span>
+                    @else
+                    <span class="badge badge-success">Activado</span>
+                    @endif
+                    @if($kueski_method->sandbox_mode == false)
+                    <span class="badge badge-danger sandbox">Modo sandbox: Desactivado</span>
+                    @else
+                    <span class="badge badge-success sandbox">Modo sandbox: Activado</span>
+                    @endif
+
+                    <img src="{{ asset('assets/img/brands/kueski.jpg') }}" width="120" style="margin: 10px 0px;">
+                    <h4>Kueski Pay</h4>
+                    <p class="mb-4">Un botón que les permite a los clientes solicitar un crédito a Kueski directamente desde tu pantalla de pago.</p>
+                    <a href="javascript:void(0)" data-toggle="modal" data-target="#modalCreateKueski" class="btn btn-outline-primary btn-sm">Configurar Kueski</a>
+                     @if($kueski_method->is_active == true)
+                        <a href="{{ route('payments.status', $kueski_method->id) }}" class=" btn btn-danger" data-toggle="tooltip" data-original-title="Desactivar método de pago">Desactivar</a>  
+                    @endif
+                </div>
+            </div>
         </div>
-        
 
         <div class="card card-body mb-4">
             <h4>Tarjetas de Crédito y Débito</h4>
@@ -388,6 +418,61 @@
     </div><!-- modal-dialog -->
 </div><!-- modal -->
 
+<div id="modalCreateKueski" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Conectar con Kueski</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+             <form method="POST" action="{{ route('payments.store') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+                <input type="hidden" name="type" value="card">
+                <input type="hidden" name="supplier" value="Kueski">
+                <input id="sandbox_mode_kueski" type="hidden" name="sandbox_mode" value="0">
+                <div class="modal-body pd-25">
+                    <img src="{{ asset('assets/img/brands/kueski.jpg') }}" width="250" style="margin: 10px 0px;">
+                    <div id="live-keys-kueski">
+                        <h4>Estás en modo producción</h4>
+                        <a class="btn btn-danger change-sandbox" onclick="sandboxkueski()">Cambiar a sandbox</a>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Producción)</label>
+                            <input type="text" class="form-control" name="private_key" value="{{ $kueski_method->private_key }}" />
+                        </div>
+
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Producción)</label>
+                            <input type="text" class="form-control" name="public_key" value="{{ $kueski_method->public_key }}"/>
+                        </div>
+                    </div>
+                    <div id="sandbox-keys-kueski">
+                        <h4>Estás en modo sandbox</h4>
+                        <a class="btn btn-success change-sandbox" onclick="sandboxkueski()">Cambiar a producción</a>
+                        <div class="form-group mt-2">
+                            <label>Llave Privada (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_private_key" value="{{ $kueski_method->sandbox_private_key }}" />
+                        </div>
+
+                        <div class="form-group mt-2">
+                            <label>Llave Pública (Sandbox)</label>
+                            <input type="text" class="form-control" name="sandbox_public_key" value="{{ $kueski_method->sandbox_public_key }}"/>
+                        </div>
+                    </div>
+                    <div class="alert alert-success">
+                        <p class="mb-0">Este método de pago puede funcionar en conjunto con otros métodos de pago con tarjeta. </p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Información</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
 
 <div id="modalCreateOxxoConekta" class="modal fade">
     <div class="modal-dialog modal-dialog-vertical-center" role="document">
@@ -719,6 +804,20 @@
       var x = document.getElementById("live-keys-paypal");
       var y = document.getElementById("sandbox-keys-paypal");
       var z = document.getElementById("sandbox_mode_paypal");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        y.style.display = "none";
+        z.value = 0;
+      } else {
+        x.style.display = "none";
+        y.style.display = "block";
+        z.value = 1;
+      }
+    }  
+    function sandboxkueski() {
+      var x = document.getElementById("live-keys-kueski");
+      var y = document.getElementById("sandbox-keys-kueski");
+      var z = document.getElementById("sandbox_mode_kueski");
       if (x.style.display === "none") {
         x.style.display = "block";
         y.style.display = "none";
