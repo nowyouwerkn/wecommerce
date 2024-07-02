@@ -2,6 +2,12 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 2.1 - 2024-07-02
+
+- Agregando integración con KueskiPay. Se agrega al detalle de producto el Kueski Widget para mostrar los beneficios de pagar con Kueski.
+- Nueva ruta para Webhook de KueskiPay en documento `routes.web`
+- Modificando información de tiempo de llegada estimado a partir del método de envio en detalle de producto y carrito.
+
 ## 2.0 - 2024-04-12
 
 - Actualizando composer.json para Laravel 9 en adelante para mantener soporte de la API de Paypal

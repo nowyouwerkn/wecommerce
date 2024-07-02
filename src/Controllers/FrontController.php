@@ -57,6 +57,9 @@ use MercadoPago\Annotation\RestMethod;
 use MercadoPago\Annotation\RequestParam;
 use MercadoPago\Annotation\Attribute;
 
+/* KueskiPay Helpers */
+use Illuminate\Support\Facades\Http;
+
 /* E-commerce Models */
 use Config;
 use Mail;
@@ -416,6 +419,14 @@ class FrontController extends Controller
 
         $shipment_option = ShipmentOption::where('is_primary', true)->first();
 
+        $kueski_payment = PaymentMethod::where('supplier', 'Kueski')->where('is_active', true)->first();
+
+        if($kueski_payment != NULL){
+            $kueski_widget = true;
+        }else{
+            $kueski_widget = false;
+        }
+
         if (empty($product)) {
             return redirect()->back();
         } else {
@@ -429,7 +440,8 @@ class FrontController extends Controller
                 ->with('base_product', $base_product)
                 ->with('all_relationships', $all_relationships)
                 ->with('deduplication_code', $deduplication_code)
-                ->with('shipment_option', $shipment_option);
+                ->with('shipment_option', $shipment_option)
+                ->with('kueski_widget', $kueski_widget);
         }
     }
 
@@ -725,7 +737,8 @@ class FrontController extends Controller
         $cash_payment = PaymentMethod::where('type', 'cash')->where('is_active', true)->first();
         $paypal_payment = PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
         $mercado_payment = PaymentMethod::where('supplier', 'MercadoPago')->where('is_active', true)->first();
-
+        $kueski_payment = PaymentMethod::where('supplier', 'Kueski')->where('is_active', true)->first();
+        
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $store_shipping = ShipmentMethod::where('is_active', true)->first();
         $shipment_options = ShipmentOption::where('is_active', true)->orderBy('price', 'asc')->get();
@@ -1060,6 +1073,7 @@ class FrontController extends Controller
                 ->with('cash_payment', $cash_payment)
                 ->with('paypal_payment', $paypal_payment)
                 ->with('mercado_payment', $mercado_payment)
+                ->with('kueski_payment', $kueski_payment)
                 ->with('shipment_options', $shipment_options)
                 ->with('subtotal', $subtotal)
                 ->with('tax', $tax)
@@ -1298,6 +1312,11 @@ class FrontController extends Controller
 
                 break;
 
+            case 'Pago con Kueski':
+                $payment_method = PaymentMethod::where('is_active', true)->where('supplier', 'Kueski')->first();
+
+                break;
+                
             default:
                 $payment_method = PaymentMethod::where('supplier', '!=', 'Paypal')->where('is_active', true)->where('type', 'card')->first();
                 break;
@@ -1409,7 +1428,7 @@ class FrontController extends Controller
             $street_num = 'Tienda';
             $country = 'Tienda';
             $state = 'Tienda';
-            $postal_code = 'Tienda';
+            $postal_code = '37000';
             $city = 'Tienda';
             $phone = 'Tienda';
             $suburb = 'Tienda';
@@ -1819,10 +1838,200 @@ class FrontController extends Controller
                     // Enviar al usuario a confirmar su compra en el panel de Mercadopago
                     return redirect()->away($request->mp_preference);
                 } catch (\Exception $e) {
+
                 }
 
                 break;
 
+            case 'Kueski':
+                $get_order_id = Order::all()->count() + 1;
+
+                if ($payment_method->sandbox_mode == '1') {
+                    $private_key_kueski = $payment_method->sandbox_public_key;
+                } else {
+                    $private_key_kueski = $payment_method->private_key;
+                }
+
+                $products = array();
+
+                $products[0] = array(
+                    'name' => 'Compra desde tu tienda en linea',
+                    'description' => 'Sumatoria total de la orden',
+                    'price' => $request->final_total,
+                    'quantity' => '1',
+                    "currency" => "MXN"
+                );
+
+                /* Formato de Orden */
+                $url = "https://testing.kueskipay.com/v1/payments";
+                $api_key = $private_key_kueski;
+
+                $ch = curl_init();
+
+                $fields = array(
+                    "order_id" => 'Orden #' . $get_order_id,
+                    "description" => "Compra desde tu tienda en linea.",
+                    "amount" => array(
+                        "total" => $request->final_total,
+                        "currency" => "MXN",
+                        "details" => array(
+                            "subtotal" => str_replace(',', '', $request->sub_total),
+                            "shipping" => str_replace(',', '', $request->shipping_rate),
+                            "tax" => str_replace(',', '', $request->tax_rate),
+                        )
+                    ),
+                    "items" => $products,
+                    "billing" => array(
+                        "business" => array(
+                            "name" => $client_name . ' ' . $request->last_name,
+                        ),
+                        "address" => array(
+                            "address" => $street,
+                            "neighborhood" => $suburb,
+                            "city" => $city,
+                            "state" => $state,
+                            "zipcode" => $postal_code,
+                            "country" => "MX"
+                        ),
+                        "phone_number" => $phone,
+                        "email" => $request->email
+                    ),
+                    "shipping" => array(
+                        "name" => array(
+                            "name" => $client_name,
+                            "last" => $request->last_name
+                        ),
+                        "address" => array(
+                            "address" => $street,
+                            "interior" => $street_num,
+                            "neighborhood" => $suburb,
+                            "city" => $city,
+                            "state" => $state,
+                            "zipcode" => $postal_code,
+                            "country" => "MX"
+                        ),
+                        "phone_number" => $phone,
+                        "email" => $request->email
+                    ),
+                    "callbacks" => array(
+                        "on_success" => route('purchase.complete'),
+                        "on_reject" => route('checkout'),
+                        "on_canceled" => route('checkout'),
+                        "on_failed" => route('checkout')
+                    )
+                );
+
+                $fields_string = json_encode($fields);
+                $header = array();
+
+                $header[] = "Authorization: Bearer " . $api_key;
+                $header[] = 'Content-Type: application/json';
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+
+                $result = curl_exec($ch);
+                curl_close($ch);
+
+                $kueski_payment = json_decode($result, true);
+                //dd($kueski_payment);
+
+                if ($kueski_payment['status'] == "success") {
+                    if (!Auth::check()) {
+                        $user = User::create([
+                            'name' => $client_name,
+                            'last_name' => $request->last_name,
+                            'phone' => $request->phone,
+                            'email' => $request->email,
+                            'password' => bcrypt('wkshop'),
+                        ]);
+
+                        $user->assignRole('customer');
+                    } else {
+                        $user = Auth::user();
+                    }
+
+                    // GUARDAR LA ORDEN
+                    $order = new Order();
+
+                    $order->cart = serialize($cart);
+                    $order->street = $street;
+                    $order->street_num = $street_num;
+                    $order->country = $country;
+                    $order->state = $state;
+                    $order->postal_code = $postal_code;
+                    $order->city = $city;
+                    $order->phone = $phone;
+                    $order->suburb = $suburb;
+                    $order->references = $references;
+                    $order->shipping_option = $request->shipping_option;
+
+                    /* Money Info */
+                    $order->cart_total = $cart->totalPrice;
+                    $order->shipping_rate = str_replace(',', '', $request->shipping_rate);
+                    $order->sub_total = str_replace(',', '', $request->sub_total);
+                    $order->tax_rate = str_replace(',', '', $request->tax_rate);
+                    if (isset($request->discounts)) {
+                        $order->discounts = str_replace(',', '', $request->discounts);
+                    }
+
+                    $order->total = $request->final_total;
+                    $order->payment_total = $request->final_total;
+                    /*------------*/
+
+                    if (isset($billing_shipping_id)) {
+                        $order->billing_shipping_id = $billing_shipping_id->id;
+                    }
+
+                    $order->card_digits = Str::substr($request->card_number, 15);
+                    $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
+
+                    $order->status = 'Sin Completar';
+
+                    $order->payment_id = $kueski_payment['data']['payment_id'];
+                    $order->payment_method = $payment_method->supplier;
+
+                    //Guadar puntos de salida
+                    if (isset($request->points)) {
+                        $order->points = $request->points;
+                    }
+
+                    // Identificar al usuario para guardar sus datos.
+                    $user->orders()->save($order);
+
+                    // GUARDAR LA DIRECCIÓN
+                    if ($request->save_address == 'true') {
+                        $check = UserAddress::where('street', $street)->count();
+
+                        if ($check == NULL || $check == 0) {
+                            $address = new UserAddress;
+                            $address->name = 'Compra_Kueski' . $order->id;
+                            $address->user_id = $user->id;
+                            $address->street = $street;
+                            $address->street_num = $street_num;
+                            $address->postal_code = $postal_code;
+                            $address->city = $city;
+                            $address->country = $country;
+                            $address->state = $state;
+                            $address->phone = $phone;
+                            $address->suburb = $suburb;
+                            $address->references = $references;
+                            $address->is_billing = false;
+
+                            $address->save();
+                        }
+                    }
+
+                    // Enviar al usuario a confirmar su compra en el panel de Kueski
+                    return redirect()->away($kueski_payment['data']['callback_url']);
+
+                } else {
+                    Session::flash('error', '¡Lo sentimos! El pago a través de Kueski no se pudo realizar. Inténtalo nuevamente o usa otro método de pago. Contacta con nosotros si tienes alguna pregunta.');
+                    return redirect()->route('index');
+                }
+                break;
             default:
                 // code...
                 break;

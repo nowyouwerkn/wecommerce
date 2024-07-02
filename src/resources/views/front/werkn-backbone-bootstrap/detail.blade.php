@@ -287,7 +287,16 @@
                         @endif
                     </div>
 
+                    @if($kueski_widget == true)
+                    <kueskipay-widget data-kpay-color-scheme="black" data-kpay-widget-font-size="12"></kueskipay-widget>
+
+                    <script id="kpay-advertising-script" src="https://cdn.kueskipay.com/widgets.js?authorization=0c821e76-e634-47a3-8ecb-cb1bec22da80&integration=API&sandbox=true"></script>
+                    <script type="">new KueskipayAdvertising().init()</script>
+                    @endif
+
+                    @if($shipment_option != NULL)
                     <p class="text-primary mt-4"><ion-icon name="bag-handle-outline"></ion-icon> Récibelo de {{ $shipment_option->delivery_time }} al seleccionar <br> {{ $shipment_option->name }} en tu Checkout.</p>
+                    @endif
                 </div>
             </div>
         </div>

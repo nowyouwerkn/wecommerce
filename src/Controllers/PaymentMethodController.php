@@ -20,6 +20,7 @@ class PaymentMethodController extends Controller
         $openpay_method = PaymentMethod::where('type', 'card')->where('supplier', 'OpenPay')->first();
         $paypal_method = PaymentMethod::where('type', 'card')->where('supplier', 'Paypal')->first();
         $mercadopago_method = PaymentMethod::where('type', 'card')->where('supplier', 'MercadoPago')->first();
+        $kueski_method = PaymentMethod::where('type', 'card')->where('supplier', 'Kueski')->first();
 
         return view('wecommerce::back.payments.index')
         ->with('payments', $payments)
@@ -28,7 +29,8 @@ class PaymentMethodController extends Controller
         ->with('stripe_method', $stripe_method)
         ->with('openpay_method', $openpay_method)
         ->with('paypal_method', $paypal_method)
-        ->with('mercadopago_method', $mercadopago_method);
+        ->with('mercadopago_method', $mercadopago_method)
+        ->with('kueski_method', $kueski_method);
     }
 
     public function create()

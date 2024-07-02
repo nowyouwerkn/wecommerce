@@ -147,7 +147,9 @@
                     <div class="col-12 col-md-4 order-md-5">
                         <div class="card px-4 pt-3 pb-3 mb-3">
                             <h5>Total del Carrito</h5>
+                            @if($shipment_option != NULL)
                             <p class="text-primary mt-1 mb-4"><ion-icon name="bag-handle-outline"></ion-icon> Récibelo en {{ $shipment_option->delivery_time }} al seleccionar {{ $shipment_option->name }} en tu Checkout.</p>
+                            @endif
                             <div class="list_custom">
                                 <ul class="list-unstyled">
                                     <li class="d-flex justify-content-between">
