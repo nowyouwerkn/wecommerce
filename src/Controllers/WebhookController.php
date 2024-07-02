@@ -98,6 +98,56 @@ class WebhookController extends Controller
 
 	public function orderKueski()
 	{
-		return response()->json([], 200);
+		$body = @file_get_contents('php://input');
+		$data = json_decode($body, true);
+		http_response_code(200); 
+
+		if($data['status'] == 'approved'){
+			/*
+			// Obtener usuario de la orden de MercadoPago
+			$user = User::where('email', $data['payer']['email'])->first();
+			// Encontrar la orden de mercadopago realizada por este usuario
+			$orders = Order::where('user_id', $user->id)->where('payment_method', 'MercadoPago')->where('status', 'Sin Completar')->first();
+			$reference = $data['id'];
+
+			$order->is_completed = 0;
+			$order->status = 1;
+			$order->save();
+			*/
+
+			return response()->json(['message' => 'The payment was approved by Kueski Pay'], 200);
+		}
+
+		if($data['status'] == 'denied'){
+			/*
+			// Obtener usuario de la orden de MercadoPago
+			$user = User::where('email', $data['payer']['email'])->first();
+			// Encontrar la orden de mercadopago realizada por este usuario
+			$orders = Order::where('user_id', $user->id)->where('payment_method', 'MercadoPago')->where('status', 'Sin Completar')->first();
+			$reference = $data['id'];
+
+			$order->is_completed = 0;
+			$order->status = 1;
+			$order->save();
+			*/
+
+			return response()->json(['message' => 'El pago fue rechazado por Kueski.'], 200);
+		}
+
+		if($data['status'] == 'canceled'){
+			/*
+			// Obtener usuario de la orden de MercadoPago
+			$user = User::where('email', $data['payer']['email'])->first();
+			// Encontrar la orden de mercadopago realizada por este usuario
+			$orders = Order::where('user_id', $user->id)->where('payment_method', 'MercadoPago')->where('status', 'Sin Completar')->first();
+			$reference = $data['id'];
+
+			$order->is_completed = 0;
+			$order->status = 1;
+			$order->save();
+			*/
+
+			return response()->json(['message' => 'Pago cancelado.'], 200);
+		}
 	}
 }
