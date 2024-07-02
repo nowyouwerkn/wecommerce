@@ -149,5 +149,7 @@ class WebhookController extends Controller
 
 			return response()->json(['status' => 'canceled'], 200);
 		}
+
+		return response('Evento recibido con éxito.', 200);
 	}
 }
