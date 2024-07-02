@@ -121,37 +121,40 @@ class WebhookController extends Controller
 				$order->is_completed = 1;
 				$order->status = 'Pagado';
 				$order->save();
-	
+				
 				$cart = unserialize($order->cart);
-	
+			
 				// Actualizar existencias del producto
 				foreach ($cart->items as $product) {
+
 					if ($product['item']['has_variants'] == true) {
 						$variant = Variant::where('value', $product['variant'])->first();
 						$product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
-		
-						/* Proceso de Reducción de Stock */
-						$values = array(
-							'action_by' => $user->id,
-							'initial_value' => $product_variant->stock, 
-							'final_value' => $product_variant->stock - $product['qty'], 
-							'product_id' => $product_variant->id,
-							'created_at' => Carbon::now(),
-						);
-		
-						DB::table('inventory_record')->insert($values);
-		
-						/* Guardado completo de existencias */
-						$product_variant->stock = $product_variant->stock - $product['qty'];
-						$product_variant->save();
 						
+						if($product_variant != NULL){
+							/* Proceso de Reducción de Stock */
+							$values = array(
+								'action_by' => $order->user_id,
+								'initial_value' => $product_variant->stock ?? 0, 
+								'final_value' => $product_variant->stock ?? 0 - $product['qty'], 
+								'product_id' => $product_variant->id ?? 0,
+								'created_at' => Carbon::now(),
+							);
+			
+							DB::table('inventory_record')->insert($values);
+			
+							/* Guardado completo de existencias */
+							$product_variant->stock = $product_variant->stock  ?? 0 - $product['qty'];
+							$product_variant->save();
+						}
 					} else {
 						$product_stock = Product::find($product['item']['id']);
-		
-						$product_stock->stock = $product_stock->stock - $product['qty'];
+			
+						$product_stock->stock = $product_stock->stock ?? 0 - $product['qty'];
 						$product_stock->save();
 					}
 				}
+				
 			}else{
 				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago','status' => 'approved'], 200);
 			}
@@ -175,15 +178,12 @@ class WebhookController extends Controller
 						$variant = Variant::where('value', $product['variant'])->first();
 						$product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
 
-						$product_variant->stock = $product_variant->stock + $product['qty'];
-						$product_variant->save();
-					} else {
-						$product_stock = Product::find($product['item']['id']);
+						if($product_variant != NULL){
+							$product_variant->stock = $product_variant->stock + $product['qty'];
+							$product_variant->save();
+						}
 
-						$product_stock->stock = $product_stock->stock + $product['qty'];
-						$product_stock->save();
-					}
-					if ($request->value == 'Entregado') {
+					} else {
 						$product_stock = Product::find($product['item']['id']);
 
 						$product_stock->stock = $product_stock->stock + $product['qty'];
@@ -213,15 +213,11 @@ class WebhookController extends Controller
 						$variant = Variant::where('value', $product['variant'])->first();
 						$product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
 
-						$product_variant->stock = $product_variant->stock + $product['qty'];
-						$product_variant->save();
+						if($product_variant != NULL){
+							$product_variant->stock = $product_variant->stock + $product['qty'];
+							$product_variant->save();
+						}
 					} else {
-						$product_stock = Product::find($product['item']['id']);
-
-						$product_stock->stock = $product_stock->stock + $product['qty'];
-						$product_stock->save();
-					}
-					if ($request->value == 'Entregado') {
 						$product_stock = Product::find($product['item']['id']);
 
 						$product_stock->stock = $product_stock->stock + $product['qty'];
