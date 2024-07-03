@@ -117,9 +117,9 @@ class WebhookController extends Controller
 		$payment_method = PaymentMethod::where('supplier', 'Kueski')->where('is_active', true)->first();
 
 		if ($payment_method->sandbox_mode == '1') {
-			$private_key_kueski = $payment_method->sandbox_public_key;
+			$private_key_kueski = $payment_method->sandbox_private_key;
 		} else {
-			$private_key_kueski = $payment_method->public_key;
+			$private_key_kueski = $payment_method->private_key;
 		}
 		
 		$api_key = $private_key_kueski;
@@ -166,10 +166,10 @@ class WebhookController extends Controller
 					}
 				}
 			}else{
-				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago','status' => 'approved'], 200)->header('Authorization', 'Bearer ' . $api_key);
+				return response()->json(['status' => 'accept'], 200)->header('Authorization', 'Bearer ' . $api_key);
 			}
 
-			return response()->json(['status' => 'approved'], 200)->header('Authorization', 'Bearer ' . $api_key);
+			return response()->json(['status' => 'accept'], 200)->header('Authorization', 'Bearer ' . $api_key);
 		}
 
 		if($data['status'] == 'denied'){
@@ -201,10 +201,10 @@ class WebhookController extends Controller
 					}
 				}
 			}else{
-				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago','status' => 'denied'], 200)->header('Authorization', 'Bearer ' . $api_key);;
+				return response()->json(['status' => 'ok'], 200)->header('Authorization', 'Bearer ' . $api_key);
 			}
 				
-			return response()->json(['status' => 'denied'], 200)->header('Authorization', 'Bearer ' . $api_key);;
+			return response()->json(['status' => 'ok'], 200)->header('Authorization', 'Bearer ' . $api_key);
 		}
 
 		if($data['status'] == 'canceled'){
@@ -235,12 +235,12 @@ class WebhookController extends Controller
 					}
 				}
 			}else{
-				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago', 'status' => 'canceled'], 200)->header('Authorization', 'Bearer ' . $api_key);;
+				return response()->json(['status' => 'ok'], 200)->header('Authorization', 'Bearer ' . $api_key);
 			}
 
-			return response()->json(['status' => 'canceled'], 200)->header('Authorization', 'Bearer ' . $api_key);;
+			return response()->json(['status' => 'ok'], 200)->header('Authorization', 'Bearer ' . $api_key);
 		}
 
-		return response()->json(['Evento recibido con éxito.'], 200)->header('Authorization', 'Bearer ' . $api_key);;
+		return response()->json(['Evento recibido con éxito.'], 200)->header('Authorization', 'Bearer ' . $api_key);
 	}
 }
