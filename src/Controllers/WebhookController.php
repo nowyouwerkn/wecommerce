@@ -15,6 +15,7 @@ use Nowyouwerkn\WeCommerce\Models\Order;
 use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 use Nowyouwerkn\WeCommerce\Models\Variant;
+use Nowyouwerkn\WeCommerce\Models\PaymentMethod;
 
 class WebhookController extends Controller
 {
@@ -113,6 +114,16 @@ class WebhookController extends Controller
 		$data = json_decode($body, true);
 		http_response_code(200); 
 
+		$payment_method = PaymentMethod::where('supplier', 'Kueski')->where('is_active', true)->first();
+
+		if ($payment_method->sandbox_mode == '1') {
+			$private_key_kueski = $payment_method->sandbox_public_key;
+		} else {
+			$private_key_kueski = $payment_method->public_key;
+		}
+		
+		$api_key = $private_key_kueski;
+
 		if($data['status'] == 'approved'){
 			// Encontrar la orden de Kueski realizada por este usuario
 			$order = Order::where('payment_id', $data['payment_id'])->first();
@@ -154,12 +165,11 @@ class WebhookController extends Controller
 						$product_stock->save();
 					}
 				}
-				
 			}else{
-				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago','status' => 'approved'], 200);
+				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago','status' => 'approved'], 200)->header('Authorization', 'Bearer ' . $api_key);
 			}
 
-			return response()->json(['status' => 'approved'], 200);
+			return response()->json(['status' => 'approved'], 200)->header('Authorization', 'Bearer ' . $api_key);
 		}
 
 		if($data['status'] == 'denied'){
@@ -191,10 +201,10 @@ class WebhookController extends Controller
 					}
 				}
 			}else{
-				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago','status' => 'denied'], 200);
+				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago','status' => 'denied'], 200)->header('Authorization', 'Bearer ' . $api_key);;
 			}
 				
-			return response()->json(['status' => 'denied'], 200);
+			return response()->json(['status' => 'denied'], 200)->header('Authorization', 'Bearer ' . $api_key);;
 		}
 
 		if($data['status'] == 'canceled'){
@@ -225,12 +235,12 @@ class WebhookController extends Controller
 					}
 				}
 			}else{
-				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago', 'status' => 'canceled'], 200);
+				return response()->json(['mensaje' => 'No existe orden de compra con ese ID de Pago', 'status' => 'canceled'], 200)->header('Authorization', 'Bearer ' . $api_key);;
 			}
 
-			return response()->json(['status' => 'canceled'], 200);
+			return response()->json(['status' => 'canceled'], 200)->header('Authorization', 'Bearer ' . $api_key);;
 		}
 
-		return response()->json(['Evento recibido con éxito.'], 200);
+		return response()->json(['Evento recibido con éxito.'], 200)->header('Authorization', 'Bearer ' . $api_key);;
 	}
 }

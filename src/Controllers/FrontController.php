@@ -1849,7 +1849,7 @@ class FrontController extends Controller
                 if ($payment_method->sandbox_mode == '1') {
                     $private_key_kueski = $payment_method->sandbox_public_key;
                 } else {
-                    $private_key_kueski = $payment_method->private_key;
+                    $private_key_kueski = $payment_method->public_key;
                 }
 
                 $products = array();
