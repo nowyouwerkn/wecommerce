@@ -1846,11 +1846,7 @@ class FrontController extends Controller
             case 'Kueski':
                 $get_order_id = Order::all()->count() + 1;
 
-                if ($payment_method->sandbox_mode == '1') {
-                    $private_key_kueski = $payment_method->sandbox_public_key;
-                } else {
-                    $private_key_kueski = $payment_method->public_key;
-                }
+                /* Formato de Orden */
 
                 $products = array();
 
@@ -1862,8 +1858,14 @@ class FrontController extends Controller
                     "currency" => "MXN"
                 );
 
-                /* Formato de Orden */
-                $url = "https://testing.kueskipay.com/v1/payments";
+                if ($payment_method->sandbox_mode == '1') {
+                    $private_key_kueski = $payment_method->sandbox_public_key;
+                    $url = "https://testing.kueskipay.com/v1/payments";
+                } else {
+                    $private_key_kueski = $payment_method->public_key;
+                    $url = "https://api.kueskipay.com/v1/payments";
+                }
+
                 $api_key = $private_key_kueski;
 
                 $ch = curl_init();
