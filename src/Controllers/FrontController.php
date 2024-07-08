@@ -118,6 +118,7 @@ use Nowyouwerkn\WeCommerce\Services\FacebookEvents;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class FrontController extends Controller
 {
@@ -2192,28 +2193,35 @@ class FrontController extends Controller
             }
         }
 
+        
         // Actualizar existencias del producto
         foreach ($cart->items as $product) {
             if ($product['item']['has_variants'] == true) {
+                // Obtén la variante del producto
                 $variant = Variant::where('value', $product['variant'])->first();
-                $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
 
-                /* Proceso de Reducción de Stock */
-                $values = array(
-                    'action_by' => $user->id,
-                    'initial_value' => $product_variant->stock, 
-                    'final_value' => $product_variant->stock - $product['qty'], 
-                    'product_id' => $product_variant->id,
-                    'created_at' => Carbon::now(),
-                );
+                if($variant != NULL){
+                    $product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
 
-                DB::table('inventory_record')->insert($values);
-
-                /* Guardado completo de existencias */
-                $product_variant->stock = $product_variant->stock - $product['qty'];
-                $product_variant->save();
-                
+                    /* Proceso de Reducción de Stock */
+                    $values = array(
+                        'action_by' => $user->id,
+                        'initial_value' => $product_variant->stock, 
+                        'final_value' => $product_variant->stock - $product['qty'], 
+                        'product_id' => $product_variant->id,
+                        'created_at' => Carbon::now(),
+                    );
+    
+                    DB::table('inventory_record')->insert($values);
+    
+                    /* Guardado completo de existencias */
+                    $product_variant->stock = $product_variant->stock - $product['qty'];
+                    $product_variant->save();
+                }else{
+                    Log::error('No se encontró la variante de un producto para actualizar las existencias.');
+                }
             } else {
+                // Para productos sin variantes
                 $product_stock = Product::find($product['item']['id']);
 
                 $product_stock->stock = $product_stock->stock - $product['qty'];
@@ -2965,8 +2973,6 @@ class FrontController extends Controller
             $order->subscription_period_end = Carbon::createFromTimestamp($subscription->billing_cycle_end)->toDateTimeString();
         }
 
-
-
         if (isset($request->coupon_code)) {
             $coupon = Coupon::where('code', $request->coupon_code)->where('is_active', true)->orderBy('created_at', 'desc')->first();
 
@@ -3047,25 +3053,33 @@ class FrontController extends Controller
 
         // Guardar solicitud de factura si es que existe
         if (isset($request->rfc_num)) {
-            $invoice = new UserInvoice;
-
-            $invoice->invoice_request_num = Str::slug(substr($request->rfc_num, 0, 4)) . '_' . Str::random(10);
-            $invoice->rfc_num = $request->rfc_num;
-            $invoice->cfdi_use = $request->cfdi_use;
-            $invoice->order_id = $order->id;
-            $invoice->user_id = $user->id;
-            $invoice->email = $request->email;
-
-            $invoice->save();
-
-            // Notificación
-            $type = 'Invoice';
-            $by = $user;
-            $data = 'Solicitó una factura para la orden: ' . $order->id;
-            $model_action = "create";
-            $model_id = $invoice->id;
-
-            $this->notification->send($type, $by, $data, $model_action, $model_id);
+            if ($order != NULL && $user != NULL){
+                try {
+                    $invoice = new UserInvoice;
+    
+                    $invoice->invoice_request_num = Str::slug(substr($request->rfc_num, 0, 4)) . '_' . Str::random(10);
+                    $invoice->rfc_num = $request->rfc_num;
+                    $invoice->cfdi_use = $request->cfdi_use;
+                    $invoice->order_id = $order->id;
+                    $invoice->user_id = $user->id;
+                    $invoice->email = $request->email;
+    
+                    $invoice->save();
+    
+                    // Notificación
+                    $type = 'Invoice';
+                    $by = $user;
+                    $data = 'Solicitó una factura para la orden: ' . $order->id;
+                    $model_action = "create";
+                    $model_id = $invoice->id;
+    
+                    $this->notification->send($type, $by, $data, $model_action, $model_id);
+                } catch (\Exception $e) {
+                    Session::flash('info', 'Tu solicitud de factura no pudo ser procesada. Contacta con un agente de soporte para dar seguimiento y solicitar tu factura.');
+                }
+            }else{
+                Session::flash('info', 'Tu solicitud de factura no pudo ser procesada. Contacta con un agente de soporte para dar seguimiento y solicitar tu factura.');
+            }
         }
 
         // Correo de confirmación de compra
@@ -3312,6 +3326,8 @@ class FrontController extends Controller
                 });
             } catch (\Exception $e) {
                 Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
+            } catch (\Swift_TransportException $e) {
+                Session::flash('info', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
             }
 
             $purchase_value = $cart->totalPrice;
