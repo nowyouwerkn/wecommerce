@@ -66,7 +66,7 @@
             @endphp
 
 			@if($product->status == 'Publicado')
-				@if($size_total== 0)
+				@if($size_total == 0)
 					<g:availability>out of stock</g:availability>
 				@else
 					<g:availability>in stock</g:availability>
