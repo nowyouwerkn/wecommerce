@@ -2,6 +2,10 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 2.2 - 2024-07-12
+
+- Cambio en forma de contabilizar inventario en XML Feed para Meta.
+
 ## 2.1 - 2024-07-02
 
 - Agregando integración con KueskiPay. Se agrega al detalle de producto el Kueski Widget para mostrar los beneficios de pagar con Kueski.

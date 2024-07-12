@@ -55,18 +55,6 @@
 
 			<g:condition>{{ $product->condition ?? 'New' }}</g:condition>
 			
-			@if($product->status == 'Publicado')
-				@if($product->stock == 0)
-					<g:availability>out of stock</g:availability>
-				@else
-					<g:availability>in stock</g:availability>
-				@endif
-				<status>active</status>
-			@else
-			<status>archived</status>
-			<g:availability>out of stock</g:availability>
-			@endif
-			
 			@php
                 $size_total = 0;
 
@@ -77,6 +65,18 @@
 	            $size_total;
             @endphp
 
+			@if($product->status == 'Publicado')
+				@if($size_total== 0)
+					<g:availability>out of stock</g:availability>
+				@else
+					<g:availability>in stock</g:availability>
+				@endif
+				<status>active</status>
+			@else
+			<status>archived</status>
+			<g:availability>out of stock</g:availability>
+			@endif
+			
 			<g:inventory>{{ $size_total }}</g:inventory>
 
 			<g:price>{{ number_format($product->price, 2) }} @if($config->currency_id == 2)MXN @else USD @endif</g:price>
