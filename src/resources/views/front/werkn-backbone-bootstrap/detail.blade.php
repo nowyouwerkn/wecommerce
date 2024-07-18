@@ -297,6 +297,19 @@
                     @if($shipment_option != NULL)
                     <p class="text-primary mt-4"><ion-icon name="bag-handle-outline"></ion-icon> Récibelo de {{ $shipment_option->delivery_time }} al seleccionar <br> {{ $shipment_option->name }} en tu Checkout.</p>
                     @endif
+
+                    <hr>
+
+                    @foreach($product->links as $link)
+                    <div class="d-block mb-3">
+                        <a href="{{ $link->url }}" class="btn btn-primary">
+                            @if($link->icon != NULL)
+                            <img src="{{ asset('/img/icons/' . $link->icon) }}" alt="icon" width="120">
+                            @endif
+                            {{ $link->name }}
+                        </a>
+                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>

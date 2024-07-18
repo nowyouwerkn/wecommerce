@@ -13,6 +13,7 @@ use Nowyouwerkn\WeCommerce\Models\Product;
 use Nowyouwerkn\WeCommerce\Models\Category;
 use Nowyouwerkn\WeCommerce\Models\ProductImage;
 use Nowyouwerkn\WeCommerce\Models\ProductCharacteristic;
+use Nowyouwerkn\WeCommerce\Models\ProductLink;
 use Nowyouwerkn\WeCommerce\Models\ProductVariant;
 use Nowyouwerkn\WeCommerce\Models\ProductRelationship;
 
@@ -448,6 +449,62 @@ class ProductController extends Controller
         $chars = ProductCharacteristic::find($id);
         $chars->delete();
         Session::flash('success', 'La característica fue borrada exitosamente');
+
+        return redirect()->back();
+    }
+
+    public function storeLink (Request $request)
+    {
+        $link = new ProductLink;
+        $link->product_id = $request->product_id;
+
+        $link->name = $request->name;
+        $link->color = $request->color;
+        $link->url = $request->url;
+
+        if(isset($request->image)){
+            $model_image = $request->file('image');
+            $filename = 'link_icon' . time() . '.' . $model_image->getClientOriginalExtension();
+            $location = public_path('img/icons/' . $filename);
+
+            Image::make($model_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $link->icon = $filename;
+        }
+
+        $link->save();
+
+        return redirect()->back();
+    }
+
+    public function updateLink (Request $request, $id)
+    {
+        $link = ProductLink::find($id);
+        $link->name = $request->name;
+        $link->color = $request->color;
+        $link->url = $request->url;
+
+        if(isset($request->image)){
+            $model_image = $request->file('image');
+            $filename = 'link_icon' . time() . '.' . $model_image->getClientOriginalExtension();
+            $location = public_path('img/icons/' . $filename);
+
+            Image::make($model_image)->resize(1280,null, function($constraint){ $constraint->aspectRatio(); })->save($location);
+
+            $link->icon = $filename;
+        }
+
+        $link->save();
+
+        return redirect()->back();
+    }
+
+    public function destroyLink ($id)
+    {
+        $link = ProductLink::find($id);
+        $link->delete();
+
+        Session::flash('success', 'El link de producto fue borrada exitosamente');
 
         return redirect()->back();
     }

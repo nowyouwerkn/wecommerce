@@ -27,6 +27,11 @@ class Product extends Model
         return $this->hasMany(ProductCharacteristic::class);
     }
 
+    public function links()
+    {
+        return $this->hasMany(ProductLink::class);
+    }
+
     public function secondary_image()
     {
         return ProductImage::where('product_id', $this->id)->orderBy('priority', 'asc')->orderBy('created_at', 'asc')->first();

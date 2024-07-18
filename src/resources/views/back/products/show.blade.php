@@ -1535,6 +1535,8 @@
             @break
         @endswitch
 
+        @include('wecommerce::back.products.partials._links_card')
+
         <div class="card mg-t-10 mb-4">
             <div class="card-header pd-t-20 pd-b-0 bd-b-0">
                 <h6 class="mg-b-5">Histórico de este producto</h6>
@@ -1808,4 +1810,23 @@
 
     @break
 @endswitch
+
+<script>
+    $(document).ready(function () {
+        $('#link-new').hide();
+    });
+
+    $('#newLink').on('click', function(e){
+        $('#link-new').fadeIn();
+    });
+
+    $('.btn-eliminate').on('click', function(e){
+        $('#link-new').fadeOut();
+    });
+
+    $('.btn-save-2').click(function (e) {
+
+        $('#link-u').submit();
+    });
+</script>
 @endpush

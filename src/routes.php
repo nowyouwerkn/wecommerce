@@ -144,6 +144,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
         return view('wecommerce::back.products.includes._characteristic_inputs_update');
     })->name('subscription.inputs.update');
 
+    /* Funcionalida de Caracteristicas para productos */
     Route::post('products/new-characteristic', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeCharacteristic',
         'as' => 'characteristic.store'
@@ -157,6 +158,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'can:admin_access']],
     Route::delete('products/delete-characteristic/{id}', [
         'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@destroyCharacteristic',
         'as' => 'characteristic.destroy'
+    ]);
+
+    /* Funcionalidad de Links externos para productos */
+    Route::post('products/new-link', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@storeLink',
+        'as' => 'link.store'
+    ]);
+
+    Route::put('products/update-link/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@updateLink',
+        'as' => 'link.update'
+    ]);
+
+    Route::delete('products/delete-link/{id}', [
+        'uses' => 'Nowyouwerkn\WeCommerce\Controllers\ProductController@destroyLink',
+        'as' => 'link.destroy'
     ]);
 
     Route::post('products/new-image', [

@@ -350,15 +350,10 @@
                                     </div>
                                     @if (!empty($products))
                                         @if ($shipment_options->count() != 0)
-                                            <button class="we-co--btn-coupon select-shipment-first" id="apply_points"
-                                                type="button">Canjear</button>
+                                            <button class="we-co--btn-coupon select-shipment-first" id="apply_points" type="button">Canjear</button>
                                         @else
-                                            <button class="we-co--btn-coupon" id="apply_points"
-                                                type="button">Canjear</button>
+                                            <button class="we-co--btn-coupon" id="apply_points" type="button">Canjear</button>
                                         @endif
-                                    @else
-                                        <button class="we-co--btn-coupon" id="apply_points"
-                                            type="button">Canjear</button>
                                     @endif
                                 </div>
                                 <div class="p-3">
@@ -686,7 +681,6 @@
         </script>
     @endif
 
-
     <!--/*Puntos*/-->
     @if (!empty($products))
         @if ($shipment_options->count() != 0)
@@ -694,6 +688,10 @@
                 $('#apply_points').on('click', function() {
                     event.preventDefault();
 
+                    if($(this).hasClass('reload-btn')){
+                        window.location.reload();
+                    }
+                    
                     if ($(this).hasClass('select-shipment-first')) {
                         $('.cp-error').text('Selecciona un método de envío primero.');
                         $('.cp-error').fadeIn();
@@ -701,7 +699,6 @@
                         setTimeout(function() {
                             $('.cp-error').fadeOut();
                         }, 3000);
-
                     } else {
                         var subtotal = parseFloat($('#subtotalInput').val());
                         var shipping = parseFloat($('#shippingInput').val());
@@ -754,48 +751,18 @@
                             $('#finalTotal').val(parseFloat(finaltotal));
 
                             $(this).text('Reiniciar');
+                            $(this).addClass('reload-btn');
 
                             $('#points').val(0);
                             $('#points').attr('disabled', 'disabled');
                             $('#number').css('margin-top', '0px');
-
                         } else {
-                            $("#coupon_code").attr("disabled", false);
-                            $("#apply_coupon").attr("disabled", false);
+                            $('.cp-error').text('No se pueden canjear 0 puntos.');
+                            $('.cp-error').fadeIn();
 
-                            var discount_init = 0;
-                            //CALCULAR DESCUENTO
-                            $('#discountValue').text(parseFloat(discount_init.toString().replace(/,/g, '')).toFixed(2));
-                            $("#points_discount").val(discount_init);
-
-                            var total_count = subtotal * 1.16;
-                            var total = total_count.toString().replace(/,/g, '');
-                            $('#totalPayment').text(total);
-
-                            /* Calculate Tax */
-                            var tax_rate = 0;
-                            var tax = parseFloat(total_count - subtotal).toFixed(2);
-                            /* Print Tax on Screen */
-                            $('#taxValue').text(tax);
-                            $('#taxRate').val(tax);
-
-                            // Clean Numbers
-                            var total = total_count.toString().replace(/,/g, '');
-                            var total = parseFloat(total);
-                            var tax = parseFloat(tax);
-                            var finaltotal = parseFloat(total_count).toFixed(2);
-
-                            $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                            $('#finalTotal').val(parseFloat(finaltotal));
-
-                            var subtotal = parseFloat(finaltotal - tax).toFixed(2);
-
-                            $('#subtotal').text(subtotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                            $('#subtotal_input').val(parseFloat(subtotal));
-
-                            $('#points').attr('disabled', false);
-                            $(this).text('Canjear');
-
+                            setTimeout(function() {
+                                $('.cp-error').fadeOut();
+                            }, 3000);
                         }
                     }
                 });
@@ -805,116 +772,10 @@
                 $('#apply_points').on('click', function() {
                     event.preventDefault();
 
-                    if ($(this).hasClass('select-shipment-first')) {
-                        $('.cp-error').text('Selecciona un método de envío primero.');
-                        $('.cp-error').fadeIn();
-
-                        setTimeout(function() {
-                            $('.cp-error').fadeOut();
-                        }, 3000);
-
-                    } else {
-                        var subtotal = parseFloat($('#subtotalInput').val());
-                        var shipping = parseFloat($('#shippingInput').val());
-
-                        var final_s = parseFloat($('#finalTotal').val());
-
-                        $use_points = $("#points").val();
-                        $point_disc = $("#point_value").val();
-                        $points = $use_points * $point_disc;
-
-                        $("#points_to_apply").val($points);
-
-                        if ($points > 0) {
-                            $("#coupon_code").attr("disabled", true);
-                            $("#apply_coupon").attr("disabled", true);
-
-                            $('#subtotal').text(final_s.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                            $('#subtotal_input').val(parseFloat(final_s));
-
-                            //CALCULAR DESCUENTO
-                            $('#discountValue').text(parseFloat($points.toString().replace(/,/g, '')).toFixed(2));
-                            $("#points_discount").val($points);
-
-                            var total_count = final_s - parseFloat($points.toString().replace(/,/g, ''));
-
-                            var total = total_count.toString().replace(/,/g, '');
-                            $('#totalPayment').text(total);
-
-                            /* Calculate Tax */
-                            var tax_rate = 0;
-                            var tax = parseFloat(total_count * tax_rate).toFixed(2);
-                            /* Print Tax on Screen */
-                            $('#taxValue').text(tax);
-                            $('#taxRate').val(0);
-
-                            // Clean Numbers
-                            var total = total_count.toString().replace(/,/g, '');
-                            var total = parseFloat(total);
-                            var tax = parseFloat(tax);
-                            var finaltotal = parseFloat(total + tax).toFixed(2);
-
-                            $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                            $('#finalTotal').val(parseFloat(finaltotal));
-
-                            $(this).text('Reiniciar');
-
-                            $('#points').val(0);
-                            $('#number').css('margin-top', '0px');
-                            $('#points').attr('disabled', 'disabled');
-
-                        } else {
-                            $("#coupon_code").attr("disabled", false);
-                            $("#apply_coupon").attr("disabled", false);
-
-                            var discount_init = 0;
-                            //CALCULAR DESCUENTO
-                            $('#discountValue').text(parseFloat(discount_init.toString().replace(/,/g, '')).toFixed(2));
-                            $("#points_discount").val(discount_init);
-
-                            var total_count = subtotal * 1.16;
-
-                            var total = total_count.toString().replace(/,/g, '');
-                            $('#totalPayment').text(total);
-
-                            /* Calculate Tax */
-                            var tax_rate = 0;
-                            var tax = parseFloat(total_count - subtotal).toFixed(2);
-                            /* Print Tax on Screen */
-                            $('#taxValue').text(tax);
-                            $('#taxRate').val(tax);
-
-                            // Clean Numbers
-                            var total = total_count.toString().replace(/,/g, '');
-                            var total = parseFloat(total);
-                            var tax = parseFloat(tax);
-                            var finaltotal = parseFloat(total_count).toFixed(2);
-
-                            $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                            $('#finalTotal').val(parseFloat(finaltotal));
-
-
-                            $('#points').attr('disabled', false);
-                            $(this).text('Canjear');
-                        }
+                    if($(this).hasClass('reload-btn')){
+                        window.location.reload();
                     }
-                });
-            </script>
-        @endif
-    @else
-        <script>
-            $('#apply_points').on('click', function() {
-                event.preventDefault();
 
-                if ($(this).hasClass('select-shipment-first')) {
-                    $('.cp-error').text('Selecciona un método de envío primero.');
-                    $('.cp-error').fadeIn();
-
-                    setTimeout(function() {
-                        $('.cp-error').fadeOut();
-                    }, 3000);
-
-                } else {
                     var subtotal = parseFloat($('#subtotalInput').val());
                     var shipping = parseFloat($('#shippingInput').val());
 
@@ -959,46 +820,22 @@
                         $('#finalTotal').val(parseFloat(finaltotal));
 
                         $(this).text('Reiniciar');
+                        $(this).addClass('reload-btn');
 
                         $('#points').val(0);
+                        $('#number').css('margin-top', '0px');
                         $('#points').attr('disabled', 'disabled');
-                        $('#number').css('margin-top', '0px')
-
                     } else {
-                        $("#coupon_code").attr("disabled", false);
-                        $("#apply_coupon").attr("disabled", false);
+                        $('.cp-error').text('No se pueden canjear 0 puntos.');
+                        $('.cp-error').fadeIn();
 
-                        var discount_init = 0;
-                        //CALCULAR DESCUENTO
-                        $('#discountValue').text(parseFloat(discount_init.toString().replace(/,/g, '')).toFixed(2));
-                        $("#points_discount").val(discount_init);
-
-                        var total_count = subtotal * 1.16;
-
-                        var total = total_count.toString().replace(/,/g, '');
-                        $('#totalPayment').text(total);
-
-                        /* Calculate Tax */
-                        var tax_rate = 0;
-                        var tax = parseFloat(total_count - subtotal).toFixed(2);
-                        /* Print Tax on Screen */
-                        $('#taxValue').text(tax);
-                        $('#taxRate').val(tax);
-
-                        // Clean Numbers
-                        var total = total_count.toString().replace(/,/g, '');
-                        var total = parseFloat(total);
-                        var tax = parseFloat(tax);
-                        var finaltotal = parseFloat(total_count).toFixed(2);
-
-                        $('#totalPayment').text(finaltotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                        $('#finalTotal').val(parseFloat(finaltotal));
-
-                        $('#points').attr('disabled', false);
-                        $(this).text('Canjear');
+                        setTimeout(function() {
+                            $('.cp-error').fadeOut();
+                        }, 3000);
                     }
-                }
-            });
-        </script>
+                });
+            </script>
+        @endif
     @endif
 @endpush
+
