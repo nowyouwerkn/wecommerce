@@ -2,6 +2,11 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 2.3 - 2024-07-12
+
+- Se agrega un nuevo modulo que permite colocar links externos de productos desde el detalle. Este link se puede mostrar en el detalle de producto del front para mostrar links que lleven a Marketplaces externos.
+- Modificación de modelo Product
+
 ## 2.2 - 2024-07-12
 
 - Cambio en forma de contabilizar inventario en XML Feed para Meta.
