@@ -36,7 +36,7 @@
                     @foreach($products as $cart_product)
                     <li>
                         @php
-                            $item_img = $cart_product['item']['image'];
+                            $item_img = $cart_product['item']['images']->first()->image;
                             $variant = $cart_product['variant'];
                         @endphp
 
