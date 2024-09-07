@@ -2,7 +2,10 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
-## 2.4 - 2024-07-12
+## 2.5 - 2024-09-06
+- Cambio de versión Facebook Conversion API
+
+## 2.4 - 2024-09-06
 
 - Agregando integración con Aplazo. Se agrega al detalle de producto el Aplazo Widget para mostrar los beneficios de pagar con Aplazo.
 - Nueva ruta para Webhook de Aplazo en documento `routes.web` (/webhook/aplazo_status)
