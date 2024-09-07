@@ -713,3 +713,8 @@ Route::post('/webhook/kueski_status', [
     'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WebhookController@orderKueski',
     'as' => 'webhook.kueski',
 ]);
+
+Route::post('/webhook/aplazo_status', [
+    'uses' => 'Nowyouwerkn\WeCommerce\Controllers\WebhookController@orderAplazo',
+    'as' => 'webhook.aplazo',
+]);

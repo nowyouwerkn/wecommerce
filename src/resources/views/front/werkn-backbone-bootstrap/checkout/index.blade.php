@@ -587,6 +587,31 @@
         </script>
     @endif
 
+    @if (!empty($aplazo_payment))
+        <script type="text/javascript">
+            var $form = $('#checkout-form');
+
+            $(function() {
+                $('#checkout-form').parsley().on('field:validated', function() {
+                    var ok = $('.parsley-error').length === 0;
+                    $('.bs-callout-info').toggleClass('hidden', !ok);
+                    $('.bs-callout-warning').toggleClass('hidden', ok);
+                })
+                $('#btnBuy').on('click', function() {
+                    if ($('input[name=method]').val() === 'Pago con Aplazo') {
+                        // Pedirle al boton que se desactive al enviar el formulario para que no sea posible enviar varias veces el formulario.
+                        $form.find('button').prop('disabled', true);
+                        $('.loader-standby h2').text('Creando Orden en Aplazo...');
+                        $('.loader-standby').removeClass('loader-hidden');
+                        //console.log(response.id);
+
+                        $form.get(0).submit();
+                    }
+                });
+            });
+        </script>
+    @endif
+
     @if (!empty($cash_payment))
         <!-- CONEKTA TOKENIZE API -->
         @if ($cash_payment->supplier == 'Conekta')

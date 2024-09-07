@@ -2,6 +2,12 @@
 
 Todos los cambios notables para `wecommerce` serán documentados en este archivo
 
+## 2.4 - 2024-07-12
+
+- Agregando integración con Aplazo. Se agrega al detalle de producto el Aplazo Widget para mostrar los beneficios de pagar con Aplazo.
+- Nueva ruta para Webhook de Aplazo en documento `routes.web` (/webhook/aplazo_status)
+- Función de Webhook en el controlador correspondiente para funciones de Aplazo
+
 ## 2.3 - 2024-07-12
 
 - Se agrega un nuevo modulo que permite colocar links externos de productos desde el detalle. Este link se puede mostrar en el detalle de producto del front para mostrar links que lleven a Marketplaces externos.
@@ -14,7 +20,7 @@ Todos los cambios notables para `wecommerce` serán documentados en este archivo
 ## 2.1 - 2024-07-02
 
 - Agregando integración con KueskiPay. Se agrega al detalle de producto el Kueski Widget para mostrar los beneficios de pagar con Kueski.
-- Nueva ruta para Webhook de KueskiPay en documento `routes.web`
+- Nueva ruta para Webhook de KueskiPay en documento `routes.web` (/webhook/kueski_status)
 - Modificando información de tiempo de llegada estimado a partir del método de envio en detalle de producto y carrito.
 
 ## 2.0 - 2024-04-12

@@ -243,4 +243,71 @@ class WebhookController extends Controller
 
 		return response()->json(['Evento recibido con éxito.'], 200)->header('Authorization', 'Bearer ' . $api_key);
 	}
+
+	public function orderAplazo()
+	{
+		$body = @file_get_contents('php://input');
+		$data = json_decode($body, true);
+		http_response_code(200); 
+
+		$payment_method = PaymentMethod::where('supplier', 'Aplazo')->where('is_active', true)->first();
+
+		if ($payment_method->sandbox_mode == '1') {
+			$private_key_aplazo = $payment_method->sandbox_private_key;
+		} else {
+			$private_key_aplazo = $payment_method->private_key;
+		}
+		
+		$api_key = $private_key_aplazo;
+
+		if($data['status'] == 'Activo'){
+			// Encontrar la orden de Aplazo realizada por este usuario
+			$order = Order::where('payment_id', $data['payment_id'])->first();
+
+			if($order != NULL){
+				$order->is_completed = 1;
+				$order->status = 'Pagado';
+				$order->save();
+				
+				$cart = unserialize($order->cart);
+			
+				// Actualizar existencias del producto
+				foreach ($cart->items as $product) {
+
+					if ($product['item']['has_variants'] == true) {
+						$variant = Variant::where('value', $product['variant'])->first();
+						$product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
+						
+						if($product_variant != NULL){
+							/* Proceso de Reducción de Stock */
+							$values = array(
+								'action_by' => $order->user_id,
+								'initial_value' => $product_variant->stock ?? 0, 
+								'final_value' => $product_variant->stock ?? 0 - $product['qty'], 
+								'product_id' => $product_variant->id ?? 0,
+								'created_at' => Carbon::now(),
+							);
+			
+							DB::table('inventory_record')->insert($values);
+			
+							/* Guardado completo de existencias */
+							$product_variant->stock = $product_variant->stock  ?? 0 - $product['qty'];
+							$product_variant->save();
+						}
+					} else {
+						$product_stock = Product::find($product['item']['id']);
+			
+						$product_stock->stock = $product_stock->stock ?? 0 - $product['qty'];
+						$product_stock->save();
+					}
+				}
+			}else{
+				return response()->json(['status' => 'accept'], 200)->header('Authorization', 'Bearer ' . $api_key);
+			}
+
+			return response()->json(['status' => 'accept'], 200)->header('Authorization', 'Bearer ' . $api_key);
+		}
+
+		return response()->json(['Evento recibido con éxito.'], 200)->header('Authorization', 'Bearer ' . $api_key);
+	}
 }

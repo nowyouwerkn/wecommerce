@@ -215,6 +215,21 @@
         </div>
         @endif
 
+        @if(!empty($aplazo_payment))
+        <div class="card mb-2">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="paymentRadio" id="paymentRadio_aplazo" data-option="aplazo">
+                    <label class="form-check-label" for="paymentRadio_aplazo">
+                        Aplazo
+                    </label>
+                </div>
+
+                <img src="{{ asset('assets/img/brands/aplazo.jpg') }}" style="height: 25px; width: auto !important;">
+            </div>
+        </div>
+        @endif
+
         <div class="card">
             <div class="card-body">
                 <div class="mb-0">
@@ -295,6 +310,16 @@
                     $('input[name=method]').val('Pago con Kueski');
 
                     $('#paymentMethod').text('Kueski Pay');
+
+                    break;
+
+                case "aplazo":
+                    console.log('Pago con Aplazo');
+                    $('#cardInfo').fadeOut();
+                    $('#cardInfo').find('input').prop('disabled', true);
+                    $('input[name=method]').val('Pago con Aplazo');
+
+                    $('#paymentMethod').text('Aplazo');
 
                     break;
 

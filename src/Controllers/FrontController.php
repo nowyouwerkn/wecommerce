@@ -421,11 +421,18 @@ class FrontController extends Controller
         $shipment_option = ShipmentOption::where('is_primary', true)->first();
 
         $kueski_payment = PaymentMethod::where('supplier', 'Kueski')->where('is_active', true)->first();
+        $aplazo_payment = PaymentMethod::where('supplier', 'Aplazo')->where('is_active', true)->first();
 
         if($kueski_payment != NULL){
             $kueski_widget = true;
         }else{
             $kueski_widget = false;
+        }
+
+        if($aplazo_payment != NULL){
+            $aplazo_widget = true;
+        }else{
+            $aplazo_widget = false;
         }
 
         if (empty($product)) {
@@ -442,7 +449,8 @@ class FrontController extends Controller
                 ->with('all_relationships', $all_relationships)
                 ->with('deduplication_code', $deduplication_code)
                 ->with('shipment_option', $shipment_option)
-                ->with('kueski_widget', $kueski_widget);
+                ->with('kueski_widget', $kueski_widget)
+                ->with('aplazo_widget', $aplazo_widget);
         }
     }
 
@@ -739,6 +747,7 @@ class FrontController extends Controller
         $paypal_payment = PaymentMethod::where('supplier', 'Paypal')->where('is_active', true)->first();
         $mercado_payment = PaymentMethod::where('supplier', 'MercadoPago')->where('is_active', true)->first();
         $kueski_payment = PaymentMethod::where('supplier', 'Kueski')->where('is_active', true)->first();
+        $aplazo_payment = PaymentMethod::where('supplier', 'Aplazo')->where('is_active', true)->first();
         
         $store_tax = StoreTax::where('country_id', $this->store_config->get_country())->first();
         $store_shipping = ShipmentMethod::where('is_active', true)->first();
@@ -1075,6 +1084,7 @@ class FrontController extends Controller
                 ->with('paypal_payment', $paypal_payment)
                 ->with('mercado_payment', $mercado_payment)
                 ->with('kueski_payment', $kueski_payment)
+                ->with('aplazo_payment', $aplazo_payment)
                 ->with('shipment_options', $shipment_options)
                 ->with('subtotal', $subtotal)
                 ->with('tax', $tax)
@@ -1315,6 +1325,11 @@ class FrontController extends Controller
 
             case 'Pago con Kueski':
                 $payment_method = PaymentMethod::where('is_active', true)->where('supplier', 'Kueski')->first();
+
+                break;
+
+            case 'Pago con Aplazo':
+                $payment_method = PaymentMethod::where('is_active', true)->where('supplier', 'Aplazo')->first();
 
                 break;
                 
@@ -2029,9 +2044,182 @@ class FrontController extends Controller
 
                     // Enviar al usuario a confirmar su compra en el panel de Kueski
                     return redirect()->away($kueski_payment['data']['callback_url']);
-
                 } else {
                     Session::flash('error', '¡Lo sentimos! El pago a través de Kueski no se pudo realizar. Inténtalo nuevamente o usa otro método de pago. Contacta con nosotros si tienes alguna pregunta.');
+                    return redirect()->route('index');
+                }
+                break;
+            
+            case 'Aplazo':
+                $get_order_id = Order::all()->count() + 1;
+
+                /* Formato de Orden */
+                $products = array();
+
+                $products[0] = array(
+                    'name' => 'Compra desde tu tienda en linea',
+                    'description' => 'Sumatoria total de la orden',
+                    'price' => $request->final_total,
+                    'quantity' => '1',
+                    "currency" => "MXN"
+                );
+
+                if ($payment_method->sandbox_mode == '1') {
+                    $private_key_aplazo = $payment_method->sandbox_public_key;
+                    $merchant_id = $payment_method->sandbox_merchant_id;
+                    $url = "https://api.aplazo.net/api/loan";
+                } else {
+                    $private_key_aplazo = $payment_method->public_key;
+                    $merchant_id = $payment_method->merchant_id;
+                    $url = "https://api.aplazo.mx/api/loan";
+                }
+                
+                // Get the Bearer token (you can reuse the function from before)
+                $bearerToken = $this->getAplazoToken();
+                
+                if ($bearerToken) {
+                    // Define the data for the loan request
+                    $webHookUrl = route('webhook.aplazo');
+
+                    $fields = array(
+                        "buyer" => array(
+                            "addressLine" => $street . ' ' . $street_num . ' ' . $suburb . ' ' . $city,
+                            "email" => $request->email,
+                            "firstName" => $client_name,
+                            "lastName" => $request->last_name,
+                            "phone" => $phone,
+                            "postalCode" => $postal_code
+                        ),
+                        "cartId" => $get_order_id,
+                        "cartUrl" => route('cart'),
+                        "errorUrl" => route('index'),
+                        "products" => $products,
+                        "shopId" => $shopId,
+                        "successUrl" => route('purchase.complete'),
+                        "totalPrice" => $request->final_total,
+                        "webHookUrl" => $webHookUrl
+                    );
+
+                    // Encode the data to JSON
+                    $fields_string = json_encode($fields);
+                    
+                    // Initialize cURL
+                    $ch = curl_init();
+                    
+                    // Set cURL options
+                    curl_setopt($ch, CURLOPT_URL, $url);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                        "Authorization: $bearerToken",
+                        'Content-Type: application/json'
+                    ]);
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+                    
+                    // Execute cURL
+                    $result = curl_exec($ch);
+                    
+                    // Close cURL
+                    curl_close($ch);
+                    
+                }else{
+                    Session::flash('error', '¡Lo sentimos! El pago a través de Aplazo no se pudo realizar. Inténtalo nuevamente o usa otro método de pago. Contacta con nosotros si tienes alguna pregunta.');
+                    return redirect()->route('index');
+                }
+                
+                $aplazo_payment = json_decode($result, true);
+                //dd($aplazo_payment);
+
+                if ($aplazo_payment['status'] == "success") {
+                    if (!Auth::check()) {
+                        $user = User::create([
+                            'name' => $client_name,
+                            'last_name' => $request->last_name,
+                            'phone' => $request->phone,
+                            'email' => $request->email,
+                            'password' => bcrypt('wkshop'),
+                        ]);
+
+                        $user->assignRole('customer');
+                    } else {
+                        $user = Auth::user();
+                    }
+
+                    // GUARDAR LA ORDEN
+                    $order = new Order();
+
+                    $order->cart = serialize($cart);
+                    $order->street = $street;
+                    $order->street_num = $street_num;
+                    $order->country = $country;
+                    $order->state = $state;
+                    $order->postal_code = $postal_code;
+                    $order->city = $city;
+                    $order->phone = $phone;
+                    $order->suburb = $suburb;
+                    $order->references = $references;
+                    $order->shipping_option = $request->shipping_option;
+
+                    /* Money Info */
+                    $order->cart_total = $cart->totalPrice;
+                    $order->shipping_rate = str_replace(',', '', $request->shipping_rate);
+                    $order->sub_total = str_replace(',', '', $request->sub_total);
+                    $order->tax_rate = str_replace(',', '', $request->tax_rate);
+                    if (isset($request->discounts)) {
+                        $order->discounts = str_replace(',', '', $request->discounts);
+                    }
+
+                    $order->total = $request->final_total;
+                    $order->payment_total = $request->final_total;
+                    /*------------*/
+
+                    if (isset($billing_shipping_id)) {
+                        $order->billing_shipping_id = $billing_shipping_id->id;
+                    }
+
+                    $order->card_digits = Str::substr($request->card_number, 15);
+                    $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
+
+                    $order->status = 'Sin Completar';
+
+                    $order->payment_id = $kueski_payment['data']['payment_id'];
+                    $order->payment_method = $payment_method->supplier;
+
+                    //Guadar puntos de salida
+                    if (isset($request->points)) {
+                        $order->points = $request->points;
+                    }
+
+                    // Identificar al usuario para guardar sus datos.
+                    $user->orders()->save($order);
+
+                    // GUARDAR LA DIRECCIÓN
+                    if ($request->save_address == 'true') {
+                        $check = UserAddress::where('street', $street)->count();
+
+                        if ($check == NULL || $check == 0) {
+                            $address = new UserAddress;
+                            $address->name = 'Compra_Aplazo' . $order->id;
+                            $address->user_id = $user->id;
+                            $address->street = $street;
+                            $address->street_num = $street_num;
+                            $address->postal_code = $postal_code;
+                            $address->city = $city;
+                            $address->country = $country;
+                            $address->state = $state;
+                            $address->phone = $phone;
+                            $address->suburb = $suburb;
+                            $address->references = $references;
+                            $address->is_billing = false;
+
+                            $address->save();
+                        }
+                    }
+
+                    // Enviar al usuario a confirmar su compra en el panel de Aplazo
+                    return redirect()->away($aplazo_payment['data']['successUrl']);
+                } else {
+                    Session::flash('error', '¡Lo sentimos! El pago a través de Aplazo no se pudo realizar. Inténtalo nuevamente o usa otro método de pago. Contacta con nosotros si tienes alguna pregunta.');
                     return redirect()->route('index');
                 }
                 break;
@@ -3379,6 +3567,58 @@ class FrontController extends Controller
         // Mensaje de session
         Session::flash('error', 'Lo sentimos! El pago a través de PayPal no se pudo realizar. Inténtalo nuevamente o usa otro método de pago. Contacta con nosotros si tienes alguna pregunta.');
         return redirect()->route('checkout.paypal')->with(compact('status'));
+    }
+
+    public function getAplazoToken()
+    {
+        $payment_method = PaymentMethod::where('is_active', true)->where('supplier', 'Aplazo')->first();
+
+        if ($payment_method->sandbox_mode == '1') {
+            $private_key_aplazo = $payment_method->sandbox_public_key;
+            $merchant_id = $payment_method->sandbox_merchant_id;
+            $url = "https://api.aplazo.net/api/auth";
+        } else {
+            $private_key_aplazo = $payment_method->public_key;
+            $merchant_id = $payment_method->merchant_id;
+            $url = "https://api.aplazo.mx/api/auth";
+        }
+
+        // Fields that will be sent in the body of the request
+        $fields = [
+            'apiToken' => $private_key_aplazo,
+            'merchantId' => $merchant_id             
+        ];
+        
+        // Encoding the data to JSON
+        $fields_string = json_encode($fields);
+        
+        // Initialize cURL
+        $ch = curl_init();
+        
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json'
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+        
+        // Execute cURL
+        $result = curl_exec($ch);
+        
+        // Close cURL
+        curl_close($ch);
+        
+        // Decode the result to get the bearer token
+        $response = json_decode($result, true);
+        
+        if (isset($response['Authorization'])) {
+            // Return the token or save it for future use
+            return $response['Authorization'];
+        }
+        
+        return null; // Handle the error case
     }
 
     /*

@@ -85,7 +85,6 @@
                             </li>
                             @endforeach
                         </ul>
-                        
                     </div>
 
                     <div class="shop-details-img-wrap ">
@@ -286,6 +285,12 @@
                             @endif
                         @endif
                     </div>
+
+                    @if($aplazo_widget == true)
+                        <script src='https://cdn.aplazo.mx/aplazo-widgets.min.js'></script>
+                        <aplazo-install></aplazo-install>
+                        <aplazo-placement></aplazo-placement>
+                    @endif
 
                     @if($kueski_widget == true)
                     <kueskipay-widget data-kpay-color-scheme="black" data-kpay-widget-font-size="12"></kueskipay-widget>
