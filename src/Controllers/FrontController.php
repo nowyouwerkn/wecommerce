@@ -2137,8 +2137,6 @@ class FrontController extends Controller
                 
                 $aplazo_payment = json_decode($result, true);
 
-                dd($aplazo_payment);
-
                 if (!empty($aplazo_payment)) {
                     if (!Auth::check()) {
                         $user = User::create([
