@@ -2057,26 +2057,27 @@ class FrontController extends Controller
                 $products = array();
 
                 $products[0] = array(
-                    'name' => 'Compra desde tu tienda en linea',
-                    'description' => 'Sumatoria total de la orden',
+                    'count' => 1,
+                    'description' => "Total de la orden",
+                    'id' => 0,
+                    'imageUrl' => "",
                     'price' => $request->final_total,
-                    'quantity' => '1',
-                    "currency" => "MXN"
+                    'title' => "Compra desde tu tienda en linea."
                 );
 
                 if ($payment_method->sandbox_mode == '1') {
-                    $private_key_aplazo = $payment_method->sandbox_public_key;
+                    $private_key_aplazo = $payment_method->sandbox_private_key;
                     $merchant_id = $payment_method->sandbox_merchant_id;
                     $url = "https://api.aplazo.net/api/loan";
                 } else {
-                    $private_key_aplazo = $payment_method->public_key;
+                    $private_key_aplazo = $payment_method->private_key;
                     $merchant_id = $payment_method->merchant_id;
                     $url = "https://api.aplazo.mx/api/loan";
                 }
                 
                 // Get the Bearer token (you can reuse the function from before)
                 $bearerToken = $this->getAplazoToken();
-                
+
                 if ($bearerToken) {
                     // Define the data for the loan request
                     $webHookUrl = route('webhook.aplazo');
@@ -2092,10 +2093,22 @@ class FrontController extends Controller
                         ),
                         "cartId" => $get_order_id,
                         "cartUrl" => route('cart'),
+                        "discount" => array(
+                            "price" => 0,
+                            "title" => ""
+                        ),
                         "errorUrl" => route('index'),
                         "products" => $products,
-                        "shopId" => $shopId,
+                        "shipping" => array(
+                            "price" => 0,
+                            "title" => ""
+                        ),
+                        "shopId" => $merchant_id,
                         "successUrl" => route('purchase.complete'),
+                        "taxes" => array(
+                            "price" => 0,
+                            "title" => ""
+                        ),
                         "totalPrice" => $request->final_total,
                         "webHookUrl" => $webHookUrl
                     );
@@ -2103,34 +2116,30 @@ class FrontController extends Controller
                     // Encode the data to JSON
                     $fields_string = json_encode($fields);
                     
-                    // Initialize cURL
                     $ch = curl_init();
-                    
-                    // Set cURL options
+
+                    $header = array();
+
+                    $header[] = "Authorization: " . $bearerToken;
+                    $header[] = 'Content-Type: application/json';
                     curl_setopt($ch, CURLOPT_URL, $url);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                        "Authorization: $bearerToken",
-                        'Content-Type: application/json'
-                    ]);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-                    
-                    // Execute cURL
+
                     $result = curl_exec($ch);
-                    
-                    // Close cURL
                     curl_close($ch);
-                    
                 }else{
                     Session::flash('error', '¡Lo sentimos! El pago a través de Aplazo no se pudo realizar. Inténtalo nuevamente o usa otro método de pago. Contacta con nosotros si tienes alguna pregunta.');
                     return redirect()->route('index');
                 }
                 
                 $aplazo_payment = json_decode($result, true);
-                //dd($aplazo_payment);
 
-                if ($aplazo_payment['status'] == "success") {
+                dd($aplazo_payment);
+
+                if (!empty($aplazo_payment)) {
                     if (!Auth::check()) {
                         $user = User::create([
                             'name' => $client_name,
@@ -2180,9 +2189,9 @@ class FrontController extends Controller
                     $order->card_digits = Str::substr($request->card_number, 15);
                     $order->client_name = $request->input('name') . ' ' . $request->input('last_name');
 
-                    $order->status = 'Sin Completar';
+                    $order->status = 'Prestamo Pendiente';
 
-                    $order->payment_id = $kueski_payment['data']['payment_id'];
+                    $order->payment_id = $aplazo_payment['loanToken'];
                     $order->payment_method = $payment_method->supplier;
 
                     //Guadar puntos de salida
@@ -2217,7 +2226,7 @@ class FrontController extends Controller
                     }
 
                     // Enviar al usuario a confirmar su compra en el panel de Aplazo
-                    return redirect()->away($aplazo_payment['data']['successUrl']);
+                    return redirect()->away($aplazo_payment['url']);
                 } else {
                     Session::flash('error', '¡Lo sentimos! El pago a través de Aplazo no se pudo realizar. Inténtalo nuevamente o usa otro método de pago. Contacta con nosotros si tienes alguna pregunta.');
                     return redirect()->route('index');
@@ -3574,11 +3583,11 @@ class FrontController extends Controller
         $payment_method = PaymentMethod::where('is_active', true)->where('supplier', 'Aplazo')->first();
 
         if ($payment_method->sandbox_mode == '1') {
-            $private_key_aplazo = $payment_method->sandbox_public_key;
+            $private_key_aplazo = $payment_method->sandbox_private_key;
             $merchant_id = $payment_method->sandbox_merchant_id;
             $url = "https://api.aplazo.net/api/auth";
         } else {
-            $private_key_aplazo = $payment_method->public_key;
+            $private_key_aplazo = $payment_method->private_key;
             $merchant_id = $payment_method->merchant_id;
             $url = "https://api.aplazo.mx/api/auth";
         }
