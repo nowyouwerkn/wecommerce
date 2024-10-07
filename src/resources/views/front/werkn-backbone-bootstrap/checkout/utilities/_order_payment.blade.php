@@ -225,7 +225,7 @@
                     </label>
                 </div>
 
-                <img src="{{ asset('assets/img/brands/aplazo.jpg') }}" style="height: 25px; width: auto !important;">
+                <img src="{{ asset('assets/img/brands/aplazo.png') }}" style="height: 25px; width: auto !important;">
             </div>
         </div>
         @endif

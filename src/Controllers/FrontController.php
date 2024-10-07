@@ -2051,7 +2051,8 @@ class FrontController extends Controller
                 break;
             
             case 'Aplazo':
-                $get_order_id = Order::all()->count() + 1;
+                $order_id = Order::latest()->first();
+                $get_order_id = $order_id->id + 1;
 
                 /* Formato de Orden */
                 $products = array();
@@ -2189,7 +2190,7 @@ class FrontController extends Controller
 
                     $order->status = 'Prestamo Pendiente';
 
-                    $order->payment_id = $aplazo_payment['loanToken'];
+                    $order->payment_id = $aplazo_payment['loanId'];
                     $order->payment_method = $payment_method->supplier;
 
                     //Guadar puntos de salida
@@ -2494,7 +2495,7 @@ class FrontController extends Controller
             Session::flash('info', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
         }
 
-        $purchase_value = $cart->totalPrice;
+        $purchase_value = $cart->totalPrice ?? $request->final_total;
 
         // Notificación
         $type = 'Orden';
@@ -2530,7 +2531,6 @@ class FrontController extends Controller
 
         Session::forget('cart');
         Session::flash('purchase_complete', 'Compra Exitosa.');
-
 
         return redirect()->route('purchase.complete')
             ->with('purchase_value', $purchase_value)
@@ -4428,7 +4428,7 @@ class FrontController extends Controller
                 Session::flash('error', 'No se pudo enviar el correo con tu confirmación de orden. Aún así la orden está guardada en nuestros sistema. Contacta con un agente de soporte para dar seguimiento o accede a tu perfil para ver la orden.');
             }
 
-            $purchase_value = $cart->totalPrice;
+            $purchase_value = $cart->totalPrice ?? 0;
 
             // Notificación
             $type = 'Orden';
@@ -4464,14 +4464,19 @@ class FrontController extends Controller
 
             Session::forget('cart');
 
+            
+
             return view('front.theme.' . $this->theme->get_name() . '.purchase_complete')
+                ->with('purchase_value', $purchase_value)
                 ->with('store_config', $store_config)
                 ->with('deduplication_code', $deduplication_code);
         }
 
         $deduplication_code = NULL;
+        $purchase_value = 0;
 
         return view('front.theme.' . $this->theme->get_name() . '.purchase_complete')
+            ->with('purchase_value', $purchase_value)    
             ->with('store_config', $store_config)
             ->with('deduplication_code', $deduplication_code);
     }
