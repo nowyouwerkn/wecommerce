@@ -679,6 +679,7 @@ class FrontController extends Controller
                 $productCount += $cart_product['qty'];
             }
 
+            /*
             if ($productCount >= 2) {
                 if ($productCount % 2 === 0) {
                     // Múltiplo de dos
@@ -690,6 +691,22 @@ class FrontController extends Controller
                     $total = $subtotal;
                 } else {
                     // No es múltiplo de dos ni de tres
+                    $subtotal;
+                    $promo_alert = true;
+                }
+            } else {
+                $promo_cta = true;
+            }
+            */
+
+            if ($productCount >= 2) {
+                if ($productCount % 2 === 0) {
+                    // Múltiplo de dos
+                    $subtotal = 1299 * ($productCount / 2);
+                    $total = $subtotal;
+                    $promo_alert = false;
+                } else {
+                    // No es múltiplo de dos
                     $subtotal;
                     $promo_alert = true;
                 }
@@ -977,6 +994,7 @@ class FrontController extends Controller
                 $productCount += $cart_product['qty'];
             }
 
+            /*
             if ($productCount >= 2) {
                 if ($productCount % 2 === 0) {
                     // Múltiplo de dos
@@ -988,6 +1006,22 @@ class FrontController extends Controller
                     $total =  $subtotal + $tax;
                 } else {
                     // No es múltiplo de dos ni de tres
+                    $subtotal;
+                    $promo_alert = true;
+                }
+            } else {
+                $promo_cta = true;
+            }
+            */
+
+            if ($productCount >= 2) {
+                if ($productCount % 2 === 0) {
+                    // Múltiplo de dos
+                    $subtotal = (1299 * ($productCount / 2))  - ($tax);
+                    $total = $subtotal + $tax;
+                    $promo_alert = false;
+                } else {
+                    // No es múltiplo de dos
                     $subtotal;
                     $promo_alert = true;
                 }
@@ -4713,6 +4747,7 @@ class FrontController extends Controller
                 $productCount += $cart_product['qty'];
             }
 
+            /*
             if ($productCount >= 2) {
                 if ($productCount % 2 === 0) {
                     // Múltiplo de dos
@@ -4722,6 +4757,19 @@ class FrontController extends Controller
                     $total_cart = 1799 * ($productCount / 3);
                 } else {
                     // No es múltiplo de dos ni de tres
+                    $total_cart = $cart->totalPrice;
+                }
+            } else {
+                $total_cart = $cart->totalPrice;
+            }
+            */
+
+            if ($productCount >= 2) {
+                if ($productCount % 2 === 0) {
+                    // Múltiplo de dos
+                    $total_cart = 1299 * ($productCount / 2);
+                } else {
+                    // No es múltiplo de dos
                     $total_cart = $cart->totalPrice;
                 }
             } else {
