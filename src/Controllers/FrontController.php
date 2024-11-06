@@ -679,7 +679,7 @@ class FrontController extends Controller
                 $productCount += $cart_product['qty'];
             }
 
-            /*
+            
             if ($productCount >= 2) {
                 if ($productCount % 2 === 0) {
                     // Múltiplo de dos
@@ -697,8 +697,8 @@ class FrontController extends Controller
             } else {
                 $promo_cta = true;
             }
-            */
-
+            
+            /*
             if ($productCount >= 2) {
                 if ($productCount % 2 === 0) {
                     // Múltiplo de dos
@@ -713,6 +713,7 @@ class FrontController extends Controller
             } else {
                 $promo_cta = true;
             }
+            */
         }
 
         return view('front.theme.' . $this->theme->get_name() . '.cart')
@@ -994,7 +995,7 @@ class FrontController extends Controller
                 $productCount += $cart_product['qty'];
             }
 
-            /*
+            
             if ($productCount >= 2) {
                 if ($productCount % 2 === 0) {
                     // Múltiplo de dos
@@ -1012,8 +1013,8 @@ class FrontController extends Controller
             } else {
                 $promo_cta = true;
             }
-            */
-
+            
+            /*
             if ($productCount >= 2) {
                 if ($productCount % 2 === 0) {
                     // Múltiplo de dos
@@ -1028,6 +1029,7 @@ class FrontController extends Controller
             } else {
                 $promo_cta = true;
             }
+            */
         }
 
         if (empty($mercado_payment)) {
@@ -4747,7 +4749,6 @@ class FrontController extends Controller
                 $productCount += $cart_product['qty'];
             }
 
-            /*
             if ($productCount >= 2) {
                 if ($productCount % 2 === 0) {
                     // Múltiplo de dos
@@ -4762,8 +4763,8 @@ class FrontController extends Controller
             } else {
                 $total_cart = $cart->totalPrice;
             }
-            */
-
+            
+            /*
             if ($productCount >= 2) {
                 if ($productCount % 2 === 0) {
                     // Múltiplo de dos
@@ -4775,6 +4776,7 @@ class FrontController extends Controller
             } else {
                 $total_cart = $cart->totalPrice;
             }
+            */
         }
 
         //$total_cart = $cart->totalPrice;
