@@ -284,7 +284,8 @@
                     }else{
                         $('#suburb').empty();
                         response.forEach(element => {
-                            $('#suburb').append(`<option value="${element['suburb']}">${element['suburb']}</option>`);
+                            let suburb = element['suburb'] || element['municipality']; // Use 'municipality' if 'suburb' is null
+                            $('#suburb').append(`<option value="${suburb}">${suburb}</option>`);
                         });
 
                         $('#city').empty();
