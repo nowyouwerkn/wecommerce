@@ -262,7 +262,7 @@ class WebhookController extends Controller
 
 		if($data['status'] == 'Activo'){
 			// Encontrar la orden de Aplazo realizada por este usuario
-			$order = Order::where('payment_id', $data['payment_id'])->first();
+			$order = Order::where('payment_id', $data['loanId'])->first();
 
 			if($order != NULL){
 				$order->is_completed = 1;
@@ -270,7 +270,7 @@ class WebhookController extends Controller
 				$order->save();
 				
 				$cart = unserialize($order->cart);
-			
+				
 				// Actualizar existencias del producto
 				foreach ($cart->items as $product) {
 
@@ -279,7 +279,6 @@ class WebhookController extends Controller
 						$product_variant = ProductVariant::where('product_id', $product['item']['id'])->where('variant_id', $variant->id)->first();
 						
 						if($product_variant != NULL){
-							/* Proceso de Reducción de Stock */
 							$values = array(
 								'action_by' => $order->user_id,
 								'initial_value' => $product_variant->stock ?? 0, 
@@ -290,7 +289,6 @@ class WebhookController extends Controller
 			
 							DB::table('inventory_record')->insert($values);
 			
-							/* Guardado completo de existencias */
 							$product_variant->stock = $product_variant->stock  ?? 0 - $product['qty'];
 							$product_variant->save();
 						}
