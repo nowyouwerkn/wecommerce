@@ -289,7 +289,7 @@
                         });
 
                         $('#city').empty();
-                        $('#city').val(response[0]['city']);
+                        $('#city').val(response[0]['municipality']);
                         //$('#city').append(`<option value="${response[0]['city']}">${response[0]['city']}</option>`);
 
                         $('#state').empty();

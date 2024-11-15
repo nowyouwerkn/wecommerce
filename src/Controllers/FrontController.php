@@ -1491,7 +1491,7 @@ class FrontController extends Controller
                 'unique' => 'Verifica que tu dirección de envío sea correcta y que esté completa. Puedes crear una nueva directamente desde este formulario.'
             ];
 
-            $this->validate($request, array(
+            $this->validate($request, [
                 'street' => 'required',
                 'street_num' => 'required',
                 'suburb' => 'required',
@@ -1500,7 +1500,17 @@ class FrontController extends Controller
                 'state' => 'required',
                 'city' => 'required',
                 'references' => 'required',
-            ), $customMessages);
+            ], [], 
+            [
+                'street' => 'Nombre de la calle',
+                'street_num' => 'Número',
+                'suburb' => 'Colonia',
+                'postal_code' => 'Código Postal',
+                'country' => 'País',
+                'state' => 'Estado',
+                'city' => 'Ciudad',
+                'references' => 'Referencias en Dirección de Envío',
+            ]);
 
             $street = $request->input('street');
             $street_num = $request->input('street_num');
